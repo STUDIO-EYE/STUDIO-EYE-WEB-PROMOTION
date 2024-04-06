@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { motion, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import LetterAnimation from "../../Components/Common/LetterAnimation";
+import LetterAnimation from "../../components/Common/LetterAnimation";
 import axios from "axios";
 
 const ArrowImg = styled.img`

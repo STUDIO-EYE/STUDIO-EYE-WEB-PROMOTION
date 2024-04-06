@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import Body from "../../Components/Common/AdminBody";
+import Body from "../../components/Common/AdminBody";
 import PlusArtworkModal from "./Component/PlusArtworkModal";
 import EditArtWorkModal from "./Component/EditArtWorkModal";
 import { motion } from "framer-motion";

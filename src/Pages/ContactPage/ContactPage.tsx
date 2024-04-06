@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Body from "../../Components/Common/Body";
+import Body from "../../components/Common/Body";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Modal from "./Components/Modal";

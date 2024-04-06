@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ThemeProvider } from "styled-components";
 import router from "./Router";
-import { theme } from "./theme";
+import { theme } from "./styles/theme";
 
 const client = new QueryClient();
 const element = document.getElementById("root");

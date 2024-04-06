@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Body from "../../Components/Common/Body";
+import Body from "../../components/Common/Body";
 import { motion, Variants } from "framer-motion";
 
 const MainBody = styled.div`

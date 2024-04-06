@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
-import Body from "../../Components/Common/Body";
+import Body from "../../components/Common/Body";
 import styled, { keyframes } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import MainAnimation from "../MainPage/MainAnimation";
-import DetailTransition from "../../Components/Common/DetailTransition";
+import DetailTransition from "../../components/Common/DetailTransition";
 import YouTube from "react-youtube";
 
 //지금은 안쓰는 임시 js 파일

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Variants } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import studioi from "../../assets/logo/mainLogo.png";
-import PlusAboutModal from "../../Pages/AdminPage/Component/PlusAboutModal";
+import PlusAboutModal from "../../pages/AdminPage/Component/PlusAboutModal";
 import AdminModal from "./AdminModal";
 
 const HeaderBlock = styled.div`

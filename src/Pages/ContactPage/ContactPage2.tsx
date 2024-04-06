@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Body from "../../Components/Common/Body";
+import Body from "../../components/Common/Body";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Select from "react-select";

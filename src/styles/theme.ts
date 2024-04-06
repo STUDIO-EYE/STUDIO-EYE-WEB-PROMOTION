@@ -4,16 +4,16 @@ export const theme: DefaultTheme = {
   color: {
     black: {
       bold: "#141414",
-      light: "#181818",
-      pale: "#2f2f2f",
+      light: "#FBFBFB",
+      pale: "#FBFBFB",
     },
     white: {
-      bold: "#e5e5e5",
+      bold: "#FBFBFB",
       light: "#fff",
     },
     yellow: {
-      bold: "##FBA900",
-      light: "#FDE9D2",
+      bold: "#FFA900",
+      light: "#FFF0D1",
     },
   },
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 // import Data from "bootstrap/js/src/dom/data";
-import Body from "../../Components/Common/AdminBody";
+import Body from "../../components/Common/AdminBody";
 import ShowContactModal from "./Component/ShowContactModal";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";

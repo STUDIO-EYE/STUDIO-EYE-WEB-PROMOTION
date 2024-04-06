@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAnimation, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import LetterAnimation from "../../Components/Common/LetterAnimation";
+import LetterAnimation from "../../components/Common/LetterAnimation";
 import Arrow from "../../assets/icon/Arrow2.png"
 
 
