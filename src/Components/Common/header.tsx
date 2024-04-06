@@ -174,6 +174,7 @@ const Header = () => {
             <MenuButtons>ABOUT</MenuButtons>
             <MenuButtons>CONTENTS</MenuButtons>
             <MenuButtons>CONTACT</MenuButtons>
+            <MenuButtons>FAQ</MenuButtons>
           </div>
         </Wrapper>
       </HeaderBlock>
