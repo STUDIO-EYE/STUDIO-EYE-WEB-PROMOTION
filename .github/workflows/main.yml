@@ -11,41 +11,59 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # 2. Install dependencies and build the project
     - name: Install dependencies and build
       run: |
         npm install
-        npm run build  # 빌드 과정은 GitHub Actions에서 실행
+        npm run build  # 빌드 과정에서 build 폴더 생성
 
+    # 3. Upload build artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3  # v3로 업데이트
+      uses: actions/upload-artifact@v3
       with:
         name: build
-        path: build  # 빌드된 파일을 아티팩트로 업로드
+        path: build  # build 폴더를 업로드
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: build
+    needs: build  # 빌드가 완료되면 실행
 
     steps:
+    # 1. Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Download the build artifacts
     - name: Download build artifacts
-      uses: actions/download-artifact@v3  # v3로 업데이트
+      uses: actions/download-artifact@v3
       with:
         name: build
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        script: |
-          cd ~/STUDIO-EYE-WEB-PROMOTION
-          git pull origin main
-          rm -rf build
-          mv ~/actions/build ~/STUDIO-EYE-WEB-PROMOTION/build  # EC2에 빌드된 파일 전달
-          sudo systemctl restart nginx
+    # 3. Set up SSH key
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+
+    # 4. Pull the latest code on the server
+    - name: Update the code on EC2
+      run: |
+        ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_HOST }} "cd /home/ubuntu/STUDIO-EYE-WEB-PROMOTION && git pull origin main"
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+
+    # 5. Deploy to EC2 via SCP
+    - name: Deploy to EC2 via SCP
+      run: |
+        scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no -r build/ ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
