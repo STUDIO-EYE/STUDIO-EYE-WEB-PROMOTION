@@ -37,7 +37,7 @@ export const PP_ROUTES_CHILD = {
   FAQ: 'faq',
   LOGIN: 'login',
   RECRUITMENT: 'recruitment', // 추가된 경로
-EWSBOARD: 'news',
+  NEWSBOARD: 'news',
   NEWSBOARD_DETAIL: 'news/:id',
 };
 
