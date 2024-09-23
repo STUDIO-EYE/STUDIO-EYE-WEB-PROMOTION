@@ -17,24 +17,25 @@ jobs:
     - name: Install dependencies and build
       run: |
         npm install
-        npm run build  # 빌드 과정에서 build 폴더가 생성됨
+        npm run build  # 빌드 과정에서 build 폴더 생성
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build
-        path: build  # build 폴더를 아티팩트로 업로드
+        path: build  # 빌드된 파일을 업로드
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    needs: build  # build 작업이 완료된 후 실행
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Download build artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v3  # 업로드된 build 파일 다운로드
       with:
         name: build
 
@@ -45,4 +46,3 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
-        PORT: 22
