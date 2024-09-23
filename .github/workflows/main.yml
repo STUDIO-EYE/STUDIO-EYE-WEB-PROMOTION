@@ -7,14 +7,36 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Execute deploy script on EC2
+    - name: Install dependencies and build
+      run: |
+        npm install
+        npm run build  # 빌드 과정은 GitHub Actions에서 실행
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build  # 빌드된 파일을 아티팩트로 업로드
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build
+
+    - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -24,4 +46,6 @@ jobs:
         script: |
           cd ~/STUDIO-EYE-WEB-PROMOTION
           git pull origin main
+          rm -rf build
+          mv ~/actions/build ~/STUDIO-EYE-WEB-PROMOTION/build  # EC2에 빌드된 파일 전달
           sudo systemctl restart nginx
