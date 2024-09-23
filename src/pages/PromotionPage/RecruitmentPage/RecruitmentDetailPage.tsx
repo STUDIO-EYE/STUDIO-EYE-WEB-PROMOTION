@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
+import styled from 'styled-components';
 
 interface PostData {
   id: number;
@@ -39,7 +40,8 @@ const RecruitmentDetailPage = () => {
   );
 };
 
-// Styled components
+export default RecruitmentDetailPage;
+
 const Wrapper = styled.div`
   padding: 20px;
   max-width: 800px;
@@ -67,5 +69,3 @@ const BackButton = styled.button`
   border: none;
   cursor: pointer;
 `;
-
-export default RecruitmentDetailPage;
