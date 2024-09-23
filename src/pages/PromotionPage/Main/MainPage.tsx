@@ -55,80 +55,81 @@ const MainPage = () => {
   }, [height]);
 
   return (
-    <>
-      <style>{`
-        body, html {
-          overflow: hidden;
-        }
-      `}</style>
-      <div style={{ overflowY: 'scroll', height: '100vh', scrollSnapType: 'y mandatory' }}>
-        <ChakraProvider>
-          <TopSection>
-            {filteredTopData && filteredTopData.length > 0 ? (
-              filteredTopData.map((i, index) => <Top key={index} backgroundImg={i.mainImg} />)
-            ) : (
-              <Top backgroundImg={defaultTopImg} />
-            )}
-          </TopSection>
-          <IntroSection>
-            <Intro />
-          </IntroSection>
-          <ArtworkSection>
-            <Box
-              scrollSnapType='y mandatory'
-              overflowY='scroll'
-              h='100vh'
-              sx={{
-                '&::-webkit-scrollbar': {
-                  display: 'none',
-                },
-              }}
-            >
-              {isLoading ? (
-                <div>데이터 로딩 중...</div>
-              ) : filteredMainData && filteredMainData.length > 0 ? (
-                filteredMainData.map((item, index) => (
-                  <ArtworkList
-                    key={item.id}
-                    data={{
-                      backgroundImg: item.mainImg ? item.mainImg : '',
-                      title: item.name ? item.name : '',
-                      client: item.client ? item.client : '',
-                      overview: item.overView,
-                      link: item.link,
-                    }}
-                    count={filteredMainData.length}
-                    scrollToSection={scrollToSection}
-                    elementHeight={elementHeight}
-                    index={index}
-                    ref={(element) => (sectionsRef.current[index] = element as HTMLElement)}
-                  />
-                ))
-              ) : (
-                <ArtworkList
-                  key={'default'}
-                  data={{
-                    backgroundImg: defaultMainImg,
-                    title: '',
-                    client: '',
-                    overview: '😊 데이터가 존재하지 않습니다.',
-                  }}
-                  count={filteredMainData.length}
-                  scrollToSection={scrollToSection}
-                  elementHeight={elementHeight}
-                  index={0}
-                  ref={(element) => (sectionsRef.current[0] = element as HTMLElement)}
-                />
-              )}
-            </Box>
-          </ArtworkSection>
-          <OutroSection>
-            <Outro />
-            <Footer />
-          </OutroSection>
-        </ChakraProvider>
-      </div>
-    </>
+    // <>
+    //   <style>{`
+    //     body, html {
+    //       overflow: hidden;
+    //     }
+    //   `}</style>
+    //   <div style={{ overflowY: 'scroll', height: '100vh', scrollSnapType: 'y mandatory' }}>
+    //     <ChakraProvider>
+    //       <TopSection>
+    //         {filteredTopData && filteredTopData.length > 0 ? (
+    //           filteredTopData.map((i, index) => <Top key={index} backgroundImg={i.mainImg} />)
+    //         ) : (
+    //           <Top backgroundImg={defaultTopImg} />
+    //         )}
+    //       </TopSection>
+    //       <IntroSection>
+    //         <Intro />
+    //       </IntroSection>
+    //       <ArtworkSection>
+    //         <Box
+    //           scrollSnapType='y mandatory'
+    //           overflowY='scroll'
+    //           h='100vh'
+    //           sx={{
+    //             '&::-webkit-scrollbar': {
+    //               display: 'none',
+    //             },
+    //           }}
+    //         >
+    //           {isLoading ? (
+    //             <div>데이터 로딩 중...</div>
+    //           ) : filteredMainData && filteredMainData.length > 0 ? (
+    //             filteredMainData.map((item, index) => (
+    //               <ArtworkList
+    //                 key={item.id}
+    //                 data={{
+    //                   backgroundImg: item.mainImg ? item.mainImg : '',
+    //                   title: item.name ? item.name : '',
+    //                   client: item.client ? item.client : '',
+    //                   overview: item.overView,
+    //                   link: item.link,
+    //                 }}
+    //                 count={filteredMainData.length}
+    //                 scrollToSection={scrollToSection}
+    //                 elementHeight={elementHeight}
+    //                 index={index}
+    //                 ref={(element) => (sectionsRef.current[index] = element as HTMLElement)}
+    //               />
+    //             ))
+    //           ) : (
+    //             <ArtworkList
+    //               key={'default'}
+    //               data={{
+    //                 backgroundImg: defaultMainImg,
+    //                 title: '',
+    //                 client: '',
+    //                 overview: '😊 데이터가 존재하지 않습니다.',
+    //               }}
+    //               count={filteredMainData.length}
+    //               scrollToSection={scrollToSection}
+    //               elementHeight={elementHeight}
+    //               index={0}
+    //               ref={(element) => (sectionsRef.current[0] = element as HTMLElement)}
+    //             />
+    //           )}
+    //         </Box>
+    //       </ArtworkSection>
+    //       <OutroSection>
+    //         <Outro />
+    //         <Footer />
+    //       </OutroSection>
+    //     </ChakraProvider>
+    //   </div>
+    // </>
+    <>안녕</>
   );
 };
 
