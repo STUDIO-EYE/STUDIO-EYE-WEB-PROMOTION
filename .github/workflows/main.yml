@@ -29,7 +29,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
-        key: ~/.ssh/id_ed25519
+        key: ~/.ssh/id_ed25519  # 직접 생성한 SSH 키 파일 사용
         port: 22
         script: |
           cd ~/STUDIO-EYE-WEB-PROMOTION
