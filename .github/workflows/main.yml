@@ -15,21 +15,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Set up SSH key
-    - name: Set up SSH key
+    # 2. Set up PEM key for SSH
+    - name: Set up PEM key for SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
+        echo "${{ secrets.EC2_PEM_KEY }}" > ~/.ssh/ec2_key.pem
+        chmod 600 ~/.ssh/ec2_key.pem
         ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-    # 3. Execute deploy script on EC2
+    # 3. Execute deploy script on EC2 using PEM key
     - name: Execute deploy script on EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
-        key: ~/.ssh/id_ed25519  # 직접 생성한 SSH 키 파일 사용
+        key: ~/.ssh/ec2_key.pem  # PEM 키 파일을 직접 사용
         port: 22
         script: |
           cd ~/STUDIO-EYE-WEB-PROMOTION
