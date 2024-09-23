@@ -20,7 +20,7 @@ jobs:
         npm run build  # 빌드 과정은 GitHub Actions에서 실행
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: build
         path: build  # 빌드된 파일을 아티팩트로 업로드
