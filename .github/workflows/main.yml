@@ -54,7 +54,14 @@ jobs:
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
 
-    # 4. Deploy to EC2 via SCP
+    # 4. Pull the latest code on the server
+    - name: Update the code on EC2
+      run: |
+        ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_HOST }} "cd /home/ubuntu/STUDIO-EYE-WEB-PROMOTION && git pull origin main"
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+
+    # 5. Deploy to EC2 via SCP
     - name: Deploy to EC2 via SCP
       run: |
         scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no -r build/ ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
