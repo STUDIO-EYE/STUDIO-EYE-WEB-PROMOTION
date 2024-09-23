@@ -3,25 +3,47 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시될 때 트리거
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Execute deploy script on EC2
-      uses: appleboy/ssh-action@master
+    # 2. Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    # 3. Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # 4. Build project
+    - name: Build project
+      run: |
+        CI=false npm run build
+
+    # 5. Copy files via scp
+    - name: Copy files via scp
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        script: |
-          cd ~/STUDIO-EYE-WEB-PROMOTION
-          git pull origin main
-          sudo systemctl restart nginx
+        source: "build/*"
+        target: "/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build"  # Nginx의 루트 디렉토리
+
+    # 6. Restart Nginx
+    - name: Restart Nginx
+      run: |
+        echo "${{ secrets.SERVER_SSH_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+        sudo systemctl restart nginx
+        EOF
