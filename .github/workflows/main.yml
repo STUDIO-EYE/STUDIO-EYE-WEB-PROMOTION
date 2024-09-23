@@ -28,7 +28,6 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
     - name: Checkout code
@@ -41,7 +40,7 @@ jobs:
 
     - name: Deploy to EC2 via SCP
       run: |
-        scp -r build/ ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+        scp -o StrictHostKeyChecking=no -r build/ ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
