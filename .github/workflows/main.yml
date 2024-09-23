@@ -11,25 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Set up PEM key for SSH
-    - name: Set up PEM key for SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_PEM_KEY }}" > ~/.ssh/ec2_key.pem
-        chmod 600 ~/.ssh/ec2_key.pem
-        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-
-    # 3. Execute deploy script on EC2 using PEM key
     - name: Execute deploy script on EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
-        key: ~/.ssh/ec2_key.pem  # PEM 키 파일을 직접 사용
+        key: ${{ secrets.SERVER_SSH_KEY }}
         port: 22
         script: |
           cd ~/STUDIO-EYE-WEB-PROMOTION
