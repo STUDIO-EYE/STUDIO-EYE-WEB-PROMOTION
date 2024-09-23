@@ -1,4 +1,5 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
+import { IRecruitmentList } from '@/types/PromotionAdmin/recruitment';
 import axios from 'axios';
 
 export const postRecruitment = async (recruitmentData: { title: string; content: string }) => {
@@ -16,9 +17,10 @@ export const postRecruitment = async (recruitmentData: { title: string; content:
   }
 };
 
-export const getAllRecruitmentData = async () => {
+export const getAllRecruitmentData = async (page: number, size: number): Promise<IRecruitmentList> => {
   try {
-    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment`);
+    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment?page=${page - 1}&size=${size}`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.log('[❌ Error fetching RecruitmentData]', error);
@@ -26,10 +28,21 @@ export const getAllRecruitmentData = async () => {
   }
 };
 
+// export const getRecruitmentList = async () => {
+//   try {
+//     const response = await axios.get('http://www.studioeye-promotion.kro.kr:8080/api/recruitment?page=0&size=10');
+//     console.log(response.data.data.content);
+//     return response.data.data;
+//   } catch (error) {
+//     console.log('[❌ Error fetching RecruitmentData]', error);
+//     throw error;
+//   }
+// };
+
 export const getRecruitmentData = async (id: number) => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment/${id}`);
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.log(`[❌ Error fetching RecruitmentData for id: ${id}]`, error);
     throw error;

@@ -1,7 +1,8 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { IRecruitmentList, IRecruitment } from '@/types/PromotionAdmin/recruitment';
+import { IContent, IRecruitmentList, IRecruitment } from '@/types/PromotionAdmin/recruitment';
 import {
   getAllRecruitmentData,
   getRecruitmentData,
@@ -9,7 +10,6 @@ import {
   deleteRecruitmentData,
 } from '../../../apis/PromotionAdmin/recruitment';
 import { useState, useEffect } from 'react';
-import { theme } from '@/styles/theme';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import Pagination from '@/components/Pagination/Pagination';
@@ -25,103 +25,99 @@ function RecruitmentManagePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
   const isEditing = useRecoilValue(dataUpdateState);
   const navigator = useNavigate();
-  const { data, isLoading, refetch, error } = useQuery<IRecruitmentList, Error>(
-    ['recruitment', 'list'], // 'faq', 'id' 대신 적절한 queryKey를 사용
-    getAllRecruitmentData,
-  );
-  const [slicedFAQ, setSlicedFAQ] = useState<IFAQ[]>([]);
-  const [currentFAQ, setCurrentFAQ] = useState<IFAQ | null>();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [FAQsPerPage] = useState(10);
+  const [RecruitmentsPerPage] = useState(10);
+  const { data, isLoading, error, refetch } = useQuery<IRecruitmentList, Error>(
+    ['recruitmentList', currentPage],
+    () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
+    { keepPreviousData: true },
+  );
+  const [slicedRecruitment, setSlicedRecruitment] = useState<IContent[]>([]);
+  const [currentRecruitment, setCurrentRecruitment] = useState<IRecruitment | null>();
   const [isSelected, setIsSelected] = useState(false);
-  const [questionLength, setQuestionLength] = useState<number>(0);
-  const [answerLength, setAnswerLength] = useState<number>(0);
-  const maxQuestionLength = 200;
-  const maxAnswerLength = 1500;
+  const [titleLength, setTitleLength] = useState<number>(0);
+  const [contentLength, setContentLength] = useState<number>(0);
+  const maxTitleLength = 200;
+  const maxContentLength = 1500;
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
-  useEffect(() => {
-    if (data) {
-      const indexOfLast = currentPage * FAQsPerPage;
-      const indexOfFirst = indexOfLast - FAQsPerPage;
-      const sliced = data.slice(indexOfFirst, indexOfLast);
-      setSlicedFAQ(sliced);
+  // useEffect(() => {
+  //   if (data) {
+  //     const indexOfLast = currentPage * RecruitmentsPerPage;
+  //     const indexOfFirst = indexOfLast - RecruitmentsPerPage;
+  //     const sliced = data.content.slice(indexOfFirst, indexOfLast);
+  //     setSlicedRecruitment(sliced);
 
-      if (sliced.length === 0 && currentPage > 1) {
-        setCurrentPage((prevPage) => prevPage - 1);
-        navigator(`?page=${currentPage - 1}`);
-      }
+  //     if (sliced.length === 0 && currentPage > 1) {
+  //       setCurrentPage((prevPage) => prevPage - 1);
+  //       navigator(`?page=${currentPage - 1}`);
+  //     }
 
-      if (currentPage >= 1 && sliced.length > 0) {
-        setCurrentFAQ(sliced[0]);
-        setIsSelected(true);
-        setQuestionLength(sliced[0].question.length);
-        setAnswerLength(sliced[0].answer.length);
-      }
-    }
-  }, [data, currentPage, FAQsPerPage, navigator]);
+  //     if (currentPage >= 1 && sliced.length > 0) {
+  //       setCurrentRecruitment(sliced[0]);
+  //       setIsSelected(true);
+  //       setTitleLength(sliced[0].title.length);
+  //     }
+  //   }
+  // }, [data, currentPage, RecruitmentsPerPage, navigator]);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<IFAQ>({
+  } = useForm<IRecruitment>({
     defaultValues: {
-      question: currentFAQ?.question,
-      answer: currentFAQ?.answer,
+      title: currentRecruitment?.title,
+      content: currentRecruitment?.content,
     },
   });
 
   useEffect(() => {
-    if (currentFAQ) {
-      setValue('question', currentFAQ.question);
-      setValue('answer', currentFAQ.answer);
-      setQuestionLength(currentFAQ.question.length);
-      setAnswerLength(currentFAQ.answer.length);
+    if (currentRecruitment) {
+      setValue('title', currentRecruitment.title);
+      setValue('content', currentRecruitment.content);
+      setTitleLength(currentRecruitment.title.length);
+      setContentLength(currentRecruitment.content.length);
     }
-  }, [currentFAQ, setValue]);
+  }, [currentRecruitment, setValue]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      axios
-        .delete(`${PROMOTION_BASIC_PATH}/api/faq/${id}`)
-        .then((response) => {
-          alert('FAQ가 삭제되었습니다.');
-          console.log(response);
-          refetch();
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 삭제 중 오류가 발생했습니다.');
-        });
+      try {
+        const response = await deleteRecruitmentData(id); // deleteRecruitmentData 함수 호출
+        alert('FAQ가 삭제되었습니다.');
+        console.log(response);
+        refetch(); // 데이터 새로고침
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 삭제 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  const onValid = (data: IFAQ) => {
-    const formData = {
-      id: currentFAQ?.id,
-      question: currentFAQ?.question,
-      answer: currentFAQ?.answer,
-      visibility: currentFAQ?.visibility,
-    };
-    if (!(data.question === '' || data.answer === '') && window.confirm('수정하시겠습니까?')) {
-      axios
-        .put(`${PROMOTION_BASIC_PATH}/api/faq`, formData)
-        .then((response) => {
-          alert('FAQ가 수정되었습니다.');
-          console.log(response);
-          setIsEditing(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 수정 중 오류가 발생했습니다.');
-        });
-    }
-  };
+  // const onValid = async (data: IRecruitment) => {
+  //   const formData = {
+  //     id: currentRecruitment?.id,
+  //     title: currentRecruitment?.title,
+  //     content: currentRecruitment?.content,
+  //   };
+
+  //   if (!(data.title === '' || data.content === '') && window.confirm('수정하시겠습니까?')) {
+  //     try {
+  //       const response = await updateRecruitmentData(formData); // updateRecruitmentData 함수 호출
+  //       alert('FAQ가 수정되었습니다.');
+  //       console.log(response);
+  //       setIsEditing(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //       alert('FAQ 수정 중 오류가 발생했습니다.');
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (isEditing) {
@@ -143,41 +139,37 @@ function RecruitmentManagePage() {
     if (/^\s/.test(value.charAt(0))) {
       return;
     }
-    if (name === 'question') {
-      setQuestionLength(value.length);
+    if (name === 'title') {
+      setTitleLength(value.length);
     }
     if (name === 'answer') {
-      setAnswerLength(value.length);
+      setContentLength(value.length);
     }
-    setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, [name]: value } : null));
+    setCurrentRecruitment((prevFAQ) => (prevFAQ ? { ...prevFAQ, [name]: value } : null));
   };
 
-  const handleSelectFAQ = (faq: IFAQ) => {
-    if (isEditing && !(currentFAQ?.id === faq.id)) {
-      handleConfirmNavigation(faq);
-    } else if (isEditing && currentFAQ?.id === faq.id) {
-      return;
-    } else {
-      setCurrentFAQ(faq);
-      setIsSelected(true);
-      setQuestionLength(faq.question.length);
-      setAnswerLength(faq.answer.length);
+  const fetchRecruitmentData = async (id: number) => {
+    try {
+      const data = await getRecruitmentData(id);
+      setCurrentRecruitment(data); // 선택된 공고 데이터 저장
+    } catch (error) {
+      console.log('Error fetching recruitment data:', error);
     }
   };
 
-  const handleConfirmNavigation = (faq: IFAQ) => {
-    if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
-      setIsEditing(false);
-      setCurrentFAQ(faq);
-      setIsSelected(true);
-      setQuestionLength(faq.question.length);
-      setAnswerLength(faq.answer.length);
-    } else {
-      setIsEditing(true);
-    }
-  };
+  // const handleConfirmNavigation = (recruitment: IRecruitment) => {
+  //   if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
+  //     setIsEditing(false);
+  //     setCurrentRecruitment(recruitment);
+  //     setIsSelected(true);
+  //     setTitleLength(recruitment.title.length);
+  //     setContentLength(recruitment.content.length);
+  //   } else {
+  //     setIsEditing(true);
+  //   }
+  // };
 
-  const handleAddNewFAQ = () => {
+  const handleAddNewRecruitment = () => {
     if (isEditing) {
       if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
         setIsEditing(false);
@@ -197,42 +189,41 @@ function RecruitmentManagePage() {
           <TitleWrapper>
             <Title>
               {DATAEDIT_TITLES_COMPONENTS.FAQ}
-              FAQ 게시글 관리
-              <Info>등록된 게시글 {data?.length}건 </Info>
+              채용공고 관리
+              <Info>등록된 게시글 {data?.totalElements}건 </Info>
             </Title>
-            <Button onClick={handleAddNewFAQ}>
+            <Button onClick={handleAddNewRecruitment}>
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
               </div>
-              Add New FAQ
+              Add New Recruitment
             </Button>
           </TitleWrapper>
           <ListWrapper>
-            {slicedFAQ?.map((faq) => (
-              <FAQList key={faq.id}>
-                <DeleteIcon width={15} height={15} onClick={() => handleDelete(faq.id)} />
+            {slicedRecruitment?.map((recruitment) => (
+              <FAQList key={recruitment.id}>
+                <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id)} />
                 <FAQItem
-                  key={faq.id}
-                  isSelected={currentFAQ?.id === faq.id && isSelected}
+                  key={recruitment.id}
+                  isSelected={currentRecruitment?.id === recruitment.id && isSelected}
                   onClick={() => {
-                    handleSelectFAQ(faq);
+                    fetchRecruitmentData(recruitment.id);
                   }}
                 >
-                  <FAQQuestion>{faq.question}</FAQQuestion>
-                  {faq.visibility ? <PublicIcon /> : <PrivateIcon />}
+                  <FAQQuestion>{recruitment.title}</FAQQuestion>
                 </FAQItem>
               </FAQList>
             ))}
           </ListWrapper>
           {data && (
             <PaginationWrapper>
-              <Pagination postsPerPage={FAQsPerPage} totalPosts={data.length} paginate={paginate} />
+              <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalPages} paginate={paginate} />
             </PaginationWrapper>
           )}
         </ContentBox>
       </LeftContentWrapper>
 
-      <RightContentWrapper>
+      {/* <RightContentWrapper>
         <form onSubmit={handleSubmit(onValid)}>
           <ContentBox>
             <TitleWrapper>
@@ -240,27 +231,27 @@ function RecruitmentManagePage() {
             </TitleWrapper>
             <InputWrapper>
               <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Question</p>
+                <p>Title</p>
                 <div
                   style={{
                     fontSize: 12,
                     paddingTop: 10,
                   }}
                 >
-                  {questionLength}/{maxQuestionLength}
+                  {titleLength}/{maxTitleLength}
                 </div>
               </InputTitle>
               <input
-                {...register('question', {
-                  required: 'Question을 입력해주세요. (200자 내로 작성해 주세요.)',
+                {...register('title', {
+                  required: 'Title을 입력해주세요. (200자 내로 작성해 주세요.)',
                 })}
-                name='question'
-                value={currentFAQ?.question || ''}
+                name='title'
+                value={currentRecruitment?.title || ''}
                 onChange={handleChange}
                 maxLength={200}
-                placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
+                placeholder='Title 입력해주세요. (200자 내로 작성해 주세요.)'
               />
-              {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
+              {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
               <InputTitle style={{ justifyContent: 'space-between' }}>
                 <p>Answer</p>
                 <div
@@ -269,51 +260,27 @@ function RecruitmentManagePage() {
                     paddingTop: 10,
                   }}
                 >
-                  {answerLength}/{maxAnswerLength}
+                  {contentLength}/{maxContentLength}
                 </div>
               </InputTitle>
               <textarea
-                {...register('answer', {
-                  required: 'Answer를 입력해주세요. (1500자 내로 작성해 주세요.)',
+                {...register('content', {
+                  required: 'Content 입력해주세요. (1500자 내로 작성해 주세요.)',
                 })}
-                name='answer'
-                value={currentFAQ?.answer || ''}
+                name='content'
+                value={currentRecruitment?.content || ''}
                 onChange={handleChange}
                 maxLength={1500}
-                placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
+                placeholder='Content 입력해주세요. (1500자 내로 작성해 주세요.)'
               />
-              {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
+              {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
             </InputWrapper>
             <RowWrapper>
-              {currentFAQ && (
-                <VisibilityWrapper>
-                  <CheckBox
-                    onClick={() => {
-                      setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: true } : null));
-                    }}
-                    className='public'
-                    selected={currentFAQ?.visibility}
-                  >
-                    공개
-                  </CheckBox>
-                  <CheckBox
-                    onClick={() => {
-                      setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: false } : null));
-                    }}
-                    className='private'
-                    selected={!currentFAQ?.visibility}
-                  >
-                    비공개
-                  </CheckBox>
-                </VisibilityWrapper>
-              )}
-              <ButtonWrapper>
-                <ModifyButton>수정하기</ModifyButton>
-              </ButtonWrapper>
+              <ModifyButton>수정하기</ModifyButton>
             </RowWrapper>
           </ContentBox>
         </form>
-      </RightContentWrapper>
+      </RightContentWrapper> */}
     </Wrapper>
   );
 }
@@ -480,29 +447,6 @@ const RowWrapper = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
-`;
-
-const VisibilityWrapper = styled.div`
-  display: flex;
-  margin-top: 20px;
-`;
-
-const CheckBox = styled.div<{ selected: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-  width: 6vw;
-  height: 40px;
-  font-size: 15px;
-  font-family: ${(props) => props.theme.font.medium};
-  box-shadow: 1px 1px 4px 0.1px #c6c6c6;
-  background-color: ${(props) => (props.selected ? theme.color.yellow.light : 'none')};
-  cursor: pointer;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
   margin-top: 20px;
 `;
 
