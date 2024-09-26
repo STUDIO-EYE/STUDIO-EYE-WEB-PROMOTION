@@ -5,11 +5,4 @@ export interface INEWS {
     pubDate: string;
     content: string;    
     visibility: boolean;
-    createdAt: string;
-    updatedAt: string;
-    newsFiles:[
-      id:number,
-      fileName:string,
-      filePath:string
-    ]
   }

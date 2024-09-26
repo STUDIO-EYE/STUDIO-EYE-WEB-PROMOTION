@@ -9,7 +9,7 @@ import PAFaqPage from './pages/PromotionAdmin/FaqPage/index';
 import PASettingPage from './pages/PromotionAdmin/SettingPage/index';
 import PANewsPage from './pages/PromotionAdmin/NewsPage/index';
 import PANewsWritePage from './pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage';
-import PANewsViewPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewViewPage';
+import PANewsViewPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewsViewPage';
 import PALayout from './components/PromotionAdmin/Layout/Layout';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';

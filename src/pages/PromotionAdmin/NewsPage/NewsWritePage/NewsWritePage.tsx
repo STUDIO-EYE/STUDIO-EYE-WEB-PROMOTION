@@ -2,15 +2,12 @@ import { dataUpdateState } from '@/recoil/atoms';
 import { INEWS } from '@/types/PromotionAdmin/news';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ReactQuill, {Quill} from 'react-quill';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
-import ImageResize from 'quill-image-resize';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { postNews } from '@/apis/PromotionAdmin/news';
-Quill.register('modules/ImageResize', ImageResize);
 
 const NewsWritePage = () => {
   const navigator = useNavigate();
@@ -20,7 +17,7 @@ const NewsWritePage = () => {
 
   const setIsEditing = useSetRecoilState(dataUpdateState);
   // const [editorHtml, setEditorHtml] = useState("");
-  const {register,handleSubmit,formState: { errors },getValues,setValue,watch,
+  const {register,getValues,setValue,watch,
   }= useForm<INEWS>({
     defaultValues: {
       title: '',
@@ -49,10 +46,6 @@ const NewsWritePage = () => {
   const handleCancelWriting=()=>{
     //작성중인거 취소하겠냐고 물어보는 로직 필요
     navigator(listPath);
-  }
-
-  const setEditorHtml=(content:string)=>{
-    setValue('content', content);
   }
 
   const sendNews = async () => {
@@ -97,22 +90,20 @@ const NewsWritePage = () => {
         <SendButton onClick={handleCancelWriting}>취소</SendButton></div>
     </HeaderWrapper>
     <InputWrapper>
-          <InputTitle style={{ justifyContent: 'space-between' }}>
+          <InputTitle>
             <p>제목</p>
-            <div style={{fontSize: 12,paddingTop: 10,}}></div>
+            <input
+            {...register('title')}
+              name='title'
+              value={putData.title}
+              onChange={handleChange}
+              placeholder='News 제목 입력'
+              style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}
+            />
           </InputTitle>
-          <input
-          {...register('title')}
-            name='title'
-            value={putData.title}
-            onChange={handleChange}
-            placeholder='News 제목 입력'
-            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}
-          />
 
-          <div style={{display:"flex",flexDirection:"row"}}>
-          <InputTitle style={{marginTop:"10px", marginBottom:"10px"}}>
-            <p style={{marginTop:"auto",marginBottom:"auto",fontSize: 16, padding:10,whiteSpace:"nowrap"}}>출처/작성자</p>
+          <InputTitle>
+            <p>출처/작성자</p>
             <input
             {...register('source')}
             name='source'
@@ -121,7 +112,11 @@ const NewsWritePage = () => {
             placeholder='출처 혹은 작성자 입력'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}
             />
-            <p style={{marginTop:"auto",marginBottom:"auto",fontSize: 16, padding:10,whiteSpace:"nowrap"}}>원문 날짜</p>
+          </InputTitle>
+
+          <div style={{display:"flex",flexDirection:"row"}}>
+          <InputTitle>
+            <p style={{marginTop:"auto",marginBottom:"auto"}}>원문 날짜</p>
             <input
             {...register('pubDate')}
             name='pubDate'
@@ -130,7 +125,7 @@ const NewsWritePage = () => {
             placeholder='기사 원문 날짜 입력'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}
             />
-            <p style={{marginTop:"auto",marginBottom:"auto",marginLeft:"10px",fontSize: 16, padding:10,whiteSpace:"nowrap"}}>공개 여부</p>
+            <p style={{marginTop:"auto",marginBottom:"auto",marginLeft:"10px",fontSize: 16, padding:10}}>공개 여부</p>
             <VisibilityWrapper>
               <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
                 공개
@@ -140,33 +135,19 @@ const NewsWritePage = () => {
               </CheckBox>
             </VisibilityWrapper>
           </InputTitle>
-          
           </div>
-          
-          <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>내용</p>
-            <div style={{fontSize: 12,paddingTop: 10,}}></div>
+
+          <InputTitle>
+            <p>링크</p>
+            <input
+            {...register('content')}
+            name='content'
+            value={putData.content}
+            onChange={handleChange}
+            placeholder='기사 링크 입력'
+            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}
+            />
           </InputTitle>
-          <CustomQuillEditor
-            // value={editorHtml}
-            value={getValues('content')}
-            onChange={(html)=>{
-              setEditorHtml(html);
-              setIsEditing(true);
-            }}
-            modules={{
-              toolbar: [
-                ["bold", "italic", "underline", "strike"],
-                ['image', 'video'],
-                [{color:[]},{background:[]}],
-                [{align:[]}, { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-                [{ size: ["small", false, "large", "huge"] }],
-              ],
-              ImageResize: {
-                parchment: Quill.import('parchment')
-              }
-            }}
-          />
         </InputWrapper>
     </Container>
   );
@@ -177,7 +158,7 @@ export default NewsWritePage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 600px;
+  width: 100%;
 `;
 
 const HeaderWrapper = styled.div`
@@ -232,11 +213,18 @@ const InputWrapper = styled.div`
 const InputTitle = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 40px;
   width: 100%;
+  white-space:nowrap;
+  padding: 10px;
   svg {
     cursor: pointer;
     margin-right: 10px;
+  }
+
+  p{
+    margin-right:10px;
   }
 `;
 
@@ -262,54 +250,4 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
   margin-left: 10px;
   font-size: 13px;
-`;
-
-const CustomQuillEditor = styled(ReactQuill)`
-  resize: none;
-  background-color:white;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  border-radius: 10px;
-
-  .ql-container {
-    border: 1px solid #E4E4E7;
-    border-radius: 0 0 10px 10px;
-  }
-
-  .ql-editor {
-    height: 80vh;
-    overflow: auto;
-  }
-  .ql-editor img {
-    max-width: 100%; /* 이미지가 컨테이너를 넘지 않도록 설정 */
-    cursor: nwse-resize; /* 크기 조정 시 커서 변경 */
-    resize: both; /* 양 방향 리사이징 허용 */
-  }
-
-  .ql-toolbar {
-    background-color: rgba(0, 0, 0, 0.03);
-    border: 1px solid #E4E4E7;
-    border-radius: 10px 10px 0 0;
-  }
-
-  .ql-editor .ql-size-huge {
-    font-size: 1.5em;
-  }
-  .ql-editor .ql-size-large {
-    font-size: 1.2em;
-  }
-  .ql-editor .ql-size-small {
-    font-size: 0.7em;
-  }
-  .ql-bold {
-    font-weight: 800;
-  }
-  .ql-italic {
-    font-style: italic;
-  }
-  .ql-underline {
-    text-decoration: underline;
-  }
-  .ql-strike {
-    text-decoration: overline;
-}
 `;
