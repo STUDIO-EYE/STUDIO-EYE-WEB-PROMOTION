@@ -1,18 +1,16 @@
 import { INEWS } from '@/types/PromotionAdmin/news';
-import { locale } from 'dayjs';
 import React from 'react';
-import { NavigateFunction } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NewsItem = ({data}:{data:INEWS}) => {
 
-    const formatDate = (date: Date): string => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        //getMonth하면 0부터 11을 가져오므로 +1, 문자열의 길이가 2보다 짧으면 앞부터 0 추가
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      };
+    // const formatDate = (date: Date): string => {
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth() + 1).padStart(2, '0');
+    //     //getMonth하면 0부터 11을 가져오므로 +1, 문자열의 길이가 2보다 짧으면 앞부터 0 추가
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}`;
+    //   };
 
     return (
     <Container>

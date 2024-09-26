@@ -5,6 +5,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { INEWS } from '@/types/PromotionAdmin/news';
 import { useQuery } from 'react-query';
 import { getNews } from '@/apis/PromotionAdmin/news';
+import GreetingComponent from '@/tests/forTest/GreetingComponent';
 
 const NewsList = ({handler}:{handler:(id:number)=>void}) => {
   const { data, isLoading, error, refetch } = useQuery<INEWS[], Error>('newsList', getNews);
@@ -24,6 +25,7 @@ const NewsList = ({handler}:{handler:(id:number)=>void}) => {
         <NewsItem data={i}/>
         </div>
     ))}
+    <GreetingComponent/>
     </div>
   );
 };
