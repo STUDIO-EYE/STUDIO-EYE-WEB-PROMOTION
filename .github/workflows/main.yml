@@ -41,7 +41,7 @@ jobs:
       # 6. Transfer build files to EC2 via SCP
       - name: Transfer build files to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build/* ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build/
 
       # 7. Clean up SSH key file (for security purposes)
       - name: Clean up SSH key
