@@ -28,6 +28,9 @@ jobs:
       # 4. Build the project
       - name: Build project
         run: CI=false npm run build  # 빌드 과정에서 환경 변수를 사용하여 빌드
+        env:
+          REACT_APP_GATEWAY_URL: ${{ secrets.REACT_APP_GATEWAY_URL }}
+          REACT_APP_PROMOTION_URL: ${{ secrets.REACT_APP_PROMOTION_URL }}
 
       # 5. Create SSH key file from GitHub Secrets (Private key)
       - name: Create SSH key file
