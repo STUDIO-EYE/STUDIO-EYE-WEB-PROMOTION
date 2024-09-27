@@ -1,9 +1,10 @@
-name: Deploy to ec2 server
+name: Deploy to EC2 server
 
 on:
   push:
     branches:
-      - develop
+      - develop  # develop 브랜치에 푸시될 때마다 실행
+
 jobs:
   build:
     name: Build and Deploy
@@ -16,14 +17,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.19.1' # 서버에서 사용 중인 Node.js 버전
+          node-version: '18.19.1'  # 서버에서 사용 중인 Node.js 버전
 
       - name: Install dependencies
         run: npm install
 
       - name: Build project
-        run: CI=false npm run build
+        run: CI=false npm run build  # 빌드 과정에서 환경 변수를 사용하여 빌드
 
+      # 빌드 폴더를 EC2 서버에 전송
+      - name: Transfer build files to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+
+      # EC2 서버에서 배포 스크립트를 실행
       - name: Execute deploy script on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -33,7 +40,6 @@ jobs:
           port: 22
           script: |
             cd ~/STUDIO-EYE-WEB-PROMOTION
-            git pull origin develop  
-            npm install
-            npm run build  
-            sudo systemctl restart nginx
+            git pull origin develop  # 소스 코드 최신 상태로 유지
+            npm install  # 필요한 패키지 설치
+            sudo systemctl restart nginx  # NGINX 재시작
