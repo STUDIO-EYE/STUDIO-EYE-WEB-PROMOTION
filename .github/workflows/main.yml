@@ -11,35 +11,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.19.1'  # 서버에서 사용 중인 Node.js 버전
 
+      # 3. Install the dependencies
       - name: Install dependencies
         run: npm install
 
+      # 4. Build the project
       - name: Build project
         run: CI=false npm run build  # 빌드 과정에서 환경 변수를 사용하여 빌드
 
-      # 빌드 폴더를 EC2 서버에 전송
+      # 5. Create SSH key file from GitHub Secrets (Private key)
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" > id_rsa
+          chmod 600 id_rsa
+
+      # 6. Transfer build files to EC2 via SCP
       - name: Transfer build files to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
 
-      # EC2 서버에서 배포 스크립트를 실행
+      # 7. Clean up SSH key file (for security purposes)
+      - name: Clean up SSH key
+        run: rm id_rsa  # SSH 키를 삭제하여 보안 유지
+
+      # 8. Execute commands on EC2 to pull the latest code and restart NGINX
       - name: Execute deploy script on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          username: ubuntu
+          key: ${{ secrets.SERVER_SSH_KEY }}  # GitHub Secrets에서 비공개 키 사용
           port: 22
           script: |
             cd ~/STUDIO-EYE-WEB-PROMOTION
             git pull origin develop  # 소스 코드 최신 상태로 유지
-            npm install  # 필요한 패키지 설치
             sudo systemctl restart nginx  # NGINX 재시작
