@@ -8,6 +8,7 @@ import { theme } from '@/styles/theme';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { postNews } from '@/apis/PromotionAdmin/news';
+import { MSG } from '@/constants/messages';
 
 const NewsWritePage = () => {
   const navigator = useNavigate();
@@ -23,7 +24,7 @@ const NewsWritePage = () => {
       title: '',
       source: '',
       pubDate: '',
-      content: '',
+      url: '',
       visibility: true,
     },
   });
@@ -34,7 +35,7 @@ const NewsWritePage = () => {
     title: '',
     source: '',
     pubDate: '',
-    content: '',
+    url: '',
     visibility: true,
   });
 
@@ -44,30 +45,32 @@ const NewsWritePage = () => {
     navigator(listPath);
   }
   const handleCancelWriting=()=>{
-    //작성중인거 취소하겠냐고 물어보는 로직 필요
-    navigator(listPath);
+    if(window.confirm(MSG.CONFIRM_MSG.CANCLE)){
+      navigator(listPath);
+    }
   }
 
   const sendNews = async () => {
-    const formData = new FormData();
+    // const formData = new FormData();
     const requestData = {
       title: getValues('title'),
       source: getValues('source'),
       pubDate: getValues('pubDate'),
-      content: getValues('content'),
+      url: getValues('url'),
       visibility: getValues('visibility'),
     };
-    formData.append('dto', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+    // formData.append('dto', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
     try {
-      const response = await postNews(formData);
-      if (response.code === 400 && response.data === null && response.message) {
+      const response = await postNews(requestData);
+      // if (response.code === 400 && response.data === null && response.message) {
         // setErrorMessage(response.message);
+        alert(MSG.ALERT_MSG.POST)
+        setIsEditing(false)
         return;
-      }
+      // }
       // alert(MSG.ALERT_MSG.SAVE);
-      console.log(response.data.id);
     } catch (error: any) {
-      // alert(MSG.CONFIRM_MSG.FAILED);
+      alert(MSG.CONFIRM_MSG.FAILED);
     }
   };
 
@@ -140,9 +143,9 @@ const NewsWritePage = () => {
           <InputTitle>
             <p>링크</p>
             <input
-            {...register('content')}
-            name='content'
-            value={putData.content}
+            {...register('url')}
+            name='url'
+            value={putData.url}
             onChange={handleChange}
             placeholder='기사 링크 입력'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}

@@ -3,6 +3,6 @@ export interface INEWS {
     title: string;
     source: string;
     pubDate: string;
-    content: string;    
+    url: string;    
     visibility: boolean;
   }
