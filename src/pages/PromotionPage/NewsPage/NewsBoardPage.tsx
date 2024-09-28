@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { getAllNewsData } from '@/apis/PromotionPage/news';
+import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
+import { GoArrowRight } from "react-icons/go";
 
 interface INewsCardProps {
   id: number;
   title: string;
   source: string;
-  mainImg?: string;
-  content: string;
+  url: string;
   pubDate: string;
-  createdAt: Date;
-  updatedAt: Date;
   onClick?: () => void;
 }
 
@@ -31,13 +30,9 @@ const NewsBoardPage: React.FC = () => {
           id: news.id,
           title: news.title,
           source: news.source,
-          mainImg: news.newsFiles.length > 0 ? news.newsFiles[0].filePath : undefined, // 이미지 경로 설정
-          content: news.content,
           pubDate: news.pubDate,
-          createdAt: news.createdAt,
-          updatedAt: news.updatedAt
+          url: news.url,
         }));
-
         setNewsData(formattedData);
       } catch (error) {
         console.error('news' + error);
@@ -50,45 +45,155 @@ const NewsBoardPage: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleCardClick = (news: INewsCardProps) => {
-    navigate(`/news/${news.id}`, { state: { news } });
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <Container>
-      <Content>
-        <Title>최근 소식</Title>
-        <CardContainer>
-          {newsData.map((news) => (
-            <NewsCard key={news.id} onClick={() => handleCardClick(news)} {...news} />
-          ))}
-        </CardContainer>
-      </Content>
+      <IntroSection>
+        <IntroTitleWrapper>
+          <IntroLine>
+            <IntroNewsWhite>REA</IntroNewsWhite>
+            <IntroNewsMovingContainer>
+              <IntroNewsMovingDAnimated delay="0s">D</IntroNewsMovingDAnimated>
+              <IntroNewsMovingDAnimated delay="0.2s">D</IntroNewsMovingDAnimated>
+              <IntroNewsMovingDAnimated delay="0.4s">D</IntroNewsMovingDAnimated>
+            </IntroNewsMovingContainer>
+            <IntroNewsWhite>THE NEWS</IntroNewsWhite>
+          </IntroLine>
+
+          <IntroLine>
+            <IntroNewsYellow>AB</IntroNewsYellow>
+            <IntroNewsMovingContainer>
+              <IntroNewsMovingOAnimated delay="0s">O</IntroNewsMovingOAnimated>
+              <IntroNewsMovingOAnimated delay="0.2s">O</IntroNewsMovingOAnimated>
+              <IntroNewsMovingOAnimated delay="0.4s">O</IntroNewsMovingOAnimated>
+            </IntroNewsMovingContainer>
+            <IntroNewsYellowNoMargin>UT STUDIOEYE!</IntroNewsYellowNoMargin>
+          </IntroLine>
+        </IntroTitleWrapper>
+
+        <BackgroundYellowCircle> </BackgroundYellowCircle>
+
+      </IntroSection>
+
+      <NewsSection>
+        <NewsSectionIntro>스튜디오아이 관련 뉴스 보기</NewsSectionIntro>
+        {newsData.map((news) => (
+          <NewsCard key={news.id} onClick={() => { window.open(news.url) }}>
+            <TextWrapper>
+              <Title>{news.title}</Title>
+              <Source>{news.source}  {new Date(news.pubDate).toLocaleDateString()}</Source>
+            </TextWrapper>
+            <ArrowIcon> <GoArrowRight /> </ArrowIcon>
+          </NewsCard>
+        ))}
+      </NewsSection>
     </Container>
   );
 };
 
-const NewsCard: React.FC<INewsCardProps> = ({ title, source, mainImg, content, pubDate, onClick }) => {
-  return (
-    <Card onClick={onClick}>
-      <TextContent>
-        <TitleWrapper>{title}</TitleWrapper>
-        <Client>{source}</Client>
-        <ContentPreview>{content.slice(0, 100)}...</ContentPreview>
-      </TextContent>
-      {mainImg ? (
-        <ImageWrapper>
-          <img src={mainImg} alt={title} />
-        </ImageWrapper>
-      ) : (
-        <TextImage>{content.slice(0, 40)}...</TextImage>
-      )}
-    </Card>
-  );
-};
+const IntroSection = styled.div`
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const IntroTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  margin-bottom: 50px;
+`;
+
+const IntroLine = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const IntroNewsWhite = styled.span`
+  font-family: Pretendard;
+  font-weight: 700;
+  font-size: 96px;
+  color: white;
+`;
+
+const IntroNewsYellow = styled.span`
+  margin-left: 30px;
+  font-family: Pretendard;
+  font-weight: 700;
+  font-size: 96px;
+  color: #ffa900;
+`;
+
+const IntroNewsYellowNoMargin = styled.span`
+  font-family: Pretendard;
+  font-weight: 700;
+  font-size: 96px;
+  color: #ffa900;
+`;
+
+const IntroNewsMovingContainer = styled.span`
+  position: relative;
+  display: inline-block;
+  margin-right: 70px;
+`;
+
+interface IntroNewsMovingProps {
+  delay: string;
+}
+
+const IntroNewsMovingDAnimated = styled.span<IntroNewsMovingProps>`
+  font-family: Pretendard;
+  font-weight: 50;
+  font-size: 96px;
+  color: #ffa900;
+  position: absolute;
+  margin-left: -5px;
+  animation: move-diagonal 0.7s ease-in-out infinite alternate;
+  animation-delay: ${(props) => props.delay}; 
+  
+  @keyframes move-diagonal {
+    0% {
+      transform: translate(-5px, -5px);
+    }
+    100% {
+      transform: translate(5px, 5px);
+    }
+  }
+`;
+
+const IntroNewsMovingOAnimated = styled.span<IntroNewsMovingProps>`
+  font-family: Pretendard;
+  font-weight: 50;
+  font-size: 96px;
+  color: #ffffff;
+  position: absolute;
+  animation: move-horizontal 0.7s ease-in-out infinite alternate;
+  animation-delay: ${(props) => props.delay}; 
+  
+  @keyframes move-horizontal {
+    0% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(5px);
+    }
+  }
+`;
+
+
+const IntroSubtitle = styled.div`
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: white;
+`;
 
 const Container = styled.div`
   font-family: 'Pretendard';
@@ -101,102 +206,83 @@ const Container = styled.div`
   justify-content: flex-start;
 `;
 
-const Content = styled.div`
+const NewsSection = styled.div`
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+`;
+const NewsSectionIntro = styled.h3`
+  font-size: 19px;
+  color: white;
+  margin-bottom: 20px;
   max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
-  padding-top: 5rem;
-  flex: 1;
+`;
+const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: flex-start;
 `;
-
-const Title = styled.h1`
+const Title = styled.h3`
   font-size: 24px;
-  margin-bottom: 20px;
-  font-weight: 700;
+  font-weight: 600;
+  color: white;
+  transition: color 0.3s ease-in-out;
 `;
 
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+const Source = styled.p`
+  font-size: 19px;
+  margin: 8px 0 0 0;
+  display: none;
 `;
 
-const Card = styled.div`
+const PubDate = styled.p`
+  font-size: 19px;
+  color: white;
+  margin: 0;
+  display: none;
+`;
+
+const ArrowIcon = styled.div`
+  font-size: 100px;
+  color: #ffa900;
+  display: none;
+  margin: 8px 0 0 auto;
+  align-self: center;
+`;
+
+const NewsCard = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px 0;
+  margin-bottom: 10px;
+  background-color: black;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
+  justify-content: space-between;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  height: 60px;
 
   &:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
+    height: 90px;
+
+    ${Title} {
+      color: #ffa900;
+    }
+
+    ${Source}, ${PubDate}, ${ArrowIcon} {
+      display: block;
+    }
   }
-`;
-
-const TextContent = styled.div`
-  flex: 1;
-  padding-right: 20px;
-`;
-
-const TitleWrapper = styled.h2`
-  font-size: 1.5rem;
-  font-family: 'Pretendard-bold';
-  color: black;
-  margin-bottom: 10px;
-`;
-
-const Client = styled.p`
-  font-size: 14px;
-  font-family: 'Pretendard';
-  font-weight: 600;
-  color: #777;
-  margin-bottom: 10px;
-`;
-
-const ContentPreview = styled.p`
-  font-size: 16px;
-  font-family: 'Pretendard';
-  font-weight: 500;
-  color: #555;
-`;
-
-// 이미지가 있을 때
-const ImageWrapper = styled.div`
-  width: 150px;
-  height: 150px;
-  flex-shrink: 0;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-`;
-
-// 메인이미지가 없을 때 텍스트로 대체
-const TextImage = styled.div`
-  width: 150px;
-  height: 150px;
-  flex-shrink: 0;
-  background-color: #e0e0e0;
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: left;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: 'Pretendard';
-  font-weight: 500;
-  line-height: 1.2;
 `;
 
 export default NewsBoardPage;
