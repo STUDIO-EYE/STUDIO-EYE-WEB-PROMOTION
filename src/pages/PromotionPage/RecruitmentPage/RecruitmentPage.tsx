@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 interface PostData {
   id: number;
@@ -12,7 +12,7 @@ interface PostData {
 
 const RecruitmentPage = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Fetch recruitment posts
   useEffect(() => {
@@ -28,7 +28,7 @@ const RecruitmentPage = () => {
 
   // Handle clicking a post to navigate to the detail page
   const handleClickPost = (post: PostData) => {
-    history.push(`/recruitment/${post.id}`);
+    navigate(`/recruitment/${post.id}`);
   };
 
   return (

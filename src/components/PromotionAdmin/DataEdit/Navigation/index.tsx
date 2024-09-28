@@ -19,6 +19,10 @@ const linksData = [
     path: `${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_CLIENT}`,
     pathName: 'Client',
   },
+  {
+    path: `${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_MENU}`,
+    pathName: 'Menu',
+  },
 ];
 
 function DetailNavigator() {

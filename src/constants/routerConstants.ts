@@ -20,6 +20,7 @@ export const PA_ROUTES_CHILD = {
   DATA_EDIT_COMPANY: 'company',
   DATA_EDIT_PARTNER: 'partner',
   DATA_EDIT_CLIENT: 'client',
+  DATA_EDIT_MENU: 'menu',
   STATISTICS: 'statistics',
   FAQ: 'faq',
   NEWS: 'news',
@@ -37,7 +38,7 @@ export const PP_ROUTES_CHILD = {
   FAQ: 'faq',
   LOGIN: 'login',
   RECRUITMENT: 'recruitment', // 추가된 경로
-EWSBOARD: 'news',
+  NEWSBOARD: 'news',
   NEWSBOARD_DETAIL: 'news/:id',
 };
 

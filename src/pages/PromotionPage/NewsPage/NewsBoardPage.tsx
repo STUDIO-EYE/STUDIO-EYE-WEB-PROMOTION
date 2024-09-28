@@ -60,7 +60,7 @@ const NewsBoardPage: React.FC = () => {
   return (
     <Container>
       <Content>
-        <Title>최근 소식 어쩌구</Title>
+        <Title>최근 소식</Title>
         <CardContainer>
           {newsData.map((news) => (
             <NewsCard key={news.id} onClick={() => handleCardClick(news)} {...news} />
