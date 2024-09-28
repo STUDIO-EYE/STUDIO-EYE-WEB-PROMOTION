@@ -26,7 +26,7 @@ const Login = ({ email, setEmail, pwd, setPwd, handleLogin }: Props) => {
         <h1>아이디</h1>
         {/* <input
           required
-          type='email'
+          // type='email'
           placeholder='yourmail@domain.com'
           value={email}
           onChange={(e) => setEmail(e.target.value)}

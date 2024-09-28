@@ -8,6 +8,7 @@ import { ReactComponent as Statistics } from '@/assets/images/PA-Navigation/stat
 import { ReactComponent as Setting } from '@/assets/images/PA-Navigation/setting.svg';
 import { ReactComponent as Faq } from '@/assets/images/PA-Navigation/faq.svg';
 import { ReactComponent as Recruitment } from '@/assets/images/PA-Navigation/recruitment.svg';
+import { ReactComponent as News } from '@/assets/images/PA-Navigation/news.svg';
 import PALogo from '@/assets/images/PA-Navigation/pa-logo.png';
 import NavBtn from './NavBtn';
 import Logout from './Logout';
@@ -40,10 +41,15 @@ const linksData = [
     svgComponent: <Faq width={20} height={20} />,
   },
   {
+    path: PA_ROUTES.NEWS,
+    pathName: 'News',
+    svgComponent: <News width={20} height={20} />,
+  },
+  {
     path: PA_ROUTES.RECRUITMENT,
     pathName: 'Recruitment',
     svgComponent: <Recruitment width={20} height={20} />,
-  },
+  }
 ];
 
 const index = () => {

@@ -20,8 +20,7 @@ export const postRecruitment = async (recruitmentData: { title: string; content:
 export const getAllRecruitmentData = async (page: number, size: number): Promise<IRecruitmentList> => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment?page=${page - 1}&size=${size}`);
-    console.log(response);
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching RecruitmentData]', error);
     throw error;
@@ -57,10 +56,7 @@ export const updateRecruitmentData = async (recruitmentData: { id: number; title
       },
     };
     const response = await axios.put(
-      `${PROMOTION_BASIC_PATH}/api/recruitment/${recruitmentData.id}`,
-      recruitmentData,
-      config,
-    );
+      `${PROMOTION_BASIC_PATH}/api/recruitment`, recruitmentData, config);
     return response.data;
   } catch (error) {
     console.log('[❌ Error updating RecruitmentData]', error);

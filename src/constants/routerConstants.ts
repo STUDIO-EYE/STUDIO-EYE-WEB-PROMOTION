@@ -6,6 +6,7 @@ export const PA_ROUTES = {
   STATISTICS: '/promotion-admin/statistics',
   FAQ: '/promotion-admin/faq',
   RECRUITMENT: '/promotion-admin/recruitment',
+  NEWS: '/promotion-admin/news',
   SETTING: '/promotion-admin/setting',
 };
 
@@ -23,6 +24,8 @@ export const PA_ROUTES_CHILD = {
   STATISTICS: 'statistics',
   FAQ: 'faq',
   RECRUITMENT: 'recruitment',
+  NEWS: 'news',
+  NEWS_DETAIL: 'news/:id',
   SETTING: 'setting',
 };
 
@@ -35,6 +38,9 @@ export const PP_ROUTES_CHILD = {
   CONTACT: 'contact',
   FAQ: 'faq',
   LOGIN: 'login',
+  RECRUITMENT: 'recruitment', // 추가된 경로
+  NEWSBOARD: 'news',
+  NEWSBOARD_DETAIL: 'news/:id',
 };
 
 export const PP_ROUTES = {
@@ -45,4 +51,5 @@ export const PP_ROUTES = {
   ARTWORK_DETAIL: 'artwork/:id',
   CONTACT: '/contact',
   FAQ: '/faq',
+  RECRUITMENT: '/recruitment', // 추가된 경로
 };

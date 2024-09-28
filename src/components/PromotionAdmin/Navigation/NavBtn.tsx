@@ -63,6 +63,7 @@ const LinkStyle = styled(NavLink)`
 const SvgContainer = styled.div`
   object-fit: contain;
   stroke: #595959;
+  fill: #595959;
 `;
 
 const Name = styled.div`

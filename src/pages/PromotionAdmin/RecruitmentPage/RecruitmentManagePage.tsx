@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IContent, IRecruitmentList, IRecruitment } from '@/types/PromotionAdmin/recruitment';
@@ -13,25 +13,27 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import Pagination from '@/components/Pagination/Pagination';
-import { ContentBox } from '@/components/PromotionAdmin/FAQ/Components';
+import { ContentBox } from '@/components/PromotionAdmin/Recruitment/Components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { ReactComponent as AddedIcon } from '@/assets/images/PA/plusIcon.svg';
 import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
-import { DATAEDIT_TITLES_COMPONENTS } from '../../../components/PromotionAdmin/DataEdit/Company/StyleComponents';
 import { MSG } from '@/constants/messages';
 
 function RecruitmentManagePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
   const isEditing = useRecoilValue(dataUpdateState);
   const navigator = useNavigate();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [RecruitmentsPerPage] = useState(10);
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const RecruitmentsPerPage = 10;
+  
   const { data, isLoading, error, refetch } = useQuery<IRecruitmentList, Error>(
     ['recruitmentList', currentPage],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
   );
+
   const [slicedRecruitment, setSlicedRecruitment] = useState<IContent[]>([]);
   const [currentRecruitment, setCurrentRecruitment] = useState<IRecruitment | null>();
   const [isSelected, setIsSelected] = useState(false);
@@ -40,29 +42,16 @@ function RecruitmentManagePage() {
   const maxTitleLength = 200;
   const maxContentLength = 1500;
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = parseInt(queryParams.get('page') || '1', 10);
+    setCurrentPage(page);
+  }, [location]);
+
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    navigator(`?page=${pageNumber}`);
   };
-
-  // useEffect(() => {
-  //   if (data) {
-  //     const indexOfLast = currentPage * RecruitmentsPerPage;
-  //     const indexOfFirst = indexOfLast - RecruitmentsPerPage;
-  //     const sliced = data.content.slice(indexOfFirst, indexOfLast);
-  //     setSlicedRecruitment(sliced);
-
-  //     if (sliced.length === 0 && currentPage > 1) {
-  //       setCurrentPage((prevPage) => prevPage - 1);
-  //       navigator(`?page=${currentPage - 1}`);
-  //     }
-
-  //     if (currentPage >= 1 && sliced.length > 0) {
-  //       setCurrentRecruitment(sliced[0]);
-  //       setIsSelected(true);
-  //       setTitleLength(sliced[0].title.length);
-  //     }
-  //   }
-  // }, [data, currentPage, RecruitmentsPerPage, navigator]);
 
   const {
     register,
@@ -88,36 +77,50 @@ function RecruitmentManagePage() {
   const handleDelete = async (id: number) => {
     if (window.confirm('삭제하시겠습니까?')) {
       try {
-        const response = await deleteRecruitmentData(id); // deleteRecruitmentData 함수 호출
-        alert('FAQ가 삭제되었습니다.');
+        const response = await deleteRecruitmentData(id);
+        alert('채용공고가 삭제되었습니다.');
         console.log(response);
-        refetch(); // 데이터 새로고침
+        refetch();
+        setCurrentRecruitment(null);
       } catch (error) {
         console.log(error);
-        alert('FAQ 삭제 중 오류가 발생했습니다.');
+        alert('채용공고 삭제 중 오류가 발생했습니다.');
       }
     }
   };
 
-  // const onValid = async (data: IRecruitment) => {
-  //   const formData = {
-  //     id: currentRecruitment?.id,
-  //     title: currentRecruitment?.title,
-  //     content: currentRecruitment?.content,
-  //   };
+  const fetchRecruitmentData = async (id: number) => {
+    const recruitment = await getRecruitmentData(id);
+    setCurrentRecruitment(recruitment); 
+    setTitleLength(recruitment.title.length);
+    setContentLength(recruitment.content.length);
+    setIsSelected(true);
+  };
 
-  //   if (!(data.title === '' || data.content === '') && window.confirm('수정하시겠습니까?')) {
-  //     try {
-  //       const response = await updateRecruitmentData(formData); // updateRecruitmentData 함수 호출
-  //       alert('FAQ가 수정되었습니다.');
-  //       console.log(response);
-  //       setIsEditing(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //       alert('FAQ 수정 중 오류가 발생했습니다.');
-  //     }
-  //   }
-  // };
+  const onValid = async (data: IRecruitment) => {
+    if (!currentRecruitment) {
+      alert('수정할 공고가 선택되지 않았습니다.');
+      return;
+    }
+  
+    const formData = {
+      id: currentRecruitment.id,
+      title: data.title,
+      content: data.content,
+    };
+  
+    if (!(data.title === '' || data.content === '') && window.confirm('수정하시겠습니까?')) {
+      try {
+        const response = await updateRecruitmentData(formData);
+        alert('채용공고가 수정되었습니다.');
+        console.log(response);
+        setIsEditing(false);
+      } catch (error) {
+        console.log(error);
+        alert('채용공고 수정 중 오류가 발생했습니다.');
+      }
+    }
+  };
 
   useEffect(() => {
     if (isEditing) {
@@ -142,32 +145,23 @@ function RecruitmentManagePage() {
     if (name === 'title') {
       setTitleLength(value.length);
     }
-    if (name === 'answer') {
+    if (name === 'content') {
       setContentLength(value.length);
     }
-    setCurrentRecruitment((prevFAQ) => (prevFAQ ? { ...prevFAQ, [name]: value } : null));
+    setCurrentRecruitment((prevRecruitment) => (prevRecruitment ? { ...prevRecruitment, [name]: value } : null));
   };
 
-  const fetchRecruitmentData = async (id: number) => {
-    try {
-      const data = await getRecruitmentData(id);
-      setCurrentRecruitment(data); // 선택된 공고 데이터 저장
-    } catch (error) {
-      console.log('Error fetching recruitment data:', error);
+  const handleConfirmNavigation = (recruitment: IRecruitment) => {
+    if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
+      setIsEditing(false);
+      setCurrentRecruitment(recruitment);
+      setIsSelected(true);
+      setTitleLength(recruitment.title.length);
+      setContentLength(recruitment.content.length);
+    } else {
+      setIsEditing(true);
     }
   };
-
-  // const handleConfirmNavigation = (recruitment: IRecruitment) => {
-  //   if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
-  //     setIsEditing(false);
-  //     setCurrentRecruitment(recruitment);
-  //     setIsSelected(true);
-  //     setTitleLength(recruitment.title.length);
-  //     setContentLength(recruitment.content.length);
-  //   } else {
-  //     setIsEditing(true);
-  //   }
-  // };
 
   const handleAddNewRecruitment = () => {
     if (isEditing) {
@@ -180,54 +174,54 @@ function RecruitmentManagePage() {
     }
   };
 
-  if (isLoading) return <>is Loading..</>;
+  if (isLoading) return <>Loading...</>;
   if (error) return <>{error.message}</>;
-  return (
-    <Wrapper>
-      <LeftContentWrapper>
-        <ContentBox>
-          <TitleWrapper>
-            <Title>
-              {DATAEDIT_TITLES_COMPONENTS.FAQ}
-              채용공고 관리
-              <Info>등록된 게시글 {data?.totalElements}건 </Info>
-            </Title>
-            <Button onClick={handleAddNewRecruitment}>
-              <div style={{ paddingRight: 10 }}>
-                <AddedIcon />
-              </div>
-              Add New Recruitment
-            </Button>
-          </TitleWrapper>
-          <ListWrapper>
-            {slicedRecruitment?.map((recruitment) => (
-              <FAQList key={recruitment.id}>
-                <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id)} />
-                <FAQItem
-                  key={recruitment.id}
-                  isSelected={currentRecruitment?.id === recruitment.id && isSelected}
-                  onClick={() => {
-                    fetchRecruitmentData(recruitment.id);
-                  }}
-                >
-                  <FAQQuestion>{recruitment.title}</FAQQuestion>
-                </FAQItem>
-              </FAQList>
-            ))}
-          </ListWrapper>
-          {data && (
-            <PaginationWrapper>
-              <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalPages} paginate={paginate} />
-            </PaginationWrapper>
-          )}
-        </ContentBox>
-      </LeftContentWrapper>
 
-      {/* <RightContentWrapper>
+  return (
+  <Wrapper>
+    <LeftContentWrapper>
+      <ContentBox>
+        <TitleWrapper>
+          <Title>
+            채용 공고 관리
+            <Info>등록된 공고 {data?.totalElements}건 </Info>
+          </Title>
+          <Button onClick={handleAddNewRecruitment}>
+            <div style={{ paddingRight: 10 }}>
+              <AddedIcon />
+            </div>
+            새로운 공고
+          </Button>
+        </TitleWrapper>
+        <ListWrapper>
+          {data?.content?.map((recruitment) => (
+            <RecruimentList key={recruitment.id}>
+              <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id)} />
+              <RecruimentItem
+                isSelected={currentRecruitment?.id === recruitment.id && isSelected}
+                onClick={() => {
+                  fetchRecruitmentData(recruitment.id);
+                }}
+              >
+                <RecruimentTitle>{recruitment.title}</RecruimentTitle>
+              </RecruimentItem>
+            </RecruimentList>
+          ))}
+        </ListWrapper>
+        {data && (
+          <PaginationWrapper>
+            <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalElements} paginate={paginate} />
+          </PaginationWrapper>
+        )}
+      </ContentBox>
+    </LeftContentWrapper>
+
+    <RightContentWrapper>
+      {currentRecruitment ? ( // currentRecruitment가 존재하는지 확인
         <form onSubmit={handleSubmit(onValid)}>
           <ContentBox>
             <TitleWrapper>
-              <Title>FAQ 게시글 수정</Title>
+              <Title>채용 공고 수정</Title>
             </TitleWrapper>
             <InputWrapper>
               <InputTitle style={{ justifyContent: 'space-between' }}>
@@ -253,7 +247,7 @@ function RecruitmentManagePage() {
               />
               {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
               <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Answer</p>
+                <p>Content</p>
                 <div
                   style={{
                     fontSize: 12,
@@ -280,10 +274,14 @@ function RecruitmentManagePage() {
             </RowWrapper>
           </ContentBox>
         </form>
-      </RightContentWrapper> */}
-    </Wrapper>
-  );
+      ) : (
+        <div></div>
+      )}
+    </RightContentWrapper>
+  </Wrapper>
+);
 }
+
 export default RecruitmentManagePage;
 
 const Wrapper = styled.div`
@@ -345,7 +343,7 @@ const ListWrapper = styled.div`
   margin-top: 20px;
 `;
 
-const FAQList = styled.div`
+const RecruimentList = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
@@ -358,7 +356,7 @@ const FAQList = styled.div`
   }
 `;
 
-const FAQItem = styled.div<{ isSelected: boolean }>`
+const RecruimentItem = styled.div<{ isSelected: boolean }>`
   display: flex;
   position: relative;
   border: none;
@@ -375,7 +373,7 @@ const FAQItem = styled.div<{ isSelected: boolean }>`
   }
 `;
 
-const FAQQuestion = styled.div`
+const RecruimentTitle = styled.div`
   font-family: ${(props) => props.theme.font.semiBold};
   font-size: 16px;
   flex: 1;
@@ -444,7 +442,7 @@ const InputTitle = styled.div`
 const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-end;
   width: 100%;
   margin-top: 20px;

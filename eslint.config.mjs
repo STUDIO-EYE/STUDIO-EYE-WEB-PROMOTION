@@ -9,4 +9,10 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReactConfig,
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off', // 사용되지 않는 변수 규칙 비활성화
+      'react-hooks/exhaustive-deps': 'off', // useEffect 의존성 규칙 비활성화
+    },
+  },
 ];

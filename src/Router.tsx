@@ -8,6 +8,9 @@ import PAStatisticsPage from './pages/PromotionAdmin/StatisticsPage/index';
 import PAFaqPage from './pages/PromotionAdmin/FaqPage/index';
 import PARecruitmentPage from './pages/PromotionAdmin/RecruitmentPage/index';
 import PASettingPage from './pages/PromotionAdmin/SettingPage/index';
+import PANewsPage from './pages/PromotionAdmin/NewsPage/index';
+import PANewsWritePage from './pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage';
+import PANewsViewPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewViewPage';
 import PALayout from './components/PromotionAdmin/Layout/Layout';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
@@ -39,6 +42,8 @@ import PartnerWritePage from './pages/PromotionAdmin/DataEditPage/PartnerPage/Pa
 import Login from './pages/PromotionAdmin/Login/Login';
 import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage';
 import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
+import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
+import NewsDetailPage from './pages/PromotionPage/NewsPage/NewsDetailPage';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -85,6 +90,14 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.LOGIN,
             element: <Login />,
+          },
+          {
+            path: PP_ROUTES_CHILD.NEWSBOARD,
+            element: <NewsBoardPage />,
+          },
+          {
+            path: PP_ROUTES_CHILD.NEWSBOARD_DETAIL,
+            element: <NewsDetailPage />,
           },
         ],
       },
@@ -213,6 +226,20 @@ const router = createBrowserRouter([
             path: PA_ROUTES_CHILD.SETTING,
             element: <PASettingPage />,
           },
+          {
+            path: PA_ROUTES_CHILD.NEWS,
+            element: <PANewsPage/>,
+            children:[
+              {
+                path: `writing`,
+                element: <PANewsWritePage/>,
+              },
+              {
+                path:`:id`,
+                element: <PANewsViewPage/>
+              }
+            ]
+          }
         ],
       },
     ],

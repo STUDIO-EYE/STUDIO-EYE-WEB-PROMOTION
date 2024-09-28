@@ -8,6 +8,6 @@ export const ContentBox = styled.div`
   margin-right: 30px;
   border-radius: 4px;
   background-color: ${(props) => props.theme.color.white.bold};
-  width: 40vw;
+  width: 38vw;
   height: 800px;
 `;
