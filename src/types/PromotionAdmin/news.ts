@@ -3,13 +3,6 @@ export interface INEWS {
     title: string;
     source: string;
     pubDate: string;
-    content: string;    
+    url: string;    
     visibility: boolean;
-    createdAt: string;
-    updatedAt: string;
-    newsFiles:[
-      id:number,
-      fileName:string,
-      filePath:string
-    ]
   }

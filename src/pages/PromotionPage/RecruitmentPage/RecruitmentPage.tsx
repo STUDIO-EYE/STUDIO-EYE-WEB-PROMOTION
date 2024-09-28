@@ -45,7 +45,8 @@ const RecruitmentPage = () => {
   );
 };
 
-// Styled components
+export default RecruitmentPage;
+
 const Wrapper = styled.div`
   padding: 20px;
   max-width: 1200px;
@@ -78,5 +79,3 @@ const PostTitle = styled.h2`
   font-size: 24px;
   font-weight: bold;
 `;
-
-export default RecruitmentPage;

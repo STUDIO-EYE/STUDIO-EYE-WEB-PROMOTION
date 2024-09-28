@@ -1,6 +1,4 @@
 import NewsList from '@/components/PromotionAdmin/News/NewsList';
-import { PA_ROUTES } from '@/constants/routerConstants';
-import { INEWS } from '@/types/PromotionAdmin/news';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
