@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import GreetingComponent from './GreetingComponent';
+import GreetingComponent from '../../pages/ForTest/GreetingComponent';
 import axios from 'axios';
 
 // Axios 모킹 설정

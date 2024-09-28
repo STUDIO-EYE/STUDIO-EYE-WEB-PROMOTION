@@ -42,6 +42,7 @@ import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/Clie
 import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
 import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
 import NewsDetailPage from './pages/PromotionPage/NewsPage/NewsDetailPage';
+import GreetingComponent from './pages/ForTest/GreetingComponent';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -232,6 +233,10 @@ const router = createBrowserRouter([
           }
         ],
       },
+      {
+        path: '/api/greeting',
+        element: <GreetingComponent />,
+      }
     ],
   },
 ]);
