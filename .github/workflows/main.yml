@@ -1,27 +1,58 @@
-name: Deploy to Server
+name: Deploy to EC2 server
 
 on:
   push:
     branches:
-      - main
+      - develop  # develop 브랜치에 푸시될 때마다 실행
 
 jobs:
   build:
-    name: Build
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # 1. Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Execute deploy script on EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: 22
-        script: |
-          cd ~/STUDIO-EYE-WEB-PROMOTION
-          git pull origin main
-          sudo systemctl restart nginx
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.19.1'  # 서버에서 사용 중인 Node.js 버전
+
+      # 3. Install the dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Build the project
+      - name: Build project
+        run: CI=false npm run build  # 빌드 과정에서 환경 변수를 사용하여 빌드
+
+      # 5. Create SSH key file from GitHub Secrets (Private key)
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" > id_rsa
+          chmod 600 id_rsa
+
+      # 6. Transfer build files to EC2 via SCP
+      - name: Transfer build files to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+
+      # 7. Clean up SSH key file (for security purposes)
+      - name: Clean up SSH key
+        run: rm id_rsa  # SSH 키를 삭제하여 보안 유지
+
+      # 8. Execute commands on EC2 to pull the latest code and restart NGINX
+      - name: Execute deploy script on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ubuntu
+          key: ${{ secrets.SERVER_SSH_KEY }}  # GitHub Secrets에서 비공개 키 사용
+          port: 22
+          script: |
+            cd ~/STUDIO-EYE-WEB-PROMOTION
+            git pull origin develop  # 소스 코드 최신 상태로 유지
+            sudo systemctl restart nginx  # NGINX 재시작
