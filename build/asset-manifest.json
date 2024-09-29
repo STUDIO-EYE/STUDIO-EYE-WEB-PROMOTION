@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.60c3feea.css",
-    "main.js": "/static/js/main.d4bf5f4f.js",
+    "main.js": "/static/js/main.d099bdab.js",
     "static/media/Pretendard-Bold.woff2": "/static/media/Pretendard-Bold.0c6f5e225ff28f456183.woff2",
     "static/media/Pretendard-SemiBold.woff2": "/static/media/Pretendard-SemiBold.d5ded8ad2884e7855bb1.woff2",
     "static/media/Pretendard-Medium.woff2": "/static/media/Pretendard-Medium.a9645bebe1a0010e66dc.woff2",
@@ -9,7 +9,10 @@
     "static/media/Pretendard-Light.woff2": "/static/media/Pretendard-Light.1fc5521353ec20635e8e.woff2",
     "static/media/defaultMainImg.jpg": "/static/media/defaultMainImg.d24d10b0847f4d273aa6.jpg",
     "static/media/defaultTopImg.jpg": "/static/media/defaultTopImg.d24d10b0847f4d273aa6.jpg",
+    "static/media/studioeye_ceo.png": "/static/media/studioeye_ceo.47eb8cb668d7232c2b0f.png",
     "static/media/backgroundImg.png": "/static/media/backgroundImg.b28248d440d70bdc208f.png",
+    "static/media/CJ_ENM_Logo.png": "/static/media/CJ_ENM_Logo.071ff13db5341fcefce7.png",
+    "static/media/Netflix-Logo.jpg": "/static/media/Netflix-Logo.aa96b72b3f713bacb45c.jpg",
     "static/media/Mission.png": "/static/media/Mission.8f7d161f37b5f3aec2ad.png",
     "static/media/pa-logo.png": "/static/media/pa-logo.77b3cf8fafbd96d74adb.png",
     "static/media/circle.png": "/static/media/circle.08740893a51c20d62d8d.png",
@@ -34,10 +37,10 @@
     "static/media/statistics.svg": "/static/media/statistics.3b7494be467e1fa8888c70a2e06d269d.svg",
     "static/media/minusIcon.svg": "/static/media/minusIcon.eb3a9e3b8b63ebb3caaca57d065efe65.svg",
     "main.60c3feea.css.map": "/static/css/main.60c3feea.css.map",
-    "main.d4bf5f4f.js.map": "/static/js/main.d4bf5f4f.js.map"
+    "main.d099bdab.js.map": "/static/js/main.d099bdab.js.map"
   },
   "entrypoints": [
     "static/css/main.60c3feea.css",
-    "static/js/main.d4bf5f4f.js"
+    "static/js/main.d099bdab.js"
   ]
 }
