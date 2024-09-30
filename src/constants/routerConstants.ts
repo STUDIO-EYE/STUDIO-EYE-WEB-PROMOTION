@@ -5,6 +5,7 @@ export const PA_ROUTES = {
   DATA_EDIT: '/promotion-admin/dataEdit',
   STATISTICS: '/promotion-admin/statistics',
   FAQ: '/promotion-admin/faq',
+  RECRUITMENT: '/promotion-admin/recruitment',
   NEWS: '/promotion-admin/news',
   SETTING: '/promotion-admin/setting',
 };
@@ -23,6 +24,9 @@ export const PA_ROUTES_CHILD = {
   DATA_EDIT_MENU: 'menu',
   STATISTICS: 'statistics',
   FAQ: 'faq',
+  RECRUITMENT: 'recruitment',
+  RECRUITMENT_MANAGE: 'manage',
+  RECRUITMENT_PAGE_EDIT: 'page_edit',
   NEWS: 'news',
   NEWS_DETAIL: 'news/:id',
   SETTING: 'setting',
