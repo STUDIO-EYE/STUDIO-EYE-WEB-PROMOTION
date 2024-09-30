@@ -8,6 +8,7 @@ import HeaderDetail from './HeaderDetail';
 import Menubar from './Menubar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCompanyLogoData } from '../../../apis/PromotionAdmin/dataEdit';
+
 interface ContainerProps {
   isScrolled: boolean;
 }
@@ -22,9 +23,14 @@ const Header = () => {
     const fetchData = async () => {
       try {
         const data = await getCompanyLogoData();
-        setCompanyLogo(data);
+        if (data) {
+          setCompanyLogo(data);
+        } else {
+          setCompanyLogo(defaultLogo);
+        }
       } catch (error) {
         console.error('Error fetching company data: ', error);
+        setCompanyLogo(defaultLogo);
       }
     };
 

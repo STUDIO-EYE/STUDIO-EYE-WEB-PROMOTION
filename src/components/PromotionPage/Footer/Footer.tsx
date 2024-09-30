@@ -2,7 +2,7 @@ import { getCompanyBasic, getCompanyLogo } from '@/apis/PromotionPage/company';
 import React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import defaultFooterLogo from '@/assets/images/PP/defaultFooterLogo.png';
+import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
 
 type ICompanyBasic = {
   address: string;
@@ -18,9 +18,9 @@ const Footer = () => {
     staleTime: 1000 * 60 * 10,
   });
 
-  const addressData = companyBasicData ? companyBasicData.address : '';
-  const phoneData = companyBasicData ? companyBasicData.phone : '';
-  const faxData = companyBasicData ? companyBasicData.fax : '';
+  const addressData = companyBasicData ? companyBasicData.address : '서울 성동구 광나루로 162';
+  const phoneData = companyBasicData ? companyBasicData.phone : '02-000-0000';
+  const faxData = companyBasicData ? companyBasicData.fax : '000-0000';
 
   return (
     <Container>
@@ -34,16 +34,12 @@ const Footer = () => {
         </div>
       </BasicInfoWrapper>
       <ImgInfoWrapper>
-        {' '}
-        {error ? (
-          <div>
-            <img src={defaultFooterLogo} alt='기본 회사 로고' />
-          </div>
-        ) : (
-          <div>
-            <img src={companyLogoData} alt='기본 회사 로고' />
-          </div>
-        )}
+        <div>
+          <img
+            src={companyLogoData ? companyLogoData : defaultFooterLogo}
+            alt='회사 로고'
+          />
+        </div>
         <div>
           <h1>COPYRIGHTⓒSTUDIOEYE,LTD. ALL RIGHTS RESERVED </h1>
         </div>
@@ -86,20 +82,23 @@ const Container = styled.div`
   }
 `;
 
+
 const BasicInfoWrapper = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* Center vertically */
   justify-content: space-between;
   margin-bottom: 35px;
   div {
     display: flex;
   }
 `;
+
 const ImgInfoWrapper = styled.div`
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+ 
 `;

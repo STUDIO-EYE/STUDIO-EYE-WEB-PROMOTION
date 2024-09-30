@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 interface PostData {
   id: number;
