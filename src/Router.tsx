@@ -6,6 +6,7 @@ import PAArtworkPage from './pages/PromotionAdmin/ArtworkPage/Artwork';
 import PADataEditPage from './pages/PromotionAdmin/DataEditPage/index';
 import PAStatisticsPage from './pages/PromotionAdmin/StatisticsPage/index';
 import PAFaqPage from './pages/PromotionAdmin/FaqPage/index';
+import PARecruitmentPage from './pages/PromotionAdmin/RecruitmentPage/index';
 import PASettingPage from './pages/PromotionAdmin/SettingPage/index';
 import PANewsPage from './pages/PromotionAdmin/NewsPage/index';
 import PANewsWritePage from './pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage';
@@ -14,6 +15,8 @@ import PANewsEditPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewsEdi
 import PALayout from './components/PromotionAdmin/Layout/Layout';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
+import RecruitmentManagePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage';
+import RecruitmentWritePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage';
 import FAQManagePage from './pages/PromotionAdmin/FaqPage/FAQManagePage';
 import PARequestDetailPage from '@/pages/PromotionAdmin/RequestPage/RequestCheckPage';
 import FAQCheckPage from './pages/PromotionAdmin/FaqPage/FAQCheckPage';
@@ -217,16 +220,34 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: PA_ROUTES_CHILD.RECRUITMENT,
+            element: <PARecruitmentPage />,
+            children: [
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/page_edit`,
+                element: <RecruitmentManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/manage`,
+                element: <RecruitmentManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/write`,
+                element: <RecruitmentWritePage />,
+              },
+            ],
+          },
+          {
             path: PA_ROUTES_CHILD.SETTING,
             element: <PASettingPage />,
           },
           {
             path: PA_ROUTES_CHILD.NEWS,
-            element: <PANewsPage/>,
-            children:[
+            element: <PANewsPage />,
+            children: [
               {
                 path: `writing`,
-                element: <PANewsWritePage/>,
+                element: <PANewsWritePage />,
               },
               {
                 path:`:id`,
