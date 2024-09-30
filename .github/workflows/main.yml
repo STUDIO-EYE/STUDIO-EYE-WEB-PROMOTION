@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the code from the repository
+      # 1. Checkout the code from the repository (빌드 폴더는 무시됨)
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -28,6 +28,9 @@ jobs:
       # 4. Build the project
       - name: Build project
         run: CI=false npm run build  # 빌드 과정에서 환경 변수를 사용하여 빌드
+        env:
+          REACT_APP_GATEWAY_URL: ${{ secrets.REACT_APP_GATEWAY_URL }}
+          REACT_APP_PROMOTION_URL: ${{ secrets.REACT_APP_PROMOTION_URL }}
 
       # 5. Create SSH key file from GitHub Secrets (Private key)
       - name: Create SSH key file
@@ -38,13 +41,13 @@ jobs:
       # 6. Transfer build files to EC2 via SCP
       - name: Transfer build files to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build
+          scp -o StrictHostKeyChecking=no -i id_rsa -r ./build/* ubuntu@${{ secrets.SERVER_HOST }}:/home/ubuntu/STUDIO-EYE-WEB-PROMOTION/build/
 
       # 7. Clean up SSH key file (for security purposes)
       - name: Clean up SSH key
         run: rm id_rsa  # SSH 키를 삭제하여 보안 유지
 
-      # 8. Execute commands on EC2 to pull the latest code and restart NGINX
+      # 8. Execute commands on EC2 to update the code and restart NGINX
       - name: Execute deploy script on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -54,5 +57,5 @@ jobs:
           port: 22
           script: |
             cd ~/STUDIO-EYE-WEB-PROMOTION
-            git pull origin develop  # 소스 코드 최신 상태로 유지
+            sudo chmod -R 755 ./build  # 권한 설정
             sudo systemctl restart nginx  # NGINX 재시작
