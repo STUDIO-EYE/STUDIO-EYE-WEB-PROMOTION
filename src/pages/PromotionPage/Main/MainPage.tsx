@@ -109,9 +109,9 @@ const MainPage = () => {
                   key={'default'}
                   data={{
                     backgroundImg: defaultMainImg,
-                    title: '',
-                    client: '',
-                    overview: '😊 데이터가 존재하지 않습니다.',
+                    title: '절대 떠들면 안 되는 호텔',
+                    client: '넷플릭스 코리아',
+                    overview: '설명이 뭐였지',
                   }}
                   count={filteredMainData.length}
                   scrollToSection={scrollToSection}

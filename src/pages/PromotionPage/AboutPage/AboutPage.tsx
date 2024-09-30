@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getCEOData, getPartnersData } from '../../../apis/PromotionAdmin/dataEdit';
+import NetflixLogo from '@/assets/images/PP/Netflix-Logo.jpg';
+import CJLogo from '@/assets/images/PP/CJ_ENM_Logo.png';
+import defaultCEOLogo from '@/assets/images/PP/studioeye_ceo.png';
+import { CEO_DATA } from '@/constants/introdutionConstants';
 
 import IntroPage from './IntroPage';
 import WhatWeDoPage from './WhatWeDoPage';
@@ -29,43 +33,68 @@ interface ICorpInfoData {
 }
 
 const AboutPage = () => {
-  const [CEOData, setCEOData] = useState<ICEOInfoData>({
-    id: -1,
-    name: '',
-    introduction: '',
-    imageFileName: '',
-    imageUrl: '',
-  });
-  const [corpInfoData, setCorpInfoData] = useState<ICorpInfoData[]>([]);
+  const defaultCEOData: ICEOInfoData = {
+    id: 1,
+    name: CEO_DATA.CEO_Name,
+    introduction: CEO_DATA.CEO_Instruction,
+    imageFileName: defaultCEOLogo,
+    imageUrl: defaultCEOLogo,
+  };
+
+  const defaultCorpData: ICorpInfoData[] = [
+    {
+      partnerInfo: {
+        id: 1,
+        is_main: true,
+        link: 'https://www.netflix.com/browse',
+      },
+      logoImg: NetflixLogo,
+    },
+    {
+      partnerInfo: {
+        id: 2,
+        is_main: true,
+        link: 'https://www.netflix.com/browse',
+      },
+      logoImg: CJLogo,
+    },
+  ];
+
+  const [CEOData, setCEOData] = useState<ICEOInfoData>(defaultCEOData);
+  const [corpInfoData, setCorpInfoData] = useState<ICorpInfoData[]>(defaultCorpData);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [CEODataResponse, corpDataResponse] = await Promise.all([getCEOData(), getPartnersData()]);
+
+        // CEO 데이터 처리
         if (CEODataResponse) {
           const ceoInfo = CEODataResponse;
           const object1 = {
-            id: ceoInfo.id,
-            name: ceoInfo.name,
-            introduction: ceoInfo.introduction,
-            imageFileName: ceoInfo.imageFileName,
-            imageUrl: ceoInfo.imageUrl,
+            id: ceoInfo.id || defaultCEOData.id,
+            name: ceoInfo.name || defaultCEOData.name,
+            introduction: ceoInfo.introduction || defaultCEOData.introduction,
+            imageFileName: ceoInfo.imageFileName || defaultCEOData.imageFileName,
+            imageUrl: ceoInfo.imageUrl || defaultCEOData.imageUrl,
           };
           setCEOData(object1);
         }
 
+        // 기업 정보 데이터 처리
         if (corpDataResponse) {
           const objects2 = corpDataResponse
             .filter((item: any) => item.partnerInfo.is_main === true)
             .map((item: any) => ({
               partnerInfo: item.partnerInfo,
-              logoImg: item.logoImg,
+              logoImg: item.logoImg || defaultCorpData[0].logoImg,
             }));
-          setCorpInfoData(objects2);
-          console.log('objects2 : ', objects2);
+          setCorpInfoData(objects2.length > 0 ? objects2 : defaultCorpData); // 데이터 없으면 디폴트 데이터 사용
         }
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);
+        setCEOData(defaultCEOData);
+        setCorpInfoData(defaultCorpData); // 에러 시 디폴트 데이터
       }
     };
     fetchData();
@@ -93,7 +122,7 @@ const AboutPage = () => {
             </CeoImageContainer>
           </RowCoontainer>
         ) : (
-          <></>
+          <div>CEO 정보가 없습니다.</div>
         )}
       </Section>
       <Section>
@@ -123,7 +152,7 @@ const AboutPage = () => {
             </CorpLogoRowContainer>
           </CorpLogoContainer>
         ) : (
-          <></>
+          <div>기업 정보가 없습니다.</div>
         )}
       </Section>
     </ScrollContainer>
@@ -131,6 +160,7 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+
 
 const ScrollContainer = styled.div`
   display: flex;

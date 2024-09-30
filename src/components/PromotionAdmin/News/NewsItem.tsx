@@ -17,8 +17,8 @@ const NewsItem = ({data}:{data:INEWS}) => {
     return (
     <Container>
         <Title>{data.title}</Title>
-        <Day>{data.pubDate}</Day>
-        <Content>{data.content}</Content>
+        <Day>{data.source+" | "+data.pubDate}</Day>
+        <Content>{data.url}</Content>
     </Container>
   );
 };
