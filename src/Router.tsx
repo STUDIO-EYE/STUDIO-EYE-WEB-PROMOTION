@@ -213,7 +213,11 @@ const router = createBrowserRouter([
             element: <PARecruitmentPage />,
             children: [
               {
-                path: '',
+                path: `${PA_ROUTES.RECRUITMENT}/page_edit`,
+                element: <RecruitmentManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/manage`,
                 element: <RecruitmentManagePage />,
               },
               {
@@ -228,18 +232,18 @@ const router = createBrowserRouter([
           },
           {
             path: PA_ROUTES_CHILD.NEWS,
-            element: <PANewsPage/>,
-            children:[
+            element: <PANewsPage />,
+            children: [
               {
                 path: `writing`,
-                element: <PANewsWritePage/>,
+                element: <PANewsWritePage />,
               },
               {
-                path:`:id`,
-                element: <PANewsViewPage/>
-              }
-            ]
-          }
+                path: `:id`,
+                element: <PANewsViewPage />,
+              },
+            ],
+          },
         ],
       },
     ],

@@ -46,10 +46,10 @@ const linksData = [
     svgComponent: <News width={20} height={20} />,
   },
   {
-    path: PA_ROUTES.RECRUITMENT,
+    path: `${PA_ROUTES.RECRUITMENT}/manage`,
     pathName: 'Recruitment',
     svgComponent: <Recruitment width={20} height={20} />,
-  }
+  },
 ];
 
 const index = () => {

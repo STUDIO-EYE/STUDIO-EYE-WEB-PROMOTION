@@ -17,27 +17,31 @@ function RecruitmentWritePage() {
   const navigator = useNavigate();
   const [putData, setPutData] = useState({
     title: '',
-    content: '',
+    startDate: '',
+    deadline: '',
+    link: '',
   });
   const titleLength = putData.title.length;
-  const contentLength = putData.content.length;
   const maxTitleLength = 200;
-  const maxContentLength = 1500;
 
   type RecruitmentFormData = {
     title: string;
-    content: string;
+    startDate: string;
+    deadline: string;
+    link: string;
   };
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-    // setValue,
   } = useForm<RecruitmentFormData>({
     defaultValues: {
       title: '',
-      content: '',
+      startDate: '',
+      deadline: '',
+      link: '',
     },
   });
 
@@ -55,7 +59,7 @@ function RecruitmentWritePage() {
     }
   }, [isEditing]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsEditing(true);
     const { name, value } = e.target;
     if (/^\s|[~!@#$%^&*(),.?":{}|<>]/.test(value.charAt(0))) {
@@ -66,21 +70,27 @@ function RecruitmentWritePage() {
       ...prevData,
       [name]: value,
     }));
+    setValue(name as keyof RecruitmentFormData, value);
   };
 
   const onValid = async (data: RecruitmentFormData) => {
     const formData = {
       title: data.title,
-      content: data.content,
+      startDate: data.startDate,
+      deadline: data.deadline,
+      link: data.link,
     };
 
-    if (!(data.title === '' || data.content === '') && window.confirm('등록하시겠습니까?')) {
+    if (
+      !(data.title === '' || data.link === '' || data.startDate === '' || data.deadline === '') &&
+      window.confirm('등록하시겠습니까?')
+    ) {
       try {
         const response = await postRecruitment(formData);
         alert('채용공고가 등록되었습니다.');
         console.log(response);
         setIsEditing(false);
-        navigator(`${PA_ROUTES.RECRUITMENT}`);
+        navigator(`${PA_ROUTES.RECRUITMENT}/manage`, { replace: true });
       } catch (error) {
         console.log(error);
         alert('채용공고 등록 중 오류가 발생했습니다.');
@@ -89,14 +99,14 @@ function RecruitmentWritePage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <form noValidate onSubmit={handleSubmit(onValid)}>
       <ContentBox>
         <TitleWrapper>
-          <Title>채용공고 등록</Title>
+          <Title>채용 공고 수정</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Title</p>
+            <p>제목</p>
             <div
               style={{
                 fontSize: 12,
@@ -108,37 +118,109 @@ function RecruitmentWritePage() {
           </InputTitle>
           <input
             {...register('title', {
-              required: 'Title을 입력해주세요. (200자 내로 작성해 주세요.)',
+              required: '제목 입력해주세요. (200자 내로 작성해 주세요.)',
             })}
             name='title'
-            value={putData.title}
+            value={putData.title || ''}
             onChange={handleChange}
             maxLength={200}
-            placeholder='Title을 입력해주세요. (200자 내로 작성해 주세요.)'
+            placeholder='제목을 입력해주세요. (200자 내로 작성해 주세요.)'
           />
           {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
-          <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Content</p>
+          <InputTitle>
+            <p>채용 공고 링크</p>
             <div
               style={{
                 fontSize: 12,
                 paddingTop: 10,
               }}
-            >
-              {contentLength}/{maxContentLength}
-            </div>
+            ></div>
           </InputTitle>
-          <textarea
-            {...register('content', {
-              required: 'Content를 입력해주세요. (1500자 내로 작성해 주세요.)',
+          <input
+            {...register('link', {
+              required: '채용 공고 링크를 입력해주세요.',
+              validate: {
+                startsWithHttp: (value) =>
+                  value.startsWith('http://') ||
+                  value.startsWith('https://') ||
+                  '링크는 http:// 또는 https://로 시작해야 합니다.',
+              },
             })}
-            name='content'
-            value={putData.content}
+            name='link'
+            value={putData.link || ''}
             onChange={handleChange}
-            maxLength={1500}
-            placeholder='Content를 입력해주세요. (1500자 내로 작성해 주세요.)'
+            maxLength={200}
+            placeholder='채용 공고 링크를 입력해주세요.'
           />
-          {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
+          {errors.link && <ErrorMessage>{errors.link.message}</ErrorMessage>}
+          <RowWrapper style={{ justifyContent: 'space-between', width: '95%' }}>
+            <div style={{ width: '45%' }}>
+              <InputTitle>
+                <p>접수 시작일</p>
+                <div
+                  style={{
+                    fontSize: 12,
+                    paddingTop: 10,
+                  }}
+                ></div>
+              </InputTitle>
+              <input
+                style={{ width: '100%', cursor: 'pointer', userSelect: 'none' }}
+                type='date'
+                placeholder='Date'
+                {...register('startDate', {
+                  required: '접수 시작일을 입력해주세요.',
+                })}
+                name='startDate'
+                onKeyDown={(e) => e.preventDefault()}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.currentTarget.showPicker();
+                }}
+                onChange={handleChange}
+                value={putData.startDate}
+              />
+              <ErrorMessage>{errors.startDate ? errors.startDate.message : ''}</ErrorMessage>
+            </div>
+
+            <div style={{ width: '45%' }}>
+              <InputTitle>
+                <p>접수 마감일</p>
+                <div
+                  style={{
+                    fontSize: 12,
+                    paddingTop: 10,
+                  }}
+                ></div>
+              </InputTitle>
+              <input
+                style={{ width: '100%', cursor: 'pointer' }}
+                type='date'
+                {...register('deadline', {
+                  required: '접수 마감일을 입력해주세요.',
+                  validate: {
+                    isValidEndDate: (value) => {
+                      const startInputValue = (document.querySelector('input[name="startDate"]') as HTMLInputElement)
+                        ?.value;
+                      const startInput = startInputValue ? new Date(startInputValue) : null;
+                      const endDate = new Date(value);
+
+                      return (startInput && endDate >= startInput) || '마감일은 시작일 이후여야 합니다.';
+                    },
+                  },
+                })}
+                name='deadline'
+                onKeyDown={(e) => e.preventDefault()}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.currentTarget.showPicker();
+                }}
+                onChange={handleChange}
+                value={putData.deadline}
+              />
+              <ErrorMessage>{errors.deadline ? errors.deadline.message : ' '}</ErrorMessage>
+            </div>
+          </RowWrapper>
         </InputWrapper>
         <RowWrapper>
           <ModifyButton>등록하기</ModifyButton>

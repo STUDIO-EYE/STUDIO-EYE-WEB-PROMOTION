@@ -2,7 +2,12 @@ import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { IRecruitmentList } from '@/types/PromotionAdmin/recruitment';
 import axios from 'axios';
 
-export const postRecruitment = async (recruitmentData: { title: string; content: string }) => {
+export const postRecruitment = async (recruitmentData: {
+  title: string;
+  startDate: string;
+  deadline: string;
+  link: string;
+}) => {
   try {
     const config = {
       headers: {
@@ -19,7 +24,10 @@ export const postRecruitment = async (recruitmentData: { title: string; content:
 
 export const getAllRecruitmentData = async (page: number, size: number): Promise<IRecruitmentList> => {
   try {
+    console.log(`${PROMOTION_BASIC_PATH}/api/recruitment?page=${page - 1}&size=${size}`);
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment?page=${page - 1}&size=${size}`);
+
+    console.log(response.data.data);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching RecruitmentData]', error);
@@ -48,15 +56,20 @@ export const getRecruitmentData = async (id: number) => {
   }
 };
 
-export const updateRecruitmentData = async (recruitmentData: { id: number; title: string; content: string }) => {
+export const updateRecruitmentData = async (recruitmentData: {
+  id: number;
+  title: string;
+  link: string;
+  startDate: string;
+  deadline: string;
+}) => {
   try {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    const response = await axios.put(
-      `${PROMOTION_BASIC_PATH}/api/recruitment`, recruitmentData, config);
+    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/recruitment`, recruitmentData, config);
     return response.data;
   } catch (error) {
     console.log('[❌ Error updating RecruitmentData]', error);

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { IContent, IRecruitmentList, IRecruitment } from '@/types/PromotionAdmin/recruitment';
+import { IRecruitmentList, IRecruitment } from '@/types/PromotionAdmin/recruitment';
 import {
   getAllRecruitmentData,
   getRecruitmentData,
@@ -27,20 +27,17 @@ function RecruitmentManagePage() {
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState(1);
   const RecruitmentsPerPage = 10;
-  
+
   const { data, isLoading, error, refetch } = useQuery<IRecruitmentList, Error>(
     ['recruitmentList', currentPage],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
   );
 
-  const [slicedRecruitment, setSlicedRecruitment] = useState<IContent[]>([]);
   const [currentRecruitment, setCurrentRecruitment] = useState<IRecruitment | null>();
   const [isSelected, setIsSelected] = useState(false);
   const [titleLength, setTitleLength] = useState<number>(0);
-  const [contentLength, setContentLength] = useState<number>(0);
   const maxTitleLength = 200;
-  const maxContentLength = 1500;
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -61,26 +58,36 @@ function RecruitmentManagePage() {
   } = useForm<IRecruitment>({
     defaultValues: {
       title: currentRecruitment?.title,
-      content: currentRecruitment?.content,
+      startDate: currentRecruitment?.startDate,
+      deadline: currentRecruitment?.deadline,
+      link: currentRecruitment?.link,
     },
   });
 
   useEffect(() => {
     if (currentRecruitment) {
       setValue('title', currentRecruitment.title);
-      setValue('content', currentRecruitment.content);
+      setValue('link', currentRecruitment.link);
+      setValue('startDate', currentRecruitment.startDate);
+      setValue('deadline', currentRecruitment.deadline);
       setTitleLength(currentRecruitment.title.length);
-      setContentLength(currentRecruitment.content.length);
     }
   }, [currentRecruitment, setValue]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number, totalPosts: number) => {
     if (window.confirm('삭제하시겠습니까?')) {
       try {
         const response = await deleteRecruitmentData(id);
         alert('채용공고가 삭제되었습니다.');
         console.log(response);
-        refetch();
+        await refetch();
+
+        const updatedTotalPosts = totalPosts - 1;
+        const currentPostsInPage = updatedTotalPosts - (currentPage - 1) * 10;
+        if (currentPostsInPage === 0) {
+          paginate(currentPage - 1);
+        }
+
         setCurrentRecruitment(null);
       } catch (error) {
         console.log(error);
@@ -91,9 +98,13 @@ function RecruitmentManagePage() {
 
   const fetchRecruitmentData = async (id: number) => {
     const recruitment = await getRecruitmentData(id);
-    setCurrentRecruitment(recruitment); 
+    const formattedRecruitment = {
+      ...recruitment,
+      startDate: recruitment.startDate.split('T')[0],
+      deadline: recruitment.deadline.split('T')[0],
+    };
+    setCurrentRecruitment(formattedRecruitment);
     setTitleLength(recruitment.title.length);
-    setContentLength(recruitment.content.length);
     setIsSelected(true);
   };
 
@@ -102,14 +113,19 @@ function RecruitmentManagePage() {
       alert('수정할 공고가 선택되지 않았습니다.');
       return;
     }
-  
+
     const formData = {
       id: currentRecruitment.id,
       title: data.title,
-      content: data.content,
+      link: data.link,
+      startDate: data.startDate,
+      deadline: data.deadline,
     };
-  
-    if (!(data.title === '' || data.content === '') && window.confirm('수정하시겠습니까?')) {
+
+    if (
+      !(data.title === '' || data.link === '' || data.startDate === '' || data.deadline === '') &&
+      window.confirm('수정하시겠습니까?')
+    ) {
       try {
         const response = await updateRecruitmentData(formData);
         alert('채용공고가 수정되었습니다.');
@@ -145,23 +161,20 @@ function RecruitmentManagePage() {
     if (name === 'title') {
       setTitleLength(value.length);
     }
-    if (name === 'content') {
-      setContentLength(value.length);
-    }
     setCurrentRecruitment((prevRecruitment) => (prevRecruitment ? { ...prevRecruitment, [name]: value } : null));
   };
 
-  const handleConfirmNavigation = (recruitment: IRecruitment) => {
-    if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
-      setIsEditing(false);
-      setCurrentRecruitment(recruitment);
-      setIsSelected(true);
-      setTitleLength(recruitment.title.length);
-      setContentLength(recruitment.content.length);
-    } else {
-      setIsEditing(true);
-    }
-  };
+  // const handleConfirmNavigation = (recruitment: IRecruitment) => {
+  //   if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
+  //     setIsEditing(false);
+  //     setCurrentRecruitment(recruitment);
+  //     setIsSelected(true);
+  //     setTitleLength(recruitment.title.length);
+  //     setContentLength(recruitment.content.length);
+  //   } else {
+  //     setIsEditing(true);
+  //   }
+  // };
 
   const handleAddNewRecruitment = () => {
     if (isEditing) {
@@ -178,108 +191,187 @@ function RecruitmentManagePage() {
   if (error) return <>{error.message}</>;
 
   return (
-  <Wrapper>
-    <LeftContentWrapper>
-      <ContentBox>
-        <TitleWrapper>
-          <Title>
-            채용 공고 관리
-            <Info>등록된 공고 {data?.totalElements}건 </Info>
-          </Title>
-          <Button onClick={handleAddNewRecruitment}>
-            <div style={{ paddingRight: 10 }}>
-              <AddedIcon />
-            </div>
-            새로운 공고
-          </Button>
-        </TitleWrapper>
-        <ListWrapper>
-          {data?.content?.map((recruitment) => (
-            <RecruimentList key={recruitment.id}>
-              <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id)} />
-              <RecruimentItem
-                isSelected={currentRecruitment?.id === recruitment.id && isSelected}
-                onClick={() => {
-                  fetchRecruitmentData(recruitment.id);
-                }}
-              >
-                <RecruimentTitle>{recruitment.title}</RecruimentTitle>
-              </RecruimentItem>
-            </RecruimentList>
-          ))}
-        </ListWrapper>
-        {data && (
-          <PaginationWrapper>
-            <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalElements} paginate={paginate} />
-          </PaginationWrapper>
-        )}
-      </ContentBox>
-    </LeftContentWrapper>
+    <Wrapper>
+      <LeftContentWrapper>
+        <ContentBox>
+          <TitleWrapper>
+            <Title>
+              채용 공고 관리
+              <Info>등록된 공고 {data?.totalElements}건 </Info>
+            </Title>
+            <Button onClick={handleAddNewRecruitment}>
+              <div style={{ paddingRight: 10 }}>
+                <AddedIcon />
+              </div>
+              새로운 공고
+            </Button>
+          </TitleWrapper>
+          <ListWrapper>
+            {data?.content
+              ?.slice()
+              .reverse()
+              .map((recruitment) => (
+                <RecruimentList key={recruitment.id}>
+                  <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id, data.totalElements)} />
+                  <RecruimentItem
+                    isSelected={currentRecruitment?.id === recruitment.id && isSelected}
+                    onClick={() => {
+                      fetchRecruitmentData(recruitment.id);
+                    }}
+                  >
+                    <RecruimentTitle>{recruitment.title}</RecruimentTitle>
+                  </RecruimentItem>
+                  <RecruimentStatus isDeadline={recruitment.status === false}>
+                    {recruitment.status === false ? '마감' : '진행'}
+                  </RecruimentStatus>
+                </RecruimentList>
+              ))}
+          </ListWrapper>
+          {data && (
+            <PaginationWrapper>
+              <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalElements} paginate={paginate} />
+            </PaginationWrapper>
+          )}
+        </ContentBox>
+      </LeftContentWrapper>
 
-    <RightContentWrapper>
-      {currentRecruitment ? ( // currentRecruitment가 존재하는지 확인
-        <form onSubmit={handleSubmit(onValid)}>
-          <ContentBox>
-            <TitleWrapper>
-              <Title>채용 공고 수정</Title>
-            </TitleWrapper>
-            <InputWrapper>
-              <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Title</p>
-                <div
-                  style={{
-                    fontSize: 12,
-                    paddingTop: 10,
-                  }}
-                >
-                  {titleLength}/{maxTitleLength}
-                </div>
-              </InputTitle>
-              <input
-                {...register('title', {
-                  required: 'Title을 입력해주세요. (200자 내로 작성해 주세요.)',
-                })}
-                name='title'
-                value={currentRecruitment?.title || ''}
-                onChange={handleChange}
-                maxLength={200}
-                placeholder='Title 입력해주세요. (200자 내로 작성해 주세요.)'
-              />
-              {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
-              <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Content</p>
-                <div
-                  style={{
-                    fontSize: 12,
-                    paddingTop: 10,
-                  }}
-                >
-                  {contentLength}/{maxContentLength}
-                </div>
-              </InputTitle>
-              <textarea
-                {...register('content', {
-                  required: 'Content 입력해주세요. (1500자 내로 작성해 주세요.)',
-                })}
-                name='content'
-                value={currentRecruitment?.content || ''}
-                onChange={handleChange}
-                maxLength={1500}
-                placeholder='Content 입력해주세요. (1500자 내로 작성해 주세요.)'
-              />
-              {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
-            </InputWrapper>
-            <RowWrapper>
-              <ModifyButton>수정하기</ModifyButton>
-            </RowWrapper>
-          </ContentBox>
-        </form>
-      ) : (
-        <div></div>
-      )}
-    </RightContentWrapper>
-  </Wrapper>
-);
+      <RightContentWrapper>
+        {currentRecruitment ? (
+          <form noValidate onSubmit={handleSubmit(onValid)}>
+            <ContentBox>
+              <TitleWrapper>
+                <Title>채용 공고 수정</Title>
+              </TitleWrapper>
+              <InputWrapper>
+                <InputTitle style={{ justifyContent: 'space-between' }}>
+                  <p>제목</p>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                    }}
+                  >
+                    {titleLength}/{maxTitleLength}
+                  </div>
+                </InputTitle>
+                <input
+                  {...register('title', {
+                    required: '제목 입력해주세요. (200자 내로 작성해 주세요.)',
+                  })}
+                  name='title'
+                  value={currentRecruitment?.title || ''}
+                  onChange={handleChange}
+                  maxLength={200}
+                  placeholder='제목을 입력해주세요. (200자 내로 작성해 주세요.)'
+                />
+                {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
+                <InputTitle>
+                  <p>채용 공고 링크</p>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      paddingTop: 10,
+                    }}
+                  ></div>
+                </InputTitle>
+                <input
+                  {...register('link', {
+                    required: '채용 공고 링크를 입력해주세요.',
+                    validate: {
+                      startsWithHttp: (value) =>
+                        value.startsWith('http://') ||
+                        value.startsWith('https://') ||
+                        '링크는 http:// 또는 https://로 시작해야 합니다.',
+                    },
+                  })}
+                  name='link'
+                  value={currentRecruitment?.link || ''}
+                  onChange={handleChange}
+                  maxLength={200}
+                  placeholder='채용 공고 링크를 입력해주세요.'
+                />
+                {errors.link && <ErrorMessage>{errors.link.message}</ErrorMessage>}
+                <RowWrapper style={{ justifyContent: 'space-between', width: '95%' }}>
+                  <div style={{ width: '45%' }}>
+                    <InputTitle>
+                      <p>접수 시작일</p>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                        }}
+                      ></div>
+                    </InputTitle>
+                    <input
+                      style={{ width: '100%', cursor: 'pointer', userSelect: 'none' }}
+                      type='date'
+                      placeholder='Date'
+                      {...register('startDate', {
+                        required: '접수 시작일을 입력해주세요.',
+                      })}
+                      name='startDate'
+                      onKeyDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={(e) => {
+                        e.currentTarget.showPicker();
+                      }}
+                      onChange={handleChange}
+                      value={currentRecruitment?.startDate}
+                    />
+                    <ErrorMessage>{errors.startDate ? errors.startDate.message : ''}</ErrorMessage>
+                  </div>
+
+                  <div style={{ width: '45%' }}>
+                    <InputTitle>
+                      <p>접수 마감일</p>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          paddingTop: 10,
+                        }}
+                      ></div>
+                    </InputTitle>
+                    <input
+                      style={{ width: '100%', cursor: 'pointer' }}
+                      type='date'
+                      {...register('deadline', {
+                        required: '접수 마감일을 입력해주세요.',
+                        validate: {
+                          isValidEndDate: (value) => {
+                            const startInputValue = (
+                              document.querySelector('input[name="startDate"]') as HTMLInputElement
+                            )?.value;
+                            const startInput = startInputValue ? new Date(startInputValue) : null;
+                            const endDate = new Date(value);
+
+                            return (startInput && endDate >= startInput) || '마감일은 시작일 이후여야 합니다.';
+                          },
+                        },
+                      })}
+                      name='deadline'
+                      onKeyDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={(e) => {
+                        e.currentTarget.showPicker();
+                      }}
+                      onChange={handleChange}
+                      value={currentRecruitment.deadline}
+                    />
+                    <ErrorMessage>{errors.deadline ? errors.deadline.message : ' '}</ErrorMessage>
+                  </div>
+                </RowWrapper>
+              </InputWrapper>
+              <RowWrapper>
+                <ModifyButton>수정하기</ModifyButton>
+              </RowWrapper>
+            </ContentBox>
+          </form>
+        ) : (
+          <div></div>
+        )}
+      </RightContentWrapper>
+    </Wrapper>
+  );
 }
 
 export default RecruitmentManagePage;
@@ -297,6 +389,7 @@ const TitleWrapper = styled.div`
   align-items: center;
   padding-bottom: 10px;
   margin-bottom: 10px;
+  background-color: ${(props) => props.theme.color.white.bold};
 `;
 
 const Title = styled.div`
@@ -363,8 +456,10 @@ const RecruimentItem = styled.div<{ isSelected: boolean }>`
   box-shadow: 1px 1px 4px 0.1px ${(props) => props.theme.color.black.pale};
   border-radius: 4px;
   background-color: ${(props) => (props.isSelected ? props.theme.color.yellow.light : props.theme.color.white.bold)};
-  width: 90%;
+  width: 80%;
   padding: 15px 10px;
+  margin-right: 15px;
+  margin-left: 15px;
   justify-content: space-between;
   cursor: pointer;
 
@@ -385,9 +480,26 @@ const PaginationWrapper = styled.div`
   margin-top: 30px;
 `;
 
+const RecruimentStatus = styled.div<{ isDeadline: boolean }>`
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  border: none;
+  box-shadow: 1px 1px 4px 0.1px ${(props) => props.theme.color.black.pale};
+  border-radius: 10%;
+  padding: 15px 10px;
+  background-color: ${(props) => (props.isDeadline ? props.theme.color.white.light : props.theme.color.yellow.bold)};
+  font-family: ${(props) => props.theme.font.semiBold};
+  color: ${(props) => (props.isDeadline ? props.theme.color.black.bold : props.theme.color.white.bold)};
+  justify-content: center;
+  cursor: default;
+`;
+
 const InputWrapper = styled.div`
   display: flex;
-  background-color: ${(props) => props.theme.color.white.light};
+  background-color: ${(props) => props.theme.color.white.bold};
   flex-direction: column;
   font-family: ${(props) => props.theme.font.semiBold};
   p {
