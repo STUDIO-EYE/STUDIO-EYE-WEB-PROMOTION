@@ -50,7 +50,7 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
-          dangerouslySetInnerHTML={{ __html: companyMainOverview || '<p>데이터 없음</p>' }}
+          dangerouslySetInnerHTML={{ __html: companyMainOverview || '<p>스튜디오 아이는</p>' }}
         ></motion.div>
       </IntroWrapper>
       <DesWrapper ref={desRef}>
@@ -58,7 +58,7 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
-          dangerouslySetInnerHTML={{ __html: companyCommitment || '<p>데이터 없음</p>' }}
+          dangerouslySetInnerHTML={{ __html: companyCommitment || '<p>채워넣기</p>' }}
         ></motion.div>
       </DesWrapper>
       <CircleWrapper ref={circleRef}>
