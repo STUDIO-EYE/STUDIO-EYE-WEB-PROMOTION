@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { getAllMenuData, postMenuData, deleteMenuData, putMenuData } from '@/apis/PromotionAdmin/menu';
+import styled, { ExecutionProps } from 'styled-components';
+import {
+  getAllMenuData,
+  deleteMenuData,
+  putMenuData,
+} from '@/apis/PromotionAdmin/menu';
 import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { FastOmit, Substitute } from 'styled-components/dist/types';
+import { theme } from '@/styles/theme';
+import { DATAEDIT_TITLES_COMPONENTS } from '@/components/PromotionAdmin/DataEdit/Company/StyleComponents';
 
 interface IMenuData {
   id: number;
@@ -11,7 +19,6 @@ interface IMenuData {
 
 function MenuPage() {
   const [menuList, setMenuList] = useState<IMenuData[]>([]);
-  const [newMenuTitle, setNewMenuTitle] = useState('');
   const [newMenuVisibility, setNewMenuVisibility] = useState(true);
   const [editMenuId, setEditMenuId] = useState<number | null>(null);
   const [editMenuTitle, setEditMenuTitle] = useState('');
@@ -37,22 +44,6 @@ function MenuPage() {
     fetchMenuData();
   }, []);
 
-  const handleCreateMenu = async () => {
-    const requestBody = {
-      title: newMenuTitle,
-      visibility: newMenuVisibility,
-    };
-
-    try {
-      await postMenuData(requestBody);
-      setNewMenuTitle('');
-      setNewMenuVisibility(true);
-      fetchMenuData();
-    } catch (error) {
-      console.error('error:', error);
-    }
-  };
-
   const handleDeleteMenu = async (menuId: number) => {
     try {
       await deleteMenuData(menuId);
@@ -62,94 +53,71 @@ function MenuPage() {
     }
   };
 
-  const handleEditMenu = (menu: IMenuData) => {
-    setEditMenuId(menu.id);
-    setEditMenuTitle(menu.title);
-    setEditMenuVisibility(menu.visibility);
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const items = Array.from(menuList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setMenuList(items);
   };
 
-  const handleUpdateMenu = async (menuId: number) => {
-    const updatedTitle = editMenuTitle;
-    const updatedVisibility = editMenuVisibility;
-
+  const handleVisibilityChange = async (menuId: number, visibility: boolean) => {
     try {
-      await putMenuData(menuId, updatedTitle, updatedVisibility);
+      await putMenuData(menuId, menuList.find(menu => menu.id === menuId)?.title || '', visibility);
       fetchMenuData();
-      setEditMenuId(null);
     } catch (error) {
       console.error('error:', error);
     }
   };
+
   return (
     <Wrapper>
-      <TitleWrapper>
-        <h1>메뉴 관리</h1>
-      </TitleWrapper>
-
-      <MenuWrapper>
-        <AddMenuSection>
-          <Form>
-            <h3>새로운 메뉴 추가</h3>
-            <InputWrapper>
-              <Input
-                type="text"
-                value={newMenuTitle}
-                onChange={(e) => setNewMenuTitle(e.target.value)}
-                placeholder="메뉴 제목"
-              />
-              <ToggleWrapper>
-                <ToggleSwitch
-                  type="button"
-                  onClick={() => setNewMenuVisibility(!newMenuVisibility)}
-                  isChecked={newMenuVisibility}
-                />
-                <ToggleLabel isChecked={newMenuVisibility}>
-                  {newMenuVisibility ? "공개" : "비공개"}
-                </ToggleLabel>
-              </ToggleWrapper>
-            </InputWrapper>
-            <Button description="메뉴 추가" onClick={handleCreateMenu} width={100} />
-          </Form>
-        </AddMenuSection>
-
-        <MenuListSection>
-          <MenuList>
-            {menuList.map((menu) => (
-              <MenuItem key={menu.id}>
-                {editMenuId === menu.id ? (
-                  <Form>
-                    <InputWrapper>
-                      <Input
-                        type="text"
-                        value={editMenuTitle}
-                        onChange={(e) => setEditMenuTitle(e.target.value)}
-                      />
-                      <ToggleWrapper>
-                        <ToggleLabel isChecked={editMenuVisibility}>
-                          {editMenuVisibility ? "공개" : "비공개"}
-                        </ToggleLabel>
-                        <ToggleSwitch
-                          type="button"
-                          onClick={() => setEditMenuVisibility(!editMenuVisibility)}
-                          isChecked={editMenuVisibility}
-                        />
-                      </ToggleWrapper>
-                    </InputWrapper>
-                    <Button description="수정 완료" onClick={() => handleUpdateMenu(menu.id)} width={100} />
-                  </Form>
-                ) : (
-                  <div>
-                    <span>{menu.title}</span>
-                    <span>{menu.visibility ? "공개" : "비공개"}</span>
-                    <Button description="수정" onClick={() => handleEditMenu(menu)} width={100} />
-                    <Button description="삭제" onClick={() => handleDeleteMenu(menu.id)} width={100} />
-                  </div>
+      <ContentBlock>
+        <MenuWrapper>
+          <MenuListSection>
+            <TitleWrapper>
+              {DATAEDIT_TITLES_COMPONENTS.MENU}
+              메뉴 수정
+            </TitleWrapper>
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+              <Droppable droppableId="menuList">
+                {(provided: { droppableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; innerRef: React.LegacyRef<HTMLUListElement> | undefined; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+                  <MenuList {...provided.droppableProps} ref={provided.innerRef}>
+                    {menuList.map((menu, index) => (
+                      <Draggable key={menu.id} draggableId={menu.id.toString()} index={index}>
+                        {(provided: { innerRef: React.LegacyRef<HTMLLIElement> | undefined; draggableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; dragHandleProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; }) => (
+                          <MenuItem
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <MenuItemContent>
+                              <MenuTitle>{menu.title}</MenuTitle>
+                              <MenuActions>
+                                <Button description="삭제" onClick={() => handleDeleteMenu(menu.id)} width={100} />
+                                <Select
+                                  value={menu.visibility ? '공개' : '비공개'}
+                                  onChange={(e) => handleVisibilityChange(menu.id, e.target.value === '공개')}
+                                >
+                                  <option value="공개">공개</option>
+                                  <option value="비공개">비공개</option>
+                                </Select>
+                              </MenuActions>
+                            </MenuItemContent>
+                          </MenuItem>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </MenuList>
                 )}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </MenuListSection>
-      </MenuWrapper>
+              </Droppable>
+            </DragDropContext>
+          </MenuListSection>
+        </MenuWrapper>
+      </ContentBlock>
     </Wrapper>
   );
 }
@@ -157,122 +125,97 @@ function MenuPage() {
 export default MenuPage;
 
 const Wrapper = styled.div`
-font-family: 'Pretendard';
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 80vw;
+  font-family: 'pretendard-regular';
+  width: 50vw;
+`;
+
+const ContentBlock = styled.div<{ width?: number; height?: number; isFocused?: boolean }>`
+  padding: 25px;
+  position: relative;
+  box-shadow: 2px 2px 5px 0.3px ${(props) => props.theme.color.black.pale};
+  margin-bottom: 30px;
+  margin-right: 30px;
+
+  border-radius: 4px;
+  width: ${(props) => (props.width ? props.width + 'px;' : '750px;')};
+  height: ${(props) => (props.height ? props.height + 'px;' : 'fit-content;')};
+  background-color: ${(props) => (props.isFocused ? theme.color.yellow.pale : theme.color.white.pale)};
+  `;
+
+const Select = styled.select`
+  font-family: 'Pretendard';
+  font-size: 16px;
+  padding: 5px 10px;
+  width: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: ${(props) => props.theme.color.white.bold};
+  color: #494845;
+  box-shadow: 1px 1px 4px 0.1px #c6c6c6;
 `;
 
 const MenuWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  width: 100%;
+`;
+
+const MenuListSection = styled.div`
+  padding: 25px;
   width: 100%;
 `;
 
 const TitleWrapper = styled.div`
-  text-align: left;
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const AddMenuSection = styled.div`
-  flex-grow: 1;
-  padding: 15px;
-  background-color: ${(props) => props.theme.color.white};
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-`;
-
-const MenuListSection = styled.div`
-  flex-grow: 1;
-  padding: 15px;
-  background-color: ${(props) => props.theme.color.white};
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-`;
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  input {
-    outline: none;
-    font-family: ${(props) => props.theme.font.regular};
-    font-size: 14px;
-    padding-left: 10px;
-    width: 100%;
-    height: 30px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  input:focus {
-    transition: 0.2s;
-    border-bottom: 3px solid ${(props) => props.theme.color.symbol};
-  }
-`;
-
-const ToggleWrapper = styled.div`
   display: flex;
   align-items: center;
+  align-content: center;
+  font-family: 'Pretendard-medium';
+  font-size: 25px;
 `;
 
-interface ToggleProps {
-  isChecked: boolean;
-}
-
-const ToggleLabel = styled.span<ToggleProps>`
-  margin-right: 10px;
-  font-size: 14px;
-  color: ${(props) => (props.isChecked ? "green" : "red")};
+const MenuItemContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
 
-const ToggleSwitch = styled.button<ToggleProps>`
-  width: 50px;
-  height: 25px;
-  border-radius: 15px;
-  background-color: ${(props) => (props.isChecked ? "green" : "red")};
-  position: relative;
-  cursor: pointer;
-  outline: none;
-  border: none;
+const MenuTitle = styled.span`
+  font-family: 'Pretendard';
+  font-size: 50px;
+  font-weight: 800;
+`;
 
-  &:before {
-    content: '';
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background-color: white;
-    border-radius: 50%;
-    top: 1.5px;
-    left: ${(props) => (props.isChecked ? "26px" : "2px")};
-    transition: left 0.2s;
+const MenuActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-left: 50px;
+
+  span {
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 `;
 
 const MenuList = styled.ul`
   list-style: none;
-  padding: 0;
+  margin-top: 15px;
+  width: 100%;
 `;
 
 const MenuItem = styled.li`
-  margin: 10px 0;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
+  background-color: ${theme.color.white};
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 4px;
+  border-radius: 8px;
 
-const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  &:hover {
+    background-color: #afafaf13;
+    transition: 0.2s;
+  }
 `;

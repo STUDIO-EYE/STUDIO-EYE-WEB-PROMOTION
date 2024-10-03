@@ -89,6 +89,11 @@ const DATAEDIT_COLUMNS = {
     title: 'FAQ',
     description: 'FAQ 화면에 반영됩니다.',
   },
+
+  MENU: {
+    title: 'MENU',
+    description: '프로모션 페이지의 메뉴에 반영됩니다.',
+  },
 };
 
 export const DATAEDIT_NOTICE_COMPONENTS = {
@@ -180,6 +185,12 @@ export const DATAEDIT_TITLES_COMPONENTS = {
     <TitleWrapper style={{ marginBottom: 0 }}>
       <Tooltip description={DATAEDIT_COLUMNS.FAQ.description} svgComponent={<InfoIcon width={20} height={20} />} />
       {/* <Title description={DATAEDIT_COLUMNS.FAQ.title} /> */}
+    </TitleWrapper>
+  ),
+
+  MENU: (
+    <TitleWrapper style={{ marginBottom: 0 }}>
+      <Tooltip description={DATAEDIT_COLUMNS.MENU.description} svgComponent={<InfoIcon width={20} height={20} />} />
     </TitleWrapper>
   ),
 };
