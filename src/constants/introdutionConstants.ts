@@ -19,3 +19,13 @@ export const PARTER_DATA = {
   PLADI_LINK: 'https://www.pladi.tv/',
   LOCOMO_LINK: 'https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE',
 };
+
+export const ARTWORKLIST_DATA = {
+  TITLE: '절대 떠들면 안 되는 호텔',
+  CLIENT: '넷플릭스 코리아',
+  OVERVIEW: '설명',
+};
+
+export const ABOUT_DATA = {
+  
+}
