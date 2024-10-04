@@ -28,7 +28,7 @@ function RecruitmentManagePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const RecruitmentsPerPage = 10;
 
-  const { data, isLoading, error, refetch } = useQuery<IRecruitmentList, Error>(
+  const { data, isLoading, error, refetch, isFetching, isRefetching } = useQuery<IRecruitmentList, Error>(
     ['recruitmentList', currentPage],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
@@ -38,6 +38,16 @@ function RecruitmentManagePage() {
   const [isSelected, setIsSelected] = useState(false);
   const [titleLength, setTitleLength] = useState<number>(0);
   const maxTitleLength = 200;
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    if (!isFetching && !isRefetching && data && data.content.length === 0) {
+      navigator(`${PA_ROUTES.RECRUITMENT}/write`);
+    }
+  }, [data, navigator, isFetching, isRefetching]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);

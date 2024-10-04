@@ -102,7 +102,7 @@ function RecruitmentWritePage() {
     <form noValidate onSubmit={handleSubmit(onValid)}>
       <ContentBox>
         <TitleWrapper>
-          <Title>채용 공고 수정</Title>
+          <Title>채용 공고 등록</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputTitle style={{ justifyContent: 'space-between' }}>
