@@ -5,24 +5,24 @@ import { useNavigate } from 'react-router-dom';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { GoArrowRight } from "react-icons/go"; // Import arrow icon
 import groupImage from '@/assets/images/PP/group.png'; // Importing the group.png image
-import Footer from '@/components/PromotionPage/Footer/Footer';
+//import Footer from '@/components/PromotionPage/Footer/Footer';
 
 
-import image26 from '@/assets/images/PP/image26.png'; 
-import image27 from '@/assets/images/PP/image27.png'; 
-import image28 from '@/assets/images/PP/image28.png'; 
-import image29 from '@/assets/images/PP/image29.png'; 
-import image30 from '@/assets/images/PP/image30.png'; 
-import image31 from '@/assets/images/PP/image31.png'; 
-import image32 from '@/assets/images/PP/image32.png'; 
-import image33 from '@/assets/images/PP/image33.png'; 
-import image34 from '@/assets/images/PP/image34.png'; 
-import image35 from '@/assets/images/PP/image35.png'; 
-import image36 from '@/assets/images/PP/image36.png'; 
-import image37 from '@/assets/images/PP/image37.png'; 
-import image38 from '@/assets/images/PP/image38.png'; 
-import image39 from '@/assets/images/PP/image39.png'; 
-import image40 from '@/assets/images/PP/image40.png'; 
+import image26 from '@/assets/images/PP/image1.png'; 
+import image27 from '@/assets/images/PP/image2.png'; 
+import image28 from '@/assets/images/PP/image3.png'; 
+import image29 from '@/assets/images/PP/image4.png'; 
+import image30 from '@/assets/images/PP/image5.png'; 
+import image31 from '@/assets/images/PP/image6.png'; 
+import image32 from '@/assets/images/PP/image7.png'; 
+import image33 from '@/assets/images/PP/image8.png'; 
+import image34 from '@/assets/images/PP/image9.png'; 
+import image35 from '@/assets/images/PP/image10.png'; 
+import image36 from '@/assets/images/PP/image11.png'; 
+import image37 from '@/assets/images/PP/image12.png'; 
+import image38 from '@/assets/images/PP/image13.png'; 
+import image39 from '@/assets/images/PP/image14.png'; 
+import image40 from '@/assets/images/PP/image15.png'; 
 
 interface PostData {
   id: number;
@@ -129,7 +129,7 @@ const benefits = [
       </JobBoardSection>
 
       {/* 세 번째 섹션: 회사 복지 정보 */}
-      <BenefitsSection>
+ <BenefitsSection>
   <BenefitTitle>STUDIOEYE'S BENEFIT</BenefitTitle>
     <BenefitContent>
       {benefits.map((benefit, index) => (
@@ -142,9 +142,9 @@ const benefits = [
     </BenefitContent>
   </BenefitsSection>
 
-       <>
+       {/* <>
             <Footer />
-      </> 
+      </>  */}
     </Container>
   );
 };
