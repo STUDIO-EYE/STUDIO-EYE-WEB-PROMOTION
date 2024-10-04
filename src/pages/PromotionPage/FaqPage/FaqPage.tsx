@@ -4,6 +4,7 @@ import axios from 'axios';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
+import { theme } from '@/styles/theme'; // Import your theme for media queries
 
 interface FaqData {
   id: number;
@@ -13,7 +14,7 @@ interface FaqData {
 }
 
 const FaqPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<FaqData[]>([]);
   const [faqQuestion, setFaqQuestion] = useState('');
   const [searchResult, setSearchResult] = useState('');
   const [searchData, setSearchData] = useState<FaqData[]>([]);
@@ -106,36 +107,34 @@ const FaqPage = () => {
 
   return (
     <BackgroundYellowCircle>
-      {' '}
       <Container>
         <Header>
           <Title>
-            <AnimatedSpan delay={0.1}>F</AnimatedSpan>requently
-            <AnimatedSpan delay={0.3}> A</AnimatedSpan>sked
-            <AnimatedSpan delay={0.5}> Q</AnimatedSpan>uestions
+          <LineWrapper>
+          <AnimatedSpan delay={0.1}>F</AnimatedSpan>requently
+          <AnimatedSpan delay={0.3}> A</AnimatedSpan>sked
+          </LineWrapper>
+          <LineWrapper>
+          <AnimatedSpan delay={0.5}> Q</AnimatedSpan>uestions
+           </LineWrapper>
+            
           </Title>
           <SubContent>이곳에 자주 묻는 질문들에 대한 답변을 모아 놓았습니다.</SubContent>
         </Header>
         <Content>
           <InputWrapper>
-            {faqQuestion.length === 0 ? (
-              <SearchFaqQuestion
-                placeholder='컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요.'
-                autoComplete='off'
-                name='searchingfaqquestion'
-                value={faqQuestion}
-                onChange={handleTextAreaDataChange}
-              />
-            ) : (
-              <>
-                <SearchFaqQuestion autoComplete='off' name='searchingfaqquestion' onChange={handleTextAreaDataChange} />
-              </>
-            )}
+            <SearchFaqQuestion
+              placeholder='컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요.'
+              autoComplete='off'
+              name='searchingfaqquestion'
+              value={faqQuestion}
+              onChange={handleTextAreaDataChange}
+            />
           </InputWrapper>
           {searchResult === 'fail' ? (
             <NoResults>검색 결과가 없습니다.</NoResults>
           ) : (
-            searchData.map((item: any, i: number) => (
+            searchData.map((item, i) => (
               <FaqDetailButton
                 key={i}
                 initial={{ height: 30, opacity: 0.5, scale: 0.9 }}
@@ -166,52 +165,38 @@ const FaqPage = () => {
   );
 };
 
+// Styled-components with media queries
 const Container = styled.div`
   font-family: 'Pretendard';
   min-height: 100vh;
   overflow-y: auto;
-  max-height: 'fit-content';
+  max-height: fit-content;
   scroll-snap-type: y mandatory;
   background-color: black;
   color: white;
+  padding: 2rem 1rem;
+
+  @media ${theme.media.tablet} {
+    padding: 3rem 2rem;
+  }
+
+  @media ${theme.media.mobile} {
+    padding: 2rem 1rem;
+  }
 `;
 
-const GradientOverlayTopLeft = styled.div`
-  position: absolute;
-  top: 0%;
-  left: 00%;
-  width: 50%;
-  height: 50%;
-  background-image: radial-gradient(circle at top left, rgba(255, 169, 0, 0.3), transparent);
-  filter: blur(50px);
-  z-index: 0;
-`;
-
-const GradientOverlayBottomRight = styled.div`
-  position: absolute;
-  bottom: 0%;
-  right: 0%;
-  width: 80%;
-  height: 80%;
-  background-image: radial-gradient(circle at bottom right, rgba(255, 169, 0, 0.3), transparent);
-  filter: blur(50px);
-  z-index: 0;
-`;
 
 const Header = styled.div`
   position: relative;
   text-align: center;
-  margin-top: 8rem;
-`;
+  margin-top: 4rem;
 
-const slideIn = keyframes`
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
+  @media ${theme.media.tablet} {
+    margin-top: 3rem;
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+
+  @media ${theme.media.mobile} {
+    margin-top: 2rem;
   }
 `;
 
@@ -219,23 +204,52 @@ const Title = styled.h1`
   font-size: 4rem;
   font-weight: 600;
   color: white;
+  text-align: center;
+
+  @media ${theme.media.tablet} {
+    font-size: 3rem;
+  }
+
+  @media ${theme.media.mobile} {
+    font-size: 2rem;
+  }
 `;
 
-interface AnimatedSpanProps {
-  delay?: number;
-}
+const LineWrapper = styled.div`
+  display: inline;
 
-const AnimatedSpan = styled.span<AnimatedSpanProps>`
+  @media ${theme.media.mobile} {
+    display: block; /* This will create the line break on mobile */
+  }
+`;
+
+const AnimatedSpan = styled.span<{ delay?: number }>`
   color: #ffa900;
-  animation: ${slideIn} 1.2s ease-out;
+  animation: ${keyframes`
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  `} 1.2s ease-out;
   animation-delay: ${(props) => props.delay || 0}s;
 `;
 
 const SubContent = styled.p`
   font-size: 1.2rem;
-
   margin-top: 2rem;
   color: white;
+
+  @media ${theme.media.tablet} {
+    font-size: 1.1rem;
+  }
+
+  @media ${theme.media.mobile} {
+    font-size: 1rem;
+  }
 `;
 
 const Content = styled.div`
@@ -246,6 +260,14 @@ const Content = styled.div`
   align-items: center;
   position: relative;
   z-index: 1;
+
+  @media ${theme.media.tablet} {
+    padding-top: 4rem;
+  }
+
+  @media ${theme.media.mobile} {
+    padding-top: 3rem;
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -255,6 +277,10 @@ const InputWrapper = styled.div`
   width: 80%;
   text-align: center;
   margin-bottom: 2rem;
+
+  @media ${theme.media.mobile} {
+    width: 80%;
+  }
 `;
 
 const SearchFaqQuestion = styled.input`
@@ -264,17 +290,25 @@ const SearchFaqQuestion = styled.input`
   font-size: 18px;
   color: white;
   text-align: center;
+
+  @media ${theme.media.mobile} {
+    font-size: 16px;
+  }
 `;
 
 const FaqDetailButton = styled(motion.div)`
   border-top: 2px solid gray;
   border-bottom: 2px solid gray;
-
   margin-bottom: 1rem;
   padding: 30px;
   width: 80%;
   overflow: hidden;
   cursor: pointer;
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    padding: 20px;
+  }
 `;
 
 const FaqBrief = styled.div`
@@ -286,15 +320,27 @@ const FaqBriefQuestion = styled.h2`
   font-weight: 800;
   font-size: 2rem;
   color: #ffa900;
-
   transition: all 0.3s ease;
+
   &:hover {
     color: white;
+  }
+
+  @media ${theme.media.tablet} {
+    font-size: 1.8rem;
+  }
+
+  @media ${theme.media.mobile} {
+    font-size: 1.6rem;
   }
 `;
 
 const FaqDetailBox = styled.div`
   padding: 40px 40px 0 40px;
+
+  @media ${theme.media.mobile} {
+    padding: 20px 20px 0 20px;
+  }
 `;
 
 const FaqDetailAnswer = styled.p`
@@ -306,6 +352,15 @@ const FaqDetailAnswer = styled.p`
   white-space: pre-line;
   word-wrap: break-word;
   word-break: break-word;
+
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
+
+  @media ${theme.media.mobile} {
+    font-size: 1rem;
+  }
+
   a {
     color: #ffa900;
   }
