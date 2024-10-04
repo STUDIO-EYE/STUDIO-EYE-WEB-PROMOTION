@@ -5,7 +5,6 @@ import {
   deleteMenuData,
   putMenuData,
 } from '@/apis/PromotionAdmin/menu';
-import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FastOmit, Substitute } from 'styled-components/dist/types';
 import { theme } from '@/styles/theme';
@@ -15,22 +14,28 @@ interface IMenuData {
   id: number;
   title: string;
   visibility: boolean;
+  sequence: number;
 }
 
 function MenuPage() {
   const [menuList, setMenuList] = useState<IMenuData[]>([]);
-  const [newMenuVisibility, setNewMenuVisibility] = useState(true);
-  const [editMenuId, setEditMenuId] = useState<number | null>(null);
-  const [editMenuTitle, setEditMenuTitle] = useState('');
-  const [editMenuVisibility, setEditMenuVisibility] = useState(true);
 
   const fetchMenuData = async () => {
     try {
       const data = await getAllMenuData();
-      if (Array.isArray(data)) {
-        setMenuList(data);
-      } else if (data && Array.isArray(data.data)) {
-        setMenuList(data.data);
+      console.log(data);
+  
+      if (data && Array.isArray(data.data)) {
+        const updatedData = data.data
+          .map((item: { id: number; menuTitle: string; visibility: boolean; sequence: number; }) => ({
+            id: item.id,
+            title: item.menuTitle,
+            visibility: item.visibility,
+            sequence: item.sequence,
+          }))
+          .sort((a: { sequence: number; }, b: { sequence: number; }) => a.sequence - b.sequence); // 오름차순 정렬
+  
+        setMenuList(updatedData);
       } else {
         setMenuList([]);
       }
@@ -39,38 +44,56 @@ function MenuPage() {
       setMenuList([]);
     }
   };
-
-  useEffect(() => {
-    fetchMenuData();
-  }, []);
-
-  const handleDeleteMenu = async (menuId: number) => {
-    try {
-      await deleteMenuData(menuId);
-      fetchMenuData();
-    } catch (error) {
-      console.error('error:', error);
-    }
-  };
-
-  const handleOnDragEnd = (result: any) => {
+  
+  const handleOnDragEnd = async (result: any) => {
     if (!result.destination) return;
 
     const items = Array.from(menuList);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setMenuList(items);
+    const updatedMenuList: IMenuData[] = items.map((menu, index) => ({
+      id: menu.id,
+      title: menu.title,
+      visibility: menu.visibility,
+      sequence: index,
+    }));
+
+    try {
+      setMenuList(updatedMenuList);
+    } catch (error) {
+      console.error('에러: ', error);
+    }
   };
+
 
   const handleVisibilityChange = async (menuId: number, visibility: boolean) => {
     try {
-      await putMenuData(menuId, menuList.find(menu => menu.id === menuId)?.title || '', visibility);
-      fetchMenuData();
+      const menuToUpdate = menuList.find(menu => menu.id === menuId);
+
+      if (menuToUpdate) {
+        const updatedMenuItem = {
+          ...menuToUpdate,
+          visibility: visibility,
+        };
+
+        await putMenuData([updatedMenuItem]);
+        fetchMenuData();
+      }
     } catch (error) {
-      console.error('error:', error);
+      console.error('에러:', error);
     }
   };
+
+
+  useEffect(() => {
+    fetchMenuData();
+  }, []);
+
+  useEffect(() => {
+    console.log('업데이트된 목록:', menuList);
+  }, [menuList]);
+
 
   return (
     <Wrapper>
@@ -85,33 +108,37 @@ function MenuPage() {
               <Droppable droppableId="menuList">
                 {(provided: { droppableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; innerRef: React.LegacyRef<HTMLUListElement> | undefined; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
                   <MenuList {...provided.droppableProps} ref={provided.innerRef}>
-                    {menuList.map((menu, index) => (
-                      <Draggable key={menu.id} draggableId={menu.id.toString()} index={index}>
-                        {(provided: { innerRef: React.LegacyRef<HTMLLIElement> | undefined; draggableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; dragHandleProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; }) => (
-                          <MenuItem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <MenuItemContent>
-                              <MenuTitle>{menu.title}</MenuTitle>
-                              <MenuActions>
-                                <Button description="삭제" onClick={() => handleDeleteMenu(menu.id)} width={100} />
-                                <Select
-                                  value={menu.visibility ? '공개' : '비공개'}
-                                  onChange={(e) => handleVisibilityChange(menu.id, e.target.value === '공개')}
-                                >
-                                  <option value="공개">공개</option>
-                                  <option value="비공개">비공개</option>
-                                </Select>
-                              </MenuActions>
-                            </MenuItemContent>
-                          </MenuItem>
-                        )}
-                      </Draggable>
-                    ))}
+                    {menuList.length > 0 ? (
+                      menuList.map((menu, index) => (
+                        <Draggable key={menu.id} draggableId={menu.id.toString()} index={index}>
+                          {(provided: { innerRef: React.LegacyRef<HTMLLIElement> | undefined; draggableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; dragHandleProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; }) => (
+                            <MenuItem
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <MenuItemContent>
+                                <MenuTitle>{menu.title}</MenuTitle>
+                                <MenuActions>
+                                  <Select
+                                    value={menu.visibility ? '공개' : '비공개'}
+                                    onChange={(e) => handleVisibilityChange(menu.id, e.target.value === '공개')}
+                                  >
+                                    <option value="공개">공개</option>
+                                    <option value="비공개">비공개</option>
+                                  </Select>
+                                </MenuActions>
+                              </MenuItemContent>
+                            </MenuItem>
+                          )}
+                        </Draggable>
+                      ))
+                    ) : (
+                      <p>메뉴가 없습니다.</p>
+                    )}
                     {provided.placeholder}
                   </MenuList>
+
                 )}
               </Droppable>
             </DragDropContext>
