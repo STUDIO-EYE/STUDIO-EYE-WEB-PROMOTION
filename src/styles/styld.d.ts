@@ -20,6 +20,8 @@ declare module 'styled-components' {
         light: string;
         pale: string;
       };
+      red: string;
+      green: string;
     };
     font: {
       thin: string;

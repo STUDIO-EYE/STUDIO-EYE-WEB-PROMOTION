@@ -24,6 +24,8 @@ export const theme: DefaultTheme = {
       light: '#FFF0D1',
       pale: '#fffcf5',
     },
+    red: '#ff3d33',
+    green: '#42b348',
   },
 
   font: {
