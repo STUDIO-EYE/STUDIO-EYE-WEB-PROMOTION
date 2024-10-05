@@ -16,13 +16,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["jest"],
-    "typeRoots": ["types","./node_modules/@types"],
+    "types": ["cypress"],
+    "typeRoots": ["types"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "custom.d.ts","src/**/*.tsx", "src/**/*.ts", "tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
+  "include": ["src", "custom.d.ts", "cypress/**/*.ts"]
 }
