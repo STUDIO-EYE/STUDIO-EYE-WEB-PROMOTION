@@ -1,6 +1,6 @@
 export type IContent = {
   id: number;
-  status: boolean;
+  status: string;
   title: string;
 };
 
@@ -38,7 +38,15 @@ export interface IRecruitment {
   title: string;
   startDate: string;
   deadline: string;
-  status: boolean;
+  status: string;
   createdAt: string;
   link: string;
+}
+
+export interface IBenefit {
+  id: number;
+  imageUrl: string;
+  imageFileName: string;
+  title: string;
+  content: string;
 }

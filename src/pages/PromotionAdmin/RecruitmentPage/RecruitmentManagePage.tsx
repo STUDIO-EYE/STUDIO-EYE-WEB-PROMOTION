@@ -107,6 +107,14 @@ function RecruitmentManagePage() {
   };
 
   const fetchRecruitmentData = async (id: number) => {
+    if (isEditing) {
+      const confirmMove = window.confirm('수정중인 내용이 저장되지 않습니다.\n이동하시겠습니까?');
+      setIsEditing(false);
+      if (!confirmMove) {
+        setIsEditing(true);
+        return;
+      }
+    }
     const recruitment = await getRecruitmentData(id);
     const formattedRecruitment = {
       ...recruitment,
@@ -141,6 +149,7 @@ function RecruitmentManagePage() {
         alert('채용공고가 수정되었습니다.');
         console.log(response);
         setIsEditing(false);
+        refetch();
       } catch (error) {
         console.log(error);
         alert('채용공고 수정 중 오류가 발생했습니다.');
@@ -162,7 +171,7 @@ function RecruitmentManagePage() {
     }
   }, [isEditing]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsEditing(true);
     const { name, value } = e.target;
     if (/^\s/.test(value.charAt(0))) {
@@ -231,8 +240,11 @@ function RecruitmentManagePage() {
                   >
                     <RecruimentTitle>{recruitment.title}</RecruimentTitle>
                   </RecruimentItem>
-                  <RecruimentStatus isDeadline={recruitment.status === false}>
-                    {recruitment.status === false ? '마감' : '진행'}
+                  <RecruimentStatus
+                    isDeadline={recruitment.status === 'CLOSE'}
+                    isPreparing={recruitment.status === 'PREPARING'}
+                  >
+                    {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
                   </RecruimentStatus>
                 </RecruimentList>
               ))}
@@ -490,7 +502,7 @@ const PaginationWrapper = styled.div`
   margin-top: 30px;
 `;
 
-const RecruimentStatus = styled.div<{ isDeadline: boolean }>`
+const RecruimentStatus = styled.div<{ isDeadline: boolean; isPreparing: boolean }>`
   display: flex;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -500,9 +512,26 @@ const RecruimentStatus = styled.div<{ isDeadline: boolean }>`
   box-shadow: 1px 1px 4px 0.1px ${(props) => props.theme.color.black.pale};
   border-radius: 10%;
   padding: 15px 10px;
-  background-color: ${(props) => (props.isDeadline ? props.theme.color.white.light : props.theme.color.yellow.bold)};
+  background-color: ${(props) => {
+    if (props.isDeadline) {
+      return props.theme.color.white.light;
+    } else if (props.isPreparing) {
+      return props.theme.color.yellow.light;
+    } else {
+      return props.theme.color.yellow.bold;
+    }
+  }};
+
+  color: ${(props) => {
+    if (props.isDeadline) {
+      return props.theme.color.black.light;
+    } else if (props.isPreparing) {
+      return props.theme.color.black.bold;
+    } else {
+      return props.theme.color.white.bold;
+    }
+  }};
   font-family: ${(props) => props.theme.font.semiBold};
-  color: ${(props) => (props.isDeadline ? props.theme.color.black.bold : props.theme.color.white.bold)};
   justify-content: center;
   cursor: default;
 `;
@@ -529,21 +558,6 @@ const InputWrapper = styled.div`
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
   input:focus {
-    transition: 0.2s;
-    border-bottom: 3px solid ${(props) => props.theme.color.symbol};
-  }
-  textarea {
-    outline: none;
-    font-family: ${(props) => props.theme.font.regular};
-    font-size: 14px;
-    padding: 10px;
-    width: 95%;
-    min-height: 450px;
-    border: none;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    resize: none;
-  }
-  textarea:focus {
     transition: 0.2s;
     border-bottom: 3px solid ${(props) => props.theme.color.symbol};
   }
@@ -595,4 +609,5 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
   margin-left: 10px;
   font-size: 13px;
+  height: 16px;
 `;
