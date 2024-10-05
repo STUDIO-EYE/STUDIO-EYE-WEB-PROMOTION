@@ -36,7 +36,14 @@ export const postMenuData = async (menuData: { title: string; visibility: boolea
   }
 };
 
-export const putMenuData = async (menuId: number, menuTitle: string, visibility: boolean) => {
+export interface IMenuData {
+  id: number;
+  title: string;
+  visibility: boolean;
+  sequence: number;
+}
+
+export const putMenuData = async (menuItems: IMenuData[]) => {
   try {
     const config = {
       headers: {
@@ -44,16 +51,12 @@ export const putMenuData = async (menuId: number, menuTitle: string, visibility:
       },
     };
 
-    const requestBody = {
-      id: menuId,
-      title: menuTitle,
-      visibility: visibility,
-    };
-
-    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/menu`, requestBody, config);
+    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/menu`, menuItems, config);
     return response.data;
   } catch (error) {
     console.error('[❌ Error updating menu]', error);
     throw error;
   }
 };
+
+
