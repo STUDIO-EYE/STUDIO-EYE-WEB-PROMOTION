@@ -7,7 +7,8 @@ import { useEffect } from 'react';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
 import ArtworkCard from '@/components/PromotionPage/Artwork/ArtworkCard';
 import NullException from '@/components/PromotionPage/Artwork/NullException';
-import SkeletonArtworkCardComponent from '@/components/PromotionPage/Artwork/SkeletonArtworkCardComponent';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent'; // SkeletonComponent import
+
 function ArtworkPage() {
   const location = useLocation();
   const categoryId = new URLSearchParams(location.search).get('category');
@@ -33,14 +34,21 @@ function ArtworkPage() {
       <Wrapper>
         <ArtworkWrapper>
           {Array.from({ length: 6 }).map((_, index) => (
-            <SkeletonArtworkCardComponent key={index} />
+            <SkeletonComponent
+              key={index}
+              width="350px"
+              height="350px"
+              borderRadius="8px"
+              margin="0px"
+            />
           ))}
         </ArtworkWrapper>
       </Wrapper>
     );
   }
-  
+
   if (error) return <>{error.message}</>;
+
   return (
     <>
       {postedData === null || postedData === undefined ? (
@@ -109,6 +117,5 @@ const ArtworkWrapper = styled.div`
   margin-left: 3rem;
   display: flex;
   flex-wrap: wrap;
-  // grid-template-columns: repeat(auto-fit,minmax(250px, 1fr));
   grid-gap: 50px;
 `;
