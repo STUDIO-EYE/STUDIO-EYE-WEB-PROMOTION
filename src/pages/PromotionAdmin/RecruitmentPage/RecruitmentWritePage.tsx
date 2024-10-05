@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { postRecruitment } from '@/apis/PromotionAdmin/recruitment';
-// import { theme } from '@/styles/theme';
 import { ContentBox } from '@/components/PromotionAdmin/Recruitment/Components';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
@@ -102,7 +101,7 @@ function RecruitmentWritePage() {
     <form noValidate onSubmit={handleSubmit(onValid)}>
       <ContentBox>
         <TitleWrapper>
-          <Title>채용 공고 수정</Title>
+          <Title>채용 공고 등록</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputTitle style={{ justifyContent: 'space-between' }}>
@@ -223,7 +222,7 @@ function RecruitmentWritePage() {
           </RowWrapper>
         </InputWrapper>
         <RowWrapper>
-          <ModifyButton>등록하기</ModifyButton>
+          <PostButton>등록하기</PostButton>
         </RowWrapper>
       </ContentBox>
     </form>
@@ -255,7 +254,7 @@ const Title = styled.div`
 
 const InputWrapper = styled.div`
   display: flex;
-  background-color: ${(props) => props.theme.color.white.light};
+  background-color: ${(props) => props.theme.color.white.bold};
   flex-direction: column;
   font-family: ${(props) => props.theme.font.semiBold};
   p {
@@ -275,21 +274,6 @@ const InputWrapper = styled.div`
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
   input:focus {
-    transition: 0.2s;
-    border-bottom: 3px solid ${(props) => props.theme.color.symbol};
-  }
-  textarea {
-    outline: none;
-    font-family: ${(props) => props.theme.font.regular};
-    font-size: 14px;
-    padding: 10px;
-    width: 95%;
-    min-height: 450px;
-    border: none;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    resize: none;
-  }
-  textarea:focus {
     transition: 0.2s;
     border-bottom: 3px solid ${(props) => props.theme.color.symbol};
   }
@@ -316,7 +300,7 @@ const RowWrapper = styled.div`
   margin-top: 20px;
 `;
 
-const ModifyButton = styled.button`
+const PostButton = styled.button`
   border: none;
   display: flex;
   justify-content: center;
@@ -341,4 +325,5 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
   margin-left: 10px;
   font-size: 13px;
+  height: 16px;
 `;

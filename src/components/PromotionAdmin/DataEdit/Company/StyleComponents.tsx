@@ -29,12 +29,14 @@ const IMAGE_PIXEL = {
   LOGO: '200x200',
   SLOGAN: '1080x1080',
   CEOIMG: '320x330',
+  BENEFIT: '100x100',
 };
 
 const IMAGE_COLOR = {
   LOGO: '밝은 색상',
   SLOGAN: '밝은 색상',
   CEOIMG: '밝은 색상',
+  BENEFIT: '투명 배경',
 };
 
 const DATAEDIT_COLUMNS = {
@@ -90,6 +92,18 @@ const DATAEDIT_COLUMNS = {
     description: 'FAQ 화면에 반영됩니다.',
   },
 
+  Benefit: {
+    title: 'Benefit',
+    description: 'Recruitment 화면에 반영됩니다.',
+  },
+
+  BenefitIcon: {
+    title: 'Benefit Icon',
+    description: '사내 복지 아이콘 설정입니다. (아래의 아이콘이 반영됩니다.)',
+    recommand:
+      'Recruitment 페이지는 하얀색 배경입니다.\n\n설정할 아이콘의 배경은 꼭 투명으로 설정하고 100x100 또는 정사각형 이미지로 업로드 해주세요.\n\n* 사내 복지는 최대 30개 등록 가능합니다 *',
+  },
+
   MENU: {
     title: 'MENU',
     description: '프로모션 페이지의 메뉴에 반영됩니다.',
@@ -111,6 +125,7 @@ export const DATAEDIT_NOTICE_COMPONENTS = {
 
   TEXT: {
     INTRODUCTION: <NoticeComponent description={DATAEDIT_COLUMNS.Introduction.recommand} />,
+    BENEFIT: <NoticeComponent description={DATAEDIT_COLUMNS.BenefitIcon.recommand} />,
   },
 };
 
@@ -186,6 +201,24 @@ export const DATAEDIT_TITLES_COMPONENTS = {
       <Tooltip description={DATAEDIT_COLUMNS.FAQ.description} svgComponent={<InfoIcon width={20} height={20} />} />
       {/* <Title description={DATAEDIT_COLUMNS.FAQ.title} /> */}
     </TitleWrapper>
+  ),
+
+  Benefit: (
+    <TitleWrapper style={{ marginBottom: 0 }}>
+      <Tooltip description={DATAEDIT_COLUMNS.Benefit.description} svgComponent={<InfoIcon width={20} height={20} />} />
+      <Title description={DATAEDIT_COLUMNS.Benefit.title} />
+    </TitleWrapper>
+  ),
+
+  BenefitIcon: (
+    <TitleWrapper>
+      <Tooltip
+        description={DATAEDIT_COLUMNS.BenefitIcon.description}
+        svgComponent={<InfoIcon width={20} height={20} />}
+      />
+      <Title description={DATAEDIT_COLUMNS.BenefitIcon.title} />
+    </TitleWrapper>
+
   ),
 
   MENU: (
