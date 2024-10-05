@@ -17,6 +17,8 @@ import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerC
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
 import RecruitmentManagePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage';
 import RecruitmentWritePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage';
+import BenefitManagePage from './pages/PromotionAdmin/RecruitmentPage/BenefitManagePage';
+import BenefitWritePage from './pages/PromotionAdmin/RecruitmentPage/BenefitWritePage';
 import FAQManagePage from './pages/PromotionAdmin/FaqPage/FAQManagePage';
 import PARequestDetailPage from '@/pages/PromotionAdmin/RequestPage/RequestCheckPage';
 import FAQCheckPage from './pages/PromotionAdmin/FaqPage/FAQCheckPage';
@@ -224,16 +226,20 @@ const router = createBrowserRouter([
             element: <PARecruitmentPage />,
             children: [
               {
-                path: `${PA_ROUTES.RECRUITMENT}/page_edit`,
-                element: <RecruitmentManagePage />,
-              },
-              {
                 path: `${PA_ROUTES.RECRUITMENT}/manage`,
                 element: <RecruitmentManagePage />,
               },
               {
                 path: `${PA_ROUTES.RECRUITMENT}/write`,
                 element: <RecruitmentWritePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
+                element: <BenefitManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/write`,
+                element: <BenefitWritePage />,
               },
             ],
           },
@@ -250,17 +256,17 @@ const router = createBrowserRouter([
                 element: <PANewsWritePage />,
               },
               {
-                path:`:id`,
-                element: <PANewsViewPage/>,
-                children:[
+                path: `:id`,
+                element: <PANewsViewPage />,
+                children: [
                   {
-                    path:`edit`,
-                    element: <PANewsEditPage/>
-                  }
-                ]
-              }
-            ]
-          }
+                    path: `edit`,
+                    element: <PANewsEditPage />,
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
     ],
