@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.60c3feea.css",
-    "main.js": "/static/js/main.25d4fff2.js",
+    "main.js": "/static/js/main.0468d61f.js",
     "static/media/Pretendard-Bold.woff2": "/static/media/Pretendard-Bold.0c6f5e225ff28f456183.woff2",
     "static/media/Pretendard-SemiBold.woff2": "/static/media/Pretendard-SemiBold.d5ded8ad2884e7855bb1.woff2",
     "static/media/Pretendard-Medium.woff2": "/static/media/Pretendard-Medium.a9645bebe1a0010e66dc.woff2",
@@ -9,7 +9,10 @@
     "static/media/Pretendard-Light.woff2": "/static/media/Pretendard-Light.1fc5521353ec20635e8e.woff2",
     "static/media/defaultMainImg.jpg": "/static/media/defaultMainImg.d24d10b0847f4d273aa6.jpg",
     "static/media/defaultTopImg.jpg": "/static/media/defaultTopImg.d24d10b0847f4d273aa6.jpg",
+    "static/media/studioeye_ceo.png": "/static/media/studioeye_ceo.47eb8cb668d7232c2b0f.png",
     "static/media/backgroundImg.png": "/static/media/backgroundImg.b28248d440d70bdc208f.png",
+    "static/media/CJ_ENM_Logo.png": "/static/media/CJ_ENM_Logo.071ff13db5341fcefce7.png",
+    "static/media/Netflix-Logo.jpg": "/static/media/Netflix-Logo.aa96b72b3f713bacb45c.jpg",
     "static/media/Mission.png": "/static/media/Mission.8f7d161f37b5f3aec2ad.png",
     "static/media/pa-logo.png": "/static/media/pa-logo.77b3cf8fafbd96d74adb.png",
     "static/media/circle.png": "/static/media/circle.08740893a51c20d62d8d.png",
@@ -23,6 +26,7 @@
     "static/media/request.svg": "/static/media/request.24e793b2a84bd82df3ce342a288e9b96.svg",
     "static/media/public.svg": "/static/media/public.3d306c82483e0491c9e31f934ae39be2.svg",
     "static/media/faq.svg": "/static/media/faq.f50e078823c399c6fc6b002d4de85c7b.svg",
+    "static/media/recruitment.svg": "/static/media/recruitment.34952c1df140d89e8d4e724e4ee6f793.svg",
     "static/media/isNotPosted.svg": "/static/media/isNotPosted.44101d0e287f64546977cb522e7356d4.svg",
     "static/media/3dot_Column.svg": "/static/media/3dot_Column.70b2874e8cc525d21d9e2f42ea342f47.svg",
     "static/media/isPosted.svg": "/static/media/isPosted.27c135636ded2cbe6b19603e92f5e09c.svg",
@@ -34,10 +38,10 @@
     "static/media/statistics.svg": "/static/media/statistics.3b7494be467e1fa8888c70a2e06d269d.svg",
     "static/media/minusIcon.svg": "/static/media/minusIcon.eb3a9e3b8b63ebb3caaca57d065efe65.svg",
     "main.60c3feea.css.map": "/static/css/main.60c3feea.css.map",
-    "main.25d4fff2.js.map": "/static/js/main.25d4fff2.js.map"
+    "main.0468d61f.js.map": "/static/js/main.0468d61f.js.map"
   },
   "entrypoints": [
     "static/css/main.60c3feea.css",
-    "static/js/main.25d4fff2.js"
+    "static/js/main.0468d61f.js"
   ]
 }

@@ -6,6 +6,7 @@ import PAArtworkPage from './pages/PromotionAdmin/ArtworkPage/Artwork';
 import PADataEditPage from './pages/PromotionAdmin/DataEditPage/index';
 import PAStatisticsPage from './pages/PromotionAdmin/StatisticsPage/index';
 import PAFaqPage from './pages/PromotionAdmin/FaqPage/index';
+import PARecruitmentPage from './pages/PromotionAdmin/RecruitmentPage/index';
 import PASettingPage from './pages/PromotionAdmin/SettingPage/index';
 import PANewsPage from './pages/PromotionAdmin/NewsPage/index';
 import PANewsWritePage from './pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage';
@@ -14,6 +15,10 @@ import PANewsEditPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewsEdi
 import PALayout from './components/PromotionAdmin/Layout/Layout';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
+import RecruitmentManagePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage';
+import RecruitmentWritePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage';
+import BenefitManagePage from './pages/PromotionAdmin/RecruitmentPage/BenefitManagePage';
+import BenefitWritePage from './pages/PromotionAdmin/RecruitmentPage/BenefitWritePage';
 import FAQManagePage from './pages/PromotionAdmin/FaqPage/FAQManagePage';
 import PARequestDetailPage from '@/pages/PromotionAdmin/RequestPage/RequestCheckPage';
 import FAQCheckPage from './pages/PromotionAdmin/FaqPage/FAQCheckPage';
@@ -41,8 +46,9 @@ import Login from './pages/PromotionAdmin/Login/Login';
 import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage';
 import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
 import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
-import NewsDetailPage from './pages/PromotionPage/NewsPage/NewsDetailPage';
 import GreetingComponent from './pages/ForTest/GreetingComponent';
+import RecruitmentPage from './pages/PromotionPage/RecruitmentPage/RecruitmentPage';
+import MenuPage from './pages/PromotionAdmin/DataEditPage/MenuPage/MenuPage';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -95,8 +101,8 @@ const router = createBrowserRouter([
             element: <NewsBoardPage />,
           },
           {
-            path: PP_ROUTES_CHILD.NEWSBOARD_DETAIL,
-            element: <NewsDetailPage />,
+            path: PP_ROUTES_CHILD.RECRUITMENT,
+            element: <RecruitmentPage />,
           },
         ],
       },
@@ -181,6 +187,10 @@ const router = createBrowserRouter([
                   },
                 ],
               },
+              {
+                path: `${PA_ROUTES.DATA_EDIT}/menu`,
+                element: <MenuPage />,
+              },
             ],
           },
           {
@@ -208,29 +218,51 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: PA_ROUTES_CHILD.RECRUITMENT,
+            element: <PARecruitmentPage />,
+            children: [
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/manage`,
+                element: <RecruitmentManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/write`,
+                element: <RecruitmentWritePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
+                element: <BenefitManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/write`,
+                element: <BenefitWritePage />,
+              },
+            ],
+          },
+          {
             path: PA_ROUTES_CHILD.SETTING,
             element: <PASettingPage />,
           },
           {
             path: PA_ROUTES_CHILD.NEWS,
-            element: <PANewsPage/>,
-            children:[
+            element: <PANewsPage />,
+            children: [
               {
                 path: `writing`,
-                element: <PANewsWritePage/>,
+                element: <PANewsWritePage />,
               },
               {
-                path:`:id`,
-                element: <PANewsViewPage/>,
-                children:[
+                path: `:id`,
+                element: <PANewsViewPage />,
+                children: [
                   {
-                    path:`edit`,
-                    element: <PANewsEditPage/>
-                  }
-                ]
-              }
-            ]
-          }
+                    path: `edit`,
+                    element: <PANewsEditPage />,
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
       {

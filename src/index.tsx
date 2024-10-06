@@ -8,6 +8,7 @@ import { theme } from './styles/theme';
 import './App.css';
 import reset from 'styled-reset';
 import { RecoilRoot } from 'recoil';
+import ReactiveStyle from './styles/ReactiveStyle';
 
 const client = new QueryClient();
 const element = document.getElementById('root');
@@ -19,6 +20,7 @@ root.render(
   // <React.StrictMode>
   <QueryClientProvider client={client}>
     <RecoilRoot>
+      <ReactiveStyle/>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />

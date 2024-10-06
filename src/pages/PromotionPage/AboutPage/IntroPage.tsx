@@ -75,7 +75,7 @@ function IntroPage() {
             transition={{ duration: 1, delay: 0.2 }}
           >
             <BackgroundText>ABOUT</BackgroundText>
-            <AboutText dangerouslySetInnerHTML={{ __html: companyIntroData }} />
+            <AboutText dangerouslySetInnerHTML={{ __html: companyIntroData || "디폴트 데이터 뭐였더라"  }} />
           </motion.div>
         </AboutWrapper>
         <MissionWrapper ref={missionRef}>

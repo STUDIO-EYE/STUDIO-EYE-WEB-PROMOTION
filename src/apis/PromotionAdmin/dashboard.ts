@@ -24,6 +24,28 @@ export const fetchRequestsData = async (startYear: number, startMonth: number, e
     throw error;
   }
 };
+export const fetchCategoryRequestData= async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
+  try {
+    const response = await axios.get(
+      `${PROMOTION_BASIC_PATH}/api/requests/category/${startYear}/${startMonth}/${endYear}/${endMonth}`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('[❌Error fetchRequestsData]', error);
+    throw error;
+  }
+};
+export const fetchStateRequestData= async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
+  try {
+    const response = await axios.get(
+      `${PROMOTION_BASIC_PATH}/api/requests/state/${startYear}/${startMonth}/${endYear}/${endMonth}`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('[❌Error fetchRequestsData]', error);
+    throw error;
+  }
+};
 
 export const fetchWaitingRequests = async () => {
   try {

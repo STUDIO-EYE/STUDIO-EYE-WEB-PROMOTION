@@ -74,7 +74,7 @@ const ArtworkItem = styled(motion.div)`
     height: 100%;
     object-fit:cover;
     transition: 0.3s;
-    background: linear-gradient(rgba(255, 169, 2, 0.4), rgba(255, 169, 2, 0.4)));
+    background: linear-gradient(rgba(255, 169, 2, 0.4), rgba(255, 169, 2, 0.4));
     }
     &:hover{
       img{transform: scale(1.05, 1.05);

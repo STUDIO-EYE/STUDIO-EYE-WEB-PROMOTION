@@ -1,37 +1,59 @@
 import { PP_ROUTES } from '@/constants/routerConstants';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
 import { motion } from 'framer-motion';
-
-const linksData = [
-  { path: PP_ROUTES.MAIN, pathName: 'MAIN' },
-  {
-    path: PP_ROUTES.ABOUT,
-    pathName: 'ABOUT',
-  },
-  { path: PP_ROUTES.ARTWORK, pathName: 'ARTWORK' },
-  { path: PP_ROUTES.CONTACT, pathName: 'CONTACT' },
-  { path: PP_ROUTES.FAQ, pathName: 'FAQ' },
-];
+import { getAllMenuData } from '@/apis/PromotionPage/menu';
 
 const HeaderDetail = () => {
+  const [menuData, setMenuData] = useState<string[]>([]);
+
+  const getPathForTitle = (title: string) => {
+    return title ? `/${title.toLowerCase()}` : '/';
+  };
+
+  useEffect(() => {
+    const fetchMenuData = async () => {
+      try {
+        const data = await getAllMenuData();
+        if (Array.isArray(data)) {
+          setMenuData(data);
+        } else {
+          console.error('잘못된 데이터 형식:', data);
+          setMenuData([]);
+        }
+      } catch (error) {
+        console.error('메뉴 데이터를 불러오는 중 에러 발생:', error);
+        setMenuData([]);
+      }
+    };
+
+    fetchMenuData();
+  }, []);
+
   return (
     <div>
       <NavWrapper>
-        {linksData.map((link, index) => (
-          <motion.li
-            key={index}
-            initial={{ opacity: 0.5, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0.5, x: 100 }}
-            transition={{ delay: index * 0.15, ease: 'easeIn' }}
-          >
-            <span>
-              <NavBtn path={link.path} pathName={link.pathName} />
-            </span>
-          </motion.li>
-        ))}
+        {menuData.length > 0 ? (
+          menuData.map((menuTitle, index) => (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0.5, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0.5, x: 100 }}
+              transition={{ delay: index * 0.15, ease: 'easeIn' }}
+            >
+              <span>
+                <NavBtn
+                  path={getPathForTitle(menuTitle)}
+                  pathName={menuTitle}
+                />
+              </span>
+            </motion.li>
+          ))
+        ) : (
+          <p>메뉴를 불러오는 중입니다...</p>
+        )}
       </NavWrapper>
     </div>
   );

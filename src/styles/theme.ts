@@ -1,6 +1,11 @@
 import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
+  media:{
+    mobile: 'only screen and (max-width: 768px)',
+    tablet: 'only screen and (max-width: 1024px)',
+  },
+
   color: {
     symbol: '#FFA900',
     background: '#000000',
@@ -19,6 +24,8 @@ export const theme: DefaultTheme = {
       light: '#FFF0D1',
       pale: '#fffcf5',
     },
+    red: '#ff3d33',
+    green: '#42b348',
   },
 
   font: {
