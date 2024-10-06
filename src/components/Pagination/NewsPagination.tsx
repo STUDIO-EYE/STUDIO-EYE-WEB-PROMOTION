@@ -44,9 +44,9 @@ const NewsPagination = ({ postsPerPage, totalPosts, paginate }: IPaginationProps
     setCurrentPageRange(pageRange);
   }, [location]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 900, behavior: 'smooth' });
-  }, [currentPage, currentPageRange]);
+  // useEffect(() => {
+  //   window.scrollTo({ top: 900, behavior: 'smooth' });
+  // }, [currentPage, currentPageRange]);
 
   return (
     <Wrapper>
