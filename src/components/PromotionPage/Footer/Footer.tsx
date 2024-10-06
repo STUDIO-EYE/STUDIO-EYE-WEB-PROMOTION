@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
+import { COMPANY_DATA } from '@/constants/introdutionConstants';
 
 type ICompanyBasic = {
   address: string;
@@ -18,9 +19,9 @@ const Footer = () => {
     staleTime: 1000 * 60 * 10,
   });
 
-  const addressData = companyBasicData ? companyBasicData.address : '서울 성동구 광나루로 162';
-  const phoneData = companyBasicData ? companyBasicData.phone : '02-000-0000';
-  const faxData = companyBasicData ? companyBasicData.fax : '000-0000';
+  const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
+  const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;
+  const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
 
   return (
     <Container>

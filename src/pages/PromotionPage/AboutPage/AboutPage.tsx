@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { getCEOData, getPartnersData } from '../../../apis/PromotionAdmin/dataEdit';
 import NetflixLogo from '@/assets/images/PP/Netflix-Logo.jpg';
 import CJLogo from '@/assets/images/PP/CJ_ENM_Logo.png';
+import LocomoLogo from '@/assets/images/Locomo.png'
 import defaultCEOLogo from '@/assets/images/PP/studioeye_ceo.png';
 import { CEO_DATA } from '@/constants/introdutionConstants';
 
@@ -48,16 +49,16 @@ const AboutPage = () => {
         is_main: true,
         link: 'https://www.netflix.com/browse',
       },
-      logoImg: NetflixLogo,
+      logoImg: LocomoLogo,
     },
-    {
-      partnerInfo: {
-        id: 2,
-        is_main: true,
-        link: 'https://www.netflix.com/browse',
-      },
-      logoImg: CJLogo,
-    },
+    // {
+    //   partnerInfo: {
+    //     id: 2,
+    //     is_main: true,
+    //     link: 'https://www.netflix.com/browse',
+    //   },
+    //   logoImg: CJLogo,
+    // },
   ];
 
   const [CEOData, setCEOData] = useState<ICEOInfoData>(defaultCEOData);

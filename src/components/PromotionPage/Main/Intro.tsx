@@ -50,7 +50,10 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
-          dangerouslySetInnerHTML={{ __html: companyMainOverview || '<p>스튜디오 아이는</p>' }}
+          dangerouslySetInnerHTML={{
+            __html: companyMainOverview ||
+              '<p><span style="color:#ffa900;">STUDIO EYE</span> IS THE <span style="color:#ffa900;">BEST</span> NEW MEDIA</p> <p>PRODUCTION BASED ON OTT & YOUTUBE</p>'
+          }}
         ></motion.div>
       </IntroWrapper>
       <DesWrapper ref={desRef}>
@@ -58,7 +61,7 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
-          dangerouslySetInnerHTML={{ __html: companyCommitment || '<p>채워넣기</p>' }}
+          dangerouslySetInnerHTML={{ __html: companyCommitment || '<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 끊임없이 고민하고 변화합니다.</p>' }}
         ></motion.div>
       </DesWrapper>
       <CircleWrapper ref={circleRef}>
