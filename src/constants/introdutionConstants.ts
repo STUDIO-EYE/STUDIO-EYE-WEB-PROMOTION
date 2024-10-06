@@ -8,7 +8,7 @@ export const COMPANY_DATA = {
   Address: '서울시 성동구 광나루로 162 BS성수타워 5층',
   English_Address: '5F 162, Gwangnaru-ro, Seongdong-gu, Seoul, \n Republic of Korea',
   Number: '02-2038-2663',
-  Introduction1: '스튜디오 아이와 함께  영상물 퀄리티 UP',
+  Introduction1: '스튜디오 아이와 함께 영상물 퀄리티 UP',
   Introduction2: '최고의 경험을 선사하는 스튜디오 아이의 작업과 함께하세요.',
   Introduction3: '스튜디오 아이는 편집 및 애니메이팅을 하고 있는 영상 매체 작업 전문 기업입니다.',
   Detail1: '그간의 작업물을 쉽게 둘러보세요.',
