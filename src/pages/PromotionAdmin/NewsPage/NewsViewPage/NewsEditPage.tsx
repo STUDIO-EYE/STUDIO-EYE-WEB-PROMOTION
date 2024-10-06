@@ -8,6 +8,10 @@ import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { theme } from '@/styles/theme';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker/DatePicker';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
 
 const NewsEditPage = () => {
   const { id } = useParams();
@@ -95,7 +99,7 @@ const NewsEditPage = () => {
   return (
     <Container>
       <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',marginBottom:5}}>
-        <Title>제목</Title>
+        <Description>제목</Description>
         <div style={{display:'flex',flexDirection:'row',marginTop:'auto',marginBottom:'auto'}}>
             <SendButton onClick={handlePut}>완료</SendButton>
             <SendButton onClick={handleCancelWriting}>취소</SendButton>
@@ -110,7 +114,7 @@ const NewsEditPage = () => {
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginRight:10}}/>
       
       <div>
-        <Title>출처/작성자</Title>
+        <Description>출처/작성자</Description>
         <InputBlock
             {...register('source')}
             name='source'
@@ -119,29 +123,63 @@ const NewsEditPage = () => {
             placeholder='출처/작성자'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
       </div>
-      <div>
-        <Title>원문 날짜</Title>
-        <InputBlock
-            {...register('pubDate')}
-            name='pubDate'
-            value={putData.pubDate}
-            onChange={handleChange}
-            placeholder='원문 날짜'
-            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
+      <div style={{display:'flex',flexDirection:'row'}}>
+        <div>
+          <Description>원문 날짜</Description>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+              {...register('pubDate')}
+              format='YYYY-MM-DD'
+              value={dayjs(putData.pubDate)}
+              onChange={(newValue) => {
+                const formattedDate = dayjs(newValue).format('YYYY-MM-DD'); // 날짜를 string으로 변환
+                setValue('pubDate', formattedDate); // 변환한 string을 form에 저장
+                setPutData((prevData) => ({ ...prevData, pubDate: formattedDate })); // 상태에도 저장
+              }}
+              slotProps={{
+                textField: {
+                  sx: {
+                    backgroundColor: '#ffffff',
+                    borderRadius:'5px',
+                    fontFamily:'pretendard',
+                    fontSize: '14px',
+                    margin: 'auto 0 auto 5px',
+                    boxShadow: '1px 1px 4px 0.3px #c6c6c6',
+                    '.MuiInputBase-input':{
+                      padding: '10px',
+                    },
+                    '.MuiOutlinedInput-root': {
+                      border: 'none',
+                      '&:hover': {
+                        backgroundColor: '#ffffff73',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                      },
+                    },
+                    '.MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </div>
+        <div style={{margin:'auto'}}>
+          <Description>공개 여부</Description>
+          <VisibilityWrapper>
+                <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
+                  공개
+                </CheckBox>
+                <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility}>
+                  비공개
+                </CheckBox>
+        </VisibilityWrapper>
+        </div>
       </div>
       <div>
-        <Title>공개 여부</Title>
-        <VisibilityWrapper>
-              <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
-                공개
-              </CheckBox>
-              <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility}>
-                비공개
-              </CheckBox>
-      </VisibilityWrapper>
-      </div>
-      <div>
-        <Title>내용</Title>
+        <Description>링크</Description>
         <InputBlock
             {...register('url')}
             name='url'
@@ -162,7 +200,6 @@ width: 100%;
 
 display: flex;
 flex-direction: column;
-background-color: #e8e8e8;
 padding-bottom: 5px;
 border-radius: 5px;
 
@@ -204,16 +241,23 @@ font-family: pretendard;
 font-size: 14px;
 padding: 5px 10px;
 margin-bottom: 5px;
-width: 95%;
+margin-left:5px;
+width: 92%;
 height: 30px;
 border: none;
+box-shadow: 1px 1px 4px 0.3px #c6c6c6;
+
+&:focus{
+  transition: all 0.2s ease-in-out;
+  border-bottom: 3px solid ${theme.color.yellow.bold};
+}
 `
 const CheckBox = styled.div<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  width: 6vw;
+  width: 60px;
   height: 40px;
   font-size: 15px;
   font-family: ${(props) => props.theme.font.medium};
@@ -223,4 +267,14 @@ const CheckBox = styled.div<{ selected: boolean }>`
 `;
 const VisibilityWrapper = styled.div`
   display: flex;
+`;
+
+const Description = styled.div`
+  font-family: 'pretendard-bold';
+  width: 100%;
+  padding: 5px;
+  font-size: 15px;
+  color: #595959;
+  line-height: 120%;
+  margin-top:10px;
 `;

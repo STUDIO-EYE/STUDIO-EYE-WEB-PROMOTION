@@ -1,39 +1,43 @@
+import BackDrop from '@/components/Backdrop/Backdrop';
 import NewsList from '@/components/PromotionAdmin/News/NewsList';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import NewsWritePage from './NewsWritePage/NewsWritePage';
+import { useRecoilState } from 'recoil';
+import { backdropState } from '@/recoil/atoms';
 
 const Index = () => {
-  const [onWriting,setOnWriting]=useState(false);
+  const [producingIsOpend, setProducingIsOpened] = useRecoilState(backdropState);
   const navigator = useNavigate();
 
   const location = useLocation();
-  useEffect(() => {
-    if (location.pathname.includes('writing')) {
-      setOnWriting(true);
-    } else {
-      setOnWriting(false);
-    }}, [location.pathname]);
+  // useEffect(() => {
+  //   if (location.pathname.includes('writing')) {
+  //     setOnWriting(true);
+  //   } else {
+  //     setOnWriting(false);
+  //   }}, [location.pathname]);
 
   const handleWritingNews=()=>{
-    navigator(`writing`);
+    // navigator(`writing`);
+    setProducingIsOpened(!producingIsOpend);
   }
   const handleViewNews=(id:number)=>{
     navigator(`${id}`);
   }
 
   return (
+    <>
+    {producingIsOpend && <BackDrop children={<NewsWritePage/>} isOpen={producingIsOpend} />}
     <Container>
-        {onWriting?null
-        :<HeaderWrapper>
+        <HeaderWrapper>
         <span style={{marginTop:"auto",marginBottom:"auto"}}>News 목록</span>
         <SendButton onClick={handleWritingNews}>글쓰기</SendButton>
-        </HeaderWrapper>}
-      {
-        onWriting?<Outlet/>
-        :<div style={{display:'flex'}}><NewsList handler={handleViewNews}/><Outlet/></div>
-      }
+        </HeaderWrapper>
+        <div style={{display:'flex'}}><NewsList handler={handleViewNews}/><Outlet/></div>
     </Container>
+    </>
   );
 };
 
@@ -46,7 +50,7 @@ const Container = styled.div`
 
 const HeaderWrapper = styled.div`
   display: flex;
-  width:400px;
+  width:600px;
   flex-direction: row;
   justify-content: space-between;
   align-content: center;
