@@ -47,25 +47,24 @@ function MenuPage() {
   
   const handleOnDragEnd = async (result: any) => {
     if (!result.destination) return;
-
+  
     const items = Array.from(menuList);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
+  
     const updatedMenuList: IMenuData[] = items.map((menu, index) => ({
-      id: menu.id,
-      title: menu.title,
-      visibility: menu.visibility,
+      ...menu,
       sequence: index,
     }));
-
+  
     try {
       setMenuList(updatedMenuList);
+      await putMenuData(updatedMenuList);
     } catch (error) {
-      console.error('에러: ', error);
+      console.error('handleOnDragEnd error:', error);
     }
   };
-
+  
 
   const handleVisibilityChange = async (menuId: number, visibility: boolean) => {
     try {
