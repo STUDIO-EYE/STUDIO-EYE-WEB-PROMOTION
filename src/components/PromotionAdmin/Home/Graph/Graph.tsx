@@ -15,6 +15,7 @@ type Props = {
   startDate: dayjs.Dayjs | null;
   endDate: dayjs.Dayjs | null;
   division: 'request' | 'view';
+  filter: string[];
 };
 
 const Graph = ({
@@ -26,6 +27,7 @@ const Graph = ({
   startDate,
   endDate,
   division,
+  filter,
 }: Props) => {
   return (
     <Container>
@@ -43,6 +45,13 @@ const Graph = ({
           />
         </DayPickerWrapper>
       </HeaderWrapper>
+      <div style={{display:'flex',justifyContent:'flex-end',marginRight:'15px'}}>
+        <FilterSelect>
+          {filter&&filter.map((option,index)=>{
+            return <FilterOption key={index} value={option}>{option}</FilterOption>
+          })}
+          </FilterSelect>
+      </div>
       <BodyWrapper>
         {data && data.length > 0 ? (
           <LineGraph division={division} data={processedData} />
@@ -118,6 +127,21 @@ const ErrorWrapper = styled.div`
     font-size: 13px;
   }
 `;
+
+const FilterSelect=styled.select`
+  min-width: fit-content;
+  height: fit-content;
+  backdrop-filter: blur(4px);
+  border-radius: 5px;
+  border: 1px solid;
+  padding: 4px;
+  font-size: 0.9rem;
+  font-family: 'pretendard';
+`
+const FilterOption=styled.option`
+font-size: 0.9rem;
+font-family: pretendard;
+`
 
 const LoadingWrapper = styled.div`
   font-family: 'pretendard-regular';

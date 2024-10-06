@@ -67,6 +67,7 @@ const INVALID_MSG = {
 
 const EXCEPTION_MSG = {
   NULL_DATA: '데이터가 존재하지 않습니다.',
+  INVALID_LINK: '유효하지 않은 URL입니다.'
 };
 
 const INFO_MSG = {};
