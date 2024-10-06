@@ -4,12 +4,12 @@ import NavBtn from './NavBtn';
 
 const linksData = [
   {
-    path: `${PA_ROUTES.RECRUITMENT}/${PA_ROUTES_CHILD.RECRUITMENT_PAGE_EDIT}`,
-    pathName: 'PageEdit',
+    path: `${PA_ROUTES.RECRUITMENT}/manage`,
+    pathName: 'Recruitment',
   },
   {
-    path: `${PA_ROUTES.RECRUITMENT}/${PA_ROUTES_CHILD.RECRUITMENT_MANAGE}`,
-    pathName: 'Recruitment',
+    path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
+    pathName: 'Benefit',
   },
 ];
 

@@ -12,7 +12,7 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import Outro from '@/components/PromotionPage/Main/Outro';
 import styled from 'styled-components';
 import Footer from '@/components/PromotionPage/Footer/Footer';
-import ArtworkNav from '@/components/PromotionPage/Main/ArtworkNav';
+import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
@@ -109,9 +109,9 @@ const MainPage = () => {
                   key={'default'}
                   data={{
                     backgroundImg: defaultMainImg,
-                    title: '절대 떠들면 안 되는 호텔',
-                    client: '넷플릭스 코리아',
-                    overview: '설명이 뭐였지',
+                    title: ARTWORKLIST_DATA.TITLE,
+                    client: ARTWORKLIST_DATA.CLIENT,
+                    overview: ARTWORKLIST_DATA.OVERVIEW,
                   }}
                   count={filteredMainData.length}
                   scrollToSection={scrollToSection}

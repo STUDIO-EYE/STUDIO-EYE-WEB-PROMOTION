@@ -25,8 +25,6 @@ export const PA_ROUTES_CHILD = {
   STATISTICS: 'statistics',
   FAQ: 'faq',
   RECRUITMENT: 'recruitment',
-  RECRUITMENT_MANAGE: 'manage',
-  RECRUITMENT_PAGE_EDIT: 'page_edit',
   NEWS: 'news',
   NEWS_DETAIL: 'news/:id',
   SETTING: 'setting',
