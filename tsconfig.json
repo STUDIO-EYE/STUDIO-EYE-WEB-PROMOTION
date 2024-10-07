@@ -16,11 +16,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "types": ["cypress"],
     "typeRoots": ["types"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "custom.d.ts"]
+  "include": ["src", "custom.d.ts", "cypress/**/*.ts"]
 }

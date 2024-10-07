@@ -80,11 +80,29 @@ const NewsViewPage = () => {
     };
   }, []);
 
+//링크 유효성 검사----------------------------------------
+  function isValidUrl(url:string) {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  const handleClick = (data: { url: string }) => {
+    if (isValidUrl(data.url)) {
+      window.open(data.url, '_blank');
+    } else {
+      alert(MSG.EXCEPTION_MSG.INVALID_LINK);
+    }
+  }
+
   //----------------------------------------
   return (
     <Container>
       {isEditing?<Outlet context={sharedNews}/>: 
       <>
+        <Description>제목</Description>
         <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
           <Title>{news?.title}</Title>
           <More ref={buttonRef} onClick={handleToggleMenu}/>
@@ -93,9 +111,15 @@ const NewsViewPage = () => {
             <li onClick={handleEditNews}>{MSG.BUTTON_MSG.MODIFY}</li>
             </Menu>:null}
         </div>
+        <Description>출처/작성자 및 원문 날짜</Description>
         <Day>{news?.source+" | "+news?.pubDate}</Day>
-        <Visibility>{"공개 여부: "+news?.visibility}</Visibility>
-        <Content>{news?.url}</Content>
+        <Description>공개 여부</Description>
+        <Visibility visibility={news?news.visibility:null}>{news?.visibility?"공개":"비공개"}</Visibility>
+        <Description>링크</Description>
+        <Content target="_blank" rel="noopener noreferrer"
+          onClick={()=>news?.url?handleClick({url:news?.url}):alert(MSG.EXCEPTION_MSG.NULL_DATA)}>
+            {news?.url}
+        </Content>
       </>}
     </Container>
   );
@@ -105,11 +129,12 @@ export default NewsViewPage;
 
 const Container=styled.div`
 margin-left: 10px;
-width: 30rem;
+width: 500px;
+height: fit-content;
 
 display: flex;
 flex-direction: column;
-background-color: #e8e8e8;
+background-color: #afafaf13;
 padding: 5px;
 border-radius: 5px;
 
@@ -120,23 +145,43 @@ text-overflow: ellipsis;
 `
 
 const Title=styled.div`
-padding: 5px;
+padding: 0 5px 5px 5px;
 font-size: 1.5em;
 font-family: 'pretendard-bold';
+color: #282828;
 `
+const Description = styled.div`
+  font-family: 'pretendard-regular';
+  width: 100%;
+  padding: 0 5px;
+  font-size: 13px;
+  color: #595959;
+  line-height: 120%;
+  margin-top:10px;
+`;
+
 const Day=styled.div`
 padding: 5px;
-font-size: 0.9em;
-font-family: 'pretendard';
+font-size: 1.1em;
+font-family: 'pretendard-semibold';
 `
-const Visibility=styled.div`
-padding: 5px;
-font-size: 0.9em;
-font-family: 'pretendard';
+const Visibility=styled.div<{visibility: boolean|null}>`
+border-radius: 5px;
+background-color: ${({visibility})=>visibility===true?'#ffaa007d':'#33333321'};
+width: fit-content;
+padding: 4px;
+font-family: pretendard-medium;
+font-size: 1.1em;
+margin: 5px;
 `
-const Content=styled.div`
+const Content=styled.a`
 padding: 5px;
 font-family: 'pretendard';
+color: #2c2ff2;
+text-decoration:underline;
+&:hover{
+  cursor: pointer;
+}
 `
 const More=styled(DOTS)`
 width:18px;
@@ -144,6 +189,7 @@ height:18px;
 margin-top:auto;
 margin-bottom:auto;
 margin-right:10px;
+cursor: pointer;
 `
 const Menu=styled.ul<{ top: number; left: number }>`
 position: absolute;

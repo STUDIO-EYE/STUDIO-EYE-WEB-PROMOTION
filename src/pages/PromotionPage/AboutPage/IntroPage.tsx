@@ -75,7 +75,12 @@ function IntroPage() {
             transition={{ duration: 1, delay: 0.2 }}
           >
             <BackgroundText>ABOUT</BackgroundText>
-            <AboutText dangerouslySetInnerHTML={{ __html: companyIntroData || "디폴트 데이터 뭐였더라"  }} />
+            <AboutText
+              dangerouslySetInnerHTML={{
+                __html: companyIntroData ||
+                  '2010년 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여 <br> <span style="color:#ffa900;">클라이언트 맞춤형 콘텐츠 제작</span>과 <span style="color:#ffa900;">운영 대행 서비스</span>를 제공하고 있으며 <br> 드라마, 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.'
+              }}
+            />
           </motion.div>
         </AboutWrapper>
         <MissionWrapper ref={missionRef}>
@@ -129,7 +134,7 @@ const InitTitleWrapper = styled.div`
   gap: 20px;
   margin-bottom: 70px;
 `;
-const InitTitle = styled(motion.div)<IFontStyleProps>`
+const InitTitle = styled(motion.div) <IFontStyleProps>`
   font-family: 'Pretendard-Bold';
   font-size: 120px;
   color: ${(props) => props.color || '#ffffff'};
