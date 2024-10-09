@@ -90,6 +90,7 @@ const Container = styled.div`
   background-color: black;
 
   @media ${theme.media.mobile}{
+    width: 100%;
     height: 70vh;
     justify-content: flex-start;
   }
@@ -171,6 +172,8 @@ const NewsCard = styled.div`
 
   @media ${theme.media.mobile}{
     height: 2.5rem;
+    z-index: 1;
+    background-color: transparent;
 
     &.clicked{
       ${Source}, ${ArrowIcon} {
