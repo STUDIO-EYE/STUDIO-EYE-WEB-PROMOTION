@@ -2,6 +2,14 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    media:{
+      mobile: string;
+      tablet: string;
+    };
+    mediaSize:{
+      mobile: number;
+      tablet: number;
+    };
     color: {
       symbol: string;
       background: string;
