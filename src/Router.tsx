@@ -46,6 +46,7 @@ import Login from './pages/PromotionAdmin/Login/Login';
 import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage';
 import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
 import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
+import GreetingComponent from './pages/ForTest/GreetingComponent';
 import RecruitmentPage from './pages/PromotionPage/RecruitmentPage/RecruitmentPage';
 import MenuPage from './pages/PromotionAdmin/DataEditPage/MenuPage/MenuPage';
 const router = createBrowserRouter([
@@ -264,6 +265,10 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: '/api/greeting',
+        element: <GreetingComponent />,
+      }
     ],
   },
 ]);

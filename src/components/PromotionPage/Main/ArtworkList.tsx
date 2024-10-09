@@ -4,6 +4,7 @@ import { motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
 import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import ArtworkNav from './ArtworkNav';
+import SkeletonComponent from '../SkeletonComponent/SkeletonComponent';
 
 interface SectionProps {
   elementHeight: number;
@@ -17,9 +18,10 @@ interface SectionProps {
   };
   count: number;
   scrollToSection: (index: number) => void;
+  isLoading: boolean; // 로딩 상태 추가
 }
 
-const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection }, ref) => {
+const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection, isLoading }, ref) => {
   const MotionBox = motion<BoxProps>(Box);
   const cardInView: Variants = {
     offscreen: {
@@ -44,14 +46,23 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       backgroundSize="cover"
       backgroundPosition="center"
     >
-      <motion.div variants={cardInView}>
-        <TextWrapper>
-          <ClientWrapper>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
-          <TitleWrapper>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
-          <OverviewWrapper>{data.overview}</OverviewWrapper>
-        </TextWrapper>
-        <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
-      </motion.div>
+      {isLoading ? (
+        <SkeletonWrapper>
+          {/* Skeleton 컴포넌트를 제목, 클라이언트, 개요 부분에 적용 */}
+          <SkeletonComponent width="60%" height="40px" margin="0 0 10px 0" />
+          <SkeletonComponent width="80%" height="20px" margin="0 0 10px 0" />
+          <SkeletonComponent width="90%" height="20px" />
+        </SkeletonWrapper>
+      ) : (
+        <motion.div variants={cardInView}>
+          <TextWrapper>
+            <ClientWrapper>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
+            <TitleWrapper>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
+            <OverviewWrapper>{data.overview}</OverviewWrapper>
+          </TextWrapper>
+          <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
+        </motion.div>
+      )}
       {data.link && (
         <a
           href={data.link}
@@ -98,4 +109,13 @@ const OverviewWrapper = styled.div`
   font-family: 'pretendard-medium';
   font-size: 20px;
   color: white;
+`;
+
+const SkeletonWrapper = styled.div`
+  padding: 100px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;

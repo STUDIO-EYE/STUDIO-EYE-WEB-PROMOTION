@@ -102,6 +102,7 @@ const MainPage = () => {
                     elementHeight={elementHeight}
                     index={index}
                     ref={(element) => (sectionsRef.current[index] = element as HTMLElement)}
+                    isLoading={isLoading}
                   />
                 ))
               ) : (
@@ -118,6 +119,7 @@ const MainPage = () => {
                   elementHeight={elementHeight}
                   index={0}
                   ref={(element) => (sectionsRef.current[0] = element as HTMLElement)}
+                  isLoading={isLoading}
                 />
               )}
             </Box>
