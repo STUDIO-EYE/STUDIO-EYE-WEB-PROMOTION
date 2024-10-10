@@ -377,7 +377,7 @@ const BenefitImage = styled.img`
 const BenefitTitle = styled.h3`
   font-family: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.black.bold};
-  font-size: 20px;
+  font-size: 1.25rem;
   margin-bottom: 24px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -392,15 +392,17 @@ const BenefitContent = styled.p`
   font-family: ${(props) => props.theme.font.regular};
   color: ${(props) => props.theme.color.black.light};
   font-size: 16px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box; /* Flexbox로 줄 수 제한 */
+  -webkit-line-clamp: 3; /* 최대 3줄까지만 보여줌 */
+  -webkit-box-orient: vertical; /* 수직으로 쌓임 */
+  overflow: hidden; /* 초과 내용 숨김 */
+  text-overflow: ellipsis; /* 초과된 부분은 ... 처리 */
   word-break: keep-all;
   width: 70%;
   text-align: center;
   line-height: 1.3;
 `;
+
+
 
 export default RecruitmentPage;

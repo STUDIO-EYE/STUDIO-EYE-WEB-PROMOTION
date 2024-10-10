@@ -8,6 +8,7 @@ import { PP_ROUTES } from '@/constants/routerConstants';
 import { useNavigate } from 'react-router-dom';
 import { getCompanyBasicData } from '../../../apis/PromotionAdmin/dataEdit';
 import { emailCheck, phoneFaxCheck } from '@/components/ValidationRegEx/ValidationRegEx';
+import { theme } from '@/styles/theme';
 // import useWindowSize from '@/hooks/useWindowSize';
 
 interface ICircleProps {
@@ -399,7 +400,7 @@ const ContactUsPage = () => {
   return (
     <Container ref={containerRef}>
       <IntroSection>
-        <div style={{ width: '40vw' }}>
+        <div style={{ width: '100%' }}>
           <IntroTitleWrapper>
             <IntroTitleCONTACT>CONTACT</IntroTitleCONTACT>
             <IntroTitleUS>US</IntroTitleUS>
@@ -653,15 +654,26 @@ const IntroTitleWrapper = styled.div`
   justify-content: center;
 `;
 const IntroTitleCONTACT = styled.div`
-  font-family: 'Pretendard-Bold';
-  font-size: 100px;
+  font-family: ${theme.font.bold};
+  font-size: 6.25rem;
   color: #ffffff;
+  @media ${theme.media.mobile} {
+    font-family: ${theme.font.bold};
+    font-size: 3.25rem;
+    color: #ffffff;
+  }
 `;
 const IntroTitleUS = styled.div`
   margin-left: 20px;
-  font-family: 'Pretendard-Bold';
-  font-size: 100px;
+  font-family: ${theme.font.bold};
+  font-size: 6.25rem;
   color: #ffa900;
+  @media ${theme.media.mobile}{
+    margin-left: 1rem;
+  font-family: ${theme.font.bold};
+  font-size: 3.25rem;
+  color: #ffa900;
+  }
 `;
 const IntroSubTitleWrapper = styled.div`
   margin-top: 20px;
@@ -670,25 +682,51 @@ const IntroSubTitleWrapper = styled.div`
   align-items: center;
 `;
 const IntroSubtitle = styled.div`
-  font-family: 'Pretendard-SemiBold';
-  font-size: 20px;
+  font-family: ${theme.font.semiBold};
+  font-size: 1.25rem;
   color: #ffffff;
+  @media ${theme.media.mobile}{
+    width: 80%;
+    font-family: ${theme.font.semiBold};
+    text-align: center;
+  font-size: 1rem;
+  color: #ffffff;
+  word-break: keep-all; 
+  white-space: normal;
+  }
 `;
 const IntroAboutWrapper = styled.div`
-  margin-top: 80px;
+  margin-top: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  @media ${theme.media.mobile} {
+    margin-top: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  }
 `;
 const IntroAdress = styled.div`
   margin-bottom: 20px;
-  font-family: 'Pretendard-Medium';
-  font-size: 20px;
+  font-family: ${theme.font.medium};
+  font-size: 1.25rem;
   color: #ffffff;
   text-align: left;
   max-width: 40vw;
   word-wrap: break-word;
+  @media ${theme.media.mobie}{
+    margin-bottom: 0.5rem;
+  font-family: ${theme.font.medium};
+  font-size: 0.8rem;
+  color: #ffffff;
+  text-align: left;
+  max-width: 80%;
+  word-wrap: break-word;
+  }
 `;
 const IntroNumberWrapper = styled.div`
   margin-top: 40px;
@@ -697,52 +735,103 @@ const IntroNumberWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
+  @media ${theme.media.mobile}  {
+    margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  }
 `;
 const IntroNumber = styled.div`
-  font-family: 'Pretendard-Medium';
-  font-size: 20px;
+  font-family: ${theme.font.medium};
+  font-size: 1.25rem;
   color: #ffffff;
   text-align: left;
   padding: 10px;
   max-width: 20vw;
   word-wrap: break-word;
+  @media ${theme.media.mobile}{
+    font-family: ${theme.font.medium};
+  font-size: 0.9rem;
+  color: #ffffff;
+  text-align: center;
+  max-width: 100%;
+  word-wrap: break-word;
+  }
 `;
 const RequestSection = styled.div`
   height: 100vh;
+  width: 100%;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; 
+  align-items: center; 
   background-color: black;
+
+  @media ${theme.media.mobile} {
+    margin: 0; 
+    padding: 0;
+  }
 `;
+
 const RequestContentsContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: center;
   align-items: center;
+
+  @media ${theme.media.mobile} {
+    flex-direction: column;
+  }
 `;
 const RequestLeftContentsContainer = styled.div`
   margin-left: 200px;
   display: flex;
   flex-direction: column;
   width: 45%;
+
+  @media ${theme.media.mobile} {
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 `;
+
 const RequestRightContentsContainer = styled.div`
-  margin-right: 200px;
+  margin-right: 200px; 
   padding-left: 150px;
   display: flex;
   flex-direction: column;
   width: 45%;
   justify-content: center;
   align-items: center;
+
+  @media ${theme.media.mobile} {
+    margin:0; 
+    padding:0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center; 
+  }
 `;
 const RequestStepContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  @media ${theme.media.mobile}{
+    width: calc(100% - 2rem);
+    justify-content: center;
+    margin: 0 auto; /* 화면 중앙 정렬 */
+  box-sizing: border-box;
+  }
 `;
 const RequestStepCircle = styled.div<ICircleProps>`
   width: 50px;
@@ -751,16 +840,26 @@ const RequestStepCircle = styled.div<ICircleProps>`
   border: 1px solid white;
   background-color: ${(props) => (props.filled ? '#ffa900' : 'transparent')};
   display: inline-block;
-  font-family: 'Pretendard-SemiBold';
-  font-size: 20px;
+  font-family: ${theme.font.semiBold};
+  font-size: 1.25rem;
   color: #ffffff;
   align-content: center;
   text-align: center;
+  @media ${theme.media.mobile}{
+    width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.9rem;
+  /* padding: 1rem 1rem 1rem 1rem; */
+  box-sizing: border-box;
+  }
 `;
 const RequestStepLine = styled.div`
   width: 80px;
   height: 0;
   border: 1px solid white;
+  @media ${theme.media.mobile}{
+    width: 3.5rem;
+  }
 `;
 const RequestExplanationWrapper = styled.div`
   margin-top: 70px;
@@ -768,6 +867,13 @@ const RequestExplanationWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: left;
+  @media ${theme.media.mobile}{
+    margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  }
 `;
 const RequestExplanation = styled.div<IFontStyleProps>`
   margin-bottom: 10px;
@@ -775,12 +881,22 @@ const RequestExplanation = styled.div<IFontStyleProps>`
   font-size: ${(props) => props.fontSize || '40px'};
   color: #ffffff;
   text-align: left;
+  @media ${theme.media.mobile}  {
+    margin-bottom: 10px;
+  font-family: ${theme.font.semiBold};
+  font-size: 1rem;
+  color: #ffffff;
+  text-align: left;
+  }
 `;
 const RequestSubExplanation = styled.div<IFontStyleProps>`
   font-family: ${(props) => props.fontFamily || 'Pretendard-light'};
   font-size: ${(props) => props.fontSize || '20px'};
   color: #eaeaea;
   text-align: left;
+  @media ${theme.media.mobile} {
+    display: none;
+  }
 `;
 const RequestLeftLogoWrapper = styled.div`
   margin-top: 70px;
@@ -789,12 +905,18 @@ const RequestLeftLogoWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  @media ${theme.media.mobile} {
+    display: none;
+  }
 `;
 const RequestLeftLogo = styled.img`
   width: 80%;
   height: 130px;
   object-fit: contain;
   opacity: 0.3;
+  @media ${theme.media.mobile} {
+    display: none;
+  }
 `;
 
 const RequestInputWrapper = styled.div`
@@ -804,6 +926,14 @@ const RequestInputWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  @media ${theme.media.mobile} {
+    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  }
 `;
 const RowWrapper = styled.div`
   width: 100%;
@@ -818,6 +948,14 @@ const RequestCategoryButtonWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  @media ${theme.media.mobile} {
+    display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  }
 `;
 const RequestCategoryButton = styled.button<IButtonProps>`
   border: 1px solid white;
@@ -831,13 +969,34 @@ const RequestCategoryButton = styled.button<IButtonProps>`
   text-align: center;
   align-items: center;
   background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
-  font-family: 'Pretendard-Medium';
+  font-family: ${theme.font.medium};
   font-size: 1.5vw;
   color: white;
   margin-bottom: 30px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  @media ${theme.media.mobile} {
+    border: 1px solid white;
+  transition: all 0.4s ease;
+  &:hover {
+    cursor: pointer;
+    background-color: ${(props) => (props.checked ? '#ffa900' : '#353535')};
+  }
+  height: 3rem;
+  width: 40%;
+  text-align: center;
+  align-items: center;
+  background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
+  font-family: ${theme.font.medium};
+  font-size: 1rem;
+  color: white;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  }
 `;
 const RequestInfoInput = styled.input`
   margin-bottom: 15px;
