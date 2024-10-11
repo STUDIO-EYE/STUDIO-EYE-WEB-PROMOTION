@@ -26,20 +26,21 @@ export default Menubar;
 const ToggleContainer = styled.div`
   width: fit-content;
   @media ${theme.media.tablet} {
+    top: 2.4rem;
     scale: 0.9;
   }
   @media ${theme.media.mobile} {
-    scale: 0.8;
+    scale: 0.6;
+    top: 2rem;
   }
   display: block;
   cursor: pointer;
   position: absolute;
 
-  top: 1rem;
+  top: 2.5rem;
   right: 1rem;
   z-index: 200;
   transform: translate(-50%, -50%);
-  margin-top: 1.5625rem;
 
   span {
     display: block;

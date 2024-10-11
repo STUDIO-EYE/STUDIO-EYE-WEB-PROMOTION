@@ -114,7 +114,7 @@ const Container = styled.div<ContainerProps>`
 
   padding: 0.9375rem 2.5rem; // 15px 40px -> 0.9375rem 2.5rem
   @media ${theme.media.mobile} {
-    padding: 0.4375rem;
+    padding: 0.4375rem 0.9rem;
   }
   display: flex;
   flex-direction: column;
@@ -174,12 +174,6 @@ const LogoImg = styled.img`
     height: 2.7rem;
   }
   @media ${theme.media.mobile} {
-    height: 2.3rem;
+    height: 2rem;
   }
-`;
-const MenubarWrapper = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 200; // Header보다 더 높은 z-index
 `;
