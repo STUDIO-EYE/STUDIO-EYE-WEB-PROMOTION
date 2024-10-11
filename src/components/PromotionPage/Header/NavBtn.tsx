@@ -22,7 +22,16 @@ const LinkStyle = styled(NavLink)`
 `;
 
 const Name = styled.div`
-  font-size: 70px;
+  @media only screen and (max-width: 1024px) {
+    // tablet
+    font-size: 3.375rem;
+  }
+
+  @media only screen and (max-width: 768px) {
+    // mobile
+    font-size: 2.375rem;
+  }
+  font-size: 3.575rem; // 70px -> 4.375rem
   color: white;
   font-family: 'pretendard-bold';
 `;
