@@ -7,7 +7,8 @@ import { useEffect } from 'react';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
 import ArtworkCard from '@/components/PromotionPage/Artwork/ArtworkCard';
 import NullException from '@/components/PromotionPage/Artwork/NullException';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent'; // SkeletonComponent import
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
+import { theme } from '@/styles/theme';
 
 function ArtworkPage() {
   const location = useLocation();
@@ -111,6 +112,11 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.background};
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    align-items: left;
+  }
 `;
 
 const ArtworkWrapper = styled.div`
@@ -118,4 +124,9 @@ const ArtworkWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   grid-gap: 50px;
+
+  @media ${theme.media.mobile}{
+    align-items:flex-start;
+    margin-bottom:0;
+  }
 `;
