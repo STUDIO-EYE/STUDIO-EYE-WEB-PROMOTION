@@ -13,6 +13,7 @@ import Outro from '@/components/PromotionPage/Main/Outro';
 import styled from 'styled-components';
 import Footer from '@/components/PromotionPage/Footer/Footer';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
+import { theme } from '@/styles/theme';
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
@@ -59,6 +60,14 @@ const MainPage = () => {
       <style>{`
         body, html {
           overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+          div {
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
         }
       `}</style>
       <div style={{ overflowY: 'scroll', height: '100vh', scrollSnapType: 'y mandatory' }}>
@@ -146,14 +155,6 @@ const IntroSection = styled.section`
 
 const ArtworkSection = styled.section`
   scroll-snap-align: start;
-`;
-
-const ArtworkNavWrapper = styled.div`
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 3%;
-  z-index: 1000;
 `;
 
 const OutroSection = styled.section`

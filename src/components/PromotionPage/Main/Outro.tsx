@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { getClientLogoImgList } from '@/apis/PromotionPage/client';
 import ClientRowAnimation from '../Client/ClientRowAnimation';
 import WorkWithUs from '../WorkWithUs/WorkWithUs';
+import { theme } from '@/styles/theme';
 
 const Outro = () => {
   const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
@@ -30,4 +31,9 @@ const Container = styled.div`
   box-sizing: border-box;
   margin-top: 40px;
   /* margin-bottom: 40px; */
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: 100%;
+  }
 `;
