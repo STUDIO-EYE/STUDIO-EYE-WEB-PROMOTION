@@ -30,6 +30,7 @@ const Wrapper = styled.div`
     width: 100vw;
     flex-direction: column;
     align-items: center;
+    min-height: fit-content;
   }
 `;
 
@@ -39,7 +40,8 @@ const Container = styled.div`
   width: 80vw;
 
   @media ${theme.media.mobile} {
-    width: 110%;
-
+    justify-content: center;
+    align-items: center;
+    width: auto;
   }
 `;

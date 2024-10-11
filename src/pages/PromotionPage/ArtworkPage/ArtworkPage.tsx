@@ -126,7 +126,10 @@ const ArtworkWrapper = styled.div`
   grid-gap: 50px;
 
   @media ${theme.media.mobile}{
-    align-items:flex-start;
-    margin-bottom:0;
+    display: block; // 임시
+    grid-gap: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
   }
 `;

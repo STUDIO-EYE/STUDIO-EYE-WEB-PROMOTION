@@ -96,18 +96,6 @@ const ArtworkItem = styled(motion.div)`
   }
 
   @media ${theme.media.mobile} {
-    width: 80%;
-    height: fit-content;
-    img {
-      padding: 0;
-    }
-
-    &:hover {
-      img {
-        transform: scale(1.05, 1.05);
-      }
-    }
-
     &:hover .overlay {
       width: 20rem;
       height: 20rem;

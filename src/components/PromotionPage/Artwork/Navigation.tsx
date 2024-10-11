@@ -133,7 +133,7 @@ const MobileDropdown = styled.div`
     position: relative;
     width: 20rem;
     max-width: 20rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     margin-top: -5rem; // 임시
   }
 `;
