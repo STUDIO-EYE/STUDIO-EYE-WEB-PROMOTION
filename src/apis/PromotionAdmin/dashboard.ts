@@ -1,10 +1,10 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import axios from 'axios';
 
-export const fetchViewsData = async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
+export const fetchViewsData = async (startYear: number, startMonth: number, endYear: number, endMonth: number,menu:string,category:string,) => {
   try {
     const response = await axios.get(
-      `${PROMOTION_BASIC_PATH}/api/views/${startYear}/${startMonth}/${endYear}/${endMonth}`,
+      `${PROMOTION_BASIC_PATH}/api/views/${startYear}/${startMonth}/${endYear}/${endMonth}/${menu}/${category}`,
     );
     return response.data.data;
   } catch (error) {
@@ -13,32 +13,10 @@ export const fetchViewsData = async (startYear: number, startMonth: number, endY
   }
 };
 
-export const fetchRequestsData = async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
+export const fetchRequestsData = async (startYear: number, startMonth: number, endYear: number, endMonth: number,category:string,state:string)=> {
   try {
     const response = await axios.get(
-      `${PROMOTION_BASIC_PATH}/api/requests/${startYear}/${startMonth}/${endYear}/${endMonth}`,
-    );
-    return response.data.data;
-  } catch (error) {
-    console.log('[❌Error fetchRequestsData]', error);
-    throw error;
-  }
-};
-export const fetchCategoryRequestData= async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
-  try {
-    const response = await axios.get(
-      `${PROMOTION_BASIC_PATH}/api/requests/category/${startYear}/${startMonth}/${endYear}/${endMonth}`,
-    );
-    return response.data.data;
-  } catch (error) {
-    console.log('[❌Error fetchRequestsData]', error);
-    throw error;
-  }
-};
-export const fetchStateRequestData= async (startYear: number, startMonth: number, endYear: number, endMonth: number) => {
-  try {
-    const response = await axios.get(
-      `${PROMOTION_BASIC_PATH}/api/requests/state/${startYear}/${startMonth}/${endYear}/${endMonth}`,
+      `${PROMOTION_BASIC_PATH}/api/requests/${category}/${state}/${startYear}/${startMonth}/${endYear}/${endMonth}`,
     );
     return response.data.data;
   } catch (error) {
@@ -57,9 +35,9 @@ export const fetchWaitingRequests = async () => {
   }
 };
 
-export const putViewIncrease = async () => {
+export const putViewIncrease = async (filter:any) => {
   try {
-    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/views/increase`);
+    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/views/increase`,filter);
     return response;
   } catch (error) {
     console.log('[❌Error putViewIncrease]', error);

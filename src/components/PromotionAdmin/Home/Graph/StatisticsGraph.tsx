@@ -3,11 +3,10 @@ import dayjs from 'dayjs';
 import Graph from './Graph';
 import { fetchViewsData } from '@/apis/PromotionAdmin/dashboard';
 import useGraphData from '@/hooks/useGraphData';
-
-const filter=['immedi','ate']
+import { CountViewArtworkCategory, CountViewMenu } from '@/constants/categories';
 
 const StatisticsGraph = () => {
-  const { startDate, endDate, data, processedData, handleStartDateChange, handleEndDateChange, division } =
+  const { category, state, startDate, endDate, data, processedData, handleCategoryChange, handleStateChange, handleStartDateChange, handleEndDateChange, division } =
     useGraphData(fetchViewsData, dayjs().subtract(5, 'month'), dayjs().startOf('month'), 'statistics');
 
   return (
@@ -15,12 +14,17 @@ const StatisticsGraph = () => {
       title='기간별 조회 수'
       processedData={processedData}
       data={data}
+      handleCategoryChange={handleCategoryChange}
+      handleStateChange={handleStateChange}
       handleStartDateChange={handleStartDateChange}
       handleEndDateChange={handleEndDateChange}
+      category={category}
+      state={state}
       startDate={startDate}
       endDate={endDate}
       division='view'
-      filter={filter}
+      filter={CountViewMenu}
+      filter2={CountViewArtworkCategory}
     />
   );
 };

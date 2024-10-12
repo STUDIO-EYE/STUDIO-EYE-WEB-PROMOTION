@@ -1,34 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import LineGraph from './LineGraph';
-import styled from 'styled-components';
+import styled, { RuleSet, css, keyframes } from 'styled-components';
 import { ReactComponent as Icon } from '@/assets/images/PA-Navigation/statistics.svg';
 import { RequestData, ViewData } from '@/types/PromotionAdmin/statistics';
 import PeriodPicker from '@/components/PromotionAdmin/Home/Graph/PeriodPicker';
+import { Menu, MenuType } from '@/constants/cookiesName';
 
 type Props = {
   title: string;
   processedData: { x: string; y: number }[];
   data: ViewData[] | RequestData[];
+  handleCategoryChange: (category:string)=>void;
+  handleStateChange: (state:string)=>void;
   handleStartDateChange: (newStartDate: dayjs.Dayjs | null) => void;
   handleEndDateChange: (newEndDate: dayjs.Dayjs | null) => void;
+  category: string;
+  state: string;
   startDate: dayjs.Dayjs | null;
   endDate: dayjs.Dayjs | null;
   division: 'request' | 'view';
   filter: string[];
+  filter2: string[];
 };
 
 const Graph = ({
   title,
   processedData,
   data,
+  handleCategoryChange,
+  handleStateChange,
   handleEndDateChange,
   handleStartDateChange,
   startDate,
   endDate,
+  category,
+  state,
   division,
   filter,
+  filter2,
 }: Props) => {
+  const [showFilter2, setShowFilter2] = useState(false); 
+  useEffect(()=>{
+    if(division==='request'||category===MenuType.ARTWORK){
+      setShowFilter2(true);
+    }else{
+      setShowFilter2(false);
+    }
+  },[category])
+
   return (
     <Container>
       <HeaderWrapper>
@@ -45,12 +65,21 @@ const Graph = ({
           />
         </DayPickerWrapper>
       </HeaderWrapper>
-      <div style={{display:'flex',justifyContent:'flex-end',marginRight:'15px'}}>
-        <FilterSelect>
+      <div style={{
+        display:'flex',justifyContent:'flex-end',marginRight:'15px'}}>
+        <FilterSelect onChange={(e)=>handleCategoryChange(e.target.value)}>
           {filter&&filter.map((option,index)=>{
             return <FilterOption key={index} value={option}>{option}</FilterOption>
           })}
+        </FilterSelect>
+        {
+          showFilter2 &&
+          <FilterSelect style={{marginLeft:'10px'}} onChange={(e)=>handleStateChange(e.target.value)}>
+          {filter2&&filter2.map((option,index)=>{
+            return <FilterOption key={index} value={option}>{option}</FilterOption>
+          })}
           </FilterSelect>
+        }
       </div>
       <BodyWrapper>
         {data && data.length > 0 ? (
