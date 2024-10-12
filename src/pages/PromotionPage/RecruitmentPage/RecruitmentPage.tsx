@@ -184,17 +184,17 @@ const IntroLine = styled.div`
 `;
 
 const IntroText = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 100px;
-  color: black;
-  margin: 0 25px;
+font-family: Pretendard;
+font-weight: 700;
+font-size: 100px;
+color: black;
+margin: 0 25px; /* 요소 간의 간격 조정 */
 `;
 
 const IntroTextClored = styled.span`
   font-family: 'Pretendard-Bold';
   font-size: 100px;
-  color: #ffa900;
+  color: #FFA900;
   position: relative;
   margin: 0 15px;
 `;
@@ -203,11 +203,11 @@ const IntroHighlight = styled.span`
   font-family: Pretendard;
   font-weight: 700;
   font-size: 100px;
-  color: #ffa900;
+  color: #FFA900;
   position: relative;
   margin: 0 0px; /* 간격 조정 */
   animation: move-horizontal 0.7s ease-in-out infinite alternate;
-
+  
   @keyframes move-horizontal {
     0% {
       transform: translateX(-5px);
