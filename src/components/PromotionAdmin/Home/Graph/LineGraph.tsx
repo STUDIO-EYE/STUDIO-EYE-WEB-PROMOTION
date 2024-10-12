@@ -9,6 +9,11 @@ type LineGraphProps = {
 const LineGraph = ({ data, division }: LineGraphProps) => {
   const colors = division === 'request' ? ['#0064FF'] : ['#E16262'];
 
+  // 데이터의 y값을 모아서 최대값 계산
+  const yValues = data.map(d => d.y);
+  const maxY = Math.max(...yValues);
+  const tickValues = Array.from({ length: maxY + 1 }, (_, i) => i); // 0부터 maxY까지 배열 생성
+
   return (
     <div style={{ height: '300px', width: '530px' }}>
       <ResponsiveLine
@@ -51,7 +56,7 @@ const LineGraph = ({ data, division }: LineGraphProps) => {
           legendOffset: -40,
           legendPosition: 'middle',
           truncateTickAt: 0,
-          tickValues: 5,
+          tickValues: tickValues,
           format: (value) => Math.round(value).toString(),
         }}
         enablePoints={true}

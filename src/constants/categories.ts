@@ -9,6 +9,28 @@ export const CATEGORIES = [
   'Live Commerce',
 ];
 
+export const CountViewMenu=[
+  'ALL',
+  'MAIN', 
+  'ABOUT', 
+  'ARTWORK', 
+  'FAQ', 
+  'CONTACT', 
+  'NEWS', 
+  'RECRUITMENT'
+]
+export const CountViewArtworkCategory=[
+  'ALL', 
+  'ENTERTAINMENT', 
+  'DRAMA', 
+  'DOCUMENTARY', 
+  'CHANNEL_OPERATING', 
+  'BRANDED', 
+  'MOTION_GRAPHIC', 
+  'ANIMATION', 
+  'LIVE_COMMERCE'
+]
+
 export const CountRequestCATEGORIES = [
   'all',
   'Entertainment',
@@ -22,7 +44,7 @@ export const CountRequestCATEGORIES = [
 ];
 
 export const CountRequestSTATE=[
-  'all',
+  'ALL',
   'WAITING',
   'APPROVED',
   'REJECTED',
