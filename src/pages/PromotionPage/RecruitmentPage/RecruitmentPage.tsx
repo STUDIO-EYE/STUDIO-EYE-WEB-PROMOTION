@@ -102,22 +102,19 @@ const RecruitmentPage = () => {
       <JobBoardSection>
         <Header>진행중인 채용공고</Header>
         <PostGrid>
-          {recruitmentData?.content
-            .slice(6, 9)
-            .reverse()
-            .map((recruitment) => (
-              <PostItem key={recruitment.id} onClick={() => handleClickPost(recruitment.id, recruitment.status)}>
-                <StatusButton
-                  isDeadline={recruitment.status === 'CLOSE'}
-                  isPreparing={recruitment.status === 'PREPARING'}
-                >
-                  {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-                </StatusButton>
-                <TextWrapper>
-                  <PostTitle>{recruitment.title}</PostTitle>
-                </TextWrapper>
-              </PostItem>
-            ))}
+          {recruitmentData?.content.reverse().map((recruitment) => (
+            <PostItem key={recruitment.id} onClick={() => handleClickPost(recruitment.id, recruitment.status)}>
+              <StatusButton
+                isDeadline={recruitment.status === 'CLOSE'}
+                isPreparing={recruitment.status === 'PREPARING'}
+              >
+                {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
+              </StatusButton>
+              <TextWrapper>
+                <PostTitle>{recruitment.title}</PostTitle>
+              </TextWrapper>
+            </PostItem>
+          ))}
         </PostGrid>
       </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
@@ -356,10 +353,10 @@ const BenefitItem = styled.div`
   flex-direction: column;
   align-items: center;
   border: none;
-  padding: 15px;
+  padding: 1rem;
   border-radius: 8px;
   background-color: ${(props) => props.theme.color.white.light};
-  width: calc(20% - 50px);
+  width: 15rem;
   margin: 0;
   cursor: default;
   height: auto;
@@ -370,39 +367,32 @@ const BenefitImage = styled.img`
   width: 50%;
   height: auto;
   object-fit: cover;
-  margin-bottom: 20px;
-  border-radius: 8px;
+  margin-bottom: 1.25rem;
 `;
 
 const BenefitTitle = styled.h3`
   font-family: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.black.bold};
-  font-size: 1.25rem;
-  margin-bottom: 24px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: keep-all;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
   width: 100%;
   text-align: center;
-  line-height: 1.3;
 `;
 
 const BenefitContent = styled.p`
   font-family: ${(props) => props.theme.font.regular};
   color: ${(props) => props.theme.color.black.light};
   font-size: 16px;
-  display: -webkit-box; /* Flexbox로 줄 수 제한 */
-  -webkit-line-clamp: 3; /* 최대 3줄까지만 보여줌 */
-  -webkit-box-orient: vertical; /* 수직으로 쌓임 */
-  overflow: hidden; /* 초과 내용 숨김 */
-  text-overflow: ellipsis; /* 초과된 부분은 ... 처리 */
-  word-break: keep-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
   width: 70%;
   text-align: center;
   line-height: 1.3;
+  white-space: normal;
 `;
-
-
 
 export default RecruitmentPage;

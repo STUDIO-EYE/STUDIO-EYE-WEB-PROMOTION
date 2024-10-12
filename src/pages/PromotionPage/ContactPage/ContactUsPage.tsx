@@ -63,7 +63,7 @@ const ContactUsPage = () => {
     const fetchData = async () => {
       try {
         const data = await getCompanyBasicData();
-        console.log(data);
+        // console.log(data);
         if (data !== null) {
           setCompanyBasicData(data);
         } else {
@@ -197,7 +197,9 @@ const ContactUsPage = () => {
         }
         handleSubmit(e);
       }
-      setRequestStep(requestStep + 1);
+      if (requestStep < 2) {
+        setRequestStep(requestStep + 1);
+      }
     }
   };
   const handlePrev = () => {
@@ -244,7 +246,7 @@ const ContactUsPage = () => {
     const truncatedValue = value.slice(0, 200);
 
     if (name === 'contact') {
-      let fixedValue = value.replace(/[^0-9]/g, '');
+      const fixedValue = value.replace(/[^0-9]/g, '');
       if (fixedValue.length <= 3) {
         setFormData((prevFormData) => ({
           ...prevFormData,
@@ -271,7 +273,7 @@ const ContactUsPage = () => {
         fixedValue &&
         !phoneFaxCheck(fixedValue.slice(0, 3) + '-' + fixedValue.slice(3, 7) + '-' + fixedValue.slice(7, 11))
       ) {
-        console.log(fixedValue);
+        // console.log(fixedValue);
         setErrors((prevErrors) => ({
           ...prevErrors,
           contact: '010-1234-5678의 형식으로 작성해주세요.',
@@ -349,17 +351,32 @@ const ContactUsPage = () => {
     }
   };
 
+  const [loading, setLoading] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    setLoading(true);
     const requestData = new FormData();
     requestData.append('request', new Blob([JSON.stringify(formData)], { type: 'application/json' }));
     fileList.forEach((file) => {
       requestData.append('files', file);
     });
+
+    const source = axios.CancelToken.source();
+
+    const timeoutId = setTimeout(() => {
+      source.cancel('요청이 10초 안에 완료되지 않아 취소되었습니다. 다시 시도해주세요.');
+      alert('서버 또는 인터넷 연결에 문제가 발생하였습니다. 문제가 지속 될 경우 문의해주시기 바랍니다.');
+    }, 10000);
+
     axios
-      .post(`${PROMOTION_BASIC_PATH}/api/requests`, requestData, {})
+      .post(`${PROMOTION_BASIC_PATH}/api/requests`, requestData, {
+        cancelToken: source.token,
+      })
       .then((response) => {
+        clearTimeout(timeoutId);
         console.log('response.data : ', response.data);
+
         setFormData({
           category: '',
           projectName: '',
@@ -371,11 +388,18 @@ const ContactUsPage = () => {
           description: '',
         });
         setFileList([]);
-        console.log(formData, '제출');
+        setRequestStep(requestStep + 1);
       })
       .catch((error) => {
-        alert('예기치 못한 에러가 발생했습니다.');
-        console.error('에러 발생', error);
+        if (axios.isCancel(error)) {
+          console.error('요청 취소: ', error.message);
+        } else {
+          alert('예기치 못한 에러가 발생했습니다.');
+          console.error('에러 발생', error);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -391,8 +415,6 @@ const ContactUsPage = () => {
     companyBasicData.addressEnglish,
   );
 
-  const noValidAddresses = addressInvalid && addressEnglishInvalid;
-
   const notValidInfo = (info: string | undefined | null) => {
     return !info || info.length > 18;
   };
@@ -400,7 +422,7 @@ const ContactUsPage = () => {
   return (
     <Container ref={containerRef}>
       <IntroSection>
-        <div style={{ width: '100%' }}>
+        <IntroWrapper>
           <IntroTitleWrapper>
             <IntroTitleCONTACT>CONTACT</IntroTitleCONTACT>
             <IntroTitleUS>US</IntroTitleUS>
@@ -409,217 +431,229 @@ const ContactUsPage = () => {
             <IntroSubtitle>대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!</IntroSubtitle>
           </IntroSubTitleWrapper>
           <IntroAboutWrapper>
-            {!noValidAddresses && (
-              <div>
+            <div>
+              {(!addressInvalid || !addressEnglishInvalid) && (
                 <IntroAdress style={{ color: '#8a8a8a' }}>Address</IntroAdress>
-                {addressInvalid && !addressEnglishInvalid && (
+              )}
+
+              {addressInvalid && !addressEnglishInvalid && <IntroAdress>{companyBasicData.addressEnglish}</IntroAdress>}
+              {!addressInvalid && addressEnglishInvalid && <IntroAdress>{companyBasicData.address}</IntroAdress>}
+              {!addressInvalid && !addressEnglishInvalid && (
+                <>
+                  <IntroAdress>{companyBasicData.address}</IntroAdress>
                   <IntroAdress>{companyBasicData.addressEnglish}</IntroAdress>
+                </>
+              )}
+              <IntroNumberWrapper>
+                {!notValidInfo(companyBasicData.phone) && (
+                  <div>
+                    <IntroNumber style={{ color: '#8a8a8a' }}>tel</IntroNumber>
+                    <IntroNumber>{companyBasicData.phone}</IntroNumber>
+                  </div>
                 )}
-                {!addressInvalid && addressEnglishInvalid && <IntroAdress>{companyBasicData.address}</IntroAdress>}
-                {!addressInvalid && !addressEnglishInvalid && (
-                  <>
-                    <IntroAdress>{companyBasicData.address}</IntroAdress>
-                    <IntroAdress>{companyBasicData.addressEnglish}</IntroAdress>
-                  </>
+                {!notValidInfo(companyBasicData.fax) && (
+                  <div>
+                    <IntroNumber style={{ color: '#8a8a8a' }}>fax</IntroNumber>
+                    <IntroNumber>{companyBasicData.fax}</IntroNumber>
+                  </div>
                 )}
-              </div>
-            )}
+              </IntroNumberWrapper>
+            </div>
           </IntroAboutWrapper>
-          <IntroNumberWrapper>
-            {!notValidInfo(companyBasicData.phone) && (
-              <div>
-                <IntroNumber style={{ color: '#8a8a8a' }}>tel</IntroNumber>
-                <IntroNumber>{companyBasicData.phone}</IntroNumber>
-              </div>
-            )}
-            {!notValidInfo(companyBasicData.fax) && (
-              <div>
-                <IntroNumber style={{ color: '#8a8a8a' }}>fax</IntroNumber>
-                <IntroNumber>{companyBasicData.fax}</IntroNumber>
-              </div>
-            )}
-          </IntroNumberWrapper>
-        </div>
+        </IntroWrapper>
         <BackgroundYellowCircle> </BackgroundYellowCircle>
       </IntroSection>
 
-      <RequestSection>
-        <RequestContentsContainer>
-          <RequestLeftContentsContainer>
-            <RequestStepContainer>
-              <RequestStepCircle filled={requestStep === 0}>1</RequestStepCircle>
-              <RequestStepLine></RequestStepLine>
-              <RequestStepCircle filled={requestStep === 1}>2</RequestStepCircle>
-              <RequestStepLine></RequestStepLine>
-              <RequestStepCircle filled={requestStep === 2}>3</RequestStepCircle>
-              <RequestStepLine></RequestStepLine>
-              <RequestStepCircle filled={requestStep === 3}>4</RequestStepCircle>
-            </RequestStepContainer>
-            {requestStep === 3 ? (
-              <></>
-            ) : (
-              <>
-                <RequestExplanationWrapper>
-                  <RequestExplanation fontSize='20px' fontFamily='Pretendard-Regular'>
-                    Project Request
-                  </RequestExplanation>
-                  {requestStep === 0 ? (
-                    <>
-                      <RequestExplanation>문의할 프로젝트 항목을 선택해주세요.</RequestExplanation>
-                      <RequestSubExplanation>&nbsp;</RequestSubExplanation>
-                    </>
-                  ) : requestStep === 1 ? (
-                    <>
-                      <RequestExplanation>인적사항을 입력해주세요.</RequestExplanation>
-                      <RequestSubExplanation>* 이 들어간 항목은 필수로 작성해주세요.</RequestSubExplanation>
-                    </>
-                  ) : (
-                    <>
-                      <RequestExplanation>프로젝트 정보를 입력해주세요.</RequestExplanation>
-                      <RequestSubExplanation>* 이 들어간 항목은 필수로 작성해주세요.</RequestSubExplanation>
-                    </>
-                  )}
-                </RequestExplanationWrapper>
-                <RequestLeftLogoWrapper>
-                  <RequestLeftLogo src={logo} alt='로고' />
-                </RequestLeftLogoWrapper>
-              </>
-            )}
-          </RequestLeftContentsContainer>
-          {requestStep === 3 ? (
-            <RequestRightContentsContainer />
-          ) : (
-            <RequestRightContentsContainer>
-              {requestStep === 0 ? (
-                <RequestInputWrapper>
-                  <RequestCategoryButtonWrapper>
-                    {categories.map((category) => (
-                      <RequestCategoryButton
-                        key={category.value}
-                        checked={selectedCategory === category.value}
-                        onClick={() => handleButtonClick(category.value)}
-                      >
-                        {category.label}
-                      </RequestCategoryButton>
-                    ))}
-                  </RequestCategoryButtonWrapper>
-                </RequestInputWrapper>
-              ) : requestStep === 1 ? (
-                <RequestInputWrapper>
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='text'
-                    placeholder='성함을 입력해주세요 *'
-                    value={formData.clientName}
-                    name='clientName'
-                    onChange={handleDataChange}
-                    aria-autocomplete='none'
-                  ></RequestInfoInput>
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='text'
-                    placeholder='기관 혹은 기업명을 입력해주세요 *'
-                    value={formData.organization}
-                    name='organization'
-                    onChange={handleDataChange}
-                    aria-autocomplete='none'
-                  ></RequestInfoInput>
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='text'
-                    placeholder='연락처를 입력해주세요 (예: 010-1234-5678) *'
-                    value={formData.contact}
-                    name='contact'
-                    onChange={handleDataChange}
-                    aria-autocomplete='none'
-                  ></RequestInfoInput>{' '}
-                  {errors.contact && <ErrorMessage>{errors.contact}</ErrorMessage>}
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='email'
-                    placeholder='@이하 도메인을 포함한 이메일 주소를 입력해주세요 *'
-                    value={formData.email}
-                    name='email'
-                    onChange={handleDataChange}
-                    aria-autocomplete='none'
-                  ></RequestInfoInput>
-                  {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='position'
-                    placeholder='직책을 입력해주세요'
-                    value={formData.position}
-                    name='position'
-                    onChange={handleDataChange}
-                    aria-autocomplete='none'
-                  ></RequestInfoInput>
-                </RequestInputWrapper>
+      <>
+        {loading && (
+          <LoadingModal>
+            <LoadingIcon />
+          </LoadingModal>
+        )}
+        <RequestSection>
+          <RequestContentsContainer>
+            <RequestLeftContentsContainer>
+              <RequestStepContainer>
+                <RequestStepCircle filled={requestStep === 0}>1</RequestStepCircle>
+                <RequestStepLine></RequestStepLine>
+                <RequestStepCircle filled={requestStep === 1}>2</RequestStepCircle>
+                <RequestStepLine></RequestStepLine>
+                <RequestStepCircle filled={requestStep === 2}>3</RequestStepCircle>
+                <RequestStepLine></RequestStepLine>
+                <RequestStepCircle filled={requestStep === 3}>4</RequestStepCircle>
+              </RequestStepContainer>
+              {requestStep === 3 ? (
+                <></>
               ) : (
-                <RequestInputWrapper>
-                  <RequestInfoInput
-                    autoComplete='off'
-                    type='projectName'
-                    placeholder='제목을 입력해주세요 *'
-                    value={formData.projectName}
-                    name='projectName'
-                    onChange={handleDataChange}
-                  ></RequestInfoInput>
-                  <RowWrapper>
-                    <RequestFileText ref={FileTextRef} type='text' readOnly></RequestFileText>
-                    <RequestFileUploadInput
-                      id='uploadfile'
-                      type='file'
-                      accept='*/*'
-                      multiple
-                      onChange={handleFileChange}
-                    />
-                    <RequestUploadLabel htmlFor='uploadfile'>파일 선택</RequestUploadLabel>
-                  </RowWrapper>
-                  <RequestInfoTextarea
-                    autoComplete='off'
-                    id='myTextarea'
-                    placeholder='프로젝트 설명을 적어주세요 *'
-                    value={formData.description}
-                    name='description'
-                    onChange={handleDataChange}
-                  ></RequestInfoTextarea>
-                </RequestInputWrapper>
+                <>
+                  <RequestExplanationWrapper>
+                    <RequestExplanation
+                      fontSize='1.25rem'
+                      fontFamily={theme.font.regular}
+                      color={theme.color.white.bold}
+                    >
+                      Project Request
+                    </RequestExplanation>
+                    {requestStep === 0 ? (
+                      <>
+                        <RequestExplanation>문의할 프로젝트 항목을 선택해주세요. *</RequestExplanation>
+                        <RequestSubExplanation>&nbsp;</RequestSubExplanation>
+                      </>
+                    ) : requestStep === 1 ? (
+                      <>
+                        <RequestExplanation>인적사항을 입력해주세요.</RequestExplanation>
+                        <RequestSubExplanation>* 이 들어간 항목은 필수로 작성해주세요.</RequestSubExplanation>
+                      </>
+                    ) : (
+                      <>
+                        <RequestExplanation>프로젝트 정보를 입력해주세요.</RequestExplanation>
+                        <RequestSubExplanation>* 이 들어간 항목은 필수로 작성해주세요.</RequestSubExplanation>
+                      </>
+                    )}
+                  </RequestExplanationWrapper>
+                  <RequestLeftLogoWrapper isMobile={false}>
+                    <RequestLeftLogo src={logo} alt='로고' isMobile={false} />
+                  </RequestLeftLogoWrapper>
+                </>
               )}
-              <RequestStepButtonWrapper>
-                <RequestStepButton onClick={handlePrev} disabled={requestStep === 0}>
-                  이전
-                </RequestStepButton>
-                <RequestStepButton onClick={handleNext} disabled={requestStep >= 3}>
-                  {requestStep === 3 ? '문의 접수' : '다음'}
-                </RequestStepButton>
-              </RequestStepButtonWrapper>
-            </RequestRightContentsContainer>
-          )}
-        </RequestContentsContainer>
-        {requestStep === 3 ? (
-          <>
-            <RequestCompleteContentWrapper>
-              <RequestExplanation style={{ textAlign: 'center', marginBottom: 30 }}>
-                문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.
-              </RequestExplanation>
-              <RequestExplanation style={{ textAlign: 'center' }} fontSize='20px' fontFamily='Pretendard-Regular'>
-                담당자 배정 후 연락 드리겠습니다. 감사합니다.
-              </RequestExplanation>
-            </RequestCompleteContentWrapper>
-            <RequestLeftLogoWrapper>
-              <RequestLeftLogo src={logo} alt='로고' />
-            </RequestLeftLogoWrapper>
-            <BackToMainButton
-              onClick={() => {
-                console.log(formData);
-                navigator(`/${PP_ROUTES.MAIN}`);
-              }}
-            >
-              메인화면으로
-            </BackToMainButton>
-          </>
-        ) : null}
-      </RequestSection>
+            </RequestLeftContentsContainer>
+            {requestStep === 3 ? (
+              <RequestRightContentsContainer />
+            ) : (
+              <RequestRightContentsContainer>
+                {requestStep === 0 ? (
+                  <RequestInputWrapper>
+                    <RequestCategoryButtonWrapper>
+                      {categories.map((category) => (
+                        <RequestCategoryButton
+                          key={category.value}
+                          checked={selectedCategory === category.value}
+                          onClick={() => handleButtonClick(category.value)}
+                        >
+                          {category.label}
+                        </RequestCategoryButton>
+                      ))}
+                    </RequestCategoryButtonWrapper>
+                  </RequestInputWrapper>
+                ) : requestStep === 1 ? (
+                  <RequestInputWrapper>
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='text'
+                      placeholder='성함을 입력해주세요 *'
+                      value={formData.clientName}
+                      name='clientName'
+                      onChange={handleDataChange}
+                      aria-autocomplete='none'
+                    ></RequestInfoInput>
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='text'
+                      placeholder='기관 혹은 기업명을 입력해주세요 *'
+                      value={formData.organization}
+                      name='organization'
+                      onChange={handleDataChange}
+                      aria-autocomplete='none'
+                    ></RequestInfoInput>
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='text'
+                      placeholder='연락처를 입력해주세요 (예: 010-1234-5678) *'
+                      value={formData.contact}
+                      name='contact'
+                      onChange={handleDataChange}
+                      aria-autocomplete='none'
+                    ></RequestInfoInput>{' '}
+                    {errors.contact && <ErrorMessage>{errors.contact}</ErrorMessage>}
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='email'
+                      placeholder='@이하 도메인을 포함한 이메일 주소를 입력해주세요 *'
+                      value={formData.email}
+                      name='email'
+                      onChange={handleDataChange}
+                      aria-autocomplete='none'
+                    ></RequestInfoInput>
+                    {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='position'
+                      placeholder='직책을 입력해주세요'
+                      value={formData.position}
+                      name='position'
+                      onChange={handleDataChange}
+                      aria-autocomplete='none'
+                    ></RequestInfoInput>
+                  </RequestInputWrapper>
+                ) : (
+                  <RequestInputWrapper>
+                    <RequestInfoInput
+                      autoComplete='off'
+                      type='projectName'
+                      placeholder='제목을 입력해주세요 *'
+                      value={formData.projectName}
+                      name='projectName'
+                      onChange={handleDataChange}
+                    ></RequestInfoInput>
+                    <RowWrapper>
+                      <RequestFileText ref={FileTextRef} type='text' readOnly></RequestFileText>
+                      <RequestFileUploadInput
+                        id='uploadfile'
+                        type='file'
+                        accept='*/*'
+                        multiple
+                        onChange={handleFileChange}
+                      />
+                      <RequestUploadLabel htmlFor='uploadfile'>파일 선택</RequestUploadLabel>
+                    </RowWrapper>
+                    <RequestInfoTextarea
+                      autoComplete='off'
+                      id='myTextarea'
+                      placeholder='프로젝트 설명을 적어주세요 *'
+                      value={formData.description}
+                      name='description'
+                      onChange={handleDataChange}
+                    ></RequestInfoTextarea>
+                  </RequestInputWrapper>
+                )}
+                <RequestStepButtonWrapper>
+                  <RequestStepButton onClick={handlePrev} disabled={requestStep === 0}>
+                    이전
+                  </RequestStepButton>
+                  <RequestStepButton onClick={handleNext} disabled={requestStep >= 3}>
+                    {requestStep === 2 ? '문의 접수' : '다음'}
+                  </RequestStepButton>
+                </RequestStepButtonWrapper>
+              </RequestRightContentsContainer>
+            )}
+          </RequestContentsContainer>
+          {requestStep === 3 ? (
+            <>
+              <RequestCompleteContentWrapper>
+                <RequestExplanation
+                  style={{ textAlign: 'center', marginBottom: '1.875rem', fontFamily: `${theme.font.semiBold}` }}
+                >
+                  문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.
+                </RequestExplanation>
+                <RequestExplanation style={{ textAlign: 'center' }} fontSize='1.25rem' fontFamily={theme.font.regular}>
+                  담당자 배정 후 연락 드리겠습니다. 감사합니다.
+                </RequestExplanation>
+              </RequestCompleteContentWrapper>
+              <RequestLeftLogoWrapper isMobile={true}>
+                <RequestLeftLogo src={logo} alt='로고' isMobile={true} />
+              </RequestLeftLogoWrapper>
+              <BackToMainButton
+                onClick={() => {
+                  // console.log(formData);
+                  navigator(`/${PP_ROUTES.MAIN}`);
+                }}
+              >
+                메인화면으로
+              </BackToMainButton>
+            </>
+          ) : null}
+        </RequestSection>
+      </>
     </Container>
   );
 };
@@ -637,17 +671,33 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none; // 크롬/사파리 스크롤바 숨김
   }
+  @media ${theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 const IntroSection = styled.div`
-  height: 100vh; // 전체 화면 높이
+  height: 100vh;
   scroll-snap-align: start; // 섹션의 시작점에 스냅
   background-color: black;
   position: relative; // 구형 도형의 위치 지정
   display: flex;
   justify-content: center;
   align-items: center;
+  @media ${theme.media.mobile} {
+    max-width: 100%;
+  }
 `;
+
+const IntroWrapper = styled.div`
+  @media ${theme.media.mobile} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const IntroTitleWrapper = styled.div`
   display: flex;
   flex-direction: 'row';
@@ -656,27 +706,23 @@ const IntroTitleWrapper = styled.div`
 const IntroTitleCONTACT = styled.div`
   font-family: ${theme.font.bold};
   font-size: 6.25rem;
-  color: #ffffff;
+  color: ${theme.color.white.light};
   @media ${theme.media.mobile} {
-    font-family: ${theme.font.bold};
     font-size: 3.25rem;
-    color: #ffffff;
   }
 `;
 const IntroTitleUS = styled.div`
-  margin-left: 20px;
+  margin-left: 1.25rem;
   font-family: ${theme.font.bold};
   font-size: 6.25rem;
   color: #ffa900;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     margin-left: 1rem;
-  font-family: ${theme.font.bold};
-  font-size: 3.25rem;
-  color: #ffa900;
+    font-size: 3.25rem;
   }
 `;
 const IntroSubTitleWrapper = styled.div`
-  margin-top: 20px;
+  margin-top: 1.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -685,63 +731,60 @@ const IntroSubtitle = styled.div`
   font-family: ${theme.font.semiBold};
   font-size: 1.25rem;
   color: #ffffff;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     width: 80%;
     font-family: ${theme.font.semiBold};
     text-align: center;
-  font-size: 1rem;
-  color: #ffffff;
-  word-break: keep-all; 
-  white-space: normal;
+    font-size: 1rem;
+    color: ${theme.color.white.light}
+    word-break: keep-all;
+    white-space: normal;
   }
 `;
 const IntroAboutWrapper = styled.div`
   margin-top: 5rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   @media ${theme.media.mobile} {
     margin-top: 10rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+    width: 80%;
   }
 `;
 const IntroAdress = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   font-family: ${theme.font.medium};
   font-size: 1.25rem;
   color: #ffffff;
   text-align: left;
   max-width: 40vw;
   word-wrap: break-word;
-  @media ${theme.media.mobie}{
+  @media ${theme.media.mobile} {
     margin-bottom: 0.5rem;
-  font-family: ${theme.font.medium};
-  font-size: 0.8rem;
-  color: #ffffff;
-  text-align: left;
-  max-width: 80%;
-  word-wrap: break-word;
+    font-family: ${theme.font.medium};
+    font-size: 0.8rem;
+    color: #ffffff;
+    text-align: center;
+    max-width: 100%;
+    word-wrap: break-word;
   }
 `;
 const IntroNumberWrapper = styled.div`
   margin-top: 40px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  @media ${theme.media.mobile}  {
+  @media ${theme.media.mobile} {
     margin-top: 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 `;
 const IntroNumber = styled.div`
@@ -752,13 +795,13 @@ const IntroNumber = styled.div`
   padding: 10px;
   max-width: 20vw;
   word-wrap: break-word;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     font-family: ${theme.font.medium};
-  font-size: 0.9rem;
-  color: #ffffff;
-  text-align: center;
-  max-width: 100%;
-  word-wrap: break-word;
+    font-size: 0.9rem;
+    color: #ffffff;
+    text-align: center;
+    max-width: 100%;
+    word-wrap: break-word;
   }
 `;
 const RequestSection = styled.div`
@@ -767,12 +810,12 @@ const RequestSection = styled.div`
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   background-color: black;
 
   @media ${theme.media.mobile} {
-    margin: 0; 
+    margin: 0;
     padding: 0;
   }
 `;
@@ -803,7 +846,7 @@ const RequestLeftContentsContainer = styled.div`
 `;
 
 const RequestRightContentsContainer = styled.div`
-  margin-right: 200px; 
+  margin-right: 200px;
   padding-left: 150px;
   display: flex;
   flex-direction: column;
@@ -812,13 +855,13 @@ const RequestRightContentsContainer = styled.div`
   align-items: center;
 
   @media ${theme.media.mobile} {
-    margin:0; 
-    padding:0;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  justify-content: center;
-  align-items: center; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 `;
 const RequestStepContainer = styled.div`
@@ -826,11 +869,11 @@ const RequestStepContainer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     width: calc(100% - 2rem);
     justify-content: center;
-    margin: 0 auto; /* 화면 중앙 정렬 */
-  box-sizing: border-box;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 `;
 const RequestStepCircle = styled.div<ICircleProps>`
@@ -845,19 +888,19 @@ const RequestStepCircle = styled.div<ICircleProps>`
   color: #ffffff;
   align-content: center;
   text-align: center;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     width: 2.5rem;
-  height: 2.5rem;
-  font-size: 0.9rem;
-  /* padding: 1rem 1rem 1rem 1rem; */
-  box-sizing: border-box;
+    height: 2.5rem;
+    font-size: 0.9rem;
+    /* padding: 1rem 1rem 1rem 1rem; */
+    box-sizing: border-box;
   }
 `;
 const RequestStepLine = styled.div`
   width: 80px;
   height: 0;
   border: 1px solid white;
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     width: 3.5rem;
   }
 `;
@@ -866,27 +909,35 @@ const RequestExplanationWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: left;
-  @media ${theme.media.mobile}{
+  align-items: flex-start;
+  @media ${theme.media.mobile} {
+    margin-left: 2rem;
     margin-top: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
   }
 `;
 const RequestExplanation = styled.div<IFontStyleProps>`
   margin-bottom: 10px;
-  font-family: ${(props) => props.fontFamily || 'Pretendard-SemiBold'};
-  font-size: ${(props) => props.fontSize || '40px'};
-  color: #ffffff;
+  font-family: ${(props) => props.fontFamily || theme.font.semiBold};
+  font-size: ${(props) => props.fontSize || '2.5rem'};
+  color: ${theme.color.white.light};
   text-align: left;
-  @media ${theme.media.mobile}  {
-    margin-bottom: 10px;
-  font-family: ${theme.font.semiBold};
-  font-size: 1rem;
-  color: #ffffff;
-  text-align: left;
+  width: 100%;
+  @media ${theme.media.mobile} {
+    font-size: ${(props) => (props.fontSize ? '1rem' : '1.25rem')};
+    font-family: ${(props) => (props.fontFamily ? theme.font.thin : theme.font.semiBold)};
+    color: ${(props) => (props.color ? theme.color.white.pale : theme.color.white.light)};
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
+    width: 100%;
+    word-break: keep-all;
+    white-space: normal;
   }
 `;
 const RequestSubExplanation = styled.div<IFontStyleProps>`
@@ -898,24 +949,26 @@ const RequestSubExplanation = styled.div<IFontStyleProps>`
     display: none;
   }
 `;
-const RequestLeftLogoWrapper = styled.div`
-  margin-top: 70px;
+const RequestLeftLogoWrapper = styled.div<{ isMobile?: boolean }>`
+  margin-top: 4.375rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   @media ${theme.media.mobile} {
-    display: none;
+    display: ${(props) => (props.isMobile ? 'flex' : 'none')};
+    margin-top: 0;
   }
 `;
-const RequestLeftLogo = styled.img`
+const RequestLeftLogo = styled.img<{ isMobile?: boolean }>`
   width: 80%;
-  height: 130px;
+  height: 8.125rem;
   object-fit: contain;
   opacity: 0.3;
   @media ${theme.media.mobile} {
-    display: none;
+    display: ${(props) => (props.isMobile ? 'block' : 'none')};
+    height: 3rem;
   }
 `;
 
@@ -927,12 +980,7 @@ const RequestInputWrapper = styled.div`
   align-items: center;
   width: 100%;
   @media ${theme.media.mobile} {
-    margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+    margin-bottom: 0.5rem;
   }
 `;
 const RowWrapper = styled.div`
@@ -940,6 +988,10 @@ const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
+  @media ${theme.media.mobile} {
+    width: 90%;
+    gap: 0.3rem;
+  }
 `;
 const RequestCategoryButtonWrapper = styled.div`
   display: flex;
@@ -949,12 +1001,9 @@ const RequestCategoryButtonWrapper = styled.div`
   align-items: center;
   width: 100%;
   @media ${theme.media.mobile} {
-    display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
   }
 `;
 const RequestCategoryButton = styled.button<IButtonProps>`
@@ -977,25 +1026,15 @@ const RequestCategoryButton = styled.button<IButtonProps>`
   white-space: nowrap;
   text-overflow: ellipsis;
   @media ${theme.media.mobile} {
-    border: 1px solid white;
-  transition: all 0.4s ease;
-  &:hover {
-    cursor: pointer;
-    background-color: ${(props) => (props.checked ? '#ffa900' : '#353535')};
-  }
-  height: 3rem;
-  width: 40%;
-  text-align: center;
-  align-items: center;
-  background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
-  font-family: ${theme.font.medium};
-  font-size: 1rem;
-  color: white;
-  margin-left: 0;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+    height: 2.5rem;
+    width: 45%;
+    text-align: center;
+    align-items: center;
+    background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
+    font-family: ${theme.font.regular};
+    font-size: 0.875rem;
+    color: white;
+    margin-bottom: 1rem;
   }
 `;
 const RequestInfoInput = styled.input`
@@ -1006,21 +1045,35 @@ const RequestInfoInput = styled.input`
   outline: none;
   border: 2px solid gray;
   background-color: transparent;
-  height: 60px;
+  height: 3.75rem;
   width: 100%;
-  font-family: 'Pretendard-Medium';
-  font-size: 20px;
-  color: white;
+  font-family: ${theme.font.medium};
+  font-size: 1.25rem;
+  color: ${theme.color.white.light};
   line-height: 30px;
+  @media ${theme.media.mobile} {
+    margin-bottom: 0.5rem;
+    height: 2.5rem;
+    width: 90%;
+    font-size: 0.75rem;
+    line-height: 30px;
+  }
 `;
 const ErrorMessage = styled.div`
   width: 100%;
   margin-bottom: 15px;
   padding-left: 10px;
-  font-family: 'Pretendard-regular';
+  font-family: ${theme.font.regular};
   font-size: 15px;
   color: red;
   text-align: left;
+
+  @media ${theme.media.mobile} {
+    width: 90%;
+    margin-bottom: 0.5rem;
+    font-family: ${theme.font.regular};
+    font-size: 0.75rem;
+  }
 `;
 const RequestInfoTextarea = styled.textarea`
   box-sizing: border-box;
@@ -1029,15 +1082,22 @@ const RequestInfoTextarea = styled.textarea`
   border: 2px solid gray;
   outline: none;
   width: 100%;
-  height: 300px;
-  font-family: 'Pretendard-Medium';
-  font-size: 20px;
-  color: white;
+  height: 18.75rem;
+  font-family: ${theme.font.medium};
+  font-size: 1.25rem;
+  color: ${theme.color.white.light};
   overflow-y: auto;
   line-height: 30px;
   display: block;
   overflow-wrap: break-word;
   background-color: transparent;
+  @media ${theme.media.mobile} {
+    margin-bottom: 1rem;
+    width: 90%;
+    height: 10rem;
+    font-size: 0.75rem;
+    line-height: 30px;
+  }
 `;
 const RequestFileText = styled.input`
   margin-bottom: 15px;
@@ -1049,10 +1109,16 @@ const RequestFileText = styled.input`
   background-color: transparent;
   height: 60px;
   width: 100%;
-  font-family: 'Pretendard-Medium';
+  font-family: ${theme.font.medium};
   font-size: 20px;
   color: white;
   line-height: 30px;
+  @media ${theme.media.mobile} {
+    margin-bottom: 0.5rem;
+    height: 2.5rem;
+    font-size: 0.75rem;
+    line-height: 30px;
+  }
 `;
 const RequestUploadLabel = styled.label`
   margin-bottom: 15px;
@@ -1061,16 +1127,22 @@ const RequestUploadLabel = styled.label`
   box-sizing: border-box;
   outline: none;
   border: 2px solid gray;
-  background-color: white;
+  background-color: ${theme.color.white.light};
   height: 60px;
   width: 40%;
-  font-family: 'Pretendard-Medium';
+  font-family: ${theme.font.medium};
   font-size: 20px;
   color: black;
   line-height: 30px;
   text-align: center;
   align-items: center;
   align-content: center;
+  @media ${theme.media.mobile} {
+    margin-bottom: 0.5rem;
+    height: 2.5rem;
+    font-size: 0.75rem;
+    line-height: 30px;
+  }
 `;
 const RequestFileUploadInput = styled.input.attrs({ type: 'file' })`
   width: 1px;
@@ -1087,6 +1159,10 @@ const RequestStepButtonWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+
+  @media ${theme.media.mobile} {
+    justify-content: space-around;
+  }
 `;
 const RequestStepButton = styled.button<IButtonProps>`
   border: none;
@@ -1095,26 +1171,37 @@ const RequestStepButton = styled.button<IButtonProps>`
   &:hover {
     cursor: ${(props) => (props.disabled ? '' : 'pointer')};
     background-color: ${(props) => (props.disabled ? '#ffa900' : '#ff7800')};
-    transform: ${(props) => (props.disabled ? 'none' : 'scale(1.01)')}; // 호버 시 크기 증가
+    transform: ${(props) => (props.disabled ? 'none' : 'scale(1.01)')};
   }
-  height: 70px;
+  height: 4.375rem;
   width: 45%;
   text-align: center;
   align-items: center;
   background-color: #ffa900;
-  font-family: 'Pretendard-SemiBold';
-  font-size: 30px;
-  color: white;
+  font-family: ${theme.font.semiBold};
+  font-size: 1.875rem;
+  color: ${theme.color.white.light};
+
+  @media ${theme.media.mobile} {
+    justify-content: space-around;
+    height: 2.5rem;
+    font-family: ${theme.font.regular};
+    font-size: 1.25rem;
+  }
 `;
 const RequestCompleteContentWrapper = styled.div`
-  margin-top: 100px;
+  margin-top: 6.25rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  @media ${theme.media.mobile} {
+    margin-top: 4rem;
+    width: 70%;
+  }
 `;
 const BackToMainButton = styled.button`
-  margin-top: 50px;
+  margin-top: 3.125rem;
   border: 2px solid white;
   transition: transform 0.2s;
   &:hover {
@@ -1122,12 +1209,51 @@ const BackToMainButton = styled.button`
     background-color: #ffa900;
     transform: scale(1.01);
   }
-  height: 70px;
-  width: 200px;
+  height: 4.375rem;
+  width: 12.5rem;
   text-align: center;
   align-items: center;
   background-color: transparent;
-  font-family: 'Pretendard-SemiBold';
+  font-family: ${theme.font.semiBold};
   font-size: 25px;
-  color: white;
+  color: ${theme.color.white.bold};
+
+  @media ${theme.media.mobile} {
+    /* display: none; */
+    margin-top: 3rem;
+    height: 3rem;
+    width: 10rem;
+    font-size: 1rem;
+  }
+`;
+const LoadingModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const LoadingIcon = styled.div`
+  border: 8px solid rgba(255, 255, 255, 0.3);
+  border-top: 8px solid ${theme.color.white.bold};
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;

@@ -48,6 +48,7 @@
     "react-naver-maps": "^0.1.2",
     "react-query": "^3.39.3",
     "react-quill": "^2.0.0",
+    "react-responsive": "^10.0.0",
     "react-router-dom": "^6.16.0",
     "react-router-prompt": "^0.7.0",
     "react-scripts": "5.0.1",
