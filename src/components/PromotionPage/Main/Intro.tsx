@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { Link } from 'react-router-dom';
+import { theme } from '@/styles/theme';
+import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -42,6 +44,7 @@ const Intro = () => {
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
   const limitedCompanyMainOverview = parseAndTrimHTML(companyMainOverview, 10);
+  const isMobile = window.innerWidth < 768;
 
   return (
     <Container>
@@ -50,7 +53,10 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
-          dangerouslySetInnerHTML={{ __html: companyMainOverview || '<p>스튜디오 아이는</p>' }}
+          dangerouslySetInnerHTML={{
+            __html: companyMainOverview ||
+              `<p><span style="color:#ffa900;">STUDIO EYE</span> IS ${isMobile ? '<br />' : ' '} THE <span style="color:#ffa900;">BEST</span>${isMobile ? '<br />' : ' '} NEW MEDIA</p> <p>PRODUCTION ${isMobile ? '<br />' : ' '} BASED ON ${isMobile ? '<br />' : ' '} OTT & YOUTUBE</p>`
+          }}
         ></motion.div>
       </IntroWrapper>
       <DesWrapper ref={desRef}>
@@ -58,7 +64,7 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
-          dangerouslySetInnerHTML={{ __html: companyCommitment || '<p>채워넣기</p>' }}
+          dangerouslySetInnerHTML={{ __html: companyCommitment || `<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 ${isMobile ? '<br />' : ' '} 끊임없이 고민하고 변화합니다.</p>` }}
         ></motion.div>
       </DesWrapper>
       <CircleWrapper ref={circleRef}>
@@ -72,6 +78,7 @@ const Intro = () => {
           </Link>
         </motion.div>
       </CircleWrapper>
+      {/* {isMobile && <BackgroundYellowCircle> </BackgroundYellowCircle>} */}
     </Container>
   );
 };
@@ -87,6 +94,11 @@ const Container = styled.div`
   justify-content: center;
 
   line-height: normal;
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: 100vh;
+  }
 `;
 
 const IntroWrapper = styled.div`
@@ -98,6 +110,15 @@ const IntroWrapper = styled.div`
   max-height: 12rem;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    max-height: fit-content;
+    font-size: 1.9rem;
+    text-align: left;
+    padding: 0.75rem;
+    margin-top: 5rem;
+  }
 `;
 
 const DesWrapper = styled.div`
@@ -110,8 +131,23 @@ const DesWrapper = styled.div`
   max-height: 50rem;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    padding: 0.75rem;
+    height: fit-content;
+    font-size: 0.7rem;
+    font-weight: 300;
+    text-align: left;
+    word-break: keep-all;
+    margin-top: 0;
+  }
 `;
 
 const CircleWrapper = styled(motion.div)`
   margin-top: 102px;
+
+  @media ${theme.media.mobile}{
+    margin: 4rem;
+  }
 `;

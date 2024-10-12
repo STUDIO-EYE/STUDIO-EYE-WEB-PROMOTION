@@ -9,6 +9,7 @@ import HeaderDetail from './HeaderDetail';
 import Menubar from './Menubar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCompanyLogoData } from '../../../apis/PromotionAdmin/dataEdit';
+import { theme } from '@/styles/theme';
 
 interface ContainerProps {
   isScrolled: boolean;
@@ -55,7 +56,7 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      setIsScrolled(scrollTop > 50);
+      setIsScrolled(scrollTop > 3.125); // 50px => 3.125rem
     };
     window.addEventListener('scroll', handleScroll);
 
@@ -74,6 +75,7 @@ const Header = () => {
     };
     disableScroll();
   }, [isMenuOpen]);
+
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
@@ -88,7 +90,6 @@ const Header = () => {
             {/* 조건부로 로고 변경 */}
             <LogoImg src={isRecruitmentPage ? recruitmentLogo : companyLogo} alt='Company Logo' />
           </HomeLinkWrapper>
-          <Menubar />
         </HeaderContainer>
         <AnimatePresence>
           {isMenuOpen && (
@@ -104,7 +105,8 @@ const Header = () => {
             </HeaderDetailContainer>
           )}
         </AnimatePresence>
-      </Container>
+      </Container>{' '}
+      <Menubar />
     </>
   );
 };
@@ -113,8 +115,15 @@ export default Header;
 
 const Container = styled.div<ContainerProps>`
   width: 100vw;
-  height: 80px;
-  padding: 15px 40px;
+  height: 5rem; // 80px -> 5rem
+
+  padding: 0.9375rem 2.5rem; // 15px 40px -> 0.9375rem 2.5rem
+  @media ${theme.media.mobile} {
+    padding: 0.4375rem 0.9rem;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   box-sizing: border-box;
   background-color: ${({ isScrolled, isRecruitmentPage }) => 
     isRecruitmentPage ? 'transparent' : (isScrolled ? 'rgba(0,0,0,0.1)' : 'transparent')}; // recruitment 페이지에서 투명하게
@@ -125,32 +134,52 @@ const Container = styled.div<ContainerProps>`
     background-color 0.3s,
     backdrop-filter 0.3s;
 `;
+
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 101;
 `;
+
 const HeaderDetailContainer = styled(motion.div)`
-  width: 521px;
+  width: 32.5625rem; // 521px -> 32.5625rem
   height: 100vh;
   background-color: black;
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(1.875rem); // 30px -> 1.875rem
   position: fixed;
   top: 0;
   right: 0;
   z-index: 110;
-  padding: 40px;
+  padding: 2.5rem; // 40px -> 2.5rem
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media ${theme.media.tablet} {
+    // tablet
+    width: 28.8125rem; // 301px -> 18.8125rem
+  }
+
+  @media ${theme.media.mobile} {
+    // mobile
+    width: 100%;
+  }
 `;
+
 const HomeLinkWrapper = styled(NavLink)``;
+
 const LinkWrapper = styled.div``;
+
 const LogoImg = styled.img`
-  // width: 172px;
-  height: 60px;
+  height: 3.75rem; // 60px -> 3.75rem
   object-fit: cover;
+  @media ${theme.media.tablet} {
+    height: 2.7rem;
+  }
+  @media ${theme.media.mobile} {
+    height: 2rem;
+  }
 `;

@@ -17,6 +17,8 @@ import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerC
 import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
 import RecruitmentManagePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage';
 import RecruitmentWritePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage';
+import BenefitManagePage from './pages/PromotionAdmin/RecruitmentPage/BenefitManagePage';
+import BenefitWritePage from './pages/PromotionAdmin/RecruitmentPage/BenefitWritePage';
 import FAQManagePage from './pages/PromotionAdmin/FaqPage/FAQManagePage';
 import PARequestDetailPage from '@/pages/PromotionAdmin/RequestPage/RequestCheckPage';
 import FAQCheckPage from './pages/PromotionAdmin/FaqPage/FAQCheckPage';
@@ -44,7 +46,7 @@ import Login from './pages/PromotionAdmin/Login/Login';
 import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage';
 import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
 import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
-import NewsDetailPage from './pages/PromotionPage/NewsPage/NewsDetailPage';
+import GreetingComponent from './pages/ForTest/GreetingComponent';
 import RecruitmentPage from './pages/PromotionPage/RecruitmentPage/RecruitmentPage';
 import MenuPage from './pages/PromotionAdmin/DataEditPage/MenuPage/MenuPage';
 const router = createBrowserRouter([
@@ -97,10 +99,6 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.NEWSBOARD,
             element: <NewsBoardPage />,
-          },
-          {
-            path: PP_ROUTES_CHILD.NEWSBOARD_DETAIL,
-            element: <NewsDetailPage />,
           },
           {
             path: PP_ROUTES_CHILD.RECRUITMENT,
@@ -224,16 +222,20 @@ const router = createBrowserRouter([
             element: <PARecruitmentPage />,
             children: [
               {
-                path: `${PA_ROUTES.RECRUITMENT}/page_edit`,
-                element: <RecruitmentManagePage />,
-              },
-              {
                 path: `${PA_ROUTES.RECRUITMENT}/manage`,
                 element: <RecruitmentManagePage />,
               },
               {
                 path: `${PA_ROUTES.RECRUITMENT}/write`,
                 element: <RecruitmentWritePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
+                element: <BenefitManagePage />,
+              },
+              {
+                path: `${PA_ROUTES.RECRUITMENT}/benefit/write`,
+                element: <BenefitWritePage />,
               },
             ],
           },
@@ -250,19 +252,23 @@ const router = createBrowserRouter([
                 element: <PANewsWritePage />,
               },
               {
-                path:`:id`,
-                element: <PANewsViewPage/>,
-                children:[
+                path: `:id`,
+                element: <PANewsViewPage />,
+                children: [
                   {
-                    path:`edit`,
-                    element: <PANewsEditPage/>
-                  }
-                ]
-              }
-            ]
-          }
+                    path: `edit`,
+                    element: <PANewsEditPage />,
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
+      {
+        path: '/api/greeting',
+        element: <GreetingComponent />,
+      }
     ],
   },
 ]);

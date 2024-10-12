@@ -2,23 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderState } from '@/recoil/atoms';
-import { useLocation } from 'react-router-dom';
+import { theme } from '@/styles/theme';
+import { useLocation } from 'react-router-dom'; // useLocation 임포트
 
 const Menubar = () => {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(ppHeaderState);
   const location = useLocation();
 
-  const toggleMenu = () => {
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
     setIsMenuOpen(!isMenuOpen);
   };
 
   const isRecruitmentPage = location.pathname === '/recruitment';
 
   return (
-    <ToggleContainer className={isMenuOpen ? 'active' : ''} onClick={toggleMenu}>
-      <Span isRecruitmentPage={isRecruitmentPage} />
-      <Span isRecruitmentPage={isRecruitmentPage} />
-      <Span isRecruitmentPage={isRecruitmentPage} />
+    <ToggleContainer className={isMenuOpen ? 'active' : ''} onMouseDown={toggleMenu}>
+      <span></span>
+      <span></span>
+      <span></span>
     </ToggleContainer>
   );
 };
@@ -26,43 +28,50 @@ const Menubar = () => {
 export default Menubar;
 
 const ToggleContainer = styled.div`
+  width: fit-content;
+  @media ${theme.media.tablet} {
+    top: 2.4rem;
+    scale: 0.9;
+  }
+  @media ${theme.media.mobile} {
+    scale: 0.6;
+    top: 2rem;
+  }
   display: block;
   cursor: pointer;
-  z-index: 150;
+  position: absolute;
+
+  top: 2.5rem;
+  right: 1rem;
+  z-index: 200;
   transform: translate(-50%, -50%);
-  margin-top: 25px;
-`;
 
-const Span = styled.span<{ isRecruitmentPage: boolean }>`
-  display: block;
-  background: ${({ isRecruitmentPage }) => (isRecruitmentPage ? '#FFA900' : 'white')}; // 배경 색상 조건부 적용
-  width: 42px;
-  height: 4px;
-  border-radius: 3px;
-  transition:
-    0.25s margin 0.25s,
-    0.25s transform;
-
-  &:nth-child(1) {
-    margin-bottom: 8px;
+  span {
+    display: block;
+    background: #fff;
+    width: 2.625rem;
+    height: 0.25rem;
+    border-radius: 0.1875rem;
+    transition: 0.25s ease-in-out;
   }
 
-  &:nth-child(3) {
-    margin-top: 8px;
+  span:nth-child(1) {
+    margin-bottom: 0.5rem;
   }
 
-  &.active:nth-child(1) {
-    margin-top: 8px;
-    margin-bottom: -4px;
-    transform: rotate(45deg);
+  span:nth-child(3) {
+    margin-top: 0.5rem;
   }
 
-  &.active:nth-child(2) {
-    transform: rotate(45deg);
+  &.active span:nth-child(1) {
+    transform: translateY(0.75rem) rotate(45deg);
   }
 
-  &.active:nth-child(3) {
-    margin-top: -4px;
-    transform: rotate(135deg);
+  &.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  &.active span:nth-child(3) {
+    transform: translateY(-0.75rem) rotate(-45deg);
   }
 `;

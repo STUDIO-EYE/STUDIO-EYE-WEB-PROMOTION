@@ -4,11 +4,17 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { rotateAnimation } from '@/styles/motionAnimation';
 import { LiaLongArrowAltDownSolid } from 'react-icons/lia';
+import { theme } from '@/styles/theme';
+import { useMediaQuery } from 'react-responsive';
 
 const ArrowCircle = () => {
+  const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
+  const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  const scrollAmount = isMobile ? viewportHeight : window.innerHeight;
+
   const handleClick = () => {
     window.scrollTo({
-      top: window.innerHeight,
+      top: scrollAmount,
       behavior: 'smooth',
     });
   };
@@ -20,7 +26,7 @@ const ArrowCircle = () => {
       </RotatingWrapper>
 
       <LabelWrapper>
-        <LiaLongArrowAltDownSolid size='50' />
+        <LiaLongArrowAltDownSolid size={isMobile ? '30' : '50'} />
       </LabelWrapper>
     </Container>
   );
@@ -47,5 +53,8 @@ const RotatingWrapper = styled(motion.div)`
 
 const RotatingImage = styled(motion.img)`
   position: relative;
-  width: 150px;
+  width: 9.375rem;
+  @media ${theme.media.mobile} {
+    width: 6rem;
+  }
 `;

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { theme } from '@/styles/theme';
 
 interface ArtworkNavProps {
   count: number;
@@ -39,6 +40,10 @@ font-family: 'pretendard';
   display: flex;
   flex-direction: column;
   z-index: 1000;
+
+  @media ${theme.media.mobile} {
+    top: 70%;
+  }
 `;
 
 const NavItemWrapper = styled.div`

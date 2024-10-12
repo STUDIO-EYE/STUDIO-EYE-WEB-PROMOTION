@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ScrollToTop from '@/hooks/useScrollToTop';
 import Footer from '../Footer/Footer';
 import { putViewIncrease } from '@/apis/PromotionAdmin/dashboard';
+import { theme } from '@/styles/theme';
 
 const Layout = () => {
   const location = useLocation();

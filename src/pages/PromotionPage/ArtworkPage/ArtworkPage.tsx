@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
 import ArtworkCard from '@/components/PromotionPage/Artwork/ArtworkCard';
 import NullException from '@/components/PromotionPage/Artwork/NullException';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
+import { theme } from '@/styles/theme';
 
 function ArtworkPage() {
   const location = useLocation();
@@ -14,10 +16,9 @@ function ArtworkPage() {
   const { data, isLoading, error } = useQuery<IArtworksData, Error>(['artwork', 'id'], getArtworkData);
   const category = artwork_categories.find((category) => category.key + '' === categoryId);
 
-  // data가 유효한지 확인하여 postedData 계산
   const postedData = data?.data?.filter((artwork) => artwork.isPosted === true) ?? [];
-
-  // postedData가 유효한지 확인하여 filteredData 계산
+  const dataLength = data?.data?.filter((artwork) => artwork.isPosted === true).length || 6;
+  console.log("data length" + dataLength);
   const filteredData = category
     ? postedData.filter((artwork) => artwork.category.toLowerCase() === category.label.toLocaleLowerCase())
     : postedData;
@@ -25,12 +26,30 @@ function ArtworkPage() {
   function ScrollToTop() {
     useEffect(() => {
       window.scrollTo(0, 0);
-    }, [location]); // pathname이 변경될 때마다 실행
+    }, [location]);
     return null;
   }
 
-  if (isLoading) return <div>is Loading...</div>;
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <ArtworkWrapper>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <SkeletonComponent
+              key={index}
+              width="350px"
+              height="350px"
+              borderRadius="8px"
+              margin="0px"
+            />
+          ))}
+        </ArtworkWrapper>
+      </Wrapper>
+    );
+  }
+
   if (error) return <>{error.message}</>;
+
   return (
     <>
       {postedData === null || postedData === undefined ? (
@@ -47,6 +66,7 @@ function ArtworkPage() {
                   <>
                     {postedData?.map((artwork) => (
                       <ArtworkCard
+                        key={artwork.id} // key 추가
                         id={artwork.id}
                         name={artwork.name}
                         client={artwork.client}
@@ -66,6 +86,7 @@ function ArtworkPage() {
                     <ScrollToTop />
                     {filteredData?.map((artwork) => (
                       <ArtworkCard
+                        key={artwork.id} // key 추가
                         id={artwork.id}
                         name={artwork.name}
                         client={artwork.client}
@@ -91,12 +112,24 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.background};
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    align-items: left;
+  }
 `;
 
 const ArtworkWrapper = styled.div`
   margin-left: 3rem;
   display: flex;
   flex-wrap: wrap;
-  // grid-template-columns: repeat(auto-fit,minmax(250px, 1fr));
   grid-gap: 50px;
+
+  @media ${theme.media.mobile}{
+    display: block; // 임시
+    grid-gap: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+  }
 `;

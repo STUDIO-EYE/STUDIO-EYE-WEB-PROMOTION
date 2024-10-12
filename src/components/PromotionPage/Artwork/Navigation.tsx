@@ -33,61 +33,77 @@ function Navigation() {
   const location = useLocation();
   const categoryId = new URLSearchParams(location.search).get('category');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const [refresh, setRefresh] = useState(1);
-  const handleRefresh = () => {
-    setRefresh(refresh * -1);
+  const handleCategoryChange = (categoryKey: string) => {
+    navigator(`?category=${categoryKey}`);
+    setSelectedCategory(categoryKey);
+    setIsDropdownOpen(false);
   };
 
   useEffect(() => {
     if (categoryId === null) {
       setSelectedCategory(ARTWORK_CATECORY.ALL);
     }
-  }, [categoryId, refresh]);
+  }, [categoryId]);
+
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
-    <CategoryBar>
-      <CategoryItem
-        onClick={() => {
-          navigator(`/${PP_ROUTES_CHILD.ARTWORK}`);
-          setSelectedCategory(artwork_categories[0].label);
-          handleRefresh();
-        }}
-        selected={selectedCategory === artwork_categories[0].label && categoryId !== null + '' ? true : false}
-      >
-        <span>{artwork_categories[0].label}</span>
-      </CategoryItem>
+    <>
+      <CategoryBar>
+        {artwork_categories.map((category) => (
+          <CategoryItem
+            key={category.key}
+            onClick={() => {
+              navigator(`?category=${category.key}`);
+              setSelectedCategory(category.label);
+            }}
+            selected={categoryId === category.key + ''}
+          >
+            <span>{category.label}</span>
+          </CategoryItem>
+        ))}
+      </CategoryBar>
 
-      {artwork_categories.slice(1).map((category) => (
-        <CategoryItem
-          key={category.key}
-          onClick={() => {
-            navigator(`?category=${category.key}`);
-            setSelectedCategory(category.label);
-            handleRefresh();
-          }}
-          selected={categoryId === category.key + '' ? true : false}
-        >
-          <span>{category.label}</span>
-        </CategoryItem>
-      ))}
-    </CategoryBar>
+      <MobileDropdown>
+        <DropdownHeader onClick={toggleDropdown}>
+          {artwork_categories.find((cat) => cat.key.toString() === selectedCategory)?.label ||
+            'All'}
+          <ArrowIcon isOpen={isDropdownOpen} />
+        </DropdownHeader>
+        {isDropdownOpen && (
+          <DropdownList>
+            {artwork_categories.map((category) => (
+              <DropdownItem
+                key={category.key}
+                onClick={() => handleCategoryChange(category.key.toString())}
+              >
+                {category.label}
+              </DropdownItem>
+            ))}
+          </DropdownList>
+        )}
+      </MobileDropdown>
+    </>
   );
 }
 
 export default Navigation;
 
 const CategoryBar = styled.div`
-  position: -webkit-sticky;
   position: sticky;
   align-self: flex-start;
   top: 80px;
   left: 30px;
   margin-bottom: 80px;
   width: 300px;
-  height: max-content;
   padding-left: 40px;
   color: ${(props) => props.theme.color.black.light};
+
+  @media ${theme.media.mobile} {
+    display: none;
+  }
 `;
 
 const CategoryItem = styled.div<{ selected: boolean }>`
@@ -99,13 +115,74 @@ const CategoryItem = styled.div<{ selected: boolean }>`
     font-weight: 200;
     font-size: 23px;
     font-family: ${(props) => props.theme.font.light};
-
-    color: ${({ selected }) => (selected ? theme.color.white.bold : 'none')};
+    color: ${({ selected }) => (selected ? theme.color.white.bold : theme.color.black.light)};
     border-bottom: 1.5px solid ${({ selected }) => (selected ? theme.color.white.bold : 'none')};
     transition: color 0.3s;
   }
 
   span:hover {
+    color: ${(props) => props.theme.color.white.bold};
+  }
+`;
+
+const MobileDropdown = styled.div`
+  display: none;
+
+  @media ${theme.media.mobile} {
+    display: block;
+    position: relative;
+    width: 20rem;
+    max-width: 20rem;
+    margin-bottom: 2rem;
+    margin-top: -5rem; // 임시
+  }
+`;
+
+const DropdownHeader = styled.div`
+  padding: 0.75rem;
+  background-color: ${(props) => props.theme.color.background};
+  color: ${(props) => props.theme.color.black.light};
+  border: 1px solid ${(props) => props.theme.color.white.bold};
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ArrowIcon = styled.div<{ isOpen: boolean }>`
+  width: 1rem;
+  height: 1rem;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23FFF" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: rotate(${(props) => (props.isOpen ? '180deg' : '0deg')});
+  transition: transform 0.3s ease;
+`;
+
+const DropdownList = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: ${(props) => props.theme.color.background};
+  border: 1px solid ${(props) => props.theme.color.white.bold};
+  z-index: 1000;
+  box-sizing: border-box;
+`;
+
+const DropdownItem = styled.li`
+  color: white;
+  padding: 0.5rem 0.75rem;
+  background-color: ${(props) => props.theme.color.background};
+  color: ${(props) => props.theme.color.black.light};
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 400;
+
+  &:hover {
+    background-color: ${(props) => props.theme.color.black.light};
     color: ${(props) => props.theme.color.white.bold};
   }
 `;

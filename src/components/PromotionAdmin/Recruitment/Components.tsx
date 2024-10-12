@@ -9,5 +9,6 @@ export const ContentBox = styled.div`
   border-radius: 4px;
   background-color: ${(props) => props.theme.color.white.bold};
   width: 38vw;
-  height: 800px;
+  min-height: 800px;
+  height: auto;
 `;

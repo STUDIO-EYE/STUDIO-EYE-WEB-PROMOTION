@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'; // useLocation 임포트
 import styled from 'styled-components';
 import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
 import { getCompanyBasic, getCompanyLogo } from '@/apis/PromotionPage/company';
+import { COMPANY_DATA } from '@/constants/introdutionConstants';
 
 type ICompanyBasic = {
   address: string;
@@ -22,9 +23,9 @@ const Footer = () => {
   const location = useLocation();
   const isRecruitmentPage = location.pathname === '/recruitment'; // 경로 확인
 
-  const addressData = companyBasicData ? companyBasicData.address : '서울 성동구 광나루로 162';
-  const phoneData = companyBasicData ? companyBasicData.phone : '02-000-0000';
-  const faxData = companyBasicData ? companyBasicData.fax : '000-0000';
+  const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
+  const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;
+  const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
 
   return (
     <Container isRecruitmentPage={isRecruitmentPage}>
@@ -39,10 +40,7 @@ const Footer = () => {
       </BasicInfoWrapper>
       <ImgInfoWrapper>
         <div>
-          <img
-            src={companyLogoData ? companyLogoData : defaultFooterLogo}
-            alt="회사 로고"
-          />
+          <img src={companyLogoData ? companyLogoData : defaultFooterLogo} alt='회사 로고' />
         </div>
         <div>
           <h1>COPYRIGHTⓒSTUDIOEYE,LTD. ALL RIGHTS RESERVED </h1>
