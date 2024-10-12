@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IBenefit } from '@/types/PromotionAdmin/recruitment';
-import { getBenefitData, updateBenefit, deleteBenefitData } from '../../../apis/PromotionAdmin/recruitment';
+import {
+  getBenefitData,
+  updateBenefit,
+  updateBenefitText,
+  deleteBenefitData,
+} from '../../../apis/PromotionAdmin/recruitment';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
@@ -19,6 +24,7 @@ import {
 } from '../../../components/PromotionAdmin/DataEdit/Company/StyleComponents';
 
 function BenefitManagePage() {
+  const timeStamp = Date.now();
   const setIsEditing = useSetRecoilState(dataUpdateState);
   const isEditing = useRecoilValue(dataUpdateState);
   const navigator = useNavigate();
@@ -36,7 +42,7 @@ function BenefitManagePage() {
   const [isSelected, setIsSelected] = useState(false);
   const [titleLength, setTitleLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
-  const maxTitleLength = 15;
+  const maxTitleLength = 14;
   const maxContentLength = 35;
 
   useEffect(() => {
@@ -103,30 +109,47 @@ function BenefitManagePage() {
         { type: 'application/json' },
       ),
     );
-
-    if (currentBenefit?.imageUrl && currentBenefit.imageUrl !== data?.imageUrl) {
-      const file = await urlToFile(currentBenefit.imageUrl, `${currentBenefit.title}.png`);
-      formData.append('file', file);
-    } else if (data?.imageUrl) {
-      const mainImgBlob = await urlToFile(data.imageUrl, `${data.title}.png`);
-      formData.append('file', mainImgBlob);
+    if (imgChange) {
+      if (currentBenefit?.imageUrl && currentBenefit.imageUrl !== data?.imageUrl) {
+        const file = await urlToFile(currentBenefit.imageUrl, `${currentBenefit.title}.${timeStamp}.png`);
+        formData.append('file', file);
+      } else if (data?.imageUrl) {
+        const mainImgBlob = await urlToFile(data.imageUrl, `${data.title}.${timeStamp}.png`);
+        formData.append('file', mainImgBlob);
+      } else {
+        formData.append('file', '');
+      }
+      if (window.confirm('수정하시겠습니까?')) {
+        try {
+          const response = await updateBenefit(formData);
+          alert('사내 복지가 수정되었습니다.');
+          console.log(response);
+          await refetch();
+          setIsEditing(false);
+          setImgChange(false);
+        } catch (error) {
+          console.log(error);
+          alert('사내 복지 수정 중 오류가 발생했습니다.');
+        }
+      }
     } else {
-      formData.append('file', '');
-    }
-
-    if (window.confirm('수정하시겠습니까?')) {
-      try {
-        const response = await updateBenefit(formData);
-        alert('사내 복지가 수정되었습니다.');
-        console.log(response);
-        await refetch();
-        setIsEditing(false);
-      } catch (error) {
-        console.log(error);
-        alert('사내 복지 수정 중 오류가 발생했습니다.');
+      if (window.confirm('수정하시겠습니까?')) {
+        try {
+          const response = await updateBenefitText(formData);
+          alert('사내 복지가 수정되었습니다.');
+          console.log(response);
+          await refetch();
+          setIsEditing(false);
+          setImgChange(false);
+        } catch (error) {
+          console.log(error);
+          alert('사내 복지 수정 중 오류가 발생했습니다.');
+        }
       }
     }
   };
+
+  const [imgChange, setImgChange] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -173,6 +196,7 @@ function BenefitManagePage() {
       };
       reader.readAsDataURL(file);
       setIsEditing(true);
+      setImgChange(true);
     }
   };
 
@@ -207,7 +231,7 @@ function BenefitManagePage() {
     if (/^\s/.test(value.charAt(0))) {
       return;
     }
-    if ((name === 'title' && value.length > 15) || (name === 'content' && value.length > 35)) {
+    if ((name === 'title' && value.length > 14) || (name === 'content' && value.length > 35)) {
       return;
     }
 
@@ -253,7 +277,10 @@ function BenefitManagePage() {
       <LeftContentWrapper>
         <ContentBox>
           <TitleWrapper>
-            <Title>사내 복지 관리</Title>
+            <Title>
+              사내 복지 관리
+              <Info>* 최대 등록 가능한 사내 복지는 20개 입니다 *</Info>
+            </Title>
             <Button onClick={handleAddNewBenefit}>
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
@@ -313,8 +340,8 @@ function BenefitManagePage() {
                   name='title'
                   value={currentBenefit?.title || ''}
                   onChange={handleChange}
-                  maxLength={15}
-                  placeholder='사내 복지 (15자 내로 작성해 주세요.)'
+                  maxLength={14}
+                  placeholder='사내 복지 (14자 내로 작성해 주세요.)'
                 />
                 {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
                 <InputTitle style={{ justifyContent: 'space-between' }}>
@@ -387,6 +414,15 @@ const Title = styled.div`
   font-size: 25px;
 `;
 
+const Info = styled.div`
+  display: flex;
+  align-items: end;
+  padding-left: 14px;
+  font-size: 14px;
+  font-family: ${(props) => props.theme.font.medium};
+  color: gray;
+`;
+
 const Button = styled.button`
   display: flex;
   cursor: pointer;
@@ -421,7 +457,7 @@ const BenefitItem = styled.button<{ isSelected: boolean }>`
   border-radius: 8px;
   background-color: ${(props) => (props.isSelected ? props.theme.color.yellow.light : props.theme.color.white.bold)};
   box-shadow: 1px 1px 4px 0.1px ${(props) => props.theme.color.black.pale};
-  width: calc(20% - 20px);
+  width: 8rem;
   margin: 0;
   cursor: pointer;
   transition: background-color 0.1s ease;
@@ -457,9 +493,7 @@ const BenefitContent = styled.p`
   font-family: ${(props) => props.theme.font.regular};
   color: ${(props) => props.theme.color.black.light};
   font-size: 10px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: keep-all;

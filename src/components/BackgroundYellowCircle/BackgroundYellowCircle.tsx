@@ -30,9 +30,9 @@ const YellowCircle = styled.div<YellowCircleProps>`
   height: 200px;
   background-color: rgba(255, 169, 0, 0.1943);
   box-shadow: 0 0 250px 240px rgba(255, 169, 0, 0.2);
-
   @media ${theme.media.mobile} {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 0 4.5rem 4.5rem rgba(255, 169, 0, 0.2);
   }
 `;

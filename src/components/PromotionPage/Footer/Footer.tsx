@@ -36,10 +36,7 @@ const Footer = () => {
       </BasicInfoWrapper>
       <ImgInfoWrapper>
         <div>
-          <img
-            src={companyLogoData ? companyLogoData : defaultFooterLogo}
-            alt='회사 로고'
-          />
+          <img src={companyLogoData ? companyLogoData : defaultFooterLogo} alt='회사 로고' />
         </div>
         <div>
           <h1>COPYRIGHTⓒSTUDIOEYE,LTD. ALL RIGHTS RESERVED </h1>
@@ -83,7 +80,6 @@ const Container = styled.div`
   }
 `;
 
-
 const BasicInfoWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -100,6 +96,4 @@ const ImgInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
- 
 `;
