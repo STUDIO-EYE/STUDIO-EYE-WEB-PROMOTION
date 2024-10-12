@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import defaultLogo from '@/assets/images/PP-Header/defaultLogo.png';
+import defaultLogo from '@/assets/images/PP-Header/studioeye-logo-orange.png';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderScrolledState, ppHeaderState } from '@/recoil/atoms';
