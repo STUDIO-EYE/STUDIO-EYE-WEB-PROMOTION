@@ -1,4 +1,5 @@
 import { PP_ROUTES_CHILD } from '@/constants/routerConstants';
+import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -47,20 +48,46 @@ function NullException() {
 
 export default NullException;
 
-const Wrapper = styled.div`
-  padding-top: 30px;
-`;
 
 const Msg = styled.div`
   color: ${(props) => props.theme.color.white.bold};
   font-size: 20px;
+
+  @media ${theme.media.mobile} {
+    width: 85vw;
+    display: flex;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
 `;
 
 const Title = styled.svg`
   padding: 50px 0 60px 0;
+
+  @media ${theme.media.mobile} {
+    width: 85vw;
+    justify-content: center;
+  }
 `;
 
 const Link = styled.a`
   cursor: pointer;
   color: ${(props) => props.theme.color.black.pale};
+
+  @media ${theme.media.mobile} {
+    width: 85vw;
+    display: flex;
+    justify-content: center;
+  }
+`;
+
+const Wrapper = styled.div`
+  padding-top: 30px;
+
+  @media ${theme.media.mobile} {
+    width: 85vw;
+    ${Title}, ${Msg}, ${Link} {  // 헤더 반응형 전까지 임시
+      margin-bottom: -3rem;
+    }
+  }
 `;

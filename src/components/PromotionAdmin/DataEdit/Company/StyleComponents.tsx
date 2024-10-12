@@ -101,7 +101,7 @@ const DATAEDIT_COLUMNS = {
     title: 'Benefit Icon',
     description: '사내 복지 아이콘 설정입니다. (아래의 아이콘이 반영됩니다.)',
     recommand:
-      'Recruitment 페이지는 하얀색 배경입니다.\n\n설정할 아이콘의 배경은 꼭 투명으로 설정하고 100x100 또는 정사각형 이미지로 업로드 해주세요.\n\n* 사내 복지는 최대 30개 등록 가능합니다 *',
+      'Recruitment 페이지는 하얀색 배경입니다.\n\n설정할 아이콘의 배경은 꼭 투명으로 설정하고 100x100 또는 정사각형 이미지로 업로드 해주세요.',
   },
 
   MENU: {
@@ -218,7 +218,6 @@ export const DATAEDIT_TITLES_COMPONENTS = {
       />
       <Title description={DATAEDIT_COLUMNS.BenefitIcon.title} />
     </TitleWrapper>
-
   ),
 
   MENU: (

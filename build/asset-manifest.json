@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.60c3feea.css",
-    "main.js": "/static/js/main.f9be072b.js",
+    "main.js": "/static/js/main.074a6708.js",
     "static/media/Pretendard-Bold.woff2": "/static/media/Pretendard-Bold.0c6f5e225ff28f456183.woff2",
     "static/media/Pretendard-SemiBold.woff2": "/static/media/Pretendard-SemiBold.d5ded8ad2884e7855bb1.woff2",
     "static/media/Pretendard-Medium.woff2": "/static/media/Pretendard-Medium.a9645bebe1a0010e66dc.woff2",
@@ -13,6 +13,7 @@
     "static/media/backgroundImg.png": "/static/media/backgroundImg.b28248d440d70bdc208f.png",
     "static/media/Mission.png": "/static/media/Mission.8f7d161f37b5f3aec2ad.png",
     "static/media/pa-logo.png": "/static/media/pa-logo.77b3cf8fafbd96d74adb.png",
+    "static/media/studioeye-logo-orange.png": "/static/media/studioeye-logo-orange.77b3cf8fafbd96d74adb.png",
     "static/media/circle.png": "/static/media/circle.08740893a51c20d62d8d.png",
     "static/media/news.svg": "/static/media/news.b4bb8698c2cdaf427eb4c5bc04611148.svg",
     "static/media/leftArrow.svg": "/static/media/leftArrow.f33e23f2bcbfb282c3b83ba2a7d4e1c0.svg",
@@ -36,10 +37,10 @@
     "static/media/statistics.svg": "/static/media/statistics.3b7494be467e1fa8888c70a2e06d269d.svg",
     "static/media/minusIcon.svg": "/static/media/minusIcon.eb3a9e3b8b63ebb3caaca57d065efe65.svg",
     "main.60c3feea.css.map": "/static/css/main.60c3feea.css.map",
-    "main.f9be072b.js.map": "/static/js/main.f9be072b.js.map"
+    "main.074a6708.js.map": "/static/js/main.074a6708.js.map"
   },
   "entrypoints": [
     "static/css/main.60c3feea.css",
-    "static/js/main.f9be072b.js"
+    "static/js/main.074a6708.js"
   ]
 }

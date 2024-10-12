@@ -69,27 +69,39 @@ const ArtworkItem = styled(motion.div)`
   cursor: pointer;
   height: fit-content;
 
-  img{
+  img {
     width: 100%;
     height: 100%;
-    object-fit:cover;
+    object-fit: cover;
     transition: 0.3s;
     background: linear-gradient(rgba(255, 169, 2, 0.4), rgba(255, 169, 2, 0.4));
-    }
-    &:hover{
-      img{transform: scale(1.05, 1.05);
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.05, 1.05);
     }
   }
-  &:hover .overlay{
-    top:0;
-    left:0;
+
+  &:hover .overlay {
+    top: 0;
+    left: 0;
     position: absolute;
-    width:350px;
-    height:350px;
+    width: 350px;
+    height: 350px;
     transition: 0.3s;
-    background-color:rgba(255, 169, 2, 0.4);
+    background-color: rgba(255, 169, 2, 0.4);
     border-radius: 0 150px 0 0;
     pointer-events: none;
+  }
+
+  @media ${theme.media.mobile} {
+    &:hover .overlay {
+      width: 20rem;
+      height: 20rem;
+      top: 0;
+      left: 0;
+    }
   }
 `;
 
@@ -103,6 +115,17 @@ const ArtworkImg = styled(motion.div)<{ ArtworkPhoto: string }>`
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${(props) => props.ArtworkPhoto});
   overflow: hidden;
   margin: 0 auto;
+
+  @media ${theme.media.mobile} {
+    width: 20rem;
+    min-width: 20rem;
+    max-width: 20rem;
+    height: 20rem;
+    position: relative;
+    &:hover {
+      border-radius: 0 150px 0 0;
+    }
+  }
 `;
 
 const Info = styled(motion.div)`
@@ -112,6 +135,7 @@ const Info = styled(motion.div)`
   overflow: hidden;
 
   padding-top: 10px;
+
   .info_client {
     display: block;
     padding-bottom: 5px;
@@ -128,5 +152,14 @@ const Info = styled(motion.div)`
     font-size: 24px;
     color: ${(props) => props.theme.color.white.bold};
     font-family: ${(props) => props.theme.font.semiBold};
+  }
+
+  @media ${theme.media.mobile} {
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    min-width: 20rem;
+    max-width: 20rem;
+    padding: 0;
   }
 `;

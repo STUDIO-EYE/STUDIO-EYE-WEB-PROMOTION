@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { ReactComponent as PrevArrowIcon } from '@/assets/images/PP/leftArrow.svg';
 import { ReactComponent as NextArrowIcon } from '@/assets/images/PP/rightArrow.svg';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
+import { theme } from '@/styles/theme';
 
 function ArtworkDetailPage() {
   const navigator = useNavigate();
@@ -206,6 +207,11 @@ export default ArtworkDetailPage;
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.color.black.bold};
   height: max-content;
+
+  @media ${theme.media.mobile} {
+    width: 100vw;
+    height: auto;
+  }
 `;
 
 const Thumbnail = styled.div<{ bgPhoto: string }>`
@@ -290,10 +296,22 @@ const Overview2 = styled(motion.div)`
 const ContentWrapper = styled.div`
   display: flex;
   height: 55vh;
+
+  @media ${theme.media.mobile} {
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+  }
 `;
 
 const Img = styled.div`
   width: 47vw;
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: auto;
+    flex-grow: 1;
+  }
 `;
 
 const Content = styled.div`
@@ -313,11 +331,26 @@ const Content = styled.div`
   span {
     color: ${(props) => props.theme.color.yellow.bold};
   }
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    p {
+      font-size: 2rem;
+      margin: 0 3rem;
+      text-align: center;
+    }
+  }
 `;
 
 const CircleWrapper = styled.div`
   display: flex;
   justify-content: center;
+  
+  @media ${theme.media.mobile} {
+    width: 100vw;
+    height: auto;
+    margin-bottom: 3rem;
+  }
 `;
 
 const Nav = styled.div<{location:string}>`
@@ -337,6 +370,10 @@ const Nav = styled.div<{location:string}>`
   }
   &:hover {
   }
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 const List = styled.div`
@@ -351,4 +388,8 @@ const List = styled.div`
   color: ${(props) => props.theme.color.black.bold};
   border-bottom: 1px solid ${(props) => props.theme.color.black.bold};
   background-color: ${(props) => props.theme.color.white.bold};
+
+  @media ${theme.media.mobile} {
+    font-size: 1.5rem;
+  }
 `;
