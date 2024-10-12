@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FaArrowDown } from 'react-icons/fa';
+import { theme } from '@/styles/theme';
 
 type Props = {
   backgroundImg: string;
@@ -89,12 +90,24 @@ const Background = styled(motion.div)`
   justify-content: center;
   align-items: center;
   position: relative;
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    height: 100vh;
+  }
 `;
 
 const SloganWrapper = styled(motion.div)`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    height: auto;
+    align-items: left;
+    flex-direction: column;
+  }
 `;
 
 const BackWrapper = styled(motion.div)`
@@ -105,6 +118,13 @@ const BackWrapper = styled(motion.div)`
   color: white;
   letter-spacing: -0.02em;
 
+  @media ${theme.media.mobile}{
+    font-size: 1rem;
+    line-height: 1;
+    text-align: left;
+    width: 100%;
+    padding-left: 0.75rem;
+    }
 `;
 
 const NameWrapper = styled.div`
@@ -125,6 +145,13 @@ const NameWrapper = styled.div`
   }
   span:last-child {
     color: #ffa900;
+  }
+
+  @media ${theme.media.mobile}{
+    width: 100%;
+    font-size: 3rem;
+    padding: 0.75rem;
+    height: 5rem; // 임시
   }
 `;
 

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { rotateAnimation } from '@/styles/motionAnimation';
 import useFollowPointer from '@/hooks/useFollowPointer';
+import { theme } from '@/styles/theme';
 
 type Props = {
   label: string;
@@ -38,6 +39,10 @@ export default Circle;
 const Container = styled.div`
   position: relative;
   display: inline-block;
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 const LabelWrapper = styled(motion.div)`
@@ -48,6 +53,10 @@ const LabelWrapper = styled(motion.div)`
   text-align: center;
   font-family: 'pretendard-bold';
   font-size: 18px;
+
+  @media ${theme.media.mobile} {
+    font-size: 0.8rem;
+  }
 `;
 
 const HoveredLabelWrapper = styled(motion.div)``;
@@ -57,4 +66,8 @@ const RotatingWrapper = styled(motion.div)`
 
 const RotatingImage = styled(motion.img)`
   position: relative;
+
+  @media ${theme.media.mobile} {
+    width: 10rem;
+  }
 `;

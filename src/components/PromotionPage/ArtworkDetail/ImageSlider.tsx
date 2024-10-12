@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IProjectImages } from '@/types/PromotionPage/artwork';
 import styled from 'styled-components';
+import { theme } from '@/styles/theme';
 
 interface IImageSliderProps {
   projectImages: IProjectImages[];
@@ -68,4 +69,9 @@ const ImgException = styled.div`
   height: 100%;
   font-size: 20px;
   border: 1px solid ${(props) => props.theme.color.yellow.bold};
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: auto;
+  }
 `;
