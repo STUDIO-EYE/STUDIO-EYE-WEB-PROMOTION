@@ -88,6 +88,7 @@ const Container = styled.div`
   background-color: #ffffff11;
   backdrop-filter: blur(1.25rem);
   padding: 4.0625rem 3.25rem;
+  transition: font-size 0.3s ease;
   box-sizing: border-box;
   @media ${theme.media.tablet} {
   }
@@ -116,6 +117,7 @@ const AddressWrapper = styled.div`
   @media ${theme.media.mobile} {
     justify-content: center;
     font-size: 1.6rem;
+    margin-bottom: 1rem;
   }
   @media ${theme.media.tablet} {
     font-size: 1.2rem;
@@ -147,15 +149,13 @@ const BasicInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-bottom: 2.1875rem;
   white-space: nowrap;
-
   height: 20rem;
-
   font-family: 'pretendard-bold';
   font-size: 1.45rem;
   color: #777777;
+
   @media ${theme.media.mobile} {
     display: block;
   }

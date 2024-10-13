@@ -8,7 +8,7 @@ const Menubar = () => {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(ppHeaderState);
 
   const toggleMenu = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 클릭 이벤트 전파 방지
+    e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -35,7 +35,7 @@ const ToggleContainer = styled.div`
   }
   display: block;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
 
   top: 2.5rem;
   right: 1rem;

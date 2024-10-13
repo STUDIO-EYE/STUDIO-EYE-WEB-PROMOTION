@@ -17,14 +17,16 @@ const Layout = () => {
   const pathsWithoutFooter = ['/contact'];
 
   const hideFooter = pathsWithoutFooter.includes(location.pathname);
-  
+
   useEffect(() => {
-    const increaseView = async (cookieName:string,filter:any) => {
+    const increaseView = async (cookieName: string, filter: any) => {
       // 해당 이름의 쿠키가 존재하지 않으면 조회수를 증가시킴
       if (!document.cookie.includes(cookieName)) {
         try {
           // 조회수 증가 API 호출
-          if(filter.menu!==MenuType.ARTWORK){filter.category='ALL'}
+          if (filter.menu !== MenuType.ARTWORK) {
+            filter.category = 'ALL';
+          }
           await putViewIncrease(filter);
           // 쿠키 설정 (유효기간 1일)
           const date = new Date();
@@ -39,63 +41,79 @@ const Layout = () => {
       }
     };
     let cookieName = '';
-    const filter={menu: '',category: ''}
+    const filter = { menu: '', category: '' };
     switch (location.pathname) {
       case `/${PP_ROUTES_CHILD.MAIN}`:
-        cookieName=Menu.MAIN;
-        filter.menu=MenuType.MAIN;break;
+        cookieName = Menu.MAIN;
+        filter.menu = MenuType.MAIN;
+        break;
       case `/${PP_ROUTES_CHILD.ABOUT}`:
-        cookieName=Menu.ABOUT;
-        filter.menu=MenuType.ABOUT;break;
+        cookieName = Menu.ABOUT;
+        filter.menu = MenuType.ABOUT;
+        break;
       case `/${PP_ROUTES_CHILD.ARTWORK}`:
-        switch(category){
+        switch (category) {
           case '1':
-            cookieName=ArtworkCategory.ENTERTAINMENT;
-            filter.category=CategoryType.ENTERTAINMENT; break;
+            cookieName = ArtworkCategory.ENTERTAINMENT;
+            filter.category = CategoryType.ENTERTAINMENT;
+            break;
           case '2':
-            cookieName=ArtworkCategory.DRAMA;
-            filter.category=CategoryType.DRAMA;break;
+            cookieName = ArtworkCategory.DRAMA;
+            filter.category = CategoryType.DRAMA;
+            break;
           case '3':
-            cookieName=ArtworkCategory.DOCUMENTARY;
-            filter.category=CategoryType.DOCUMENTARY;break;
+            cookieName = ArtworkCategory.DOCUMENTARY;
+            filter.category = CategoryType.DOCUMENTARY;
+            break;
           case '4':
-            cookieName=ArtworkCategory.CHANNEL;
-            filter.category=CategoryType.CHANNEL;break;
+            cookieName = ArtworkCategory.CHANNEL;
+            filter.category = CategoryType.CHANNEL;
+            break;
           case '5':
-            cookieName=ArtworkCategory.BRANDED;
-            filter.category=CategoryType.BRANDED;break;
+            cookieName = ArtworkCategory.BRANDED;
+            filter.category = CategoryType.BRANDED;
+            break;
           case '6':
-            cookieName=ArtworkCategory.MOTION_GRAPHIC;
-            filter.category=CategoryType.MOTION_GRAPHIC;break;
+            cookieName = ArtworkCategory.MOTION_GRAPHIC;
+            filter.category = CategoryType.MOTION_GRAPHIC;
+            break;
           case '7':
-            cookieName=ArtworkCategory.ANIMATION;
-            filter.category=CategoryType.ANIMATION;break;
+            cookieName = ArtworkCategory.ANIMATION;
+            filter.category = CategoryType.ANIMATION;
+            break;
           case '8':
-            cookieName=ArtworkCategory.LIVE_COMMERCE;
-            filter.category=CategoryType.LIVE_COMMERCE;break;
+            cookieName = ArtworkCategory.LIVE_COMMERCE;
+            filter.category = CategoryType.LIVE_COMMERCE;
+            break;
           default:
-            cookieName=ArtworkCategory.ALL;
-            filter.category=CategoryType.ALL;break;
+            cookieName = ArtworkCategory.ALL;
+            filter.category = CategoryType.ALL;
+            break;
         }
-        filter.menu=MenuType.ARTWORK;break;
+        filter.menu = MenuType.ARTWORK;
+        break;
       case `/${PP_ROUTES_CHILD.CONTACT}`:
-        cookieName=Menu.CONTACT;
-        filter.menu=MenuType.CONTACT;
+        cookieName = Menu.CONTACT;
+        filter.menu = MenuType.CONTACT;
         break;
       case `/${PP_ROUTES_CHILD.FAQ}`:
-        cookieName=Menu.FAQ;
-        filter.menu=MenuType.FAQ;break;
+        cookieName = Menu.FAQ;
+        filter.menu = MenuType.FAQ;
+        break;
       case `/${PP_ROUTES_CHILD.NEWSBOARD}`:
-        cookieName=Menu.NEWS;
-        filter.menu=MenuType.NEWS;break;
+        cookieName = Menu.NEWS;
+        filter.menu = MenuType.NEWS;
+        break;
       case `/${PP_ROUTES_CHILD.RECRUITMENT}`:
-        cookieName=Menu.RECRUITMENT;
-        filter.menu=MenuType.RECRUITMENT;break;
-      default:break;//여기 main 넣어도 됨
+        cookieName = Menu.RECRUITMENT;
+        filter.menu = MenuType.RECRUITMENT;
+        break;
+      default:
+        break; //여기 main 넣어도 됨
     }
-    increaseView(cookieName,filter);
-  }, [location.pathname,location.search]);
-  
+    increaseView(cookieName, filter);
+  }, [location.pathname, location.search]);
+
   return (
     <Container>
       <ScrollToTop />
