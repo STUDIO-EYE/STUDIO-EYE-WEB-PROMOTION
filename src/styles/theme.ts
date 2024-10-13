@@ -5,6 +5,10 @@ export const theme: DefaultTheme = {
     mobile: 'only screen and (max-width: 768px)',
     tablet: 'only screen and (max-width: 1024px)',
   },
+  mediaSize:{
+    mobile: 768,
+    tablet: 1024,
+  },
 
   color: {
     symbol: '#FFA900',

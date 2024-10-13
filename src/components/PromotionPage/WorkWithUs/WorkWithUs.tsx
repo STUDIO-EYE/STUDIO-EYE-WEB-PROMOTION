@@ -2,18 +2,18 @@ import { PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Circle from '../Circle/Circle';
+import { theme } from '@/styles/theme';
 
 function WorkWithUs() {
   const navigator = useNavigate();
   return (
     <Container>
       <div>
-        <Title>
-          LET'S COLLABORATE
-          <div>
-            <YellowTextWrapper>WORK &nbsp;</YellowTextWrapper> WITH US!
-          </div>
-        </Title>
+        <Title
+          dangerouslySetInnerHTML={{
+            __html: `LET'S COLLABORATE <br /> <span style="color:#ffa900;">WORK</span> WITH US!`
+          }}
+        />
         <Link onClick={() => navigator(`/${PP_ROUTES_CHILD.CONTACT}`)}>스튜디오아이에 프로젝트 문의하기 →</Link>
       </div>
       <div>
@@ -32,6 +32,15 @@ const Container = styled.div`
   justify-content: space-around;
   margin-top: 50px;
   padding: 20px 60px;
+  
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: 80vh;
+    padding: 0.75rem;
+    margin: 0;
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
 const Title = styled.div`
@@ -43,9 +52,12 @@ const Title = styled.div`
     display: flex;
   }
   margin-bottom: 35px;
-`;
-const YellowTextWrapper = styled.div`
-  color: #ffa900;
+  
+  @media ${theme.media.mobile} {
+    font-size: 2.5rem;
+    text-align: center;
+
+  }
 `;
 
 const Link = styled.a`
@@ -56,5 +68,13 @@ const Link = styled.a`
   &:hover {
     color: #ffa900;
     transition: all 300ms ease-in-out;
+  }
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    font-size: 1.3rem;
+    display: block;
+    text-align: center;
+    margin-bottom: -5rem; // 임시
   }
 `;

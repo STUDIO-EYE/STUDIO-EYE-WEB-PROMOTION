@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import ArtworkNav from './ArtworkNav';
 import SkeletonComponent from '../SkeletonComponent/SkeletonComponent';
+import { theme } from '@/styles/theme';
 
 interface SectionProps {
   elementHeight: number;
@@ -89,6 +90,13 @@ const TextWrapper = styled.div`
   padding: 100px;
   position: relative;
   z-index: 1;
+
+  @media ${theme.media.mobile} {
+    width: 100%;
+    height: 100%;
+    padding: 6rem 1.75rem 0 1rem;
+    line-height: 1.2;
+  }
 `;
 
 const TitleWrapper = styled.div`
@@ -97,18 +105,32 @@ const TitleWrapper = styled.div`
   color: white;
   white-space: nowrap;
   margin: -1rem 0 -0.5rem -0.2rem;
+
+  @media ${theme.media.mobile} {
+    margin: 0;
+    margin-left: -0.1rem;
+    font-size: 2rem;
+  }
 `;
 
 const ClientWrapper = styled(motion.h2)`
   font-family: 'pretendard-bold';
   font-size: 25px;
   color: #cccccc;
+
+  @media ${theme.media.mobile} {
+    font-size: 1.5rem;
+  }
 `;
 
 const OverviewWrapper = styled.div`
   font-family: 'pretendard-medium';
   font-size: 20px;
   color: white;
+
+  @media ${theme.media.mobile} {
+    font-size: 1rem;
+  }
 `;
 
 const SkeletonWrapper = styled.div`

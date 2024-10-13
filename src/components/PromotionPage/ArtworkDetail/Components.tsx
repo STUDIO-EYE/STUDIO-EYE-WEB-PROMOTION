@@ -1,3 +1,4 @@
+import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 
 export const NavWrapper = styled.div`
@@ -13,4 +14,10 @@ export const NavWrapper = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow : hidden;
+
+  @media ${theme.media.mobile} {
+    width: 90vw;
+    height: auto;
+    padding: 1.5rem;
+  }
 `;

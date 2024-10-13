@@ -17,6 +17,7 @@ import {
 } from '../../../components/PromotionAdmin/DataEdit/Company/StyleComponents';
 
 function BenefitWritePage() {
+  const timeStamp = Date.now();
   const setIsEditing = useSetRecoilState(dataUpdateState);
   const isEditing = useRecoilValue(dataUpdateState);
   const navigator = useNavigate();
@@ -29,7 +30,7 @@ function BenefitWritePage() {
   });
   const titleLength = putData.request.title.length;
   const contentLength = putData.request.content.length;
-  const maxTitleLength = 15;
+  const maxTitleLength = 14;
   const maxContentLength = 35;
 
   const {
@@ -61,7 +62,7 @@ function BenefitWritePage() {
       return;
     }
 
-    if (name === 'title' && value.length > 15) {
+    if (name === 'title' && value.length > 14) {
       return;
     }
     if (name === 'content' && value.length > 35) {
@@ -94,10 +95,10 @@ function BenefitWritePage() {
     );
 
     if (putData.file && putData.file !== data?.imageUrl) {
-      const file = await urlToFile(putData.file, `${putData.request.title}.png`);
+      const file = await urlToFile(putData.file, `${putData.request.title}.${timeStamp}.png`);
       formData.append('file', file);
     } else if (data?.imageUrl) {
-      const mainImgBlob = await urlToFile(data.imageUrl, `${putData.request.title}.png`);
+      const mainImgBlob = await urlToFile(data.imageUrl, `${putData.request.title}.${timeStamp}.png`);
       formData.append('file', mainImgBlob);
     } else {
       formData.append('file', '');
@@ -208,8 +209,8 @@ function BenefitWritePage() {
             name='title'
             value={putData.request.title}
             onChange={handleChange}
-            maxLength={15}
-            placeholder='사내 복지 (15자 내로 작성해 주세요.)'
+            maxLength={14}
+            placeholder='사내 복지 (14자 내로 작성해 주세요.)'
           />
           {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
           <InputTitle style={{ justifyContent: 'space-between' }}>

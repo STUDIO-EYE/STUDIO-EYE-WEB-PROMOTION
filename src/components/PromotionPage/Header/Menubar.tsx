@@ -2,16 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderState } from '@/recoil/atoms';
+import { theme } from '@/styles/theme';
 
 const Menubar = () => {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(ppHeaderState);
 
-  const toggleMenu = () => {
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <ToggleContainer className={isMenuOpen ? 'active' : ''} onClick={toggleMenu}>
+    <ToggleContainer className={isMenuOpen ? 'active' : ''} onMouseDown={toggleMenu}>
       <span></span>
       <span></span>
       <span></span>
@@ -22,43 +24,50 @@ const Menubar = () => {
 export default Menubar;
 
 const ToggleContainer = styled.div`
+  width: fit-content;
+  @media ${theme.media.tablet} {
+    top: 2.4rem;
+    scale: 0.9;
+  }
+  @media ${theme.media.mobile} {
+    scale: 0.6;
+    top: 2rem;
+  }
   display: block;
   cursor: pointer;
-  z-index: 150;
+  position: fixed;
+
+  top: 2.5rem;
+  right: 1rem;
+  z-index: 200;
   transform: translate(-50%, -50%);
-  margin-top: 25px;
 
   span {
     display: block;
     background: #fff;
-    width: 42px;
-    height: 4px;
-    border-radius: 3px;
-    transition:
-      0.25s margin 0.25s,
-      0.25s transform;
+    width: 2.625rem;
+    height: 0.25rem;
+    border-radius: 0.1875rem;
+    transition: 0.25s ease-in-out;
   }
 
   span:nth-child(1) {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
   }
 
   span:nth-child(3) {
-    margin-top: 8px;
+    margin-top: 0.5rem;
   }
 
   &.active span:nth-child(1) {
-    margin-top: 8px;
-    margin-bottom: -4px;
-    transform: rotate(45deg);
+    transform: translateY(0.75rem) rotate(45deg);
   }
 
   &.active span:nth-child(2) {
-    transform: rotate(45deg);
+    opacity: 0;
   }
 
   &.active span:nth-child(3) {
-    margin-top: -4px;
-    transform: rotate(135deg);
+    transform: translateY(-0.75rem) rotate(-45deg);
   }
 `;

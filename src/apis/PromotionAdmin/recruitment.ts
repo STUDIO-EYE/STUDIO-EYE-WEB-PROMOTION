@@ -125,6 +125,22 @@ export const updateBenefit = async (benefitData: FormData) => {
   }
 };
 
+export const updateBenefitText = async (benefitData: FormData) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/benefit/modify`, benefitData, config);
+    return response.data;
+  } catch (error) {
+    console.error('[❌ Error creating benefit]', error);
+    throw error;
+  }
+};
+
 export const deleteBenefitData = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${PROMOTION_BASIC_PATH}/api/benefit/${id}`);

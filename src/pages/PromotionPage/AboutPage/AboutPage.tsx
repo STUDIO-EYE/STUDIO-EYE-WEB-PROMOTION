@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { getCEOData, getPartnersData } from '../../../apis/PromotionAdmin/dataEdit';
 import NetflixLogo from '@/assets/images/PP/Netflix-Logo.jpg';
 import CJLogo from '@/assets/images/PP/CJ_ENM_Logo.png';
-import LocomoLogo from '@/assets/images/Locomo.png'
+import LocomoLogo from '@/assets/images/Locomo.png';
 import defaultCEOLogo from '@/assets/images/PP/studioeye_ceo.png';
 import { CEO_DATA } from '@/constants/introdutionConstants';
 
 import IntroPage from './IntroPage';
 import WhatWeDoPage from './WhatWeDoPage';
+import { theme } from '@/styles/theme';
+import { useMediaQuery } from 'react-responsive';
 
 interface IFontStyleProps {
   fontSize?: string;
@@ -60,7 +62,7 @@ const AboutPage = () => {
     //   logoImg: CJLogo,
     // },
   ];
-
+  const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const [CEOData, setCEOData] = useState<ICEOInfoData>(defaultCEOData);
   const [corpInfoData, setCorpInfoData] = useState<ICorpInfoData[]>(defaultCorpData);
 
@@ -107,18 +109,28 @@ const AboutPage = () => {
       <WhatWeDoPage />
       <Section>
         {CEOData.id !== -1 ? (
-          <RowCoontainer backgroundColor='#1a1a1a'>
+          <RowCoontainer backgroundColor='#1a1a1a' style={isMobile ? { flexDirection: 'column-reverse' } : {}}>
             <CeoInfoContainer>
-              <CeoInfo fontFamily='Pretendard-SemiBold' fontSize='70px'>
+              <CeoInfo fontFamily={theme.font.semiBold} fontSize='4.375rem'>
                 CEO&nbsp;{CEOData.name}
               </CeoInfo>
-              <CeoInfo dangerouslySetInnerHTML={{ __html: CEOData.introduction }}></CeoInfo>
+              <CeoInfo>
+                {isMobile ? (
+                  CEOData.introduction.replace(/\n/g, ' ')
+                ) : (
+                  <span dangerouslySetInnerHTML={{ __html: CEOData.introduction }} />
+                )}
+              </CeoInfo>
             </CeoInfoContainer>
             <CeoImageContainer>
               <img
                 src={CEOData.imageUrl}
                 alt='CEO Character'
-                style={{ width: '350px', height: '300px', objectFit: 'contain' }}
+                style={
+                  isMobile
+                    ? { width: '8rem', height: '8rem', objectFit: 'contain' }
+                    : { width: '21.875rem', height: '18.75rem', objectFit: 'contain' }
+                }
               />
             </CeoImageContainer>
           </RowCoontainer>
@@ -136,12 +148,21 @@ const AboutPage = () => {
                   <img
                     src={info.logoImg}
                     alt='CORP Logo'
-                    style={{
-                      width: '300px',
-                      height: '150px',
-                      objectFit: 'contain',
-                      cursor: info.partnerInfo.link ? 'pointer' : 'default',
-                    }}
+                    style={
+                      isMobile
+                        ? {
+                            width: '6.25rem',
+                            height: '3.125rem',
+                            objectFit: 'contain',
+                            cursor: info.partnerInfo.link ? 'pointer' : 'default',
+                          }
+                        : {
+                            width: '18.75rem',
+                            height: '9.375rem',
+                            objectFit: 'contain',
+                            cursor: info.partnerInfo.link ? 'pointer' : 'default',
+                          }
+                    }
                     onClick={() => {
                       if (info.partnerInfo.link) {
                         window.open(info.partnerInfo.link, '_blank');
@@ -162,17 +183,21 @@ const AboutPage = () => {
 
 export default AboutPage;
 
-
 const ScrollContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
 `;
 const Section = styled.div`
   width: 100%;
   display: flex;
-  margin-top: 150px;
-  margin-bottom: 50px;
+  margin-top: 9.375rem;
+  margin-bottom: 3.125rem;
   overflow-x: hidden;
+  @media ${theme.media.mobile} {
+    margin-top: 5rem;
+    margin-bottom: 0;
+  }
 `;
 const RowCoontainer = styled.div<IContainerStyleProps>`
   width: 100%;
@@ -180,8 +205,13 @@ const RowCoontainer = styled.div<IContainerStyleProps>`
   flex-direction: row;
   justify-content: center;
   background-color: ${(props) => props.backgroundColor || 'black'};
-  padding-top: 80px;
-  padding-bottom: 80px;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  @media ${theme.media.mobile} {
+    flex-direction: column;
+    margin-top: 5rem;
+    padding: 1.5rem;
+  }
 `;
 
 const CeoInfoContainer = styled.div`
@@ -190,20 +220,35 @@ const CeoInfoContainer = styled.div`
   text-align: right;
   justify-content: center;
   width: 40%;
+  @media ${theme.media.mobile} {
+    width: 100%;
+    text-align: center;
+  }
 `;
 const CeoImageContainer = styled.div`
   padding-left: 70px;
+  @media ${theme.media.mobile} {
+    text-align: center;
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const CeoInfo = styled.div<IFontStyleProps>`
   white-space: pre-line;
   word-wrap: break-word;
-  word-break: break-word;
+  word-break: keep-all;
   line-height: 1.3;
-  margin-bottom: 30px;
-  font-family: ${(props) => props.fontFamily || 'Pretendard-regular'};
-  font-size: ${(props) => props.fontSize || '24px'};
-  color: #ffffff;
+  margin-bottom: 1.875rem;
+  font-family: ${(props) => props.fontFamily || theme.font.regular};
+  font-size: ${(props) => props.fontSize || '1.5rem'};
+  color: ${theme.color.white.light};
+  @media ${theme.media.mobile} {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: ${(props) => (props.fontSize ? '2rem' : '1rem')};
+    font-family: ${(props) => (props.fontFamily ? props.fontFamily : theme.font.regular)};
+  }
 `;
 const CorpLogoItem = styled.div`
   flex: 1 1 30%;
@@ -218,21 +263,30 @@ const CorpLogoContainer = styled.div`
   align-items: center;
 `;
 const CorpLogoRowContainer = styled.a`
-  margin-bottom: 80px;
+  margin-bottom: 5rem;
   width: 80%;
-
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  gap: 50px;
+  gap: 3.125rem;
   flex-wrap: wrap;
+  @media ${theme.media.mobile} {
+    width: 95%;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
 `;
 const CorpText = styled.div`
-  margin-bottom: 30px;
-  font-family: 'pretendard-regular';
-  font-size: 120px;
+  margin-bottom: 1.875rem;
+  font-family: ${theme.font.regular};
+  font-size: 7.5rem;
   letter-spacing: 5px;
   opacity: 0.2;
   filter: blur(2px);
-  color: '#FFFFFF';
+  color: ${theme.color.white.light};
+  @media ${theme.media.mobile} {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
 `;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import Navigation from './Navigation';
+import { theme } from '@/styles/theme';
 
 const Layout = () => {
   return (
@@ -24,10 +25,23 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+
+  @media ${theme.media.mobile} {
+    width: 100vw;
+    flex-direction: column;
+    align-items: center;
+    min-height: fit-content;
+  }
 `;
 
 const Container = styled.div`
   // padding-left: 370px;
   padding-bottom: 200px;
   width: 80vw;
+
+  @media ${theme.media.mobile} {
+    justify-content: center;
+    align-items: center;
+    width: auto;
+  }
 `;

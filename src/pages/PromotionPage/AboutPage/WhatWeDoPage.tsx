@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { getCompanyDetailData } from '@/apis/PromotionAdmin/dataEdit';
+import { theme } from '@/styles/theme';
+import { useMediaQuery } from 'react-responsive';
 
 interface IWhatWeDoProps {
   isHighlighted: boolean;
@@ -12,6 +14,7 @@ interface IWhatWeDoInputProps {
 }
 
 const WhatWeDoPage = () => {
+  const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const [companyDetailDataTitle, setCompanyDetailDataTitle] = useState<string[]>([]);
   const [companyDetailData, setCompanyDetailData] = useState<string[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
@@ -68,7 +71,7 @@ const WhatWeDoPage = () => {
             key={index}
             className='WhatWeDo'
             isHighlighted={highlighted === index}
-            style={{ left: index % 2 === 0 ? '10%' : '90%' }}
+            style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '10%' : '90%' }}
           >
             <WhatWeDoInput leftInput={index % 2 === 0}>
               <Circle />
@@ -76,7 +79,10 @@ const WhatWeDoPage = () => {
             <WhatWeDoTitleInput leftInput={index % 2 !== 0}>
               {companyDetailDataTitle[index].length >= 20 ? `WHAT WE DO ${index + 1}` : companyDetailDataTitle[index]}
             </WhatWeDoTitleInput>
-            <WhatWeDoContentInput leftInput={index % 2 !== 0}>{info}</WhatWeDoContentInput>
+            <WhatWeDoContentInput
+              leftInput={index % 2 !== 0}
+              dangerouslySetInnerHTML={{ __html: info.replace(/\n/g, '<br/>') }}
+            ></WhatWeDoContentInput>
           </WhatWeDo>
         ))}
 
@@ -96,14 +102,17 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 100px;
-  margin-bottom: 150px;
+  margin-top: 6.25rem;
+  margin-bottom: 9.375rem;
 `;
 
 const WhatWeDoContainer = styled.div`
   position: relative;
   width: 50%;
   height: 100%;
+  @media ${theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 const ScrollBar = styled.div`
@@ -114,6 +123,11 @@ const ScrollBar = styled.div`
   width: 5px;
   height: 100%;
   background-color: #1a1a1a;
+  @media ${theme.media.mobile} {
+    left: 5%;
+    translate: none;
+    height: 100%;
+  }
 `;
 const ScrollBarBox = styled(motion.div)`
   position: sticky;
@@ -121,9 +135,14 @@ const ScrollBarBox = styled(motion.div)`
   left: 50%;
   translate: -50%;
   width: 5px;
-  height: 350px;
-  background-color: #ffffff;
+  height: 21.875rem;
+  background-color: ${theme.color.white.light};
   z-index: 1000;
+  @media ${theme.media.mobile} {
+    left: 5%;
+    translate: none;
+    height: 10rem;
+  }
 `;
 const WhatWeDo = styled(motion.div)<IWhatWeDoProps>`
   position: relative;
@@ -132,37 +151,63 @@ const WhatWeDo = styled(motion.div)<IWhatWeDoProps>`
   height: auto;
   background-color: transparent;
   padding: 10px;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 3.125rem;
+  margin-bottom: 3.125rem;
   transition: all 0.2s;
   opacity: ${({ isHighlighted }) => (isHighlighted ? 1 : 0.2)};
   transition: all 300ms ease-in-out;
+  @media ${theme.media.mobile} {
+    transform: none;
+    width: 70%;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
 `;
 
 const WhatWeDoInput = styled.div<IWhatWeDoInputProps>`
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   display: flex;
   justify-content: ${({ leftInput }) => (leftInput ? 'flex-start' : 'flex-end')};
+  @media ${theme.media.mobile} {
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+  }
 `;
 const WhatWeDoTitleInput = styled.div<IWhatWeDoInputProps>`
-  margin-bottom: 30px;
-  font-family: 'pretendard-semibold';
-  font-size: 60px;
+  margin-bottom: 1.875rem;
+  font-family: ${theme.font.semiBold};
+  font-size: 3.75rem;
   text-align: ${({ leftInput }) => (leftInput ? 'left' : 'right')};
-  word-wrap: break-word;
+  word-break: keep-all;
+  white-space: normal;
+  @media ${theme.media.mobile} {
+    margin-bottom: 1rem;
+    text-align: left;
+    font-size: 1.5rem;
+  }
 `;
 const WhatWeDoContentInput = styled.div<IWhatWeDoInputProps>`
-  margin-bottom: 8px;
-  font-family: 'pretendard-regular';
-  font-size: 24px;
+  margin-bottom: 0.5rem;
+  font-family: ${theme.font.regular};
+  font-size: 1.5rem;
   text-align: ${({ leftInput }) => (leftInput ? 'left' : 'right')};
-  word-wrap: break-word;
+  word-break: keep-all;
+  white-space: normal;
   line-height: 1.5;
-  white-space: pre-line;
+  @media ${theme.media.mobile} {
+    margin-bottom: 0.1rem;
+    text-align: left;
+    font-size: 0.8rem;
+  }
 `;
 const Circle = styled.div`
   background-color: #ffa900;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 3.125rem;
+  height: 3.125rem;
+  @media ${theme.media.mobile} {
+    width: 1rem;
+    height: 1rem;
+  }
 `;

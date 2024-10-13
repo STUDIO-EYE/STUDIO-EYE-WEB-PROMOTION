@@ -4,6 +4,7 @@ import styled from "styled-components";
 import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
+import { theme } from "@/styles/theme";
 
 interface INewsCardProps {
   id: number;
@@ -84,4 +85,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  
+  @media ${theme.media.mobile}{
+    width:95%;
+    padding: 0;
+    margin: auto;
+  }
 `;
