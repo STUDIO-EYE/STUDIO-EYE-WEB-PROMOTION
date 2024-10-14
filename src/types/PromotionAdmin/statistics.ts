@@ -8,7 +8,12 @@ export type ViewData = {
 export type RequestData = {
   year: number;
   month: number;
-  requestCount: number;
+  requestCount: {
+    WAITING: number,
+    APPROVED: number,
+    REJECTED: number,
+    DISCUSSING: number
+};
 };
 
 export type WaitingRequestData = {
