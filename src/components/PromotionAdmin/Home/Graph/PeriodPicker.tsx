@@ -13,6 +13,7 @@ type Props = {
 };
 
 const PeriodPicker = ({ startDate, endDate, startDateChange, endDateChange }: Props) => {
+
   return (
     <Container>
       <Wrapper>
@@ -21,6 +22,9 @@ const PeriodPicker = ({ startDate, endDate, startDateChange, endDateChange }: Pr
             slotProps={{
               textField: {
                 size: 'small',
+                inputProps: {
+                  value: startDate ? dayjs(startDate).format('YYYY년 MM월') : '',
+                },
               },
             }}
             value={startDate}
@@ -38,6 +42,9 @@ const PeriodPicker = ({ startDate, endDate, startDateChange, endDateChange }: Pr
           slotProps={{
             textField: {
               size: 'small',
+              inputProps: {
+                value: endDate ? dayjs(endDate).format('YYYY년 MM월') : '',
+              },
             },
           }}
           value={endDate}
