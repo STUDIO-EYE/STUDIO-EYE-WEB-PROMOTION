@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 
 type LineGraphProps = {
@@ -9,10 +9,18 @@ type LineGraphProps = {
 const LineGraph = ({ data, division }: LineGraphProps) => {
   const colors = division === 'request' ? ['#0064FF'] : ['#E16262'];
 
-  // 데이터의 y값을 모아서 최대값 계산
   const yValues = data.map(d => d.y);
-  const maxY = Math.max(...yValues);
-  const tickValues = Array.from({ length: maxY + 1 }, (_, i) => i); // 0부터 maxY까지 배열 생성
+  const maxY = Math.max(...yValues); // 최대값 계산
+  const numberOfTicks = 5; // 원하는 tick 개수
+  let tickValues:number[]=[];
+  // yValues가 비어 있지 않은 경우에만 tickValues를 계산
+  if (maxY > 0) {
+    const interval = maxY / (numberOfTicks - 1); // 간격 계산
+    tickValues = Array.from({ length: numberOfTicks }, (_, index) => Math.round(index * interval));
+  } else {
+    // 데이터가 없을 경우 tickValues는 [0]으로 설정
+    tickValues = [0];
+  }
 
   return (
     <div style={{ height: '300px', width: '530px' }}>
