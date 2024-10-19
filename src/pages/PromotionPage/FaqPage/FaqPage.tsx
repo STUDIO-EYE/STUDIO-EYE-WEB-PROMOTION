@@ -110,14 +110,13 @@ const FaqPage = () => {
       <Container>
         <Header>
           <Title>
-          <LineWrapper>
-          <AnimatedSpan delay={0.1}>F</AnimatedSpan>requently
-          <AnimatedSpan delay={0.3}> A</AnimatedSpan>sked
-          </LineWrapper>
-          <LineWrapper>
-          <AnimatedSpan delay={0.5}> Q</AnimatedSpan>uestions
-           </LineWrapper>
-            
+            <LineWrapper>
+              <AnimatedSpan delay={0.1}>F</AnimatedSpan>requently
+              <AnimatedSpan delay={0.3}> A</AnimatedSpan>sked
+            </LineWrapper>
+            <LineWrapper>
+              <AnimatedSpan delay={0.5}> Q</AnimatedSpan>uestions
+            </LineWrapper>
           </Title>
           <SubContent>이곳에 자주 묻는 질문들에 대한 답변을 모아 놓았습니다.</SubContent>
         </Header>
@@ -165,7 +164,7 @@ const FaqPage = () => {
   );
 };
 
-// Styled-components with media queries
+// Styled-components with responsive media queries
 const Container = styled.div`
   font-family: 'Pretendard';
   min-height: 100vh;
@@ -176,26 +175,37 @@ const Container = styled.div`
   color: white;
   padding: 2rem 1rem;
 
-  @media ${theme.media.tablet} {
-    padding: 3rem 2rem;
+  /* iPad Pro ~ 작은 iPad */
+  @media (max-width: 1366px) and (min-width: 768px) {
+    font-size: 80%;
   }
 
-  @media ${theme.media.mobile} {
-    padding: 2rem 1rem;
+  /* 작은 iPad ~ 큰 휴대폰 */
+  @media (max-width: 1024px) and (min-width: 540px) {
+    font-size: 70%;
+  }
+
+  /* 큰 휴대폰 ~ 작은 휴대폰 */
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 130%;
+  }
+
+  /* 작은 휴대폰 이하 */
+  @media (max-width: 374px) {
+    font-size: 110%;
   }
 `;
-
 
 const Header = styled.div`
   position: relative;
   text-align: center;
   margin-top: 4rem;
 
-  @media ${theme.media.tablet} {
+  @media (max-width: 1366px) and (min-width: 768px) {
     margin-top: 3rem;
   }
 
-  @media ${theme.media.mobile} {
+  @media (max-width: 540px) and (min-width: 375px) {
     margin-top: 2rem;
   }
 `;
@@ -206,20 +216,27 @@ const Title = styled.h1`
   color: white;
   text-align: center;
 
-  @media ${theme.media.tablet} {
+  @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 3rem;
   }
 
-  @media ${theme.media.mobile} {
+  @media (max-width: 767px) and (min-width: 540px) {
+    font-size: 2rem; 
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
     font-size: 2rem;
+  }
+  @media (max-width: 374px) {
+    font-size: 2rem; 
   }
 `;
 
 const LineWrapper = styled.div`
   display: inline;
 
-  @media ${theme.media.mobile} {
-    display: block; /* This will create the line break on mobile */
+  @media (max-width: 540px) and (min-width: 375px) {
+    display: block;
   }
 `;
 
@@ -243,11 +260,11 @@ const SubContent = styled.p`
   margin-top: 2rem;
   color: white;
 
-  @media ${theme.media.tablet} {
+  @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 1.1rem;
   }
 
-  @media ${theme.media.mobile} {
+  @media (max-width: 540px) and (min-width: 375px) {
     font-size: 1rem;
   }
 `;
@@ -261,116 +278,103 @@ const Content = styled.div`
   position: relative;
   z-index: 1;
 
-  @media ${theme.media.tablet} {
+  @media (max-width: 1366px) and (min-width: 768px) {
     padding-top: 4rem;
   }
 
-  @media ${theme.media.mobile} {
+  @media (max-width: 540px) and (min-width: 375px) {
     padding-top: 3rem;
   }
 `;
 
 const InputWrapper = styled.div`
-  padding: 10px 30px;
-  border: 2px solid gray;
-  background-color: transparent;
+  margin-bottom: 1rem;
   width: 80%;
-  text-align: center;
-  margin-bottom: 2rem;
 
-  @media ${theme.media.mobile} {
-    width: 80%;
+  @media (max-width: 1366px) and (min-width: 768px) {
+    width: 90%;
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
+    width: 100%;
   }
 `;
 
 const SearchFaqQuestion = styled.input`
-  all: unset;
-  height: 30px;
   width: 100%;
-  font-size: 18px;
+  padding: 0.8rem;
+  border: 1px solid white;
+  background-color: black;
   color: white;
-  text-align: center;
 
-  @media ${theme.media.mobile} {
-    font-size: 16px;
+  @media (max-width: 1366px) and (min-width: 768px) {
+    padding: 0.7rem;
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
+    padding: 0.6rem;
   }
 `;
 
-const FaqDetailButton = styled(motion.div)`
-  border-top: 2px solid gray;
-  border-bottom: 2px solid gray;
-  margin-bottom: 1rem;
-  padding: 30px;
-  width: 80%;
-  overflow: hidden;
-  cursor: pointer;
+const NoResults = styled.p`
+  color: white;
+`;
 
-  @media ${theme.media.mobile} {
+const FaqDetailButton = styled(motion.button)`
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 80%;
+  cursor: pointer;
+  text-align: left;
+
+  @media (max-width: 1366px) and (min-width: 768px) {
+    width: 90%;
+    padding: 0.9rem;
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
     width: 100%;
-    padding: 20px;
+    padding: 0.8rem;
   }
 `;
 
 const FaqBrief = styled.div`
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const FaqBriefQuestion = styled.h2`
-  font-weight: 800;
-  font-size: 2rem;
-  color: #ffa900;
-  transition: all 0.3s ease;
+const FaqBriefQuestion = styled.p`
+  margin: 0;
+  font-size: 1rem;
 
-  &:hover {
-    color: white;
+  @media (max-width: 1366px) and (min-width: 768px) {
+    font-size: 0.9rem;
   }
 
-  @media ${theme.media.tablet} {
-    font-size: 1.8rem;
-  }
-
-  @media ${theme.media.mobile} {
-    font-size: 1.6rem;
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 0.8rem;
   }
 `;
 
 const FaqDetailBox = styled.div`
-  padding: 40px 40px 0 40px;
-
-  @media ${theme.media.mobile} {
-    padding: 20px 20px 0 20px;
-  }
+  margin-top: 1rem;
 `;
 
 const FaqDetailAnswer = styled.p`
-  font-size: 1.4rem;
-  line-height: 30px;
-  font-weight: 400;
-  text-align: justify;
-  color: white;
-  white-space: pre-line;
-  word-wrap: break-word;
-  word-break: break-word;
+  font-size: 0.9rem;
+  margin: 0;
 
-  @media ${theme.media.tablet} {
-    font-size: 1.2rem;
+  @media (max-width: 1366px) and (min-width: 768px) {
+    font-size: 0.85rem;
   }
 
-  @media ${theme.media.mobile} {
-    font-size: 1rem;
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 0.8rem;
   }
-
-  a {
-    color: #ffa900;
-  }
-`;
-
-const NoResults = styled.div`
-  font-size: 1rem;
-  color: gray;
-  text-align: center;
-  margin-top: 2rem;
 `;
 
 export default FaqPage;
