@@ -26,7 +26,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
 
   useEffect(() => {// 모바일 여부를 판단 (width나 userAgent 등을 사용)
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= theme.mediaSize.mobile); // 예: width 768px 이하일 경우 모바일로 간주
+      setIsMobile(window.innerWidth <= theme.mediaSize.tablet); // 예: width 768px 이하일 경우 모바일로 간주
     };
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);

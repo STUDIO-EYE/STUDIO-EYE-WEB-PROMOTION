@@ -1,5 +1,5 @@
 import { getAllNewsData } from "@/apis/PromotionPage/news";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
@@ -55,21 +55,40 @@ const NewsBoardPage: React.FC = () => {
     // No scroll behavior, just set the current page
   };
 
+  const autoScrollRef = useRef<HTMLDivElement | null>(null);
+  const handleScroll=()=>{
+    if(autoScrollRef.current) {
+      const elementPosition = autoScrollRef.current.getBoundingClientRect().top; //요소 위치
+      const offsetPosition = window.scrollY + elementPosition; //현재 스크롤 위치
+      const headerOffset = 100; //헤더 높이
+
+      // 스크롤 이동 (헤더 높이만큼 더 위로 스크롤)
+      window.scrollTo({
+        top: offsetPosition - headerOffset,
+        behavior: 'smooth', // 부드러운 스크롤
+      });
+    }
+  }
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <Container>
       <IntroSection />
-      <NewsSection 
+      <div ref={autoScrollRef}>
+      <NewsSection
         currentNewsData={currentNewsData}
         onNewsClick={(url) => window.open(url)} 
       />
+      </div>
+      <div onClick={handleScroll}>
       <NewsPagination
         postsPerPage={postsPerPage}
         totalPosts={newsData.length}
         paginate={paginate}
       />
+      </div>
     </Container>
   );
 };

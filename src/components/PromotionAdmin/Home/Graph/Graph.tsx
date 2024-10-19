@@ -20,9 +20,14 @@ type Props = {
   startDate: dayjs.Dayjs | null;
   endDate: dayjs.Dayjs | null;
   division: 'request' | 'view';
-  filter: string[];
-  filter2: string[];
+  filter: Option[];
+  filter2: Option[];
 };
+
+type Option={
+  value:string;
+  label:string;
+}
 
 const Graph = ({
   title,
@@ -67,19 +72,16 @@ const Graph = ({
       </HeaderWrapper>
       <div style={{
         display:'flex',justifyContent:'flex-end',marginRight:'15px'}}>
-        <FilterSelect onChange={(e)=>handleCategoryChange(e.target.value)}>
-          {filter&&filter.map((option,index)=>{
-            return <FilterOption key={index} value={option}>{option}</FilterOption>
+        <FilterSelect value={category} onChange={(e)=>handleCategoryChange(e.target.value)}>
+          {filter&&filter.map((option)=>{
+            return <FilterOption value={option.value}>{option.label}</FilterOption>
           })}
         </FilterSelect>
-        {
-          showFilter2 &&
-          <FilterSelect style={{marginLeft:'10px'}} onChange={(e)=>handleStateChange(e.target.value)}>
-          {filter2&&filter2.map((option,index)=>{
-            return <FilterOption key={index} value={option}>{option}</FilterOption>
-          })}
-          </FilterSelect>
-        }
+        <FilterSelect value={state} style={{marginLeft:'10px'}} onChange={(e)=>handleStateChange(e.target.value)} disabled={showFilter2?false:true}>
+        {filter2&&filter2.map((option,index)=>{
+          return <FilterOption key={index} value={option.value}>{option.label}</FilterOption>
+        })}
+        </FilterSelect>
       </div>
       <BodyWrapper>
         {data && data.length > 0 ? (

@@ -76,6 +76,7 @@ const useGraphData = (
   //카테고리 변경 핸들러
   const handleCategoryChange=(category:string)=>{
     setCategory(category);
+    setState(division==='request'?'all':'ALL');
   }
   //상태 변경 핸들러
   const handleStateChange=(state:string)=>{
