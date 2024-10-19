@@ -75,19 +75,20 @@ const RecruitmentPage = () => {
             <IntroTextClored> US?</IntroTextClored>
           </IntroLine>
 
-          <CircleWrapper ref={circleRef}>
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: circleInView ? 1 : 0, y: circleInView ? 0 : 100 }}
-              transition={{ duration: 1, delay: 1 }}
-            >
-              <a href="https://www.saramin.co.kr/zf_user/company-info/view?csn=cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09" target="_blank" rel="noopener noreferrer">
-                <div style={{ color: '#FFA900' }}>
-                  <Circle label='기업 정보 보기' />
-                </div>
-              </a>
-            </motion.div>
-          </CircleWrapper>
+          <CircleWrapper ref={circleRef} style={{ height: '100px', position: 'relative' }}>
+  <motion.div
+    initial={{ opacity: 0, y: 100 }}
+    animate={{ opacity: circleInView ? 1 : 0, y: circleInView ? 0 : 100 }}
+    transition={{ duration: 1, delay: 1 }}
+  >
+    <a href="https://www.saramin.co.kr/zf_user/company-info/view?csn=cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09" target="_blank" rel="noopener noreferrer">
+      <div style={{ color: '#FFA900' }}>
+        <Circle label='기업 정보 보기' />
+      </div>
+    </a>
+  </motion.div>
+</CircleWrapper>
+
 
         </IntroTitleWrapper>
       </IntroSection>
