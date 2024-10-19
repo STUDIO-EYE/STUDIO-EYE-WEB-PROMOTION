@@ -20,6 +20,15 @@ const Layout = () => {
 
   useEffect(() => {
     const increaseView = async (cookieName: string, filter: any) => {
+      if(!document.cookie.includes('allView')){
+        await putViewIncrease({menu:'ALL',category:'ALL'});
+        // 쿠키 설정 (유효기간 1일)
+        const date = new Date();
+        date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+        const expires = `expires=${date.toUTCString()}`;
+        document.cookie = `allView=true;${expires};path=/`;
+      }
+
       // 해당 이름의 쿠키가 존재하지 않으면 조회수를 증가시킴
       if (!document.cookie.includes(cookieName)) {
         try {

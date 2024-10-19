@@ -3,12 +3,17 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     media:{
-      mobile: string;
+      large_tablet: string;
       tablet: string;
+      mobile: string;
+      small_mobile: string;
     };
     mediaSize:{
-      mobile: number;
+      large_tablet: number;
       tablet: number;
+      mobile: number;
+      small_mobile: number;
+      
     };
     color: {
       symbol: string;
