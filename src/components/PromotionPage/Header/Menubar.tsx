@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderState } from '@/recoil/atoms';
 import { theme } from '@/styles/theme';
+import { useLocation } from 'react-router-dom'; // useLocation 임포트
 
 const Menubar = () => {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(ppHeaderState);
+  const location = useLocation();
 
   const toggleMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const isRecruitmentPage = location.pathname === '/recruitment';
 
   return (
     <ToggleContainer className={isMenuOpen ? 'active' : ''} onMouseDown={toggleMenu}>

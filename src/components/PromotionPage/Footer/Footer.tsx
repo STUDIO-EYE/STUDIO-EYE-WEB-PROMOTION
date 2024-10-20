@@ -36,9 +36,12 @@ const Footer = () => {
   const { data: companyBasicData } = useQuery<ICompanyBasic>(['getCompanyBasic'], getCompanyBasic, {
     staleTime: 1000 * 60 * 10,
   });
-  const { data: companyLogoData, error } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
+  const { data: companyLogoData } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
     staleTime: 1000 * 60 * 10,
   });
+
+  const location = useLocation();
+  const isRecruitmentPage = location.pathname === '/recruitment'; // 경로 확인
 
   const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
   const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;

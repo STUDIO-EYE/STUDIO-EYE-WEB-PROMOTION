@@ -148,4 +148,8 @@ const Container = styled.div<{ whiteFooter: boolean }>`
 
 const BodyWrapper = styled.div<{ hideFooter: boolean }>`
   margin-bottom: ${({ hideFooter }) => (hideFooter ? '0' : '10rem')};
+flex: 1; /* BodyWrapper가 남은 공간을 차지하도록 설정 */
+  box-sizing: border-box;
 `;
+
+

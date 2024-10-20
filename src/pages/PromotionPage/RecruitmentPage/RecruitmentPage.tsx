@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { ThemeConsumer } from 'styled-components';
+import React, { useRef } from 'react';
+import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { IRecruitmentList, IRecruitment, IBenefit } from '@/types/PromotionAdmin/recruitment';
+import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
 import { useNavigate } from 'react-router-dom';
 import groupImage from '@/assets/images/PP/group.png';
@@ -11,16 +11,13 @@ const RecruitmentPage = () => {
   const currentPage = 1;
   const RecruitmentsPerPage = 10;
 
-  const {
-    data: recruitmentData,
-    isLoading: isRecruitmentLoading,
-    error: recruitmentError,
-  } = useQuery<IRecruitmentList, Error>(
+  const circleRef = useRef(null);
+  const circleInView = useInView(circleRef);
+
+  const { data: recruitmentData, isLoading: isRecruitmentLoading, error: recruitmentError } = useQuery<IRecruitmentList, Error>(
     ['recruitmentList'],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
-    {
-      keepPreviousData: true,
-    },
+    { keepPreviousData: true },
   );
 
   const {
@@ -41,11 +38,6 @@ const RecruitmentPage = () => {
     }
   };
 
-  const handleImageClick = () => {
-    window.location.href =
-      'https://www.saramin.co.kr/zf_user/company-info/view?csn=UUtVZHVnRklXRE5zRU1pV3VRVXl3UT09&popup_yn=y';
-  };
-
   if (isRecruitmentLoading || isBenefitLoading) {
     return <div>Loading...</div>;
   }
@@ -57,6 +49,7 @@ const RecruitmentPage = () => {
   return (
     <Container>
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
+      <Element name="intro" className="element">
       <IntroSection>
         <IntroTitleWrapper>
           <RecruitText>RECRUIT</RecruitText>
@@ -78,12 +71,28 @@ const RecruitmentPage = () => {
             <IntroText>JOIN</IntroText>
             <IntroTextClored> US?</IntroTextClored>
           </IntroLine>
-          <ImageWrapper onClick={handleImageClick}>
-            <img src={groupImage} alt='Group' />
-          </ImageWrapper>
+
+          <CircleWrapper ref={circleRef} style={{ height: '100px', position: 'relative' }}>
+  <motion.div
+    initial={{ opacity: 0, y: 100 }}
+    animate={{ opacity: circleInView ? 1 : 0, y: circleInView ? 0 : 100 }}
+    transition={{ duration: 1, delay: 1 }}
+  >
+    <a href="https://www.saramin.co.kr/zf_user/company-info/view?csn=cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09" target="_blank" rel="noopener noreferrer">
+      <div style={{ color: '#FFA900' }}>
+        <Circle label='기업 정보 보기' />
+      </div>
+    </a>
+  </motion.div>
+</CircleWrapper>
+
+
         </IntroTitleWrapper>
       </IntroSection>
+      </Element>
+
       {/* 두 번째 섹션: 채용 게시판 */}
+      <Element name="jobBoard" className="element">
       <JobBoardSection>
         <PostGrid>
           <Header>진행중인 채용공고</Header>
@@ -112,11 +121,13 @@ const RecruitmentPage = () => {
         </PostGrid>
       </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
+      <Element name="benefits" className="element">
       <BenefitsSection>
-        <BenefitSectionTitle>STUDIOEYE'S BENEFIT</BenefitSectionTitle>
+        <BenefitSectionTitle>STUDIOEYE'S  BENEFIT</BenefitSectionTitle>
         <ListWrapper>
           {benefitData?.map((benefit) => (
-            <BenefitItem key={benefit.id}>
+            <BenefitItem key={benefit.id}
+            >
               <BenefitImage src={benefit.imageUrl} alt={benefit.imageFileName} />
               <BenefitTitle>{benefit.title}</BenefitTitle>
               <BenefitContent>{benefit.content}</BenefitContent>
@@ -162,12 +173,22 @@ const RecruitText = styled.h2`
 const IntroLine = styled.div`
   display: inline-block;
   justify-content: center;
+  align-items: center; 
+  position: relative; 
 `;
 
 const IntroText = styled.span`
   font-family: ${theme.font.bold};
   font-size: clamp(1.8rem, 5vw, 6.25rem);
   color: black;
+`;
+
+const IntroText2 = styled.span`
+  font-family: Pretendard;
+  font-weight: 700;
+  font-size: 85px;
+  color: black;
+  margin: 0 10px;
 `;
 
 const IntroTextClored = styled.span`
@@ -386,8 +407,11 @@ const PostTitle = styled.h2`
 `;
 
 const BenefitsSection = styled.div`
+  min-height: 100vh; 
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.color.white.light};
   width: 100%;
@@ -415,9 +439,10 @@ const ListWrapper = styled.div`
   }
 `;
 
-const BenefitItem = styled.div`
+const BenefitItem = styled(motion.div)`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   border: none;
   border-radius: 8px;
@@ -436,10 +461,9 @@ const BenefitItem = styled.div`
 `;
 
 const BenefitImage = styled.img`
-  width: 50%;
-  height: auto;
-  object-fit: cover;
-  margin-bottom: 1.25rem;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 15px;
 `;
 
 const BenefitTitle = styled.h3`
