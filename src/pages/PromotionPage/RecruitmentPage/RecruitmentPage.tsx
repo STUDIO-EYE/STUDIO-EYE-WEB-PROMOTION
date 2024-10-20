@@ -3,17 +3,13 @@ import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
+import { useNavigate } from 'react-router-dom';
+import groupImage from '@/assets/images/PP/group.png';
 import { theme } from '@/styles/theme';
-import { useNavigate } from 'react-router-dom'; 
-import Circle from '@/components/PromotionPage/Circle/Circle'; 
-import { motion, useInView } from 'framer-motion';
-import { Link, Element } from 'react-scroll';
-
 
 const RecruitmentPage = () => {
   const currentPage = 1;
   const RecruitmentsPerPage = 10;
-  const navigator = useNavigate();
 
   const circleRef = useRef(null);
   const circleInView = useInView(circleRef);
@@ -24,16 +20,21 @@ const RecruitmentPage = () => {
     { keepPreviousData: true },
   );
 
-  const { data: benefitData, isLoading: isBenefitLoading, error: benefitError } = useQuery<IBenefit[], Error>(
-    ['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 }
-  );
+  const {
+    data: benefitData,
+    isLoading: isBenefitLoading,
+    error: benefitError,
+  } = useQuery<IBenefit[], Error>(['benefit'], getBenefitData, {
+    keepPreviousData: false,
+    staleTime: 0,
+  });
 
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
       const recruitment = await getRecruitmentData(id);
       window.location.href = `${recruitment.link}`;
     } else {
-      console.log('This position is closed.');
+      console.log('This recruitment is closed.');
     }
   };
 
@@ -53,22 +54,18 @@ const RecruitmentPage = () => {
         <IntroTitleWrapper>
           <RecruitText>RECRUIT</RecruitText>
           <IntroLine>
-            <IntroText2>WOUL</IntroText2>
-            <AnimatedContainer>
-            <MovingOAnimated delay="0s">D</MovingOAnimated>
-            <MovingOAnimated delay="0.2s">D</MovingOAnimated>
-            <MovingOAnimated delay="0.4s">D</MovingOAnimated>
-            </AnimatedContainer>
-            {/* <IntroHighlight>D</IntroHighlight> */}
+            <IntroText>WOUL</IntroText>
+            <AnimatedD>
+              <span>D</span>
+              <span>D</span>D
+            </AnimatedD>
             <IntroText> YOU</IntroText>
             <IntroTextClored> LIKE</IntroTextClored>
-            <IntroText2> T</IntroText2>
-            <AnimatedContainer>
-            <MovingOAnimated delay="0s">O</MovingOAnimated>
-            <MovingOAnimated delay="0.2s">O</MovingOAnimated>
-            <MovingOAnimated delay="0.4s">O</MovingOAnimated>
-            </AnimatedContainer>
-            {/* <IntroHighlight>O</IntroHighlight> */}
+            <IntroText> T</IntroText>
+            <AnimatedO>
+              <span>O</span>
+              <span>O</span>O
+            </AnimatedO>
           </IntroLine>
           <IntroLine>
             <IntroText>JOIN</IntroText>
@@ -97,36 +94,32 @@ const RecruitmentPage = () => {
       {/* 두 번째 섹션: 채용 게시판 */}
       <Element name="jobBoard" className="element">
       <JobBoardSection>
-  <Header>진행중인 채용공고</Header>
-  <PostGrid>
-    {recruitmentData?.content.reverse().map((recruitment) => (
-      <PostItem
-        key={recruitment.id}
-        onClick={async () => {
-          if (recruitment.status === 'OPEN') {
-            const recruitmentData = await getRecruitmentData(recruitment.id);
-            window.open(recruitmentData.link, '_blank'); // Open link in a new tab
-          } else {
-            console.log('This position is closed.');
-          }
-        }}
-      >
-        <StatusButton
-          isDeadline={recruitment.status === 'CLOSE'}
-          isPreparing={recruitment.status === 'PREPARING'}
-        >
-          {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-        </StatusButton>
-        <TextWrapper>
-          <PostTitle>{recruitment.title}</PostTitle>
-        </TextWrapper>
-      </PostItem>
-    ))}
-  </PostGrid>
-</JobBoardSection>
-</Element>
+        <PostGrid>
+          <Header>진행중인 채용공고</Header>
+          <Content>
+            {recruitmentData?.content.slice(0, 5).map((recruitment) => (
+              <PostItem
+                isOpen={recruitment.status === 'OPEN'}
+                key={recruitment.id}
+                onClick={() => handleClickPost(recruitment.id, recruitment.status)}
+              >
+                <StatusButtonWrapper>
+                  <StatusButton
+                    isDeadline={recruitment.status === 'CLOSE'}
+                    isPreparing={recruitment.status === 'PREPARING'}
+                  >
+                    {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
+                  </StatusButton>
+                </StatusButtonWrapper>
 
-
+                <TextWrapper>
+                  <PostTitle>{recruitment.title}</PostTitle>
+                </TextWrapper>
+              </PostItem>
+            ))}
+          </Content>
+        </PostGrid>
+      </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
       <Element name="benefits" className="element">
       <BenefitsSection>
@@ -142,33 +135,23 @@ const RecruitmentPage = () => {
           ))}
         </ListWrapper>
       </BenefitsSection>
-      </Element>
     </Container>
   );
 };
 
 // 스타일 컴포넌트들
 const Container = styled.div`
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  background-color: #f5f5f5;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: ${theme.color.white.light};
 `;
 
 const IntroSection = styled.div`
-  min-height: 100vh; 
-  scroll-snap-align: start;
-  background-color: white;
+  background-color: ${theme.color.white.light};
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-top: 15rem;
 `;
 
 const IntroTitleWrapper = styled.div`
@@ -180,27 +163,24 @@ const IntroTitleWrapper = styled.div`
 `;
 
 const RecruitText = styled.h2`
-  font-family: 'Pretendard-Bold';
-  font-size: 40px;
-  font-weight: bold;
+  font-family: ${theme.font.bold};
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
   color: black;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 `;
 
 const IntroLine = styled.div`
-  display: inline-flex; 
+  display: inline-block;
   justify-content: center;
   align-items: center; 
   position: relative; 
 `;
 
 const IntroText = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 85px;
+  font-family: ${theme.font.bold};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
   color: black;
-  margin: 0 25px;
 `;
 
 const IntroText2 = styled.span`
@@ -212,93 +192,185 @@ const IntroText2 = styled.span`
 `;
 
 const IntroTextClored = styled.span`
-  font-family: 'Pretendard-Bold';
-  font-size: 85px;
-  color: #FFA900;
-  position: relative;
-  margin: 0 15px;
+  font-family: ${theme.font.bold};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: #ffa900;
 `;
 
-const AnimatedContainer = styled.span`
+const AnimatedD = styled.span`
   position: relative;
-  display: inline-block;
-  width: 85px; // MovingDAnimated, MovingOAnimated의 크기와 맞춤
-`;
+  font-family: ${theme.font.thin};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: #ffa900;
 
-interface MovingProps {
-  delay: string;
-}
+  span {
+    position: absolute;
+    opacity: 0.8;
 
-const MovingOAnimated = styled.span<MovingProps>`
-  font-size: 85px;  // IntroText와 크기 맞춤
-  font-weight: semi-bold;
-  color: #FFA900;
-  position: absolute;
-  top: -49px; // 필요한 만큼 조정
-  left: 0px; // 필요한 만큼 조정
-  animation: move-horizontal 0.7s ease-in-out infinite alternate;
-  animation-delay: ${(props) => props.delay};
+    &:nth-child(1) {
+      animation: moveLeftD 2s infinite ease-in-out;
+    }
+    &:nth-child(2) {
+      animation: moveRightD 2s infinite ease-in-out;
+    }
+  }
 
-  @keyframes move-horizontal {
+  @keyframes moveLeftD {
     0% {
-      transform: translateX(-5px);
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(-1vw, -1vw);
     }
     100% {
-      transform: translateX(5px);
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes moveRightD {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(1vw, 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
     }
   }
 `;
 
+const AnimatedO = styled.span`
+  position: relative;
+  font-family: ${theme.font.thin};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: #ffa900;
+
+  span {
+    position: absolute;
+    opacity: 0.8;
+
+    &:nth-child(1) {
+      animation: moveLeftO 2s infinite ease-in-out;
+    }
+    &:nth-child(2) {
+      animation: moveRightO 2s infinite ease-in-out;
+    }
+  }
+
+  @keyframes moveLeftO {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(1vw, -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes moveRightO {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(-1vw, 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+`;
+
+const ImageWrapper = styled.div`
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  img {
+    width: clamp(8rem, 13vw, 20rem);
+  }
+`;
+
 const JobBoardSection = styled.div`
-  min-height: 100vh;
-  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #fff;
   padding: 20px;
-`;
-
-const Header = styled.h3`
-  font-size: 25px;
-  color: black;
-  margin-bottom: 10px;
-  max-width: 1200px;
-  width: 100%;
-  font-family: 'Pretendard-Regular';
+  margin-top: 10rem;
+  @media ${theme.media.large_tablet} {
+    margin-top: 5rem;
+  }
+  @media ${theme.media.mobile} {
+    margin-top: 2rem;
+  }
 `;
 
 const PostGrid = styled.div`
   width: 100%;
-  max-width: 1200px;
-  padding: 20px 0;
+  max-width: 75rem;
+  padding: 1rem;
 `;
 
-const PostItem = styled.div`
+const Header = styled.h3`
+  font-size: clamp(0.8rem, 3vw, 1.6rem);
+  color: black;
+  margin-bottom: 1rem;
   width: 100%;
-  padding: 20px 0;
-  margin-bottom: 10px;
-  background-color: white;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s ease-in-out;
-  overflow: hidden;
-  height: 60px;
+  font-family: ${theme.font.medium};
 
-  &:hover {
-    height: 90px;
-    background-color: #f9f9f9;
+  @media ${theme.media.large_tablet} {
+    margin-bottom: 0.5rem;
   }
 `;
 
+const Content = styled.div`
+  border-top: 1.5px solid black;
+  border-bottom: 1.5px solid black;
+`;
+
+const PostItem = styled.div<{ isOpen: boolean }>`
+  width: 100%;
+  padding: 1.25rem 0;
+  background-color: ${theme.color.white.light};
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  height: auto;
+  min-height: 3.5rem;
+  transform: scale(1);
+  cursor: ${(props) => (props.isOpen ? 'pointer' : 'default')};
+
+  &:hover {
+    background-color: ${(props) => (props.isOpen ? '#f9f9f9' : theme.color.white.light)};
+    transform: ${(props) => (props.isOpen ? 'scale(1.02)' : 'scale(1)')};
+  }
+`;
+
+const StatusButtonWrapper = styled.div``;
+
 const StatusButton = styled.div<{ isDeadline: boolean; isPreparing: boolean }>`
-  width: 98px;
-  height: 37px;
+  width: clamp(2.5rem, 5vw, 6rem);
+  height: auto;
+  padding: 0.5rem;
   border-radius: 20px;
   background-color: ${(props) => {
     if (props.isDeadline) {
@@ -319,22 +391,19 @@ const StatusButton = styled.div<{ isDeadline: boolean; isPreparing: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  margin-right: 20px;
+  text-align: center;
+  margin-right: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1.5rem);
+  font-family: ${theme.font.medium};
 `;
 
-const TextWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-grow: 1;
-`;
+const TextWrapper = styled.div``;
 
-const PostTitle = styled.div`
-  font-family: 'Pretendard-Regular';
-  font-size: 16px;
+const PostTitle = styled.h2`
+  font-size: clamp(1rem, 2vw, 1.5rem);
   color: black;
-  margin-bottom: 5px;
+  transition: color 0.3s ease-in-out;
+  font-family: ${theme.font.semiBold};
 `;
 
 const BenefitsSection = styled.div`
@@ -344,26 +413,30 @@ const BenefitsSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white; 
-  padding: 40px 20px;
+  background-color: ${(props) => props.theme.color.white.light};
+  width: 100%;
+  margin-top: 10rem;
 `;
 
-const BenefitSectionTitle = styled.h2`
-  font-family: 'Pretendard-Bold';
-  font-size: 35px;
-  font-weight: bold;
-  color: #FFA900;
-  text-align: center;
-  margin-bottom: 40px;
+const BenefitSectionTitle = styled.h1`
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-family: ${theme.font.bold};
+  color: #ffa900;
+  margin-bottom: 5rem;
 `;
 
 const ListWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
-  gap: 20px; /* Spacing between items */
-  max-width: 1200px;
-  width: 100%;
-  padding: 0 20px;
+  width: 90%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 1rem;
+
+  @media ${theme.media.tablet} {
+    width: 95%;
+  }
 `;
 
 const BenefitItem = styled(motion.div)`
@@ -371,9 +444,20 @@ const BenefitItem = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white;
-  padding: 20px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  border-radius: 8px;
+  line-height: 1.1;
+  background-color: ${(props) => props.theme.color.white.light};
+  width: clamp(10rem, 15vw, 20rem);
+  margin: 0;
+  margin-bottom: 2rem;
+  cursor: default;
+  height: auto;
+  overflow: hidden;
+
+  @media ${theme.media.small_mobile} {
+    width: clamp(8rem, 15vw, 20rem);
+  }
 `;
 
 const BenefitImage = styled.img`
@@ -383,21 +467,35 @@ const BenefitImage = styled.img`
 `;
 
 const BenefitTitle = styled.h3`
-  font-family: 'Pretendard-Bold';
-  font-size: 20px;
-  color: black;
-  margin-bottom: 10px;
-`;
-
-const BenefitContent = styled.p`
-  font-family: 'Pretendard-Regular';
-  font-size: 14px;
-  color: #555;
+  font-family: ${(props) => props.theme.font.bold};
+  color: ${(props) => props.theme.color.black.bold};
+  font-size: clamp(0.9rem, 1vw, 1.2rem);
+  margin-bottom: 1rem;
+  width: 100%;
+  line-height: 1.3;
   text-align: center;
 `;
 
-const CircleWrapper = styled.div`
-  margin-top: 50px;
+const BenefitContent = styled.p`
+  font-family: ${(props) => props.theme.font.regular};
+  color: ${(props) => props.theme.color.black.light};
+  font-size: clamp(0.7rem, 0.8vw, 1rem);
+  width: 70%;
+  text-align: center;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+
+  @media ${theme.media.large_tablet} {
+    width: 80%;
+  }
+  @media ${theme.media.tablet} {
+    width: 90%;
+  }
+  @media ${theme.media.mobile} {
+    width: 95%;
+  }
 `;
 
 export default RecruitmentPage;

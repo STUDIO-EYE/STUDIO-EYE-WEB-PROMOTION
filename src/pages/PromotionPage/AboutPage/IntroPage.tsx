@@ -49,6 +49,12 @@ function IntroPage() {
     fetchData();
   }, []);
 
+  const removeParagraphTags = (htmlString: string) => {
+    return htmlString
+      .replace(/<\/?p\s*\/?>/gi, '') // <p> 태그를 제거
+      .replace(/<\/?br\s*\/?>/gi, ' '); // <br> 태그를 공백으로 대체
+  };
+
   return (
     <Container>
       <InitContainer>
@@ -80,9 +86,13 @@ function IntroPage() {
             <BackgroundText>ABOUT</BackgroundText>
             <AboutText
               dangerouslySetInnerHTML={{
-                __html:
-                  companyIntroData ||
-                  '2010년 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여 <br> <span style="color:#ffa900;">클라이언트 맞춤형 콘텐츠 제작</span>과 <span style="color:#ffa900;">운영 대행 서비스</span>를 제공하고 있으며 <br> 드라마, 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.',
+                __html: isMobile
+                  ? removeParagraphTags(
+                      companyIntroData ||
+                        '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
+                    )
+                  : companyIntroData ||
+                    '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
               }}
             />
           </motion.div>
@@ -155,11 +165,8 @@ const InitTitleWrapper = styled.div`
 `;
 const InitTitle = styled(motion.div)<IFontStyleProps>`
   font-family: ${theme.font.bold};
-  font-size: 7.5rem;
+  font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};
-  @media ${theme.media.mobile} {
-    font-size: 2.75rem;
-  }
 `;
 
 const IntroContainer = styled.div`
@@ -177,14 +184,13 @@ const IntroContainer = styled.div`
 `;
 const BackgroundText = styled.div`
   font-family: ${theme.font.bold};
-  font-size: 10vw;
+  font-size: clamp(3.5rem, 10vw, 12rem);
   letter-spacing: 0.625rem;
   opacity: 0.2;
   filter: blur(3px);
   color: '#FFFFFF';
   user-select: none;
   @media ${theme.media.mobile} {
-    font-size: 3.5rem;
     font-family: ${theme.font.thin};
   }
 `;
