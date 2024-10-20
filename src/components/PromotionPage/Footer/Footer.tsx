@@ -1,6 +1,7 @@
 import { getCompanyBasic, getCompanyLogo } from '@/apis/PromotionPage/company';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom'; // useLocation 임포트
 import styled from 'styled-components';
 import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
 import { COMPANY_DATA } from '@/constants/introdutionConstants';
@@ -31,16 +32,19 @@ const Footer = () => {
   const { data: companyBasicData } = useQuery<ICompanyBasic>(['getCompanyBasic'], getCompanyBasic, {
     staleTime: 1000 * 60 * 10,
   });
-  const { data: companyLogoData, error } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
+  const { data: companyLogoData } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
     staleTime: 1000 * 60 * 10,
   });
+
+  const location = useLocation();
+  const isRecruitmentPage = location.pathname === '/recruitment'; // 경로 확인
 
   const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
   const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;
   const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
 
   return (
-    <Container>
+    <Container isRecruitmentPage={isRecruitmentPage}>
       <BasicInfoWrapper>
         <AddressWrapper>
           <span>{addressData}</span>
@@ -77,7 +81,7 @@ const Footer = () => {
 
 export default Footer;
 
-const Container = styled.div`
+const Container = styled.div<{ isRecruitmentPage: boolean }>`
   width: 100%;
   height: 15rem;
   display: flex;
