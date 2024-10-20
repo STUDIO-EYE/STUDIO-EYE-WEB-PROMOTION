@@ -1,6 +1,7 @@
 import { getCompanyBasic, getCompanyLogo } from '@/apis/PromotionPage/company';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
 import { COMPANY_DATA } from '@/constants/introdutionConstants';
@@ -13,6 +14,10 @@ type ICompanyBasic = {
 };
 
 const Footer = () => {
+  const location = useLocation();
+  const pathWhiteFooter = ['/recruitment'];
+  const whiteFooter = pathWhiteFooter.includes(location.pathname);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -40,7 +45,7 @@ const Footer = () => {
   const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
 
   return (
-    <Container>
+    <Container whiteFooter={whiteFooter}>
       <BasicInfoWrapper>
         <AddressWrapper>
           <span>{addressData}</span>
@@ -77,7 +82,7 @@ const Footer = () => {
 
 export default Footer;
 
-const Container = styled.div`
+const Container = styled.div<{ whiteFooter: boolean }>`
   width: 100%;
   height: 15rem;
   display: flex;
@@ -85,7 +90,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   border-top: 0.006rem solid #777777;
-  background-color: #ffffff11;
+  background-color: ${({ whiteFooter }) => (whiteFooter ? '#fff' : '#ffffff11')};
   backdrop-filter: blur(1.25rem);
   padding: 4.0625rem 3.25rem;
   transition: font-size 0.3s ease;

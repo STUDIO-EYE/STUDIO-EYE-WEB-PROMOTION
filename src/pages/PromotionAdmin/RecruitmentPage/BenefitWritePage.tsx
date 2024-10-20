@@ -132,22 +132,22 @@ function BenefitWritePage() {
         img.src = reader.result as string;
 
         img.onload = () => {
-          // 이미지가 100x100인 경우 리사이즈 생략
-          if (img.width === 100 && img.height === 100) {
-            // 100x100일 경우, Base64 string 그대로 putData에 저장
+          // 이미지가 256x256인 경우 리사이즈 생략
+          if (img.width === 256 && img.height === 256) {
+            // 512x512일 경우, Base64 string 그대로 putData에 저장
             setPutData((prevData) => ({
               ...prevData,
               file: reader.result as string, // 이미지를 string 형태로 저장
             }));
           } else {
-            // 이미지 크기가 100x100이 아닌 경우 리사이즈 수행
+            // 이미지 크기가 256x256이 아닌 경우 리사이즈 수행
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 100;
-            canvas.height = 100;
+            canvas.width = 256;
+            canvas.height = 256;
 
             if (ctx) {
-              ctx.drawImage(img, 0, 0, 100, 100);
+              ctx.drawImage(img, 0, 0, 256, 256);
               const resizedImage = canvas.toDataURL(file.type);
               setPutData((prevData) => ({
                 ...prevData,

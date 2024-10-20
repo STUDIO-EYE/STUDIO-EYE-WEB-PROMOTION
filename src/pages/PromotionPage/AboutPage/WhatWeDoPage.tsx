@@ -13,6 +13,8 @@ interface IWhatWeDoInputProps {
   leftInput: boolean;
 }
 
+interface CombinedProps extends IWhatWeDoProps, IWhatWeDoInputProps {}
+
 const WhatWeDoPage = () => {
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const [companyDetailDataTitle, setCompanyDetailDataTitle] = useState<string[]>([]);
@@ -71,16 +73,17 @@ const WhatWeDoPage = () => {
             key={index}
             className='WhatWeDo'
             isHighlighted={highlighted === index}
-            style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '10%' : '90%' }}
+            leftInput={index % 2 === 0}
+            style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '5%' : '95%' }}
           >
             <WhatWeDoInput leftInput={index % 2 === 0}>
               <Circle />
             </WhatWeDoInput>
-            <WhatWeDoTitleInput leftInput={index % 2 !== 0}>
+            <WhatWeDoTitleInput leftInput={index % 2 === 0}>
               {companyDetailDataTitle[index].length >= 20 ? `WHAT WE DO ${index + 1}` : companyDetailDataTitle[index]}
             </WhatWeDoTitleInput>
             <WhatWeDoContentInput
-              leftInput={index % 2 !== 0}
+              leftInput={index % 2 === 0}
               dangerouslySetInnerHTML={{ __html: info.replace(/\n/g, '<br/>') }}
             ></WhatWeDoContentInput>
           </WhatWeDo>
@@ -133,21 +136,20 @@ const ScrollBarBox = styled(motion.div)`
   position: sticky;
   top: 50%;
   left: 50%;
-  translate: -50%;
   width: 5px;
   height: 21.875rem;
   background-color: ${theme.color.white.light};
-  z-index: 1000;
+  z-index: 2;
   @media ${theme.media.mobile} {
     left: 5%;
-    translate: none;
-    height: 10rem;
+    height: 9rem;
   }
 `;
-const WhatWeDo = styled(motion.div)<IWhatWeDoProps>`
+
+const WhatWeDo = styled(motion.div)<CombinedProps>`
   position: relative;
   transform: translateX(-50%);
-  width: 70%;
+  width: 75%;
   height: auto;
   background-color: transparent;
   padding: 10px;
@@ -156,58 +158,70 @@ const WhatWeDo = styled(motion.div)<IWhatWeDoProps>`
   transition: all 0.2s;
   opacity: ${({ isHighlighted }) => (isHighlighted ? 1 : 0.2)};
   transition: all 300ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ leftInput }) => (leftInput ? 'flex-end' : 'flex-start')};
   @media ${theme.media.mobile} {
     transform: none;
-    width: 70%;
+    width: 75%;
     margin-left: 1rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
+
+    display: block;
+    flex-direction: initial;
+    align-items: initial;
   }
 `;
 
 const WhatWeDoInput = styled.div<IWhatWeDoInputProps>`
   margin-bottom: 1.25rem;
+  width: 85%;
   display: flex;
   justify-content: ${({ leftInput }) => (leftInput ? 'flex-start' : 'flex-end')};
+  padding-left: ${({ leftInput }) => (leftInput ? '6vw' : '0')};
+  padding-right: ${({ leftInput }) => (leftInput ? '0' : '6vw')};
   @media ${theme.media.mobile} {
+    width: 100%;
     justify-content: flex-end;
     margin-bottom: 0.5rem;
+    padding: 0;
   }
 `;
 const WhatWeDoTitleInput = styled.div<IWhatWeDoInputProps>`
   margin-bottom: 1.875rem;
   font-family: ${theme.font.semiBold};
-  font-size: 3.75rem;
-  text-align: ${({ leftInput }) => (leftInput ? 'left' : 'right')};
+  font-size: clamp(1.5rem, 4vw, 3.75rem);
+  text-align: ${({ leftInput }) => (leftInput ? 'right' : 'left')};
   word-break: keep-all;
   white-space: normal;
   @media ${theme.media.mobile} {
     margin-bottom: 1rem;
     text-align: left;
-    font-size: 1.5rem;
   }
 `;
 const WhatWeDoContentInput = styled.div<IWhatWeDoInputProps>`
+  width: 85%;
   margin-bottom: 0.5rem;
   font-family: ${theme.font.regular};
-  font-size: 1.5rem;
-  text-align: ${({ leftInput }) => (leftInput ? 'left' : 'right')};
-  word-break: keep-all;
-  white-space: normal;
+  font-size: clamp(0.8rem, 1.5vw, 1.5rem);
+  text-align: ${({ leftInput }) => (leftInput ? 'right' : 'left')};
   line-height: 1.5;
   @media ${theme.media.mobile} {
+    width: 100%;
     margin-bottom: 0.1rem;
     text-align: left;
-    font-size: 0.8rem;
+
+    word-wrap: break-word;
+    word-break: keep-all;
+    white-space: normal;
   }
 `;
 const Circle = styled.div`
   background-color: #ffa900;
   border-radius: 50%;
-  width: 3.125rem;
-  height: 3.125rem;
-  @media ${theme.media.mobile} {
-    width: 1rem;
-    height: 1rem;
-  }
+  width: 3vw;
+  min-width: 1rem;
+  height: 3vw;
+  min-height: 1rem;
 `;

@@ -37,7 +37,7 @@ function RecruitmentManagePage() {
   const [currentRecruitment, setCurrentRecruitment] = useState<IRecruitment | null>();
   const [isSelected, setIsSelected] = useState(false);
   const [titleLength, setTitleLength] = useState<number>(0);
-  const maxTitleLength = 200;
+  const maxTitleLength = 50;
 
   useEffect(() => {
     refetch();
@@ -177,6 +177,9 @@ function RecruitmentManagePage() {
     if (/^\s/.test(value.charAt(0))) {
       return;
     }
+    if (name === 'title' && value.length > 50) {
+      return;
+    }
     if (name === 'title') {
       setTitleLength(value.length);
     }
@@ -278,13 +281,13 @@ function RecruitmentManagePage() {
                 </InputTitle>
                 <input
                   {...register('title', {
-                    required: '제목 입력해주세요. (200자 내로 작성해 주세요.)',
+                    required: '제목 입력해주세요. (50자 내로 작성해 주세요.)',
                   })}
                   name='title'
                   value={currentRecruitment?.title || ''}
                   onChange={handleChange}
-                  maxLength={200}
-                  placeholder='제목을 입력해주세요. (200자 내로 작성해 주세요.)'
+                  maxLength={50}
+                  placeholder='제목을 입력해주세요. (50자 내로 작성해 주세요.)'
                 />
                 {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
                 <InputTitle>
