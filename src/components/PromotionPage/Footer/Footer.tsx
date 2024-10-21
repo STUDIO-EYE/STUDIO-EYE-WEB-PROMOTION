@@ -95,11 +95,6 @@ const Container = styled.div<{ whiteFooter: boolean }>`
   padding: 4.0625rem 3.25rem;
   transition: font-size 0.3s ease;
   box-sizing: border-box;
-  @media ${theme.media.tablet} {
-  }
-  @media ${theme.media.mobile} {
-    height: 20rem;
-  }
 
   img {
     opacity: 0.5;
@@ -125,7 +120,7 @@ const AddressWrapper = styled.div`
   }
   @media ${theme.media.mobile} {
     justify-content: center;
-    font-size: 1.6rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
   }
 `;
@@ -147,7 +142,8 @@ const NumberWrapper = styled.div`
     align-items: center;
     justify-content: space-around;
     width: 100%;
-    font-size: 0.5rem;
+
+    font-size: 0.8rem;
   }
 `;
 
@@ -182,6 +178,7 @@ const ImgInfoWrapper = styled.div`
 
 const CopyrightWrapper = styled.div`
   font-family: 'pretendard-bold';
+  white-space: nowrap;
   font-size: 1.25rem;
   color: #777777;
   @media ${theme.media.tablet} {
@@ -189,5 +186,6 @@ const CopyrightWrapper = styled.div`
   }
   @media ${theme.media.mobile} {
     font-size: 0.7rem;
+    text-align: center;
   }
 `;
