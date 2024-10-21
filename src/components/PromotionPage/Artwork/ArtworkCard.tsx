@@ -155,7 +155,7 @@ const Info = styled(motion.div)`
   }
 
   @media ${theme.media.mobile} {
-    margin: 0 auto;
+    margin: 0 auto 2rem 0;
     position: relative;
     width: 100%;
     min-width: 20rem;

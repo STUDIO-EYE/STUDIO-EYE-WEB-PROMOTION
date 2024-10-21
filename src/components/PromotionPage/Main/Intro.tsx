@@ -29,7 +29,7 @@ const Intro = () => {
         // const commitmentText = data.commitment;
         setCompanyCommitment(data.commitment);
       } catch (error) {
-        console.error('Error fetching company data: ', error);
+        // console.error('Error fetching company data: ', error);
       }
     };
 

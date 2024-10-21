@@ -62,7 +62,7 @@ const MainPage = () => {
           overflow: hidden;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1500px) {
           div {
             &::-webkit-scrollbar {
               display: none;
