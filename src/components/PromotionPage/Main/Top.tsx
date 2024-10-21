@@ -118,13 +118,17 @@ const BackWrapper = styled(motion.div)`
   color: white;
   letter-spacing: -0.02em;
 
+  @media ${theme.media.tablet} {
+    font-size: 0.75rem;
+  }
+
   @media ${theme.media.mobile}{
     font-size: 1rem;
     line-height: 1;
     text-align: left;
     width: 100%;
     padding-left: 0.75rem;
-    }
+  }
 `;
 
 const NameWrapper = styled.div`
@@ -132,6 +136,7 @@ const NameWrapper = styled.div`
   font-size: 150px;
   z-index: 10;
   white-space: nowrap;
+
   overflow: hidden;
   span {
     display: inline-block;
@@ -145,6 +150,10 @@ const NameWrapper = styled.div`
   }
   span:last-child {
     color: #ffa900;
+  }
+  
+  @media ${theme.media.tablet} {
+    font-size: 6rem;
   }
 
   @media ${theme.media.mobile}{

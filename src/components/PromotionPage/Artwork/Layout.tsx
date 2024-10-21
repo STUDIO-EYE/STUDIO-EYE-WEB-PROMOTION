@@ -42,6 +42,7 @@ const Container = styled.div`
   @media ${theme.media.mobile} {
     justify-content: center;
     align-items: center;
+    padding-bottom: 0;
     width: auto;
   }
 `;
