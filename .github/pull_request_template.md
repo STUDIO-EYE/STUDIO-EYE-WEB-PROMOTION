@@ -1,15 +1,15 @@
-## 📸 작업 내용
+![image](https://github.com/user-attachments/assets/2f45539f-9b97-4976-9b73-106acf3f1aed)## ✅ 작업 내용
 > 이번 PR에서 작업한 내용을 적어주세요
 
 - [ ] detail task
 - [ ] detail task
 
-## 스크린샷 
+## 📷 스크린샷 
 > 작업 화면을 캡쳐해주세요
 
 
 
-## 💌 빌드 완료 스크린샷
+## 📷 빌드 완료 스크린샷
 > `npm run build` 실행 후 에러 없는 화면을 캡쳐하여 보여주세요
 
 
