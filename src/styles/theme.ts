@@ -2,12 +2,16 @@ import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
   media:{
-    mobile: 'only screen and (max-width: 768px)',
-    tablet: 'only screen and (max-width: 1024px)',
+    large_tablet: 'only screen and (max-width: 1280px)',
+    tablet: 'only screen and (max-width:1024px)',
+    mobile: 'only screen and (max-width: 767px)',
+    small_mobile: 'only screen and (max-width: 320px)',
   },
   mediaSize:{
-    mobile: 768,
+    large_tablet: 1280,
     tablet: 1024,
+    mobile: 767,
+    small_mobile: 320,
   },
 
   color: {

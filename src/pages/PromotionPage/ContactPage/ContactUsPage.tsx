@@ -736,11 +736,12 @@ const IntroSubtitle = styled.div`
     font-family: ${theme.font.semiBold};
     text-align: center;
     font-size: 1rem;
-    color: ${theme.color.white.light}
+    color: ${theme.color.white.light};
     word-break: keep-all;
     white-space: normal;
   }
 `;
+
 const IntroAboutWrapper = styled.div`
   margin-top: 5rem;
   display: flex;

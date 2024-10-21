@@ -1,6 +1,7 @@
 import { getCompanyBasic, getCompanyLogo } from '@/apis/PromotionPage/company';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import defaultFooterLogo from '@/assets/images/PP-Header/studioeye.png';
 import { COMPANY_DATA } from '@/constants/introdutionConstants';
@@ -13,6 +14,10 @@ type ICompanyBasic = {
 };
 
 const Footer = () => {
+  const location = useLocation();
+  const pathWhiteFooter = ['/recruitment'];
+  const whiteFooter = pathWhiteFooter.includes(location.pathname);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -31,7 +36,7 @@ const Footer = () => {
   const { data: companyBasicData } = useQuery<ICompanyBasic>(['getCompanyBasic'], getCompanyBasic, {
     staleTime: 1000 * 60 * 10,
   });
-  const { data: companyLogoData, error } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
+  const { data: companyLogoData } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
     staleTime: 1000 * 60 * 10,
   });
 
@@ -40,7 +45,7 @@ const Footer = () => {
   const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
 
   return (
-    <Container>
+    <Container whiteFooter={whiteFooter}>
       <BasicInfoWrapper>
         <AddressWrapper>
           <span>{addressData}</span>
@@ -77,7 +82,7 @@ const Footer = () => {
 
 export default Footer;
 
-const Container = styled.div`
+const Container = styled.div<{ whiteFooter: boolean }>`
   width: 100%;
   height: 15rem;
   display: flex;
@@ -85,7 +90,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   border-top: 0.006rem solid #777777;
-  background-color: #ffffff11;
+  background-color: ${({ whiteFooter }) => (whiteFooter ? '#fff' : '#ffffff11')};
   backdrop-filter: blur(1.25rem);
   padding: 4.0625rem 3.25rem;
   transition: font-size 0.3s ease;
@@ -114,13 +119,14 @@ const AddressWrapper = styled.div`
   display: flex;
   color: #777777;
   font-family: 'pretendard-bold';
+
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
   @media ${theme.media.mobile} {
     justify-content: center;
     font-size: 1.6rem;
     margin-bottom: 1rem;
-  }
-  @media ${theme.media.tablet} {
-    font-size: 1.2rem;
   }
 `;
 
@@ -132,15 +138,16 @@ const NumberWrapper = styled.div`
   color: #777777;
   font-size: 1.3rem;
   display: flex;
+
+  @media ${theme.media.tablet} {
+    font-size: 1rem;
+  }
   @media ${theme.media.mobile} {
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 100%;
     font-size: 0.5rem;
-  }
-  @media ${theme.media.tablet} {
-    font-size: 1rem;
   }
 `;
 

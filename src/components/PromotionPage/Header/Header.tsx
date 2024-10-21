@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import defaultLogo from '@/assets/images/PP-Header/studioeye-logo-orange.png';
+import defaultLogo from '@/assets/images/PP-Header/defaultLogo.png';
+import recruitmentLogo from '@/assets/logo/logo_yellow.png'; // 새로운 로고 임포트
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderScrolledState, ppHeaderState } from '@/recoil/atoms';
@@ -12,6 +13,7 @@ import { theme } from '@/styles/theme';
 
 interface ContainerProps {
   isScrolled: boolean;
+  isRecruitmentPage: boolean; // 새로운 prop 추가
 }
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(ppHeaderState);
@@ -78,12 +80,15 @@ const Header = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  const isRecruitmentPage = location.pathname === '/recruitment';
+
   return (
     <>
-      <Container ref={headerRef} isScrolled={isScrolled}>
+      <Container ref={headerRef} isScrolled={isScrolled} isRecruitmentPage={isRecruitmentPage}> {/* isRecruitmentPage 전달 */}
         <HeaderContainer>
           <HomeLinkWrapper to={'/'}>
-            <LogoImg src={companyLogo} alt='Company Logo' />
+            {/* 조건부로 로고 변경 */}
+            <LogoImg src={isRecruitmentPage ? recruitmentLogo : companyLogo} alt='Company Logo' />
           </HomeLinkWrapper>
         </HeaderContainer>
         <AnimatePresence>
@@ -120,8 +125,9 @@ const Container = styled.div<ContainerProps>`
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
-  background-color: ${({ isScrolled }) => (isScrolled ? 'rgba(0,0,0,0.1)' : 'transparent')};
-  backdrop-filter: ${({ isScrolled }) => (isScrolled ? 'blur(0.9375rem)' : 'none')}; // 15px -> 0.9375rem
+  background-color: ${({ isScrolled, isRecruitmentPage }) => 
+    isRecruitmentPage ? 'transparent' : (isScrolled ? 'rgba(0,0,0,0.1)' : 'transparent')}; // recruitment 페이지에서 투명하게
+  backdrop-filter: ${({ isScrolled }) => (isScrolled ? 'blur(15px)' : 'none')};
   position: fixed;
   z-index: 100;
   transition:

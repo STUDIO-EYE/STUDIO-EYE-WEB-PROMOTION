@@ -54,6 +54,10 @@ const RotatingWrapper = styled(motion.div)`
 const RotatingImage = styled(motion.img)`
   position: relative;
   width: 9.375rem;
+
+  @media ${theme.media.large_tablet} {
+    width: 8rem;
+  }
   @media ${theme.media.mobile} {
     width: 6rem;
   }

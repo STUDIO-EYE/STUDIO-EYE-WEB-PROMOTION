@@ -18,8 +18,20 @@ const Layout = () => {
 
   const hideFooter = pathsWithoutFooter.includes(location.pathname);
 
+  const pathWhiteFooter = ['/recruitment'];
+  const whiteFooter = pathWhiteFooter.includes(location.pathname);
+
   useEffect(() => {
     const increaseView = async (cookieName: string, filter: any) => {
+      if (!document.cookie.includes('allView')) {
+        await putViewIncrease({ menu: 'ALL', category: 'ALL' });
+        // 쿠키 설정 (유효기간 1일)
+        const date = new Date();
+        date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+        const expires = `expires=${date.toUTCString()}`;
+        document.cookie = `allView=true;${expires};path=/`;
+      }
+
       // 해당 이름의 쿠키가 존재하지 않으면 조회수를 증가시킴
       if (!document.cookie.includes(cookieName)) {
         try {
@@ -115,10 +127,10 @@ const Layout = () => {
   }, [location.pathname, location.search]);
 
   return (
-    <Container>
+    <Container whiteFooter={whiteFooter}>
       <ScrollToTop />
       <Header />
-      <BodyWrapper>
+      <BodyWrapper hideFooter={hideFooter}>
         <Outlet />
       </BodyWrapper>
       {!hideFooter && <Footer />}
@@ -128,12 +140,16 @@ const Layout = () => {
 
 export default Layout;
 
-const Container = styled.div`
-  background-color: black;
+const Container = styled.div<{ whiteFooter: boolean }>`
+  background-color: ${({ whiteFooter }) => (whiteFooter ? 'white' : 'black')};
   width: 100%;
   color: white;
 `;
 
-const BodyWrapper = styled.div`
-  margin-bottom: 10rem;
+const BodyWrapper = styled.div<{ hideFooter: boolean }>`
+  margin-bottom: ${({ hideFooter }) => (hideFooter ? '0' : '10rem')};
+flex: 1; /* BodyWrapper가 남은 공간을 차지하도록 설정 */
+  box-sizing: border-box;
 `;
+
+

@@ -1,7 +1,7 @@
 export const CEO_DATA = {
   CEO_Instruction:
-    'CJ ENM 디지털 제작 팀장 출신 \n TV 예능, 웹드라마, 디지털 다큐멘터리, 게임 콘텐츠 연출 \n 기업 및 정부기관 콘텐츠 제작 및 SNS 운영 \n 엔터테인먼트 아티스트 콘텐츠 제작',
-  CEO_Name: '박성진',
+    'CJ ENM 디지털 제작 팀장 출신 \n TV 예능, 웹드라마, 디지털 다큐멘터리, 게임 콘텐츠 연출 \n 기업 및 정부기관 콘텐츠 제작 및 SNS 운영 엔터테인먼트 아티스트 콘텐츠 제작 \n\n 고객의 목적에 맞춘 최적의 콘텐츠로 재미와 감동을 드리겠습니다.',
+  CEO_Name: '박용진',
 };
 
 export const COMPANY_DATA = {
@@ -26,6 +26,4 @@ export const ARTWORKLIST_DATA = {
   OVERVIEW: '설명',
 };
 
-export const ABOUT_DATA = {
-  
-}
+export const ABOUT_DATA = {};

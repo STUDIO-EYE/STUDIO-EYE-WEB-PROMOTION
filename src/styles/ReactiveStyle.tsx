@@ -6,6 +6,10 @@ const ReactiveStyle = createGlobalStyle`
   html {
     font-size: 100%;
     transition: all 1s ease-in-out;
+
+    @media ${theme.media.large_tablet}{
+      font-size: 90%;
+    }
     
     @media ${theme.media.tablet} {
       font-size: 80%;
@@ -13,6 +17,10 @@ const ReactiveStyle = createGlobalStyle`
 
     @media ${theme.media.mobile} {
       font-size: 70%;
+    }
+
+    @media ${theme.media.small_mobile}{
+      font-size: 60%;
     }
   }
 
