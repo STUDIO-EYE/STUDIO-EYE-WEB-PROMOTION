@@ -195,7 +195,8 @@ const ContactUsPage = () => {
           alert('프로젝트에 대한 필수 내용을 모두 입력해주세요.');
           return;
         }
-        handleSubmit(e);
+        // handleSubmit(e);
+        setRequestStep(requestStep + 1);
       }
       if (requestStep < 2) {
         setRequestStep(requestStep + 1);
@@ -505,8 +506,8 @@ const ContactUsPage = () => {
                       </>
                     )}
                   </RequestExplanationWrapper>
-                  <RequestLeftLogoWrapper isMobile={false}>
-                    <RequestLeftLogo src={logo} alt='로고' isMobile={false} />
+                  <RequestLeftLogoWrapper>
+                    <RequestLeftLogo src={logo} alt='로고' />
                   </RequestLeftLogoWrapper>
                 </>
               )}
@@ -624,16 +625,14 @@ const ContactUsPage = () => {
           {requestStep === 3 ? (
             <>
               <RequestCompleteContentWrapper>
-                <RequestExplanationMedium>
-                  문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.
-                </RequestExplanationMedium>
+                <RequestExplanationBig>문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.</RequestExplanationBig>
                 <RequestExplanationSmall style={{ textAlign: 'center' }}>
                   담당자 배정 후 연락 드리겠습니다. 감사합니다.
                 </RequestExplanationSmall>
               </RequestCompleteContentWrapper>
-              <RequestLeftLogoWrapper isMobile={true}>
-                <RequestLeftLogo src={logo} alt='로고' isMobile={true} />
-              </RequestLeftLogoWrapper>
+              <RequestSuccessLogoWrapper>
+                <RequestSuccessLogo src={logo} alt='로고' />
+              </RequestSuccessLogoWrapper>
               <BackToMainButton
                 onClick={() => {
                   // console.log(formData);
@@ -821,12 +820,9 @@ const RequestContentsContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 80%;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 
-  @media ${theme.media.large_tablet} {
-    width: 85%;
-  }
   @media ${theme.media.tablet} {
     width: 90%;
   }
@@ -837,8 +833,13 @@ const RequestContentsContainer = styled.div`
 const RequestLeftContentsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 45%;
+  width: 40%;
+  padding-left: 2vw;
 
+  @media ${theme.media.large_tablet} {
+    width: 45%;
+    padding: 0;
+  }
   @media ${theme.media.mobile} {
     margin: 0;
     justify-content: center;
@@ -916,10 +917,12 @@ const RequestExplanationWrapper = styled.div`
 const RequestExplanationSmall = styled.div`
   margin-bottom: 0.75rem;
   font-family: ${theme.font.regular};
-  font-size: clamp(1rem, 1vw, 1.25rem);
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   color: ${theme.color.white.light};
   text-align: left;
   width: 100%;
+  word-break: keep-all;
+  white-space: normal;
 `;
 const RequestExplanation = styled.div`
   margin-bottom: 0.75rem;
@@ -942,67 +945,75 @@ const RequestExplanation = styled.div`
     white-space: normal;
   }
 `;
-const RequestExplanationMedium = styled.div`
-  margin-bottom: 2.5rem;
+const RequestExplanationBig = styled.div`
+  margin-bottom: clamp(1.5rem, 2vw, 2.5rem);
   font-family: ${theme.font.semiBold};
-  font-size: 1.875rem;
+  font-size: clamp(1.25rem, 2.5vw, 2.75rem);
   color: ${theme.color.white.light};
   text-align: center;
   width: 100%;
+  word-break: keep-all;
+  white-space: normal;
 `;
 
 const RequestSubExplanation = styled.div`
   font-family: ${theme.font.light};
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 1vw, 1.25rem);
   color: #eaeaea;
   text-align: left;
   @media ${theme.media.mobile} {
     display: none;
   }
 `;
-const RequestLeftLogoWrapper = styled.div<{ isMobile?: boolean }>`
-  margin-top: 4.375rem;
+const RequestLeftLogoWrapper = styled.div`
+  margin-top: clamp(2rem, 4vw, 4.375rem);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
+
   @media ${theme.media.mobile} {
-    display: ${(props) => (props.isMobile ? 'flex' : 'none')};
-    margin-top: 0;
+    display: none;
   }
 `;
-const RequestLeftLogo = styled.img<{ isMobile?: boolean }>`
-  width: 80%;
-  height: 8.125rem;
+const RequestLeftLogo = styled.img`
+  width: clamp(15rem, 25vw, 30rem);
+  height: clamp(4rem, 8vw, 8.125rem);
   object-fit: contain;
   opacity: 0.3;
+
   @media ${theme.media.mobile} {
-    display: ${(props) => (props.isMobile ? 'block' : 'none')};
-    height: 3rem;
+    display: none;
   }
 `;
 
+const RequestSuccessLogoWrapper = styled.div`
+  margin-top: clamp(1rem, 4vw, 4.375rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+const RequestSuccessLogo = styled.img`
+  width: clamp(15rem, 25vw, 30rem);
+  height: clamp(4rem, 8vw, 8rem);
+  object-fit: contain;
+  opacity: 0.3;
+`;
+
 const RequestInputWrapper = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: clamp(0.5rem, 2vw, 2.5rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  @media ${theme.media.mobile} {
-    margin-bottom: 0.5rem;
-  }
 `;
 const RowWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 10px;
-  @media ${theme.media.mobile} {
-    width: 90%;
-    gap: 0.3rem;
-  }
+  gap: clamp(0.3rem, 0.5vw, 0.625rem);
 `;
 const RequestCategoryButtonWrapper = styled.div`
   display: flex;
@@ -1011,11 +1022,6 @@ const RequestCategoryButtonWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  @media ${theme.media.mobile} {
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-  }
 `;
 const RequestCategoryButton = styled.button<IButtonProps>`
   border: 1px solid white;
@@ -1024,136 +1030,100 @@ const RequestCategoryButton = styled.button<IButtonProps>`
     cursor: pointer;
     background-color: ${(props) => (props.checked ? '#ffa900' : '#353535')};
   }
-  height: 70px;
+  height: clamp(3rem, 4vw, 4.375rem);
   width: 45%;
   text-align: center;
   align-items: center;
   background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
   font-family: ${theme.font.medium};
-  font-size: 1.5vw;
+  font-size: clamp(0.875rem, 2vw, 2rem);
   color: white;
-  margin-bottom: 30px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  margin-bottom: 1.875rem;
+
+  @media ${theme.media.large_tablet} {
+    margin-bottom: 1.5rem;
+  }
   @media ${theme.media.mobile} {
-    height: 2.5rem;
-    width: 45%;
-    text-align: center;
-    align-items: center;
-    background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
     font-family: ${theme.font.regular};
-    font-size: 0.875rem;
-    color: white;
     margin-bottom: 1rem;
   }
 `;
 const RequestInfoInput = styled.input`
-  margin-bottom: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
   box-sizing: border-box;
   outline: none;
   border: 2px solid gray;
   background-color: transparent;
-  height: 3.75rem;
+  height: clamp(2.5rem, 4vw, 3.75rem);
   width: 100%;
   font-family: ${theme.font.medium};
-  font-size: 1.25rem;
+  font-size: clamp(0.75rem, 1.5vw, 1.25rem);
   color: ${theme.color.white.light};
-  line-height: 30px;
-  @media ${theme.media.mobile} {
-    margin-bottom: 0.5rem;
-    height: 2.5rem;
-    width: 90%;
-    font-size: 0.75rem;
-    line-height: 30px;
-  }
+  line-height: clamp(1rem, 2vw, 1.875rem);
 `;
 const ErrorMessage = styled.div`
   width: 100%;
-  margin-bottom: 15px;
-  padding-left: 10px;
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+  padding-left: 0.625rem;
   font-family: ${theme.font.regular};
-  font-size: 15px;
+  font-size: clamp(0.75rem, 1vw, 1rem);
   color: red;
   text-align: left;
-
-  @media ${theme.media.mobile} {
-    width: 90%;
-    margin-bottom: 0.5rem;
-    font-family: ${theme.font.regular};
-    font-size: 0.75rem;
-  }
 `;
 const RequestInfoTextarea = styled.textarea`
   box-sizing: border-box;
-  padding: 10px;
+  padding: 0.625rem;
   resize: none;
   border: 2px solid gray;
   outline: none;
   width: 100%;
-  height: 18.75rem;
+  height: clamp(10rem, 20vw, 18.75rem);
   font-family: ${theme.font.medium};
-  font-size: 1.25rem;
+  font-size: clamp(0.75rem, 1.5vw, 1.25rem);
   color: ${theme.color.white.light};
   overflow-y: auto;
-  line-height: 30px;
+  line-height: clamp(1rem, 2vw, 1.875rem);
   display: block;
   overflow-wrap: break-word;
   background-color: transparent;
   @media ${theme.media.mobile} {
     margin-bottom: 1rem;
-    width: 90%;
-    height: 10rem;
-    font-size: 0.75rem;
-    line-height: 30px;
   }
 `;
 const RequestFileText = styled.input`
-  margin-bottom: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
   box-sizing: border-box;
   outline: none;
   border: 2px solid gray;
   background-color: transparent;
-  height: 60px;
+  height: clamp(2.5rem, 4vw, 3.75rem);
   width: 100%;
   font-family: ${theme.font.medium};
-  font-size: 20px;
+  font-size: clamp(0.75rem, 1.5vw, 1.25rem);
   color: white;
-  line-height: 30px;
-  @media ${theme.media.mobile} {
-    margin-bottom: 0.5rem;
-    height: 2.5rem;
-    font-size: 0.75rem;
-    line-height: 30px;
-  }
+  line-height: clamp(1rem, 2vw, 1.875rem);
 `;
 const RequestUploadLabel = styled.label`
-  margin-bottom: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
   box-sizing: border-box;
   outline: none;
   border: 2px solid gray;
   background-color: ${theme.color.white.light};
-  height: 60px;
+  height: clamp(2.5rem, 4vw, 3.75rem);
   width: 40%;
   font-family: ${theme.font.medium};
-  font-size: 20px;
+  font-size: clamp(0.75rem, 1.5vw, 1.25rem);
   color: black;
-  line-height: 30px;
+  line-height: clamp(1rem, 2vw, 1.875rem);
   text-align: center;
   align-items: center;
   align-content: center;
-  @media ${theme.media.mobile} {
-    margin-bottom: 0.5rem;
-    height: 2.5rem;
-    font-size: 0.75rem;
-    line-height: 30px;
-  }
 `;
 const RequestFileUploadInput = styled.input.attrs({ type: 'file' })`
   width: 1px;
@@ -1170,10 +1140,6 @@ const RequestStepButtonWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-
-  @media ${theme.media.mobile} {
-    justify-content: space-around;
-  }
 `;
 const RequestStepButton = styled.button<IButtonProps>`
   border: none;
@@ -1184,35 +1150,32 @@ const RequestStepButton = styled.button<IButtonProps>`
     background-color: ${(props) => (props.disabled ? '#ffa900' : '#ff7800')};
     transform: ${(props) => (props.disabled ? 'none' : 'scale(1.01)')};
   }
-  height: 4.375rem;
+  height: clamp(3rem, 4vw, 4.375rem);
   width: 45%;
   text-align: center;
   align-items: center;
   background-color: #ffa900;
   font-family: ${theme.font.semiBold};
-  font-size: 1.875rem;
+  font-size: clamp(1.25rem, 1.5vw, 2rem);
   color: ${theme.color.white.light};
 
   @media ${theme.media.mobile} {
-    justify-content: space-around;
-    height: 2.5rem;
     font-family: ${theme.font.regular};
-    font-size: 1.25rem;
   }
 `;
 const RequestCompleteContentWrapper = styled.div`
-  margin-top: 6.25rem;
+  margin-top: clamp(4rem, 6vw, 6.25rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+
   @media ${theme.media.mobile} {
-    margin-top: 4rem;
-    width: 70%;
+    width: 85%;
   }
 `;
 const BackToMainButton = styled.button`
-  margin-top: 3.125rem;
+  margin-top: clamp(2rem, 3vw, 3.125rem);
   border: 2px solid white;
   transition: transform 0.2s;
   &:hover {
@@ -1220,20 +1183,16 @@ const BackToMainButton = styled.button`
     background-color: #ffa900;
     transform: scale(1.01);
   }
-  height: 4.375rem;
-  width: 12.5rem;
+  height: clamp(3rem, 5vw, 4.375rem);
+  width: clamp(10rem, 12vw, 12.5rem);
   text-align: center;
   align-items: center;
   background-color: transparent;
   font-family: ${theme.font.semiBold};
-  font-size: 25px;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   color: ${theme.color.white.bold};
 
   @media ${theme.media.mobile} {
-    /* display: none; */
-    margin-top: 3rem;
-    height: 3rem;
-    width: 10rem;
     font-size: 1rem;
   }
 `;
