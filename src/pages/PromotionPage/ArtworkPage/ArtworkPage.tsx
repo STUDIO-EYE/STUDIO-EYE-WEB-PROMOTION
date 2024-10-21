@@ -115,6 +115,7 @@ const Wrapper = styled.div`
 
   @media ${theme.media.mobile}{
     width: 100%;
+    min-height: fit-content;
     align-items: left;
   }
 `;

@@ -40,6 +40,11 @@ const Container = styled.div`
   position: relative;
   display: inline-block;
 
+  /* @media ${theme.media.tablet} {
+    margin-left: -6rem;
+    display: none;
+  } */
+
   @media ${theme.media.mobile} {
     width: 100%;
   }
@@ -54,8 +59,12 @@ const LabelWrapper = styled(motion.div)`
   font-family: 'pretendard-bold';
   font-size: 18px;
 
+  /* @media ${theme.media.tablet} {
+    font-size: 0rem;
+  } */
+
   @media ${theme.media.mobile} {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 `;
 
@@ -67,7 +76,11 @@ const RotatingWrapper = styled(motion.div)`
 const RotatingImage = styled(motion.img)`
   position: relative;
 
+  /* @media ${theme.media.tablet} {
+    width: 0rem;
+  } */
+
   @media ${theme.media.mobile} {
-    width: 10rem;
+    width: 7rem;
   }
 `;

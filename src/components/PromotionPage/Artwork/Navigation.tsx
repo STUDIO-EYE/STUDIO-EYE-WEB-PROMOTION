@@ -168,8 +168,10 @@ const DropdownList = styled.ul`
   right: 0;
   background-color: ${(props) => props.theme.color.background};
   border: 1px solid ${(props) => props.theme.color.white.bold};
-  z-index: 1000;
+  z-index: 50;
   box-sizing: border-box;
+  font-size: 1rem;
+  font-weight: 500;
 `;
 
 const DropdownItem = styled.li`
@@ -179,7 +181,7 @@ const DropdownItem = styled.li`
   color: ${(props) => props.theme.color.black.light};
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
 
   &:hover {
     background-color: ${(props) => props.theme.color.black.light};
