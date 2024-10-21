@@ -40,9 +40,6 @@ const Footer = () => {
     staleTime: 1000 * 60 * 10,
   });
 
-  const location = useLocation();
-  const isRecruitmentPage = location.pathname === '/recruitment'; // 경로 확인
-
   const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
   const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;
   const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
@@ -122,13 +119,14 @@ const AddressWrapper = styled.div`
   display: flex;
   color: #777777;
   font-family: 'pretendard-bold';
+
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
   @media ${theme.media.mobile} {
     justify-content: center;
     font-size: 1.6rem;
     margin-bottom: 1rem;
-  }
-  @media ${theme.media.tablet} {
-    font-size: 1.2rem;
   }
 `;
 
@@ -140,15 +138,16 @@ const NumberWrapper = styled.div`
   color: #777777;
   font-size: 1.3rem;
   display: flex;
+
+  @media ${theme.media.tablet} {
+    font-size: 1rem;
+  }
   @media ${theme.media.mobile} {
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 100%;
     font-size: 0.5rem;
-  }
-  @media ${theme.media.tablet} {
-    font-size: 1rem;
   }
 `;
 

@@ -31,7 +31,7 @@ function BenefitWritePage() {
   const titleLength = putData.request.title.length;
   const contentLength = putData.request.content.length;
   const maxTitleLength = 14;
-  const maxContentLength = 35;
+  const maxContentLength = 34;
 
   const {
     register,
@@ -65,7 +65,7 @@ function BenefitWritePage() {
     if (name === 'title' && value.length > 14) {
       return;
     }
-    if (name === 'content' && value.length > 35) {
+    if (name === 'content' && value.length > 34) {
       return;
     }
     setPutData((prevData) => ({
@@ -231,8 +231,8 @@ function BenefitWritePage() {
             name='content'
             value={putData.request.content}
             onChange={handleChange}
-            maxLength={35}
-            placeholder='복지 내용 (35자 내로 작성해 주세요.)'
+            maxLength={34}
+            placeholder='복지 내용 (34자 내로 작성해 주세요.)'
           />
           {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
           <RowWrapper>
