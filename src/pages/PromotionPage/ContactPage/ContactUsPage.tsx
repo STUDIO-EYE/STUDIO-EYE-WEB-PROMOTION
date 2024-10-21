@@ -431,7 +431,7 @@ const ContactUsPage = () => {
             <IntroSubtitle>대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!</IntroSubtitle>
           </IntroSubTitleWrapper>
           <IntroAboutWrapper>
-            <div>
+            <div style={{ width: '100%' }}>
               {(!addressInvalid || !addressEnglishInvalid) && (
                 <IntroAdress style={{ color: '#8a8a8a' }}>Address</IntroAdress>
               )}
@@ -487,13 +487,7 @@ const ContactUsPage = () => {
               ) : (
                 <>
                   <RequestExplanationWrapper>
-                    <RequestExplanation
-                      fontSize='1.25rem'
-                      fontFamily={theme.font.regular}
-                      color={theme.color.white.bold}
-                    >
-                      Project Request
-                    </RequestExplanation>
+                    <RequestExplanationSmall>Project Request</RequestExplanationSmall>
                     {requestStep === 0 ? (
                       <>
                         <RequestExplanation>문의할 프로젝트 항목을 선택해주세요. *</RequestExplanation>
@@ -630,14 +624,12 @@ const ContactUsPage = () => {
           {requestStep === 3 ? (
             <>
               <RequestCompleteContentWrapper>
-                <RequestExplanation
-                  style={{ textAlign: 'center', marginBottom: '1.875rem', fontFamily: `${theme.font.semiBold}` }}
-                >
+                <RequestExplanationMedium>
                   문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.
-                </RequestExplanation>
-                <RequestExplanation style={{ textAlign: 'center' }} fontSize='1.25rem' fontFamily={theme.font.regular}>
+                </RequestExplanationMedium>
+                <RequestExplanationSmall style={{ textAlign: 'center' }}>
                   담당자 배정 후 연락 드리겠습니다. 감사합니다.
-                </RequestExplanation>
+                </RequestExplanationSmall>
               </RequestCompleteContentWrapper>
               <RequestLeftLogoWrapper isMobile={true}>
                 <RequestLeftLogo src={logo} alt='로고' isMobile={true} />
@@ -708,7 +700,7 @@ const IntroTitleCONTACT = styled.div`
   font-size: 6.25rem;
   color: ${theme.color.white.light};
   @media ${theme.media.mobile} {
-    font-size: 3.25rem;
+    font-size: 3rem;
   }
 `;
 const IntroTitleUS = styled.div`
@@ -718,7 +710,7 @@ const IntroTitleUS = styled.div`
   color: #ffa900;
   @media ${theme.media.mobile} {
     margin-left: 1rem;
-    font-size: 3.25rem;
+    font-size: 3rem;
   }
 `;
 const IntroSubTitleWrapper = styled.div`
@@ -749,6 +741,7 @@ const IntroAboutWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+
   @media ${theme.media.mobile} {
     margin-top: 10rem;
     width: 80%;
@@ -760,8 +753,9 @@ const IntroAdress = styled.div`
   font-size: 1.25rem;
   color: #ffffff;
   text-align: left;
-  max-width: 40vw;
   word-wrap: break-word;
+  line-height: 1.2;
+
   @media ${theme.media.mobile} {
     margin-bottom: 0.5rem;
     font-family: ${theme.font.medium};
@@ -793,12 +787,14 @@ const IntroNumber = styled.div`
   font-size: 1.25rem;
   color: #ffffff;
   text-align: left;
-  padding: 10px;
+  padding-bottom: 1.25rem;
   max-width: 20vw;
   word-wrap: break-word;
+
   @media ${theme.media.mobile} {
     font-family: ${theme.font.medium};
     font-size: 0.9rem;
+    padding-bottom: 0.5rem;
     color: #ffffff;
     text-align: center;
     max-width: 100%;
@@ -824,16 +820,21 @@ const RequestSection = styled.div`
 const RequestContentsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
-  justify-content: center;
+  width: 80%;
+  justify-content: space-between;
   align-items: center;
 
+  @media ${theme.media.large_tablet} {
+    width: 85%;
+  }
+  @media ${theme.media.tablet} {
+    width: 90%;
+  }
   @media ${theme.media.mobile} {
     flex-direction: column;
   }
 `;
 const RequestLeftContentsContainer = styled.div`
-  margin-left: 200px;
   display: flex;
   flex-direction: column;
   width: 45%;
@@ -847,8 +848,6 @@ const RequestLeftContentsContainer = styled.div`
 `;
 
 const RequestRightContentsContainer = styled.div`
-  margin-right: 200px;
-  padding-left: 150px;
   display: flex;
   flex-direction: column;
   width: 45%;
@@ -870,47 +869,39 @@ const RequestStepContainer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+
   @media ${theme.media.mobile} {
-    width: calc(100% - 2rem);
+    width: 100%;
     justify-content: center;
     margin: 0 auto;
     box-sizing: border-box;
   }
 `;
 const RequestStepCircle = styled.div<ICircleProps>`
-  width: 50px;
-  height: 50px;
+  width: clamp(2.25rem, 3vw, 3rem);
+  height: clamp(2.25rem, 3vw, 3rem);
   border-radius: 50%;
   border: 1px solid white;
   background-color: ${(props) => (props.filled ? '#ffa900' : 'transparent')};
   display: inline-block;
   font-family: ${theme.font.semiBold};
-  font-size: 1.25rem;
+  font-size: clamp(0.9rem, 1vw, 1.25rem);
   color: #ffffff;
   align-content: center;
   text-align: center;
-  @media ${theme.media.mobile} {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 0.9rem;
-    /* padding: 1rem 1rem 1rem 1rem; */
-    box-sizing: border-box;
-  }
 `;
 const RequestStepLine = styled.div`
-  width: 80px;
+  width: clamp(3rem, 5vw, 5rem);
   height: 0;
   border: 1px solid white;
-  @media ${theme.media.mobile} {
-    width: 3.5rem;
-  }
 `;
 const RequestExplanationWrapper = styled.div`
-  margin-top: 70px;
+  margin-top: 4.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+
   @media ${theme.media.mobile} {
     margin-left: 2rem;
     margin-top: 3rem;
@@ -921,16 +912,26 @@ const RequestExplanationWrapper = styled.div`
     width: 100%;
   }
 `;
-const RequestExplanation = styled.div<IFontStyleProps>`
-  margin-bottom: 10px;
-  font-family: ${(props) => props.fontFamily || theme.font.semiBold};
-  font-size: ${(props) => props.fontSize || '2.5rem'};
+
+const RequestExplanationSmall = styled.div`
+  margin-bottom: 0.75rem;
+  font-family: ${theme.font.regular};
+  font-size: clamp(1rem, 1vw, 1.25rem);
   color: ${theme.color.white.light};
   text-align: left;
   width: 100%;
+`;
+const RequestExplanation = styled.div`
+  margin-bottom: 0.75rem;
+  font-family: ${theme.font.semiBold};
+  font-size: clamp(1.25rem, 2vw, 2.5rem);
+  color: ${theme.color.white.light};
+  text-align: left;
+  width: 100%;
+
   @media ${theme.media.mobile} {
-    font-size: ${(props) => (props.fontSize ? '1rem' : '1.25rem')};
-    font-family: ${(props) => (props.fontFamily ? theme.font.thin : theme.font.semiBold)};
+    font-size: 1.25rem;
+    font-family: ${theme.font.semiBold};
     color: ${(props) => (props.color ? theme.color.white.pale : theme.color.white.light)};
     text-align: left;
     padding: 0;
@@ -941,9 +942,18 @@ const RequestExplanation = styled.div<IFontStyleProps>`
     white-space: normal;
   }
 `;
-const RequestSubExplanation = styled.div<IFontStyleProps>`
-  font-family: ${(props) => props.fontFamily || 'Pretendard-light'};
-  font-size: ${(props) => props.fontSize || '20px'};
+const RequestExplanationMedium = styled.div`
+  margin-bottom: 2.5rem;
+  font-family: ${theme.font.semiBold};
+  font-size: 1.875rem;
+  color: ${theme.color.white.light};
+  text-align: center;
+  width: 100%;
+`;
+
+const RequestSubExplanation = styled.div`
+  font-family: ${theme.font.light};
+  font-size: 1.25rem;
   color: #eaeaea;
   text-align: left;
   @media ${theme.media.mobile} {
