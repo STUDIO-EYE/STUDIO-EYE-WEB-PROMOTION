@@ -43,7 +43,7 @@ function BenefitManagePage() {
   const [titleLength, setTitleLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
   const maxTitleLength = 14;
-  const maxContentLength = 35;
+  const maxContentLength = 34;
 
   useEffect(() => {
     if (!isFetching && !isRefetching && (data === null || data?.length === 0)) {
@@ -231,7 +231,7 @@ function BenefitManagePage() {
     if (/^\s/.test(value.charAt(0))) {
       return;
     }
-    if ((name === 'title' && value.length > 14) || (name === 'content' && value.length > 35)) {
+    if ((name === 'title' && value.length > 14) || (name === 'content' && value.length > 34)) {
       return;
     }
 
@@ -362,8 +362,8 @@ function BenefitManagePage() {
                   name='content'
                   value={currentBenefit?.content || ''}
                   onChange={handleChange}
-                  maxLength={35}
-                  placeholder='복지 내용 (35자 내로 작성해 주세요.)'
+                  maxLength={34}
+                  placeholder='복지 내용 (34자 내로 작성해 주세요.)'
                 />
                 {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
                 <RowWrapper>

@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
-import { useNavigate } from 'react-router-dom';
 import groupImage from '@/assets/images/PP/group.png';
 import { theme } from '@/styles/theme';
 
@@ -11,10 +10,11 @@ const RecruitmentPage = () => {
   const currentPage = 1;
   const RecruitmentsPerPage = 10;
 
-  const circleRef = useRef(null);
-  const circleInView = useInView(circleRef);
-
-  const { data: recruitmentData, isLoading: isRecruitmentLoading, error: recruitmentError } = useQuery<IRecruitmentList, Error>(
+  const {
+    data: recruitmentData,
+    isLoading: isRecruitmentLoading,
+    error: recruitmentError,
+  } = useQuery<IRecruitmentList, Error>(
     ['recruitmentList'],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
@@ -24,10 +24,7 @@ const RecruitmentPage = () => {
     data: benefitData,
     isLoading: isBenefitLoading,
     error: benefitError,
-  } = useQuery<IBenefit[], Error>(['benefit'], getBenefitData, {
-    keepPreviousData: false,
-    staleTime: 0,
-  });
+  } = useQuery<IBenefit[], Error>(['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 });
 
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
@@ -36,6 +33,11 @@ const RecruitmentPage = () => {
     } else {
       console.log('This recruitment is closed.');
     }
+  };
+
+  const handleImageClick = () => {
+    window.location.href =
+      'https://www.saramin.co.kr/zf_user/company-info/view?csn=UUtVZHVnRklXRE5zRU1pV3VRVXl3UT09&popup_yn=y';
   };
 
   if (isRecruitmentLoading || isBenefitLoading) {
@@ -49,7 +51,6 @@ const RecruitmentPage = () => {
   return (
     <Container>
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
-      <Element name="intro" className="element">
       <IntroSection>
         <IntroTitleWrapper>
           <RecruitText>RECRUIT</RecruitText>
@@ -71,28 +72,12 @@ const RecruitmentPage = () => {
             <IntroText>JOIN</IntroText>
             <IntroTextClored> US?</IntroTextClored>
           </IntroLine>
-
-          <CircleWrapper ref={circleRef} style={{ height: '100px', position: 'relative' }}>
-  <motion.div
-    initial={{ opacity: 0, y: 100 }}
-    animate={{ opacity: circleInView ? 1 : 0, y: circleInView ? 0 : 100 }}
-    transition={{ duration: 1, delay: 1 }}
-  >
-    <a href="https://www.saramin.co.kr/zf_user/company-info/view?csn=cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09" target="_blank" rel="noopener noreferrer">
-      <div style={{ color: '#FFA900' }}>
-        <Circle label='기업 정보 보기' />
-      </div>
-    </a>
-  </motion.div>
-</CircleWrapper>
-
-
+          <ImageWrapper onClick={handleImageClick}>
+            <img src={groupImage} alt='Group' />
+          </ImageWrapper>
         </IntroTitleWrapper>
       </IntroSection>
-      </Element>
-
       {/* 두 번째 섹션: 채용 게시판 */}
-      <Element name="jobBoard" className="element">
       <JobBoardSection>
         <PostGrid>
           <Header>진행중인 채용공고</Header>
@@ -111,7 +96,6 @@ const RecruitmentPage = () => {
                     {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
                   </StatusButton>
                 </StatusButtonWrapper>
-
                 <TextWrapper>
                   <PostTitle>{recruitment.title}</PostTitle>
                 </TextWrapper>
@@ -121,13 +105,11 @@ const RecruitmentPage = () => {
         </PostGrid>
       </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
-      <Element name="benefits" className="element">
       <BenefitsSection>
-        <BenefitSectionTitle>STUDIOEYE'S  BENEFIT</BenefitSectionTitle>
+        <BenefitSectionTitle>STUDIOEYE'S BENEFIT</BenefitSectionTitle>
         <ListWrapper>
           {benefitData?.map((benefit) => (
-            <BenefitItem key={benefit.id}
-            >
+            <BenefitItem key={benefit.id}>
               <BenefitImage src={benefit.imageUrl} alt={benefit.imageFileName} />
               <BenefitTitle>{benefit.title}</BenefitTitle>
               <BenefitContent>{benefit.content}</BenefitContent>
@@ -139,7 +121,6 @@ const RecruitmentPage = () => {
   );
 };
 
-// 스타일 컴포넌트들
 const Container = styled.div`
   height: auto;
   display: flex;
@@ -173,22 +154,14 @@ const RecruitText = styled.h2`
 const IntroLine = styled.div`
   display: inline-block;
   justify-content: center;
-  align-items: center; 
-  position: relative; 
+  align-items: center;
+  position: relative;
 `;
 
 const IntroText = styled.span`
   font-family: ${theme.font.bold};
   font-size: clamp(1.8rem, 5vw, 6.25rem);
   color: black;
-`;
-
-const IntroText2 = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 85px;
-  color: black;
-  margin: 0 10px;
 `;
 
 const IntroTextClored = styled.span`
@@ -407,7 +380,6 @@ const PostTitle = styled.h2`
 `;
 
 const BenefitsSection = styled.div`
-  min-height: 100vh; 
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -426,20 +398,25 @@ const BenefitSectionTitle = styled.h1`
 `;
 
 const ListWrapper = styled.div`
-  width: 90%;
+  width: 85%;
   height: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 1rem;
-  gap: 1rem;
-
+  gap: 0.5rem;
+  @media ${theme.media.large_tablet} {
+    width: 90%;
+  }
   @media ${theme.media.tablet} {
-    width: 95%;
+    width: 100%;
+  }
+  @media ${theme.media.mobile} {
+    width: 100%;
   }
 `;
 
-const BenefitItem = styled(motion.div)`
+const BenefitItem = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -448,30 +425,31 @@ const BenefitItem = styled(motion.div)`
   border-radius: 8px;
   line-height: 1.1;
   background-color: ${(props) => props.theme.color.white.light};
-  width: clamp(10rem, 15vw, 20rem);
+  width: clamp(11rem, 15vw, 20rem);
   margin: 0;
   margin-bottom: 2rem;
   cursor: default;
   height: auto;
   overflow: hidden;
 
-  @media ${theme.media.small_mobile} {
-    width: clamp(8rem, 15vw, 20rem);
+  @media ${theme.media.mobile} {
+    width: clamp(11rem, 15vw, 20rem);
   }
 `;
 
 const BenefitImage = styled.img`
-  width: 100px;
-  height: 100px;
-  margin-bottom: 15px;
+  width: 6.25rem;
+  height: 6.25rem;
+  margin-bottom: 1rem;
 `;
 
 const BenefitTitle = styled.h3`
   font-family: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.black.bold};
-  font-size: clamp(0.9rem, 1vw, 1.2rem);
-  margin-bottom: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1.2rem);
+  margin-bottom: 0.5rem;
   width: 100%;
+  min-height: 1rem;
   line-height: 1.3;
   text-align: center;
 `;
@@ -479,23 +457,14 @@ const BenefitTitle = styled.h3`
 const BenefitContent = styled.p`
   font-family: ${(props) => props.theme.font.regular};
   color: ${(props) => props.theme.color.black.light};
-  font-size: clamp(0.7rem, 0.8vw, 1rem);
-  width: 70%;
+  font-size: clamp(0.7rem, 0.9vw, 1rem);
+  width: 95%;
+  min-height: 2rem;
   text-align: center;
   line-height: 1.3;
   white-space: normal;
   word-break: keep-all;
   overflow-wrap: break-word;
-
-  @media ${theme.media.large_tablet} {
-    width: 80%;
-  }
-  @media ${theme.media.tablet} {
-    width: 90%;
-  }
-  @media ${theme.media.mobile} {
-    width: 95%;
-  }
 `;
 
 export default RecruitmentPage;
