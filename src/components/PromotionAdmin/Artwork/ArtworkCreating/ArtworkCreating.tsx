@@ -178,6 +178,7 @@ const ArtworkCreating = () => {
         ))}
         <div />
         <SubmitBtn
+          id='create_artwork_submit'
           title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
           disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
           onClick={() => handleSubmit()}
