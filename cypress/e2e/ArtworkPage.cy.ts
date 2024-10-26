@@ -9,75 +9,89 @@ category: create_artwork_category
 category dropdown: create_artwork_category_dropdown
 link: create_artwork_link
 artworkType: create_artwork_artworkType
-isOpened: create_artwork_isOpened_open/hide
+isOpened: create_artwork_isOpened, create_artwork_isOpened_open/hide
 Image: ${type}-image-upload 타입은 main, detail 두 개
 저장: create_artwork_submit
 */
 
-const testImage='cypress/fixtures/Images/testImage.png'
-const testImage2='cypress/fixtures/Images/testImage2.jpg'
+import { login } from "cypress/support/hooks";
+import { ArtworkData } from "cypress/support/types";
 
-describe('PA-Artwork',()=>{
-  // 이 hook은 각 테스트 케이스가 실행되기 전에 매번 실행. 
-  beforeEach(() => {
-    cy.visit('/login');
-    cy.get('#id').type('master');
-    cy.get('#pw').type('master');
-    cy.contains('로그인').click();
-    cy.url().should('include', '/promotion-admin/home');
+//fixture에 더미값 넣어놓고 support에 type 지정
+const testImage='cypress/fixtures/Artwork/testImage.png'
+const testImage2='cypress/fixtures/Artwork/testImage2.jpg'
+let testData:ArtworkData;
+
+describe('PA',()=>{
+  //해당 describe에서 모든 테스트 전에 실행하는 hook, 첫 테스트 전에만 하고 싶으면 before
+  beforeEach(()=>{
+    login(); //hook으로 쓸 함수 따로 빼둠
+    cy.fixture<ArtworkData>('Artwork/artwork_data.json').then((data) => {testData = data;});
   });
 
-  it('Artwork 입력',()=>{
+  it('아트워크 입력',()=>{
     cy.visit('/promotion-admin/artwork');
-      cy.contains('아트워크 생성하기').click(); //text가 포함된 요소 찾기
-      cy.wait(1000); // 1초 대기
-      cy.get('#create_artwork_title').type('auto testing'); //id로 요소를 찾아 타이핑
-      cy.get('#create_artwork_overview').type('auto testing');
-      cy.get('#create_artwork_customer').type('testing');
-      cy.get('#create_artwork_date').type('2024-10-20');
-      // cy.get('#create_artwork_category').click();
-      cy.get('#create_artwork_category').click();
-      cy.get('#create_artwork_category_dropdown').contains('Entertainment').click();
-      cy.get('#create_artwork_link').type('https://naver.com');
-      // cy.get('#create_artwork_artworkType').type('Others');
-      cy.get('#create_artwork_artworkType').contains('Others').click();
-      // cy.get('#create_artwork_isOpended_open').click();
-      cy.get('#create_artwork_isOpened').contains('비공개').click();
-      cy.readFile(testImage);
-      cy.get('#main-image-upload').selectFile(testImage,{force: true});//항목이 화면상에 보이지 않아 force:true
-      cy.readFile(testImage2);
-      cy.scrollTo('bottom');
-      cy.get('#detail-image-upload').selectFile(testImage2,{force: true});
-      //해당 항목이 화면상에 보이지 않을 경우 파일 이름 뒤에 ,{force:true} 붙이기
-      cy.get('#create_artwork_submit').click();
-      // cy.get('#pagination').find('div').last().click();
-      // cy.scrollTo('bottom');
-    
-      // URL 로 호출을 하고, 해당 주소 RETURN BODY에 값이 있어야 하는 경우
-      cy.request('/promotion-admin/artwork').its('body').should('deep.eq', {
-        category: "All",
-        name: "auto testing",
-        client: "testing",
-        date: "2024-10-20",
-        link: "https://naver.com",
-        overView: "auto testing",
-        projectType: "Others",
-        "isPosted": true,
-      })
+    cy.contains('아트워크 생성하기').click(); //text가 포함된 요소 찾기
+    cy.wait(500); // 0.5초 대기
+    cy.get('#create_artwork_title').type(testData.title); //id로 요소를 찾아 타이핑
+    cy.get('#create_artwork_overview').type(testData.overview);
+    cy.get('#create_artwork_customer').type(testData.customer);
+    cy.get('#create_artwork_date').type(testData.date);
+    cy.get('#create_artwork_category').click();
+    cy.get('#create_artwork_category_dropdown').contains(testData.category).click();
+    cy.get('#create_artwork_link').type(testData.link);
+    cy.get('#create_artwork_artworkType').contains(testData.artworkType).click();
+    cy.get('#create_artwork_isOpened').contains(testData.isOpened).click();
+    cy.readFile(testImage);
+    cy.get('#main-image-upload').selectFile(testImage,{force: true});//항목이 화면상에 보이지 않아 force:true
+    cy.readFile(testImage2);
+    cy.scrollTo('bottom');
+    cy.get('#detail-image-upload').selectFile(testImage2,{force: true});
+    cy.get('#create_artwork_submit').click();
+    cy.wait(1000); //1초 대기
+  });
+
+  it('아트워크 확인',()=>{
+    // pagenation의 맨 끝 값으로 가서 확인이 필요한 경우
+    //   cy.get('#pagination').find('div').last().click();
+    //   cy.scrollTo('bottom');
+    cy.fixture<ArtworkData>('Artwork/artwork_data.json').then((data) => {testData = data;});
+    cy.visit('/promotion-admin/artwork');
+    cy.contains(testData.title).click();
+    // data 객체의 모든 키-값 쌍을 순회하며 각 값이 페이지에 존재하는지 확인
+    // 특정 id 공간에 그 값이 있는지 확인하는 게 더 정확할 것 같긴 한데 일단 대충만
+    Object.entries(testData).forEach(([key, value]) => {
+      cy.contains(String(value)).should('exist');
+    });
+  })
+});
+
+describe('PP',()=>{
+  it('아트워크 확인',()=>{
+    cy.fixture<ArtworkData>('Artwork/artwork_data.json').then((data) => {testData = data;});
+    cy.visit('/Artwork');
+    cy.contains(testData.category).click();
+    cy.contains(testData.title).should('exist');
+    cy.contains(testData.customer).should('exist');
+    //api 응답 가로채고 특정 값 반환하는 게 필요할 경우
+    // cy.intercept('GET', '/api/endpoint', {
+    //     statusCode: 200,
+    //     body: { id: 123, message: '성공' }
+    //   }).as('apiCall');
   });
 });
 
-// describe('PP-Artwork',()=>{
-//   it('Artwork 확인',()=>{
-//     cy.visit('/Artwork');
+describe('PA',()=>{
+  before(()=>{
+    login();
+    cy.fixture<ArtworkData>('Artwork/artwork_data.json').then((data) => {testData = data;});
+  });
 
-//     //api 응답 가로채고 특정 값 반환
-//     cy.intercept('GET', '/api/endpoint', {
-//         statusCode: 200,
-//         body: { id: 123, message: '성공' }
-//       }).as('apiCall');
-      
-//       cy.visit('/some-page');
-//       cy.wait('@apiCall').its('response.body').should('deep.equal', { id: 123, message: '성공' });
-//   });
-// });
+  it('아트워크 삭제',()=>{
+    login();
+    cy.visit('/promotion-admin/artwork');
+    cy.contains(testData.title).click(); //아트워크 행에 있는 것만 클릭하도록 id 추가 필요
+    cy.contains('삭제하기').click();
+    cy.on('window:confirm',()=>true); //자동확인
+  });
+})
