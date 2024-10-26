@@ -221,14 +221,14 @@ const Title = styled.h1`
   }
 
   @media (max-width: 767px) and (min-width: 540px) {
-    font-size: 2rem; 
+    font-size: 2rem;
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
     font-size: 2rem;
   }
   @media (max-width: 374px) {
-    font-size: 2rem; 
+    font-size: 2rem;
   }
 `;
 

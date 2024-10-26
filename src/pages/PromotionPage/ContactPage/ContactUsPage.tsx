@@ -9,15 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { getCompanyBasicData } from '../../../apis/PromotionAdmin/dataEdit';
 import { emailCheck, phoneFaxCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 import { theme } from '@/styles/theme';
-// import useWindowSize from '@/hooks/useWindowSize';
 
 interface ICircleProps {
   filled: boolean;
-}
-interface IFontStyleProps {
-  color?: string;
-  fontSize?: string;
-  fontFamily?: string;
 }
 interface IButtonProps {
   disabled?: boolean;
@@ -195,8 +189,8 @@ const ContactUsPage = () => {
           alert('프로젝트에 대한 필수 내용을 모두 입력해주세요.');
           return;
         }
-        // handleSubmit(e);
-        setRequestStep(requestStep + 1);
+        handleSubmit(e);
+        // setRequestStep(requestStep + 1);
       }
       if (requestStep < 2) {
         setRequestStep(requestStep + 1);
@@ -372,9 +366,10 @@ const ContactUsPage = () => {
 
     axios
       .post(`${PROMOTION_BASIC_PATH}/api/requests`, requestData, {
-        cancelToken: source.token,
+        // cancelToken: source.token,
       })
       .then((response) => {
+        console.log(formData);
         clearTimeout(timeoutId);
         console.log('response.data : ', response.data);
 
@@ -392,9 +387,12 @@ const ContactUsPage = () => {
         setRequestStep(requestStep + 1);
       })
       .catch((error) => {
+        console.log(requestData);
         if (axios.isCancel(error)) {
+          console.log(formData);
           console.error('요청 취소: ', error.message);
         } else {
+          console.log(requestData);
           alert('예기치 못한 에러가 발생했습니다.');
           console.error('에러 발생', error);
         }

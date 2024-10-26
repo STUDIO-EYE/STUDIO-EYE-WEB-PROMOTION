@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { theme } from '@/styles/theme';
 import { ContentBox } from '@/components/PromotionAdmin/FAQ/Components';
+import { postFAQ } from '@/apis/PromotionAdmin/faq';
 import { IFAQ } from '../../../types/PromotionAdmin/faq';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
@@ -72,25 +72,24 @@ function FAQWritePage() {
     setValue('visibility', value);
   };
 
-  const onValid = (data: IFAQ) => {
+  const onValid = async (data: IFAQ) => {
     const formData = {
       question: data.question,
       answer: data.answer,
       visibility: data.visibility,
     };
+
     if (!(data.question === '' || data.answer === '') && window.confirm('등록하시겠습니까?')) {
-      axios
-        .post(`${PROMOTION_BASIC_PATH}/api/faq`, formData)
-        .then((response) => {
-          alert('FAQ가 등록되었습니다.');
-          console.log(response);
-          setIsEditing(false);
-          navigator(`${PA_ROUTES.FAQ}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 등록 중 오류가 발생했습니다.');
-        });
+      try {
+        const response = await postFAQ(formData);
+        alert('FAQ가 등록되었습니다.');
+        console.log(response);
+        setIsEditing(false);
+        navigator(`${PA_ROUTES.FAQ}`);
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 등록 중 오류가 발생했습니다.');
+      }
     }
   };
 

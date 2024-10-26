@@ -21,3 +21,13 @@ export const getRequestsData = async () => {
     throw error;
   }
 };
+
+export const updateRequestReply = async (id: number, replyData: { answer: string; state: string }) => {
+  try {
+    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/requests/${id}/comment`, replyData);
+    return response.data;
+  } catch (error) {
+    console.log('[❌ Error updating RecruitmentData]', error);
+    throw error;
+  }
+};

@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { IFAQ, getFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useState, useEffect } from 'react';
 import { theme } from '@/styles/theme';
-import axios from 'axios';
+import { updateFAQData, deleteFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
@@ -80,41 +80,42 @@ function FAQManagePage() {
     }
   }, [currentFAQ, setValue]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      axios
-        .delete(`${PROMOTION_BASIC_PATH}/api/faq/${id}`)
-        .then((response) => {
-          alert('FAQ가 삭제되었습니다.');
-          console.log(response);
-          refetch();
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 삭제 중 오류가 발생했습니다.');
-        });
+      try {
+        await deleteFAQData(id);
+        alert('FAQ가 삭제되었습니다.');
+        refetch();
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 삭제 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  const onValid = (data: IFAQ) => {
+  const onValid = async (data: IFAQ) => {
+    if (!currentFAQ) {
+      alert('수정할 FAQ가 선택되지 않았습니다.');
+      return;
+    }
+
     const formData = {
-      id: currentFAQ?.id,
-      question: currentFAQ?.question,
-      answer: currentFAQ?.answer,
-      visibility: currentFAQ?.visibility,
+      id: currentFAQ.id,
+      question: data.question,
+      answer: data.answer,
+      visibility: data.visibility,
     };
+
     if (!(data.question === '' || data.answer === '') && window.confirm('수정하시겠습니까?')) {
-      axios
-        .put(`${PROMOTION_BASIC_PATH}/api/faq`, formData)
-        .then((response) => {
-          alert('FAQ가 수정되었습니다.');
-          console.log(response);
-          setIsEditing(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 수정 중 오류가 발생했습니다.');
-        });
+      try {
+        const response = await updateFAQData(formData);
+        alert('FAQ가 수정되었습니다.');
+        console.log(response);
+        setIsEditing(false);
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 수정 중 오류가 발생했습니다.');
+      }
     }
   };
 
