@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { getRequestsData } from '@/apis/PromotionAdmin/request';
+import { getRequestsData, updateRequestReply } from '@/apis/PromotionAdmin/request';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { useQuery } from 'react-query';
 import styled, { keyframes } from 'styled-components';
@@ -92,7 +91,7 @@ const RequestDetailPage = () => {
     setEditorState(newEditorState);
   }, [replyState]);
 
-  const replyRequest = (state: string) => {
+  const replyRequest = async (state: string) => {
     if (state === 'WAITING') {
       alert('답변한 메일을 대기 중으로 둘 수 없습니다.');
       return;
@@ -115,55 +114,51 @@ const RequestDetailPage = () => {
     };
 
     if (window.confirm('답변 메일을 보내시겠습니까?')) {
-      setLoading(true);
-      axios
-        .put(`${PROMOTION_BASIC_PATH}/api/requests/${clickedRequest.id}/comment`, formData)
-        .then((response) => {
-          setLoading(false);
+      try {
+        setLoading(true);
+        const response = await updateRequestReply(clickedRequest.id, formData);
+        setLoading(false);
+        alert('메일 발송이 완료되었습니다.');
+        setReplyState(replyState);
+        setTextValue('');
+        setEditorState(EditorState.createEmpty());
 
-          if (response.status === 200) {
-            alert('메일 발송이 완료되었습니다.');
-            setReplyState(replyState);
-            setTextValue('');
-            setEditorState(EditorState.createEmpty());
-            const updatedEmailItems = emailItems.map((email: any) => ({
-              ...email,
-              state: state.toUpperCase(),
-            }));
-            emailItems(updatedEmailItems);
-            navigator(`${PA_ROUTES.REQUEST}/:requestId`);
-            setTextValue('');
-          }
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.log(error);
-        });
-    } else {
-      return;
+        const updatedEmailItems = emailItems.map((email: any) => ({
+          ...email,
+          state: state.toUpperCase(),
+        }));
+        emailItems(updatedEmailItems);
+
+        navigator(`${PA_ROUTES.REQUEST}/:requestId`);
+        setTextValue('');
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        alert('메일 발송 중 오류가 발생했습니다.');
+      }
     }
   };
 
   const emailItems =
     clickedRequest && clickedRequest.answers
       ? clickedRequest.answers.map((answer: { id: number; createdAt: string; text: string; state: string }) => {
-        const createdAtDate = new Date(answer.createdAt);
-        const formattedDate = `${createdAtDate.getFullYear()}-${String(createdAtDate.getMonth() + 1).padStart(
-          2,
-          '0',
-        )}-${String(createdAtDate.getDate()).padStart(2, '0')} ${String(createdAtDate.getHours()).padStart(
-          2,
-          '0',
-        )}:${String(createdAtDate.getMinutes()).padStart(2, '0')}`;
+          const createdAtDate = new Date(answer.createdAt);
+          const formattedDate = `${createdAtDate.getFullYear()}-${String(createdAtDate.getMonth() + 1).padStart(
+            2,
+            '0',
+          )}-${String(createdAtDate.getDate()).padStart(2, '0')} ${String(createdAtDate.getHours()).padStart(
+            2,
+            '0',
+          )}:${String(createdAtDate.getMinutes()).padStart(2, '0')}`;
 
-        return {
-          id: answer.id,
-          subject: answer.text,
-          date: formattedDate,
-          content: answer.text,
-          state: answer.state,
-        };
-      })
+          return {
+            id: answer.id,
+            subject: answer.text,
+            date: formattedDate,
+            content: answer.text,
+            state: answer.state,
+          };
+        })
       : [];
 
   const emailItemsSliced = emailItems.slice(indexOfFirst, indexOfLast);
@@ -198,12 +193,14 @@ const RequestDetailPage = () => {
                   description='대기: 아직 답장을 하지 않은 상태 / 논의: 내부적으로 승인과 거절 논의 중인 상태 / 승인: 문의를 승인한 상태 / 거절: 문의를 거절한 상태'
                   svgComponent={<InfoIcon width={18} height={18} />}
                 />
-                <DropDown onChange={(e) => {
-                  const newState = e.target.value;
-                  setReplyState(newState);
-                  const content = createDefaultContent(newState);
-                  setTextValue(content);
-                }}>
+                <DropDown
+                  onChange={(e) => {
+                    const newState = e.target.value;
+                    setReplyState(newState);
+                    const content = createDefaultContent(newState);
+                    setTextValue(content);
+                  }}
+                >
                   <option value='WAITING' selected disabled hidden>
                     대기
                   </option>
@@ -365,7 +362,6 @@ const StyledTextArea = styled.textarea`
   resize: none;
   overflow-wrap: break-word;
   display: block;
-
 `;
 
 const TextCounter = styled.span`
@@ -379,26 +375,26 @@ const spin = keyframes`
 `;
 
 const Spinner = styled.div`
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: white;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: ${spin} 1s linear infinite;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: ${spin} 1s linear infinite;
 `;
 
 export const Overlay = styled.div<{ visible: boolean }>`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: ${props => (props.visible ? 'flex' : 'none')};
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;
