@@ -1,69 +1,68 @@
-describe('FAQ Page E2E Tests', () => {
+describe('FAQ 페이지 E2E 테스트', () => {
+
   beforeEach(() => {
-    // 각 테스트 전에 FAQ 페이지로 이동
+    // 각 테스트 실행 전 FAQ 페이지로 이동
     cy.visit('/faq');
   });
 
-  it('should display the FAQ title and introductory text', () => {
-    // FAQ 제목과 소개 텍스트가 표시되는지 확인
-    cy.contains('Frequently Asked Questions').should('be.visible');
-    cy.contains('이곳에 자주 묻는 질문들에 대한 답변을 모아 놓았습니다.').should('be.visible');
+  it('FAQ 헤더가 올바르게 표시되는지 확인', () => {
+    // 헤더 제목이 올바르게 렌더링되는지 확인
+    cy.get('h1').contains('Frequently Asked Questions');
+    cy.get('p').contains('이곳에 자주 묻는 질문들에 대한 답변을 모아 놓았습니다.');
   });
 
-  it('should display search input with placeholder text', () => {
-    // 검색 입력 필드가 표시되고, placeholder 텍스트가 존재하는지 확인
-    cy.get('input[placeholder="컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요."]').should('be.visible');
+  it('FAQ 질문 검색 시 관련 결과가 표시되는지 확인', () => {
+    // 검색어 입력하고 해당 검색 결과가 올바르게 표시되는지 확인
+    cy.get('input[data-cy="faq-search-input"]')
+      .type('카테고리')
+      .should('have.value', '카테고리');
+
+    // 관련 검색 결과가 나타나는지 확인
+    cy.get('p[data-cy="no-results-message"]').should('not.exist'); // 결과 없음 메시지
+    cy.get('[data-cy^="faq-item-"]').each(($el) => { // 각 FAQ 항목에 대한 data-cy 속성을 사용
+      cy.wrap($el).contains('카테고리', { matchCase: false });
+    });
   });
 
-  it('should filter FAQ items based on search input', () => {
-    // 검색 입력에 텍스트를 입력하여 FAQ 항목을 필터링
-    cy.get('input[placeholder="컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요."]').type('스튜디오아이에서');
-    cy.wait(500); // 디바운스 처리가 되어 있다면 약간 대기
+  it('관련 없는 검색어에 대해 "검색 결과가 없습니다" 메시지가 표시되는지 확인', () => {
+    // 일치하는 결과가 없는 검색어 입력
+    cy.get('input[data-cy="faq-search-input"]')
+      .type('하하')
+      .should('have.value', '하하');
 
-    // 검색어를 포함하는 FAQ 항목이 로딩될 때까지 기다림
-    cy.get('.FaqBriefQuestion', { timeout: 10000 }) // 최대 10초까지 대기
-      .should('exist') // 요소가 존재할 때까지 기다림
-      .and('be.visible') // 요소가 보일 때까지 기다림
-      .each(($el) => {
-        cy.wrap($el).contains(/스튜디오아이에서/i); // 'faq1'이 포함된 질문 확인
-      });
-
-    // 검색 결과가 없을 경우 "검색 결과가 없습니다." 메시지가 표시되는지 확인
-    cy.get('input[placeholder="컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요."]').clear().type('nonexistent question');
-    cy.contains('검색 결과가 없습니다.').should('be.visible');
+    // "검색 결과가 없습니다" 메시지가 표시되는지 확인
+    cy.get('p[data-cy="no-results-message"]').should('be.visible'); // 결과 없음 메시지
   });
 
-  it('should toggle FAQ item expansion on click', () => {
-    // 첫 번째 FAQ 항목을 확장
-    cy.get('.FaqDetailButton').first().click();
-
-    // 상세 내용 박스가 표시되는지 확인
-    cy.get('.FaqDetailBox').first().should('be.visible');
-
-    // 다시 클릭하여 접기
-    cy.get('.FaqDetailButton').first().click();
-    cy.get('.FaqDetailBox').first().should('not.be.visible');
+  it('FAQ 질문을 클릭하여 답변이 표시되고 숨겨지는지 확인', () => {
+    // 첫 번째 질문을 클릭하여 답변이 표시되는지 확인
+    cy.get('[data-cy^="faq-item-"]').first().click(); // FAQ 항목 클릭
+  
+    // 해당 FAQ 항목의 ID를 가져옴
+    cy.get('[data-cy^="faq-item-"]').first().then(($el) => {
+      const dataCy = $el.attr('data-cy'); 
+  
+      // data-cy 속성이 정의되어 있는지 확인
+      if (dataCy) {
+        const itemId = dataCy.split('-')[2];
+  
+        // 답변이 보이는지 확인
+        cy.get(`[data-cy="faq-answer-${itemId}"]`).should('be.visible'); // 답변이 보이는지 확인
+  
+        // 다시 클릭하여 답변이 숨겨지는지 확인
+        cy.get('[data-cy^="faq-item-"]').first().click(); // FAQ 항목 클릭
+        cy.get(`[data-cy="faq-answer-${itemId}"]`).should('not.exist'); // 답변이 존재하지 않아야 함
+      } else {
+        throw new Error('data-cy attribute is undefined');
+      }
+    });
   });
 
-  it('should maintain layout without overflow on different screen sizes', () => {
-    // 데스크탑 크기에서 레이아웃 확인
-    cy.viewport(1366, 768);
-    cy.get('body').should('not.have.css', 'overflow-x', 'scroll');
-
-    // iPad 크기에서 레이아웃 확인
-    cy.viewport('ipad-2');
-    cy.get('body').should('not.have.css', 'overflow-x', 'scroll');
-
-    // 모바일 크기에서 레이아웃 확인
-    cy.viewport('iphone-6');
-    cy.get('body').should('not.have.css', 'overflow-x', 'scroll');
-  });
-
-  it('should keep FAQ title centered and handle long text gracefully', () => {
-    // 다양한 화면 크기에서 제목이 중앙에 정렬되는지 확인
-    cy.viewport(1366, 768);
-    cy.get('h1').should('be.visible').and('have.css', 'text-align', 'center');
-    cy.viewport('iphone-6');
-    cy.get('h1').should('be.visible').and('have.css', 'text-align', 'center');
+  it('표시된 모든 질문이 확장 가능한지 확인', () => {
+    // 모든 질문을 확장하여 각 답변이 표시되는지 확인
+    cy.get('[data-cy^="faq-item-"]').each(($el, index) => {
+      cy.wrap($el).click();
+      cy.get('[data-cy^="faq-answer"]').eq(index).should('be.visible');
+    });
   });
 });

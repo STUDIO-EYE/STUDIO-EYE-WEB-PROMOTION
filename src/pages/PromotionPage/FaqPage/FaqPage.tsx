@@ -43,7 +43,7 @@ const FaqPage = () => {
         }
     };
     fetchData();
-}, []);
+  }, []);
 
   const initiate = (data: any) => {
     if (data.length === 0) {
@@ -105,6 +105,7 @@ const FaqPage = () => {
         <Content>
           <InputWrapper>
             <SearchFaqQuestion
+              data-cy='faq-search-input' // 검색 입력에 data-cy 추가
               placeholder='컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요.'
               autoComplete='off'
               value={faqQuestion}
@@ -112,24 +113,26 @@ const FaqPage = () => {
             />
           </InputWrapper>
           {searchResult === 'fail' ? (
-            <NoResults>검색 결과가 없습니다.</NoResults>
+            <NoResults data-cy='no-results-message'>검색 결과가 없습니다.</NoResults> // 결과 없음 메시지에 data-cy 추가
           ) : (
             searchData.map((item, i) => (
-        <FaqDetailButton
-          key={item.id}
-          isExpanded={expandedItems.has(i)}
-          onClick={() => toggleItem(i)}
-        >
-          <FaqBrief>
-            <FaqBriefQuestion>
-              {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
-            </FaqBriefQuestion>
-          </FaqBrief>
-          <FaqDetailBox isExpanded={expandedItems.has(i)}>
-            {expandedItems.has(i) && <FaqDetailAnswer>{item.answer}</FaqDetailAnswer>}
-          </FaqDetailBox>
-        </FaqDetailButton>
-
+              <FaqDetailButton
+                key={item.id}
+                isExpanded={expandedItems.has(i)}
+                onClick={() => toggleItem(i)}
+                data-cy={`faq-item-${item.id}`} // 각 FAQ 항목에 data-cy 추가
+              >
+                <FaqBrief>
+                  <FaqBriefQuestion>
+                    {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
+                  </FaqBriefQuestion>
+                </FaqBrief>
+                <FaqDetailBox isExpanded={expandedItems.has(i)}>
+                  {expandedItems.has(i) && (
+                    <FaqDetailAnswer data-cy={`faq-answer-${item.id}`}>{item.answer}</FaqDetailAnswer> // 답변에 data-cy 추가
+                  )}
+                </FaqDetailBox>
+              </FaqDetailButton>
             ))
           )}
         </Content>
