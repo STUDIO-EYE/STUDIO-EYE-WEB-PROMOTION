@@ -56,10 +56,10 @@ function IntroPage() {
   };
 
   return (
-    <Container>
-      <InitContainer>
+    <Container data-cy='intro-container'>
+      <InitContainer data-cy='init-container'>
         <div>
-          <InitTitleWrapper>
+          <InitTitleWrapper data-cy='init-title-wrapper'>
             <InitTitle custom={0} initial='hidden' animate='visible' variants={bounceAnimation}>
               WHAT
             </InitTitle>
@@ -71,20 +71,21 @@ function IntroPage() {
             </InitTitle>
           </InitTitleWrapper>
         </div>
-        <Circle />
-        <BackgroundYellowCircle> </BackgroundYellowCircle>
+        <Circle data-cy='circle-icon' />
+        <BackgroundYellowCircle data-cy='background-yellow-circle'> </BackgroundYellowCircle>
       </InitContainer>
 
-      <IntroContainer>
-        <AboutWrapper ref={aboutRef}>
+      <IntroContainer data-cy='intro-container-content'>
+        <AboutWrapper ref={aboutRef} data-cy='about-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: aboutInView ? 1 : 0, y: aboutInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <BackgroundText>ABOUT</BackgroundText>
+            <BackgroundText data-cy='about-title'>ABOUT</BackgroundText>
             <AboutText
+              data-cy='about-content'
               dangerouslySetInnerHTML={{
                 __html: isMobile
                   ? removeParagraphTags(
@@ -97,16 +98,17 @@ function IntroPage() {
             />
           </motion.div>
         </AboutWrapper>
-        <MissionWrapper ref={missionRef}>
+        <MissionWrapper ref={missionRef} data-cy='mission-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: missionInView ? 1 : 0, y: missionInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <BackgroundText> MISSION</BackgroundText>
+            <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
             {sloganImageUrl !== '' ? (
               <img
+                data-cy='mission-image'
                 src={sloganImageUrl}
                 alt='SloganLabel'
                 style={
@@ -117,6 +119,7 @@ function IntroPage() {
               />
             ) : (
               <img
+                data-cy='mission-image-fallback'
                 src={MissionLabel}
                 alt='MissionLabel'
                 style={isMobile ? { width: '80%', objectFit: 'contain' } : { width: '50%', objectFit: 'contain' }}
