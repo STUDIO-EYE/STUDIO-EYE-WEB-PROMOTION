@@ -60,19 +60,32 @@ function IntroPage() {
       <InitContainer data-cy='init-container'>
         <div>
           <InitTitleWrapper data-cy='init-title-wrapper'>
-            <InitTitle custom={0} initial='hidden' animate='visible' variants={bounceAnimation}>
+            <InitTitle
+              custom={0}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              data-cy='init-title-what'
+            >
               WHAT
             </InitTitle>
-            <InitTitle custom={1} initial='hidden' animate='visible' variants={bounceAnimation} color='#ffa900'>
+            <InitTitle
+              custom={1}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              color='#ffa900'
+              data-cy='init-title-we'
+            >
               WE
             </InitTitle>
-            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation}>
+            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation} data-cy='init-title-do'>
               DO
             </InitTitle>
           </InitTitleWrapper>
         </div>
-        <Circle data-cy='circle-icon' />
-        <BackgroundYellowCircle data-cy='background-yellow-circle'> </BackgroundYellowCircle>
+        <Circle />
+        <BackgroundYellowCircle> </BackgroundYellowCircle>
       </InitContainer>
 
       <IntroContainer data-cy='intro-container-content'>
