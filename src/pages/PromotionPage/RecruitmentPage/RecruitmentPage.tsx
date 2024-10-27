@@ -134,7 +134,15 @@ const IntroSection = styled.div`
   background-color: ${theme.color.white.light};
   display: flex;
   justify-content: center;
-  margin-top: 15rem;
+  margin-top: 5rem;
+
+  @media ${theme.media.tablet} {
+    margin-top: 3rem; // 태블릿에서 여백 조정
+  }
+
+  @media ${theme.media.mobile} {
+    margin-top: 2rem; // 모바일에서 여백 조정
+  }
 `;
 
 const IntroTitleWrapper = styled.div`
@@ -143,6 +151,7 @@ const IntroTitleWrapper = styled.div`
   align-items: center;
   justify-content: center;
   line-height: 1.1;
+  padding: 2rem; // 추가 여백이 필요할 경우 이곳에 패딩을 추가
 `;
 
 const RecruitText = styled.h2`
