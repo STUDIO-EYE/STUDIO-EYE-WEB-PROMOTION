@@ -123,7 +123,6 @@ const FaqPage = () => {
               {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
             </FaqBriefQuestion>
           </FaqBrief>
-          {/* FaqDetailBox가 FaqBrief 아래에 위치하도록 조정 */}
           <FaqDetailBox isExpanded={expandedItems.has(i)}>
             {expandedItems.has(i) && <FaqDetailAnswer>{item.answer}</FaqDetailAnswer>}
           </FaqDetailBox>

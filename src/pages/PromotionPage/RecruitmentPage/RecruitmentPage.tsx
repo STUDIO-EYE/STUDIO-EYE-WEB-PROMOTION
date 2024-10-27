@@ -29,15 +29,17 @@ const RecruitmentPage = () => {
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
       const recruitment = await getRecruitmentData(id);
-      window.location.href = `${recruitment.link}`;
+      window.open(`${recruitment.link}`, '_blank'); // 새 창에서 열기
     } else {
       console.log('This recruitment is closed.');
     }
   };
 
   const handleImageClick = () => {
-    window.location.href =
-      'https://www.saramin.co.kr/zf_user/company-info/view?csn=UUtVZHVnRklXRE5zRU1pV3VRVXl3UT09&popup_yn=y';
+    window.open(
+      'https://www.saramin.co.kr/zf_user/company-info/view/csn/cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09/company_nm/(%EC%A3%BC)%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4%EC%95%84%EC%9D%B4?nomo=1',
+      '_blank' // 새 창으로 열기
+    );
   };
 
   if (isRecruitmentLoading || isBenefitLoading) {
