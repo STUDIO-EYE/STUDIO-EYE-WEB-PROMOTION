@@ -103,28 +103,34 @@ const AboutPage = () => {
     <ScrollContainer>
       <IntroPage />
       <WhatWeDoPage />
-      <Section>
+      <Section data-cy='about-section'>
         {CEOData.id !== -1 ? (
-          <RowContainer backgroundColor='#1a1a1a' style={isMobile ? { flexDirection: 'column-reverse' } : {}}>
-            <CeoInfoContainer>
-              <CeoNameInfo>CEO&nbsp;{CEOData.name}</CeoNameInfo>
-              <CeoInfo>{isMobile ? CEOData.introduction.replace(/\n/g, ' ') : CEOData.introduction}</CeoInfo>
+          <RowContainer
+            data-cy='ceo-info'
+            backgroundColor='#1a1a1a'
+            style={isMobile ? { flexDirection: 'column-reverse' } : {}}
+          >
+            <CeoInfoContainer data-cy='ceo-info-container'>
+              <CeoNameInfo data-cy='ceo-name'>CEO&nbsp;{CEOData.name}</CeoNameInfo>
+              <CeoInfo data-cy='ceo-intro'>
+                {isMobile ? CEOData.introduction.replace(/\n/g, ' ') : CEOData.introduction}
+              </CeoInfo>
             </CeoInfoContainer>
-            <CeoImageContainer>
-              <img src={CEOData.imageUrl} alt='CEO Character' />
+            <CeoImageContainer data-cy='ceo-image-container'>
+              <img data-cy='ceo-image' src={CEOData.imageUrl} alt='CEO Character' />
             </CeoImageContainer>
           </RowContainer>
         ) : (
-          <div>CEO 정보가 없습니다.</div>
+          <div data-cy='ceo-no-data'>CEO 정보가 없습니다.</div>
         )}
       </Section>
-      <Section>
+      <Section data-cy='corp-section'>
         {corpInfoData.length !== 0 ? (
-          <CorpLogoContainer>
-            <CorpText>CORP</CorpText>
-            <CorpLogoRowContainer>
+          <CorpLogoContainer data-cy='corp-logo-container'>
+            <CorpText data-cy='corp-title'>CORP</CorpText>
+            <CorpLogoRowContainer data-cy='corp-logo-row'>
               {corpInfoData.map((info) => (
-                <CorpLogoItem key={info.partnerInfo.id}>
+                <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
                     src={info.logoImg}
                     alt='CORP Logo'
@@ -140,7 +146,7 @@ const AboutPage = () => {
             </CorpLogoRowContainer>
           </CorpLogoContainer>
         ) : (
-          <div>기업 정보가 없습니다.</div>
+          <div data-cy='company-no-data'>기업 정보가 없습니다.</div>
         )}
       </Section>
     </ScrollContainer>
