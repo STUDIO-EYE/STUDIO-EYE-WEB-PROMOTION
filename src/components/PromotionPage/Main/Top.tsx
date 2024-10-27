@@ -1,7 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FaArrowDown } from 'react-icons/fa';
 import { theme } from '@/styles/theme';
 
 type Props = {
@@ -14,7 +13,7 @@ const Top = ({ backgroundImg }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Background
+    <Background data-testid="top-section"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImg})`,
         backgroundPosition: 'center',

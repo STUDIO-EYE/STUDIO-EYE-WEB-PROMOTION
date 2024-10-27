@@ -5,6 +5,7 @@ import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
 import { theme } from '@/styles/theme'; // Import your theme for media queries
+import { getFaqData } from '@/apis/PromotionPage/faq';
 
 interface FaqData {
   id: number;
@@ -25,23 +26,24 @@ const FaqPage = () => {
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    axios
-      .get(`${PROMOTION_BASIC_PATH}/api/faq`)
-      .then((response) => {
-        const filteredData = response.data.data.filter((item: any) => item.visibility === true);
-        const objects = filteredData.map((item: any) => ({
-          id: item.id,
-          question: item.question,
-          answer: item.answer,
-          visibility: item.visibility,
-        }));
-        setData(objects);
-        initiate(objects);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+    const fetchData = async () => {
+        try {
+            const faqData = await getFaqData();
+            const filteredData = faqData.filter((item: any) => item.visibility === true);
+            const objects = filteredData.map((item: any) => ({
+                id: item.id,
+                question: item.question,
+                answer: item.answer,
+                visibility: item.visibility,
+            }));
+            setData(objects);
+            initiate(objects);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    fetchData();
+}, []);
 
   const initiate = (data: any) => {
     if (data.length === 0) {

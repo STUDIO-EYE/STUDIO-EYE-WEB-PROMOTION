@@ -9,3 +9,17 @@ export interface ArtworkData {
     artworkType: string;
     isOpened: string;
   }
+
+
+  export interface ArtworkDataMain {
+    name: string;
+    overview: string;
+    client: string;
+    link: string;
+  }
+
+  export interface IntroDataMain {
+    mainOverview: string;
+    commitment: string;
+  }
+  
