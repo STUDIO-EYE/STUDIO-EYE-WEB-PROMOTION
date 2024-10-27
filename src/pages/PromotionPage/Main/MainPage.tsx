@@ -13,7 +13,6 @@ import Outro from '@/components/PromotionPage/Main/Outro';
 import styled from 'styled-components';
 import Footer from '@/components/PromotionPage/Footer/Footer';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
-import { theme } from '@/styles/theme';
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);

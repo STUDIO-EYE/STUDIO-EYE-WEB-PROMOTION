@@ -10,7 +10,7 @@ const Outro = () => {
   const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
 
   return (
-    <Container>
+    <Container data-testid="outro-section">
       <ClientRowAnimation data={data} isLoading={isLoading} error={error} />
       <WorkWithUs />
     </Container>

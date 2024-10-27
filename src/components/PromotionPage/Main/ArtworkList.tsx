@@ -34,7 +34,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
   };
 
   return (
-    <MotionBox
+    <MotionBox data-testid="artwork-section"
       w="100%"
       h="100vh"
       scrollSnapAlign="center"
@@ -57,15 +57,15 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       ) : (
         <motion.div variants={cardInView}>
           <TextWrapper>
-            <ClientWrapper>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
-            <TitleWrapper>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
-            <OverviewWrapper>{data.overview}</OverviewWrapper>
+            <ClientWrapper data-testid='artwork_client'>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
+            <TitleWrapper data-testid='artwork_name'>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
+            <OverviewWrapper data-testid='artwork_overview'>{data.overview}</OverviewWrapper>
           </TextWrapper>
           <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
         </motion.div>
       )}
       {data.link && (
-        <a
+        <a data-testid='artwork_link'
           href={data.link}
           target="_blank"
           rel="noopener noreferrer"

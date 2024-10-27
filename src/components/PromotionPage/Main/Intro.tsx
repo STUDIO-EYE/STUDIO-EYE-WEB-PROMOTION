@@ -47,7 +47,7 @@ const Intro = () => {
   const isMobile = window.innerWidth < 768;
 
   return (
-    <Container>
+    <Container data-testid="intro-section">
       <IntroWrapper ref={introRef}>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
