@@ -1,6 +1,7 @@
-import { ArtworkDataMain } from 'cypress/support/types';
+import { ArtworkDataMain, IntroDataMain } from 'cypress/support/types';
 
-let testData: ArtworkDataMain;
+let introTestestData: IntroDataMain;
+let artworkTestestData: ArtworkDataMain;
 
 describe('MainPage E2E Test', () => {
   beforeEach(() => {
@@ -14,30 +15,45 @@ describe('MainPage E2E Test', () => {
     cy.get('[data-testid="outro-section"]').should('exist');
   });
 
-  it('ArtworkList', () => {
-    // fixture에서 데이터 가져오기
-    cy.fixture<ArtworkDataMain>('MainPage/artworkData.json').then((data) => {
-      testData = data;
-      cy.log(`Artwork name: ${testData.name}`);
+  it('Intro', () => {
+    cy.fixture<IntroDataMain>('MainPage/introData.json').then((data) => {
+      introTestestData = data;
     });
-  
-    cy.intercept('GET', '/api/projects/main').as('getArtworkMainData');
-  
+
+    cy.intercept('GET', '/api/company/information').as('getCompanyData');
+
     cy.visit('/');
-  
-    cy.wait('@getArtworkMainData').then((interception) => {
-  
-      cy.get('[data-testid="artwork-section"]').within(() => {
-        cy.get('[data-testid="artwork_client"]').contains(testData.client).should('exist');
-        cy.get('[data-testid="artwork_name"]').contains(testData.name).should('exist');
-        cy.get('[data-testid="artwork_overview"]').contains(testData.overview).should('exist');
-        cy.get('[data-testid="artwork_link"]').should('have.attr', 'href', testData.link);
+
+    cy.wait('@getCompanyData').then((interception) => {
+      cy.get('[data-testid="intro-section"]').within(() => {
+        cy.get('[data-testid="intro_mainOverview"]').contains(introTestestData.mainOverview).should('exist');
+        cy.get('[data-testid="intro_commitment"]').contains(introTestestData.commitment).should('exist');
       });
     });
   });
-  
 
-  it('모든 스크롤', () => {
+  it('ArtworkList', () => {
+    cy.fixture<ArtworkDataMain>('MainPage/artworkData.json').then((data) => {
+      artworkTestestData = data;
+      cy.log(`Artwork name: ${artworkTestestData.name}`);
+    });
+
+    cy.intercept('GET', '/api/projects/main').as('getArtworkMainData');
+
+    cy.visit('/');
+
+    cy.wait('@getArtworkMainData').then((interception) => {
+      cy.get('[data-testid="artwork-section"]').within(() => {
+        cy.get('[data-testid="artwork_client"]').contains(artworkTestestData.client).should('exist');
+        cy.get('[data-testid="artwork_name"]').contains(artworkTestestData.name).should('exist');
+        cy.get('[data-testid="artwork_overview"]').contains(artworkTestestData.overview).should('exist');
+        cy.get('[data-testid="artwork_link"]').should('have.attr', 'href', artworkTestestData.link);
+        cy.get('[data-testid="artwork_link"]').click();
+      });
+    });
+  });
+
+  it('스크롤 정상 작동', () => {
     cy.scrollTo('bottom');
     cy.get('[data-testid="outro-section"]').should('be.visible');
 

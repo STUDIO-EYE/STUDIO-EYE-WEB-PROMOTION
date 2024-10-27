@@ -5,7 +5,6 @@ import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
-import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -24,9 +23,6 @@ const Intro = () => {
       try {
         const data = await getCompanyData();
         setCompanyMainOverview(data.mainOverview);
-
-        const commitmentText = data.commitment.replace(/(<([^>]+)>)/gi, '');
-        // const commitmentText = data.commitment;
         setCompanyCommitment(data.commitment);
       } catch (error) {
         // console.error('Error fetching company data: ', error);
@@ -36,19 +32,11 @@ const Intro = () => {
     fetchData();
   }, []);
 
-  const parseAndTrimHTML = (html: string, maxLength: number): string => {
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = html;
-    let text = tempElement.textContent || tempElement.innerText || '';
-    text = text.trim();
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
-  };
-  const limitedCompanyMainOverview = parseAndTrimHTML(companyMainOverview, 10);
   const isMobile = window.innerWidth < 768;
 
   return (
     <Container data-testid="intro-section">
-      <IntroWrapper ref={introRef}>
+      <IntroWrapper data-testid="intro_mainOverview" ref={introRef} >
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
@@ -59,7 +47,7 @@ const Intro = () => {
           }}
         ></motion.div>
       </IntroWrapper>
-      <DesWrapper ref={desRef}>
+      <DesWrapper data-testid="intro_commitment" ref={desRef}>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}

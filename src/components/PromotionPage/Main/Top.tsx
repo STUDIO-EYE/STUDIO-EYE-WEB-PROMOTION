@@ -1,7 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FaArrowDown } from 'react-icons/fa';
 import { theme } from '@/styles/theme';
 
 type Props = {

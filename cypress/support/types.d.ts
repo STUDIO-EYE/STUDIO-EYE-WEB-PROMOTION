@@ -17,4 +17,9 @@ export interface ArtworkData {
     client: string;
     link: string;
   }
+
+  export interface IntroDataMain {
+    mainOverview: string;
+    commitment: string;
+  }
   
