@@ -1,3 +1,53 @@
+import { login } from "cypress/support/hooks";
+
+describe('FAQ PA E2E Tests', () => {
+
+  before(() => {
+    login(); // 첫 실행 시 한 번만 로그인
+    cy.visit('/promotion-admin/faq'); 
+  });
+
+  beforeEach(() => {
+    login(); 
+    cy.visit('/promotion-admin/faq'); 
+  });
+
+  it('FAQ items이 FAQ page에 rendering 되는가', () => {
+    
+    cy.get('[data-testid="faq-question-input"]').should('be.visible');
+    cy.get('[data-testid="faq-answer-input"]').should('be.visible');
+  
+  });
+
+  it('새 질문과 답변 추가', () => {
+    cy.get('[data-testid="add-new-faq-button"]').click();
+    cy.get('[data-testid="faq-question-input"]').type('새 질문');
+    cy.get('[data-testid="faq-answer-input"]').type('새 답변');
+    cy.get('[data-testid="faq-submit-button"]').click();
+    cy.get('[data-testid="faq-manage-title"]').should('contain', 'FAQ 게시글 관리');
+  });
+
+  it('FAQ 항목 삭제', () => { 
+    cy.get('[data-testid^="faq-item-"]').last().then((faqItem) => {
+      
+      const lastFaqItem = faqItem.get(0) as HTMLElement;
+  
+      if (lastFaqItem) {
+        const lastFaqId = lastFaqItem.getAttribute('data-testid')?.split('-').pop(); // 마지막 FAQ의 ID 가져오기
+        cy.get(`[data-testid="faq-item-${lastFaqId}"]`).should('exist'); // 존재 여부 확인
+        cy.get(`[data-testid="faq-delete-icon-${lastFaqId}"]`).click(); // 삭제 아이콘 클릭
+        cy.on('window:confirm', () => true); // 확인 창에서 '확인' 선택
+        cy.get(`[data-testid="faq-item-${lastFaqId}"]`).should('not.exist'); // 삭제 확인
+      } else {
+        throw new Error('마지막 FAQ 항목을 찾을 수 없습니다.'); // 오류 처리
+      }
+    });
+  });
+  
+  });
+  
+ 
+
 describe('FAQ 페이지 E2E 테스트', () => {
 
   beforeEach(() => {
