@@ -22,18 +22,19 @@ export default function FAQCheckPage() {
       {faqDetailMatch ? (
         <>
           {clickedFAQ && (
-            <ContentBox>
+            <ContentBox data-testid="faq-detail">
               <Wrapper>
                 <TitleWrapper>
                   <QAIcon>Q</QAIcon>
-                  <Title>{clickedFAQ.question} </Title>
+                  <Title data-testid="faq-question-text">{clickedFAQ.question}</Title>
                 </TitleWrapper>
                 <QAIcon>A</QAIcon>
-                <Answer>
+                <Answer data-testid="faq-answer">
                   <InnerHTML description={clickedFAQ.answer} fontSize={20} />
                 </Answer>
                 <ButtonWrapper>
                   <Button
+                    data-testid="faq-edit-button"
                     onClick={() => {
                       navigator(`${PA_ROUTES.FAQ}/write/${clickedFAQ.id}?page=${currentPage}`);
                     }}
@@ -50,6 +51,7 @@ export default function FAQCheckPage() {
   );
 }
 
+// Styled components
 const Wrapper = styled.div``;
 const TitleWrapper = styled.div`
   display: flex;
