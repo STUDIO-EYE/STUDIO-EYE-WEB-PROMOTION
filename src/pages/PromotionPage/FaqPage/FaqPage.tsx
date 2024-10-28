@@ -376,32 +376,50 @@ color: yellow; /* 타이틀을 노란색으로 */
 
 const FaqBriefQuestion = styled.p`
   margin: 0;
-  font-size: 1.4rem;
-  color: #ffa900; // 제목을 노란색으로 설정
-  cursor: pointer; // 클릭 가능함을 나타내기 위해 커서 모양 변경
+  color: #ffa900; /* 제목을 노란색으로 설정 */
+  cursor: pointer; /* 클릭 가능함을 나타내기 위해 커서 모양 변경 */
+  
+  font-size: 1.6rem; /* 기본 폰트 사이즈 */
+
+  @media (max-width: 1366px) and (min-width: 768px) {
+    font-size: 1.4rem; /* 태블릿에서 폰트 사이즈 조정 */
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 1.2rem; /* 모바일에서 폰트 사이즈 조정 */
+  }
+
+  @media (max-width: 374px) {
+    font-size: 1.1rem; /* 모바일에서 더 작은 폰트 사이즈 조정 */
+  }
 `;
 
 const FaqDetailBox = styled.div<{ isExpanded: boolean }>`
   margin-top: 1rem;
   padding-left: 1rem; /* 들여쓰기 적용 */
   font-size: 1rem;
+  font-weight: 100; /* 폰트를 얇게 설정 */
   color: white; /* 세부 내용은 하얀 글씨 */
+  font-family: 'Pretendard'; /* 폰트 적용 */
   display: ${({ isExpanded }) => (isExpanded ? 'block' : 'none')}; /* isExpanded가 true일 때만 보여주기 */
 `;
 
 
-
-
 const FaqDetailAnswer = styled.p`
- margin: 0;
- 
+  margin: 0;
+  font-weight: 100 !important; 
+  white-space: pre-line; /* 줄바꿈을 적용하기 위해 설정 */
+  font-size: 1.1rem; /* 기본 폰트 사이즈 */
 
   @media (max-width: 1366px) and (min-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 0.8rem;
   }
 
-  @media (max-width: 540px) and (min-width: 375px) {
-    font-size: 1rem;
+  @media (max-width: 374px) {
+    font-size: 0.8rem;
   }
 `;
 
