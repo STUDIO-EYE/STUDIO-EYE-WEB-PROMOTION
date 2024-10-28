@@ -191,31 +191,34 @@ function FAQManagePage() {
       <LeftContentWrapper>
         <ContentBox>
           <TitleWrapper>
-            <Title>
+            <Title data-testid="faq-manage-title">
               {DATAEDIT_TITLES_COMPONENTS.FAQ}
               FAQ 게시글 관리
               <Info>등록된 게시글 {data?.length}건 </Info>
             </Title>
-            <Button onClick={handleAddNewFAQ}>
+            <Button onClick={handleAddNewFAQ} data-testid="add-new-faq-button">
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
               </div>
               Add New FAQ
             </Button>
           </TitleWrapper>
-          <ListWrapper>
+          <ListWrapper data-testid="faq-list">
             {slicedFAQ?.map((faq) => (
               <FAQList key={faq.id}>
-                <DeleteIcon width={15} height={15} onClick={() => handleDelete(faq.id)} />
+                <DeleteIcon width={15} height={15} onClick={() => handleDelete(faq.id)}
+                 data-testid={`faq-delete-icon-${faq.id}`} 
+                 />
                 <FAQItem
                   key={faq.id}
                   isSelected={currentFAQ?.id === faq.id && isSelected}
                   onClick={() => {
                     handleSelectFAQ(faq);
                   }}
+                  data-testid={`faq-item-${faq.id}`} // FAQ 목록의 각 항목 식별 ID
                 >
-                  <FAQQuestion>{faq.question}</FAQQuestion>
-                  {faq.visibility ? <PublicIcon /> : <PrivateIcon />}
+                  <FAQQuestion data-testid={`faq-question-text-${faq.id}`}>{faq.question}</FAQQuestion> 
+                  {faq.visibility ? <PublicIcon data-testid={`faq-visibility-public-${faq.id}`} /> : <PrivateIcon data-testid={`faq-visibility-private-${faq.id}`} />}
                 </FAQItem>
               </FAQList>
             ))}
@@ -229,14 +232,14 @@ function FAQManagePage() {
       </LeftContentWrapper>
 
       <RightContentWrapper>
-        <form onSubmit={handleSubmit(onValid)}>
+       <form onSubmit={handleSubmit(onValid)} data-testid="faq-edit-form">
           <ContentBox>
             <TitleWrapper>
-              <Title>FAQ 게시글 수정</Title>
+             <Title data-testid="faq-edit-title">FAQ 게시글 수정</Title>
             </TitleWrapper>
             <InputWrapper>
               <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Question</p>
+               <p data-testid="faq-question-label">Question</p>
                 <div
                   style={{
                     fontSize: 12,
@@ -254,6 +257,7 @@ function FAQManagePage() {
                 value={currentFAQ?.question || ''}
                 onChange={handleChange}
                 maxLength={200}
+                data-testid="faq-question-input" // Question input test ID
                 placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
               />
               {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
@@ -276,6 +280,7 @@ function FAQManagePage() {
                 value={currentFAQ?.answer || ''}
                 onChange={handleChange}
                 maxLength={1500}
+                data-testid="faq-answer-input" // Answer input test ID
                 placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
               />
               {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
@@ -289,6 +294,7 @@ function FAQManagePage() {
                     }}
                     className='public'
                     selected={currentFAQ?.visibility}
+                    data-testid="faq-visibility-public"
                   >
                     공개
                   </CheckBox>
@@ -298,13 +304,14 @@ function FAQManagePage() {
                     }}
                     className='private'
                     selected={!currentFAQ?.visibility}
+                    data-testid="faq-visibility-private"
                   >
                     비공개
                   </CheckBox>
                 </VisibilityWrapper>
               )}
               <ButtonWrapper>
-                <ModifyButton>수정하기</ModifyButton>
+              <ModifyButton type="submit" data-testid="faq-submit-button">수정하기</ModifyButton>
               </ButtonWrapper>
             </RowWrapper>
           </ContentBox>
