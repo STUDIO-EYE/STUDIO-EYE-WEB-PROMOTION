@@ -285,7 +285,7 @@ function BenefitManagePage() {
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
               </div>
-              새로운 복지 등록
+              새로운 복지
             </Button>
           </TitleWrapper>
           <ListWrapper>

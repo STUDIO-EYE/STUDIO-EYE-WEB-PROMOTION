@@ -150,7 +150,7 @@ function RecruitmentWritePage() {
             name='link'
             value={putData.link || ''}
             onChange={handleChange}
-            maxLength={50}
+            maxLength={250}
             placeholder='채용 공고 링크를 입력해주세요.'
           />
           {errors.link && <ErrorMessage>{errors.link.message}</ErrorMessage>}

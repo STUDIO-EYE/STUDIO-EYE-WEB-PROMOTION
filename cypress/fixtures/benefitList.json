@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "title": "Health Insurance",
+    "content": "Comprehensive health coverage",
+    "imageUrl": "/images/benefit1.png"
+  },
+  { "id": 2, "title": "Paid Time Off", "content": "Generous PTO policy", "imageUrl": "/images/benefit2.png" }
+]

@@ -29,15 +29,17 @@ const RecruitmentPage = () => {
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
       const recruitment = await getRecruitmentData(id);
-      window.location.href = `${recruitment.link}`;
+      window.open(`${recruitment.link}`, '_blank');
     } else {
       console.log('This recruitment is closed.');
     }
   };
 
   const handleImageClick = () => {
-    window.location.href =
-      'https://www.saramin.co.kr/zf_user/company-info/view?csn=UUtVZHVnRklXRE5zRU1pV3VRVXl3UT09&popup_yn=y';
+    window.open(
+      'https://www.saramin.co.kr/zf_user/company-info/view/csn/cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09/company_nm/(%EC%A3%BC)%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4%EC%95%84%EC%9D%B4?nomo=1',
+      '_blank',
+    );
   };
 
   if (isRecruitmentLoading || isBenefitLoading) {
@@ -51,7 +53,7 @@ const RecruitmentPage = () => {
   return (
     <Container>
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
-      <IntroSection>
+      <IntroSection data-section='intro-section'>
         <IntroTitleWrapper>
           <RecruitText>RECRUIT</RecruitText>
           <IntroLine>
@@ -73,19 +75,20 @@ const RecruitmentPage = () => {
             <IntroTextClored> US?</IntroTextClored>
           </IntroLine>
           <ImageWrapper onClick={handleImageClick}>
-            <img src={groupImage} alt='Group' />
+            <img src={groupImage} data-img='company-info-image' alt='Group_Info' />
           </ImageWrapper>
         </IntroTitleWrapper>
       </IntroSection>
       {/* 두 번째 섹션: 채용 게시판 */}
-      <JobBoardSection>
+      <JobBoardSection data-section='recruitment-section'>
         <PostGrid>
           <Header>진행중인 채용공고</Header>
           <Content>
             {recruitmentData?.content.slice(0, 5).map((recruitment) => (
               <PostItem
-                isOpen={recruitment.status === 'OPEN'}
                 key={recruitment.id}
+                isOpen={recruitment.status === 'OPEN'}
+                {...(recruitment.status === 'OPEN' ? { 'data-openRecruitment': `post-item-${recruitment.id}` } : {})}
                 onClick={() => handleClickPost(recruitment.id, recruitment.status)}
               >
                 <StatusButtonWrapper>
@@ -105,7 +108,7 @@ const RecruitmentPage = () => {
         </PostGrid>
       </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
-      <BenefitsSection>
+      <BenefitsSection data-section='benefit-section'>
         <BenefitSectionTitle>STUDIOEYE'S BENEFIT</BenefitSectionTitle>
         <ListWrapper>
           {benefitData?.map((benefit) => (
@@ -132,7 +135,15 @@ const IntroSection = styled.div`
   background-color: ${theme.color.white.light};
   display: flex;
   justify-content: center;
-  margin-top: 15rem;
+  margin-top: 5rem;
+
+  @media ${theme.media.tablet} {
+    margin-top: 3rem; // 태블릿에서 여백 조정
+  }
+
+  @media ${theme.media.mobile} {
+    margin-top: 2rem; // 모바일에서 여백 조정
+  }
 `;
 
 const IntroTitleWrapper = styled.div`
@@ -141,6 +152,7 @@ const IntroTitleWrapper = styled.div`
   align-items: center;
   justify-content: center;
   line-height: 1.1;
+  padding: 2rem; // 추가 여백이 필요할 경우 이곳에 패딩을 추가
 `;
 
 const RecruitText = styled.h2`
