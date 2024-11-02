@@ -25,18 +25,18 @@ const ArtworkBox = ({
   return (
     <Container>
       {mainImg ? <img src={mainImg} alt='mainImg' /> : <NoMainImageWrapper>No Image</NoMainImageWrapper>}
-      <DescriptionWrapper>
+      <DescriptionWrapper data-cy='PA_artwork'>
         <Wrapper>
           <div>
-            <h2>{slicedClient}</h2>
-            <h1>{slicedName}</h1>
+            <h2 data-cy='PA_artwork_client'>{slicedClient}</h2>
+            <h1 data-cy='PA_artwork_title'>{slicedName}</h1>
           </div>
           <RightAlignWrapper>
-            {isPosted ? <IsPosted /> : <IsNotPosted />}
-            <h2>{category}</h2>
+            {isPosted ? <IsPosted data-cy='PA_artwork_isOpen' /> : <IsNotPosted data-cy='PA_artwork_isClose'/>}
+            <h2 data-cy='PA_artwork_category'>{category}</h2>
           </RightAlignWrapper>
         </Wrapper>
-        <h3>{slicedOverview}</h3> <TypeWrapper projectType={projectType}>{projectType}</TypeWrapper>
+        <h3 data-cy='PA_artwork_overview'>{slicedOverview}</h3> <TypeWrapper data-cy='PA_artwork_type' projectType={projectType}>{projectType}</TypeWrapper>
       </DescriptionWrapper>
     </Container>
   );

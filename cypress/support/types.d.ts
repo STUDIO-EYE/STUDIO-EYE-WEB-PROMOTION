@@ -10,6 +10,12 @@ export interface ArtworkData {
     isOpened: string;
   }
 
+  export interface ArtworkRequiredField {
+    name: string;
+    selector: string;
+    value: string;
+    type?: 'type'|'dropdown'|'select';
+  }
 
   export interface ArtworkDataMain {
     name: string;

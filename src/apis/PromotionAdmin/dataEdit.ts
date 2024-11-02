@@ -71,12 +71,42 @@ export const getPartnersData = async () => {
   }
 };
 
+export const putPartnersLogoData=async(formData:FormData)=>{
+  try{
+    const response=await axios.put(`${PROMOTION_BASIC_PATH}/api/partners`,formData);
+    return response.data.data;
+  }catch(error){
+    console.log('[❌ Error updating partners logo data]', error);
+    throw error;
+  }
+};
+
+export const putPartnersInfoData=async(formData:FormData)=>{
+  try{
+    const response=await axios.put(`${PROMOTION_BASIC_PATH}/api/partners/modify`, formData);
+    return response.data.data;
+  }catch(error){
+    console.log('[❌ Error updating partners data]', error);
+    throw error;
+  }
+};
+
 export const getPartnersLogoData = async () => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/partners/logoImgList`);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);
+    throw error;
+  }
+};
+
+export const deletePartner=async(id:number)=>{
+  try{
+    const response=await axios.put(`${PROMOTION_BASIC_PATH}/api/partners/${id}`);
+    return response.data.data;
+  }catch(error){
+    console.log('[❌ Error deleting partners data]', error);
     throw error;
   }
 };
