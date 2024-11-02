@@ -54,15 +54,15 @@ const ArtworkDetail = () => {
   useEffect(() => {
     setSubmitButtonDisabled(
       !selectedDate ||
-        selectedCategory === '' ||
-        projectType === null ||
-        link === '' ||
-        !mainImage ||
-        !detailImages ||
-        detailImages.length === 0 ||
-        title === '' ||
-        customer === '' ||
-        overview === '',
+      selectedCategory === '' ||
+      projectType === null ||
+      link === '' ||
+      !mainImage ||
+      !detailImages ||
+      detailImages.length === 0 ||
+      title === '' ||
+      customer === '' ||
+      overview === '',
     );
   }, [
     selectedDate,
@@ -312,6 +312,7 @@ const ArtworkDetail = () => {
         <div />
         {!isGetMode && (
           <SubmitBtn
+            data-cy='modify_artwork_finish'
             title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
             disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
             onClick={() => handleSubmit()}
@@ -319,7 +320,7 @@ const ArtworkDetail = () => {
             저장하기
           </SubmitBtn>
         )}
-        {isGetMode && <SubmitBtn onClick={handleEditClick}>수정하기</SubmitBtn>}
+        {isGetMode && <SubmitBtn id='modify_artwork_submit' onClick={handleEditClick}>수정하기</SubmitBtn>}
       </ValueWrapper>{' '}
       <DeleteWrapper onClick={handleArtworkDelete}>삭제하기</DeleteWrapper>
     </Container>

@@ -32,6 +32,7 @@ function TextColorEditor({ editorState, onEditorStateChange, attribute, charLimi
   return (
     <EditorWrapper attribute={attribute}>
       <ReactQuill
+        id={`editor-${attribute.toLowerCase().replace(/\s+/g, '')}`}
         value={editorState}
         onChange={handleEditorStateChange}
         placeholder={`${attribute}을(를) 작성해주세요`}
