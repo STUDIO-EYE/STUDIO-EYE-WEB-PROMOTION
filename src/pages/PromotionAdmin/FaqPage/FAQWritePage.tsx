@@ -94,14 +94,14 @@ function FAQWritePage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <form onSubmit={handleSubmit(onValid)} data-testid="faq-write-form">
       <ContentBox>
         <TitleWrapper>
-          <Title>FAQ 게시글 등록</Title>
+          <Title data-testid="faq-write-title">FAQ 게시글 등록</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Question</p>
+            <p data-testid="faq-question-label">Question</p>
             <div
               style={{
                 fontSize: 12,
@@ -120,10 +120,11 @@ function FAQWritePage() {
             onChange={handleChange}
             maxLength={200}
             placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
+            data-testid="faq-question-input"
           />
-          {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
+          {errors.question && <ErrorMessage data-testid="faq-question-error">{errors.question.message}</ErrorMessage>}
           <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Answer</p>
+            <p data-testid="faq-answer-label">Answer</p>
             <div
               style={{
                 fontSize: 12,
@@ -142,22 +143,23 @@ function FAQWritePage() {
             onChange={handleChange}
             maxLength={1500}
             placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
+            data-testid="faq-answer-input"
           />
-          {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
+          {errors.answer && <ErrorMessage data-testid="faq-answer-error">{errors.answer.message}</ErrorMessage>}
         </InputWrapper>
         <RowWrapper>
           {putData && (
             <VisibilityWrapper>
-              <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
+              <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility} data-testid="faq-visibility-public">
                 공개
               </CheckBox>
-              <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility}>
+              <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility} data-testid="faq-visibility-private">
                 비공개
               </CheckBox>
             </VisibilityWrapper>
           )}
           <ButtonWrapper>
-            <ModifyButton>등록하기</ModifyButton>
+            <ModifyButton data-testid="faq-submit-button">등록하기</ModifyButton>
           </ButtonWrapper>
         </RowWrapper>
       </ContentBox>

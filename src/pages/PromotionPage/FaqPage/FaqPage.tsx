@@ -5,6 +5,7 @@ import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
 import { theme } from '@/styles/theme'; // Import your theme for media queries
+import { getFaqData } from '@/apis/PromotionPage/faq';
 
 interface FaqData {
   id: number;
@@ -25,22 +26,23 @@ const FaqPage = () => {
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    axios
-      .get(`${PROMOTION_BASIC_PATH}/api/faq`)
-      .then((response) => {
-        const filteredData = response.data.data.filter((item: any) => item.visibility === true);
-        const objects = filteredData.map((item: any) => ({
-          id: item.id,
-          question: item.question,
-          answer: item.answer,
-          visibility: item.visibility,
-        }));
-        setData(objects);
-        initiate(objects);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const fetchData = async () => {
+        try {
+            const faqData = await getFaqData();
+            const filteredData = faqData.filter((item: any) => item.visibility === true);
+            const objects = filteredData.map((item: any) => ({
+                id: item.id,
+                question: item.question,
+                answer: item.answer,
+                visibility: item.visibility,
+            }));
+            setData(objects);
+            initiate(objects);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    fetchData();
   }, []);
 
   const initiate = (data: any) => {
@@ -103,6 +105,7 @@ const FaqPage = () => {
         <Content>
           <InputWrapper>
             <SearchFaqQuestion
+              data-cy='faq-search-input' // 검색 입력에 data-cy 추가
               placeholder='컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요.'
               autoComplete='off'
               value={faqQuestion}
@@ -110,25 +113,26 @@ const FaqPage = () => {
             />
           </InputWrapper>
           {searchResult === 'fail' ? (
-            <NoResults>검색 결과가 없습니다.</NoResults>
+            <NoResults data-cy='no-results-message'>검색 결과가 없습니다.</NoResults> // 결과 없음 메시지에 data-cy 추가
           ) : (
             searchData.map((item, i) => (
-        <FaqDetailButton
-          key={item.id}
-          isExpanded={expandedItems.has(i)}
-          onClick={() => toggleItem(i)}
-        >
-          <FaqBrief>
-            <FaqBriefQuestion>
-              {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
-            </FaqBriefQuestion>
-          </FaqBrief>
-          {/* FaqDetailBox가 FaqBrief 아래에 위치하도록 조정 */}
-          <FaqDetailBox isExpanded={expandedItems.has(i)}>
-            {expandedItems.has(i) && <FaqDetailAnswer>{item.answer}</FaqDetailAnswer>}
-          </FaqDetailBox>
-        </FaqDetailButton>
-
+              <FaqDetailButton
+                key={item.id}
+                isExpanded={expandedItems.has(i)}
+                onClick={() => toggleItem(i)}
+                data-cy={`faq-item-${item.id}`} // 각 FAQ 항목에 data-cy 추가
+              >
+                <FaqBrief>
+                  <FaqBriefQuestion>
+                    {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
+                  </FaqBriefQuestion>
+                </FaqBrief>
+                <FaqDetailBox isExpanded={expandedItems.has(i)}>
+                  {expandedItems.has(i) && (
+                    <FaqDetailAnswer data-cy={`faq-answer-${item.id}`}>{item.answer}</FaqDetailAnswer> // 답변에 data-cy 추가
+                  )}
+                </FaqDetailBox>
+              </FaqDetailButton>
             ))
           )}
         </Content>
@@ -372,32 +376,50 @@ color: yellow; /* 타이틀을 노란색으로 */
 
 const FaqBriefQuestion = styled.p`
   margin: 0;
-  font-size: 1.4rem;
-  color: #ffa900; // 제목을 노란색으로 설정
-  cursor: pointer; // 클릭 가능함을 나타내기 위해 커서 모양 변경
+  color: #ffa900; /* 제목을 노란색으로 설정 */
+  cursor: pointer; /* 클릭 가능함을 나타내기 위해 커서 모양 변경 */
+  
+  font-size: 1.6rem; /* 기본 폰트 사이즈 */
+
+  @media (max-width: 1366px) and (min-width: 768px) {
+    font-size: 1.4rem; /* 태블릿에서 폰트 사이즈 조정 */
+  }
+
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 1.2rem; /* 모바일에서 폰트 사이즈 조정 */
+  }
+
+  @media (max-width: 374px) {
+    font-size: 1.1rem; /* 모바일에서 더 작은 폰트 사이즈 조정 */
+  }
 `;
 
 const FaqDetailBox = styled.div<{ isExpanded: boolean }>`
   margin-top: 1rem;
   padding-left: 1rem; /* 들여쓰기 적용 */
   font-size: 1rem;
+  font-weight: 100; /* 폰트를 얇게 설정 */
   color: white; /* 세부 내용은 하얀 글씨 */
+  font-family: 'Pretendard'; /* 폰트 적용 */
   display: ${({ isExpanded }) => (isExpanded ? 'block' : 'none')}; /* isExpanded가 true일 때만 보여주기 */
 `;
 
 
-
-
 const FaqDetailAnswer = styled.p`
- margin: 0;
- 
+  margin: 0;
+  font-weight: 100 !important; 
+  white-space: pre-line; /* 줄바꿈을 적용하기 위해 설정 */
+  font-size: 1.1rem; /* 기본 폰트 사이즈 */
 
   @media (max-width: 1366px) and (min-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+  @media (max-width: 540px) and (min-width: 375px) {
+    font-size: 0.8rem;
   }
 
-  @media (max-width: 540px) and (min-width: 375px) {
-    font-size: 1rem;
+  @media (max-width: 374px) {
+    font-size: 0.8rem;
   }
 `;
 

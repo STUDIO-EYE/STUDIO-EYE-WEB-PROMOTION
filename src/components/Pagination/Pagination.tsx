@@ -49,7 +49,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }: IPaginationProps) =>
   }, [currentPage, currentPageRange]);
 
   return (
-    <Wrapper>
+    <Wrapper id='pagination'>
       {currentPageRange > 0 && (
         <>
           <PageLi onClick={() => setCurrentPageRange(0)} selected={false}>

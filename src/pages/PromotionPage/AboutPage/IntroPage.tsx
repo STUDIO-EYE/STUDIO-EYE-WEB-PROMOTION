@@ -56,17 +56,30 @@ function IntroPage() {
   };
 
   return (
-    <Container>
-      <InitContainer>
+    <Container data-cy='intro-container'>
+      <InitContainer data-cy='init-container'>
         <div>
-          <InitTitleWrapper>
-            <InitTitle custom={0} initial='hidden' animate='visible' variants={bounceAnimation}>
+          <InitTitleWrapper data-cy='init-title-wrapper'>
+            <InitTitle
+              custom={0}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              data-cy='init-title-what'
+            >
               WHAT
             </InitTitle>
-            <InitTitle custom={1} initial='hidden' animate='visible' variants={bounceAnimation} color='#ffa900'>
+            <InitTitle
+              custom={1}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              color='#ffa900'
+              data-cy='init-title-we'
+            >
               WE
             </InitTitle>
-            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation}>
+            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation} data-cy='init-title-do'>
               DO
             </InitTitle>
           </InitTitleWrapper>
@@ -75,16 +88,17 @@ function IntroPage() {
         <BackgroundYellowCircle> </BackgroundYellowCircle>
       </InitContainer>
 
-      <IntroContainer>
-        <AboutWrapper ref={aboutRef}>
+      <IntroContainer data-cy='intro-container-content'>
+        <AboutWrapper ref={aboutRef} data-cy='about-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: aboutInView ? 1 : 0, y: aboutInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <BackgroundText>ABOUT</BackgroundText>
+            <BackgroundText data-cy='about-title'>ABOUT</BackgroundText>
             <AboutText
+              data-cy='about-content'
               dangerouslySetInnerHTML={{
                 __html: isMobile
                   ? removeParagraphTags(
@@ -97,16 +111,17 @@ function IntroPage() {
             />
           </motion.div>
         </AboutWrapper>
-        <MissionWrapper ref={missionRef}>
+        <MissionWrapper ref={missionRef} data-cy='mission-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: missionInView ? 1 : 0, y: missionInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <BackgroundText> MISSION</BackgroundText>
+            <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
             {sloganImageUrl !== '' ? (
               <img
+                data-cy='mission-image'
                 src={sloganImageUrl}
                 alt='SloganLabel'
                 style={
@@ -117,6 +132,7 @@ function IntroPage() {
               />
             ) : (
               <img
+                data-cy='mission-image-fallback'
                 src={MissionLabel}
                 alt='MissionLabel'
                 style={isMobile ? { width: '80%', objectFit: 'contain' } : { width: '50%', objectFit: 'contain' }}

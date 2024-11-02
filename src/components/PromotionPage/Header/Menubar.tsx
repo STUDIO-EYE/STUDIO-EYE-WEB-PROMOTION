@@ -17,7 +17,7 @@ const Menubar = () => {
   const isRecruitmentPage = location.pathname === '/recruitment';
 
   return (
-    <ToggleContainer className={isMenuOpen ? 'active' : ''} onMouseDown={toggleMenu}>
+    <ToggleContainer className={isMenuOpen ? 'active' : ''} onMouseDown={toggleMenu} isRecruitmentPage={isRecruitmentPage}>
       <span></span>
       <span></span>
       <span></span>
@@ -27,7 +27,7 @@ const Menubar = () => {
 
 export default Menubar;
 
-const ToggleContainer = styled.div`
+const ToggleContainer = styled.div<{ isRecruitmentPage: boolean }>`
   width: fit-content;
   @media ${theme.media.tablet} {
     top: 2.4rem;
@@ -48,7 +48,7 @@ const ToggleContainer = styled.div`
 
   span {
     display: block;
-    background: #fff;
+    background: ${({ isRecruitmentPage }) => (isRecruitmentPage ? '#ffa900' : '#fff')}; // 색상 변경
     width: 2.625rem;
     height: 0.25rem;
     border-radius: 0.1875rem;

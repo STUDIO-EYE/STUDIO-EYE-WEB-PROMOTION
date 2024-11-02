@@ -66,31 +66,33 @@ const WhatWeDoPage = () => {
   }
 
   return (
-    <Container>
-      <WhatWeDoContainer>
+    <Container data-cy='whatwedo-container'>
+      <WhatWeDoContainer data-cy='whatwedo-section'>
         {companyDetailData.map((info, index) => (
           <WhatWeDo
+            data-cy='whatwedo-item'
             key={index}
             className='WhatWeDo'
             isHighlighted={highlighted === index}
             leftInput={index % 2 === 0}
             style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '5%' : '95%' }}
           >
-            <WhatWeDoInput leftInput={index % 2 === 0}>
+            <WhatWeDoInput leftInput={index % 2 === 0} data-cy='whatwedo-circle'>
               <Circle />
             </WhatWeDoInput>
-            <WhatWeDoTitleInput leftInput={index % 2 === 0}>
+            <WhatWeDoTitleInput leftInput={index % 2 === 0} data-cy='whatwedo-title'>
               {companyDetailDataTitle[index].length >= 20 ? `WHAT WE DO ${index + 1}` : companyDetailDataTitle[index]}
             </WhatWeDoTitleInput>
             <WhatWeDoContentInput
+              data-cy='whatwedo-content'
               leftInput={index % 2 === 0}
               dangerouslySetInnerHTML={{ __html: info.replace(/\n/g, '<br/>') }}
             ></WhatWeDoContentInput>
           </WhatWeDo>
         ))}
 
-        <ScrollBar>
-          <ScrollBarBox />
+        <ScrollBar data-cy='scrollbar'>
+          <ScrollBarBox data-cy='scrollbar-box' />
         </ScrollBar>
       </WhatWeDoContainer>
     </Container>
