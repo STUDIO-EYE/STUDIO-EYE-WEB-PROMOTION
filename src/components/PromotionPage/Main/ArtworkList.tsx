@@ -57,9 +57,9 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       ) : (
         <motion.div variants={cardInView}>
           <TextWrapper>
-            <ClientWrapper data-cy='artwork_client'>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
-            <TitleWrapper data-cy='artwork_name'>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
-            <OverviewWrapper data-cy='artwork_overview'>{data.overview}</OverviewWrapper>
+            <ClientWrapper data-cy="artwork_client">{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
+            <TitleWrapper data-cy="artwork_name">{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
+            <OverviewWrapper data-cy="artwork_overview">{data.overview}</OverviewWrapper>
           </TextWrapper>
           <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
         </motion.div>

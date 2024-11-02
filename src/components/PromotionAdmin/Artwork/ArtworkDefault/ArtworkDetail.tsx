@@ -320,7 +320,7 @@ const ArtworkDetail = () => {
             저장하기
           </SubmitBtn>
         )}
-        {isGetMode && <SubmitBtn id='modify_artwork_submit' onClick={handleEditClick}>수정하기</SubmitBtn>}
+        {isGetMode && <SubmitBtn data-cy='modify_artwork_submit' onClick={handleEditClick}>수정하기</SubmitBtn>}
       </ValueWrapper>{' '}
       <DeleteWrapper onClick={handleArtworkDelete}>삭제하기</DeleteWrapper>
     </Container>
