@@ -5,6 +5,9 @@ export const aboutPageAttributes = {
   UPDATE_INTRO: 'intro-update',
   CREATE_SLOGAN_IMAGE: 'sloganImg-create',
   UPDATE_SLOGAN_IMAGE: 'sloganImg-update',
+  DETAIL_KEY_INPUT: 'whatWeDo-key',
+  DETAIL_VALUE_INPUT: 'whatWeDo-value',
+  DELETE_DETAIL: 'whatWeDo-delete',
 };
 
 // PA DataEdit Company 공통 속성

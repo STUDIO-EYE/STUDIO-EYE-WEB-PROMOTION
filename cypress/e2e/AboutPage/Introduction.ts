@@ -2,7 +2,7 @@ import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/
 import { MSG } from '@/constants/messages';
 import { confirmAndCheckCompletion, login } from 'cypress/support/hooks';
 
-describe('1. 회사 소개를 관리한다.', () => {
+describe('1. 회사 소개를 관리한다', () => {
   beforeEach(() => {
     login();
     cy.intercept('GET', '/api/company/information', {
@@ -37,7 +37,7 @@ describe('1. 회사 소개를 관리한다.', () => {
     cy.wait('@getCompanyInfo', { timeout: 10000 });
   });
 
-  it('PP에서 로그인 후 PA의 회사 정보 편집 페이지로 이동한다.', () => {
+  it('PP에서 로그인 후 PA의 회사 정보 편집 페이지로 이동한다', () => {
     // 페이지 이동 확인
     cy.url().should('include', '/promotion-admin/dataEdit/company');
   });
@@ -179,9 +179,7 @@ describe('1. 회사 소개를 관리한다.', () => {
 
         req.reply({
           statusCode: 200,
-          body: {
-            message: 'Company Introduction updated successfully',
-          },
+          body: {},
         });
       }).as('deleteIntroduction');
 
@@ -260,10 +258,6 @@ describe('1. 회사 소개를 관리한다.', () => {
 
           // 모든 공백을 단일 공백으로 정규화하고 문자열 앞뒤 공백 제거
           const normalizeText = (str: string) => str.replace(/\s+/g, ' ').trim();
-
-          // 디버깅 로그
-          cy.log('Normalized Actual Text:', normalizeText(text));
-          cy.log('Normalized Expected Text:', normalizeText(expectedText));
 
           chai.expect(normalizeText(text)).to.include(normalizeText(expectedText));
         });
