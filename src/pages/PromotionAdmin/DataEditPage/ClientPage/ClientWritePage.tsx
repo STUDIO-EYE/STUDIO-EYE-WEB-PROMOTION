@@ -149,6 +149,7 @@ function ClientWritePage() {
             <SubTitle description='Name' />
             <div style={{ display: 'flex' }}>
               <input
+                id="create_client_name"
                 style={{ paddingLeft: '10px' }}
                 {...register('name', {
                   required: MSG.PLACEHOLDER_MSG.NAME,
@@ -173,7 +174,7 @@ function ClientWritePage() {
         </RightContainer>
       </FormContainer>
       <ButtonWrapper>
-        <Button onClick={handleSubmit(onValid)} description={MSG.BUTTON_MSG.POST} width={100} />
+        <Button id='create_client_finish' onClick={handleSubmit(onValid)} description={MSG.BUTTON_MSG.POST} width={100} />
       </ButtonWrapper>
     </ContentBlock>
   );

@@ -1,4 +1,4 @@
-import { getPartnersData } from '@/apis/PromotionAdmin/dataEdit';
+import { deletePartner, getPartnersData, putPartnersInfoData, putPartnersLogoData } from '@/apis/PromotionAdmin/dataEdit';
 import { ContentBlock } from '@/components/PromotionAdmin/DataEdit/Company/CompanyFormStyleComponents';
 import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
 import FileButton from '@/components/PromotionAdmin/DataEdit/StyleComponents/FileButton';
@@ -8,7 +8,6 @@ import ToggleSwitch from '@/components/PromotionAdmin/DataEdit/StyleComponents/T
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { IPartnersData } from '@/types/PromotionAdmin/dataEdit';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
@@ -144,23 +143,17 @@ function PartnerEditPage() {
           console.error('로고 이미지 가져오기 실패');
         }
 
-        axios
-          .put(`${PROMOTION_BASIC_PATH}/api/partners`, formData)
-          .then((response) => {
-            console.log('Partner updated:', response);
-            alert(MSG.ALERT_MSG.SAVE);
-            setIsEditing(false);
-          })
-          .catch((error) => console.error('Error updating partner:', error));
+        putPartnersLogoData(formData)
+        .then(()=>{
+          alert(MSG.ALERT_MSG.SAVE);
+          setIsEditing(false);
+        })
       } else {
-        axios
-          .put(`${PROMOTION_BASIC_PATH}/api/partners/modify`, formData)
-          .then((response) => {
-            console.log('Partners updated:', response);
+        putPartnersInfoData(formData)
+        .then(() => {
             alert(MSG.ALERT_MSG.SAVE);
             setIsEditing(false);
           })
-          .catch((error) => console.error('Error updating partner:', error));
       }
     }
   };
@@ -195,10 +188,7 @@ function PartnerEditPage() {
 
   const handleDelete = (id: number) => {
     if (window.confirm(MSG.CONFIRM_MSG.DELETE)) {
-      axios
-        .delete(`${PROMOTION_BASIC_PATH}/api/partners/${id}`)
-        .then((response) => {})
-        .catch((error) => console.log(error));
+      deletePartner(id);
       alert(MSG.ALERT_MSG.DELETE);
       setIsEditing(false);
     }

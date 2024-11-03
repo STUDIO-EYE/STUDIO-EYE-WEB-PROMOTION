@@ -81,7 +81,7 @@ const NewsViewPage = () => {
   }, []);
 
 //링크 유효성 검사----------------------------------------
-  function isValidUrl(url:string) {
+  function isValidUrl(url: string) {
     try {
       new URL(url);
       return true;
@@ -95,32 +95,47 @@ const NewsViewPage = () => {
     } else {
       alert(MSG.EXCEPTION_MSG.INVALID_LINK);
     }
-  }
+  };
 
   //----------------------------------------
   return (
     <Container>
-      {isEditing?<Outlet context={sharedNews}/>: 
-      <>
-        <Description>제목</Description>
-        <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-          <Title>{news?.title}</Title>
-          <More ref={buttonRef} onClick={handleToggleMenu}/>
-          {more?<Menu top={menuPosition.top} left={menuPosition.left} ref={menuRef}>
-            <li onClick={handleDelete}>{MSG.BUTTON_MSG.DELETE}</li>
-            <li onClick={handleEditNews}>{MSG.BUTTON_MSG.MODIFY}</li>
-            </Menu>:null}
-        </div>
-        <Description>출처/작성자 및 원문 날짜</Description>
-        <Day>{news?.source+" | "+news?.pubDate}</Day>
-        <Description>공개 여부</Description>
-        <Visibility visibility={news?news.visibility:null}>{news?.visibility?"공개":"비공개"}</Visibility>
-        <Description>링크</Description>
-        <Content target="_blank" rel="noopener noreferrer"
-          onClick={()=>news?.url?handleClick({url:news?.url}):alert(MSG.EXCEPTION_MSG.NULL_DATA)}>
+      {isEditing ? (
+        <Outlet context={sharedNews} />
+      ) : (
+        <>
+          <Description data-cy="news-title-label">제목</Description>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Title data-cy="news-title">{news?.title}</Title>
+            <More ref={buttonRef} onClick={handleToggleMenu} data-cy="news-more-button" />
+            {more ? (
+              <Menu top={menuPosition.top} left={menuPosition.left} ref={menuRef}>
+                <li onClick={handleDelete} data-cy="news-delete-button">
+                  {MSG.BUTTON_MSG.DELETE}
+                </li>
+                <li onClick={handleEditNews} data-cy="news-edit-button">
+                  {MSG.BUTTON_MSG.MODIFY}
+                </li>
+              </Menu>
+            ) : null}
+          </div>
+          <Description data-cy="news-source-label">출처/작성자 및 원문 날짜</Description>
+          <Day data-cy="news-source">{news?.source + ' | ' + news?.pubDate}</Day>
+          <Description data-cy="news-visibility-label">공개 여부</Description>
+          <Visibility visibility={news ? news.visibility : null} data-cy="news-visibility">
+            {news?.visibility ? '공개' : '비공개'}
+          </Visibility>
+          <Description data-cy="news-link-label">링크</Description>
+          <Content
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => (news?.url ? handleClick({ url: news?.url }) : alert(MSG.EXCEPTION_MSG.NULL_DATA))}
+            data-cy="news-url"
+          >
             {news?.url}
-        </Content>
-      </>}
+          </Content>
+        </>
+      )}
     </Container>
   );
 };

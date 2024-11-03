@@ -207,6 +207,7 @@ function BenefitWritePage() {
               required: '복지 제목을 입력해주세요.',
             })}
             name='title'
+            data-cy='benefit-title'
             value={putData.request.title}
             onChange={handleChange}
             maxLength={14}
@@ -229,6 +230,7 @@ function BenefitWritePage() {
               required: '복지 내용을 입력해주세요',
             })}
             name='content'
+            data-cy='benefit-content'
             value={putData.request.content}
             onChange={handleChange}
             maxLength={34}
@@ -236,7 +238,7 @@ function BenefitWritePage() {
           />
           {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
           <RowWrapper>
-            <PostButton>등록하기</PostButton>
+            <PostButton data-cy='benefit-submit-button'>등록하기</PostButton>
           </RowWrapper>
         </InputWrapper>
       </ContentBox>
