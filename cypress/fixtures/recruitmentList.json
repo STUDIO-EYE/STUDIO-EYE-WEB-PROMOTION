@@ -1,6 +1,0 @@
-{
-  "content": [
-    { "id": 1, "title": "Software Engineer", "status": "OPEN", "link": "https://example.com/job/1" },
-    { "id": 2, "title": "Project Manager", "status": "CLOSE", "link": "https://example.com/job/2" }
-  ]
-}

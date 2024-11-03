@@ -229,28 +229,30 @@ function RecruitmentManagePage() {
             </Button>
           </TitleWrapper>
           <ListWrapper>
-            {data?.content
-              ?.slice()
-              .reverse()
-              .map((recruitment) => (
-                <RecruimentList key={recruitment.id}>
-                  <DeleteIcon width={15} height={15} onClick={() => handleDelete(recruitment.id, data.totalElements)} />
-                  <RecruimentItem
-                    isSelected={currentRecruitment?.id === recruitment.id && isSelected}
-                    onClick={() => {
-                      fetchRecruitmentData(recruitment.id);
-                    }}
-                  >
-                    <RecruimentTitle>{recruitment.title}</RecruimentTitle>
-                  </RecruimentItem>
-                  <RecruimentStatus
-                    isDeadline={recruitment.status === 'CLOSE'}
-                    isPreparing={recruitment.status === 'PREPARING'}
-                  >
-                    {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-                  </RecruimentStatus>
-                </RecruimentList>
-              ))}
+            {data?.content.map((recruitment) => (
+              <RecruimentList key={recruitment.id} data-cy='recruitment-list-item'>
+                <DeleteIcon
+                  data-cy='delete-button'
+                  width={15}
+                  height={15}
+                  onClick={() => handleDelete(recruitment.id, data.totalElements)}
+                />
+                <RecruimentItem
+                  isSelected={currentRecruitment?.id === recruitment.id && isSelected}
+                  onClick={() => {
+                    fetchRecruitmentData(recruitment.id);
+                  }}
+                >
+                  <RecruimentTitle data-cy='posted-recruitment-title'>{recruitment.title}</RecruimentTitle>
+                </RecruimentItem>
+                <RecruimentStatus
+                  isDeadline={recruitment.status === 'CLOSE'}
+                  isPreparing={recruitment.status === 'PREPARING'}
+                >
+                  {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
+                </RecruimentStatus>
+              </RecruimentList>
+            ))}
           </ListWrapper>
           {data && (
             <PaginationWrapper>
@@ -284,6 +286,7 @@ function RecruitmentManagePage() {
                     required: '제목 입력해주세요. (50자 내로 작성해 주세요.)',
                   })}
                   name='title'
+                  data-cy='recruitment-title'
                   value={currentRecruitment?.title || ''}
                   onChange={handleChange}
                   maxLength={50}
@@ -310,6 +313,7 @@ function RecruitmentManagePage() {
                     },
                   })}
                   name='link'
+                  data-cy='recruitment-link'
                   value={currentRecruitment?.link || ''}
                   onChange={handleChange}
                   maxLength={250}
@@ -335,10 +339,15 @@ function RecruitmentManagePage() {
                         required: '접수 시작일을 입력해주세요.',
                       })}
                       name='startDate'
-                      onKeyDown={(e) => e.preventDefault()}
-                      onMouseDown={(e) => e.preventDefault()}
+                      data-cy='recruitment-startDate'
+                      onKeyDown={(e) => {
+                        if (typeof Cypress === 'undefined') e.preventDefault();
+                      }}
+                      onMouseDown={(e) => {
+                        if (typeof Cypress === 'undefined') e.preventDefault();
+                      }}
                       onClick={(e) => {
-                        e.currentTarget.showPicker();
+                        if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                       }}
                       onChange={handleChange}
                       value={currentRecruitment?.startDate}
@@ -374,10 +383,15 @@ function RecruitmentManagePage() {
                         },
                       })}
                       name='deadline'
-                      onKeyDown={(e) => e.preventDefault()}
-                      onMouseDown={(e) => e.preventDefault()}
+                      data-cy='recruitment-deadline'
+                      onKeyDown={(e) => {
+                        if (typeof Cypress === 'undefined') e.preventDefault();
+                      }}
+                      onMouseDown={(e) => {
+                        if (typeof Cypress === 'undefined') e.preventDefault();
+                      }}
                       onClick={(e) => {
-                        e.currentTarget.showPicker();
+                        if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                       }}
                       onChange={handleChange}
                       value={currentRecruitment.deadline}
@@ -387,7 +401,7 @@ function RecruitmentManagePage() {
                 </RowWrapper>
               </InputWrapper>
               <RowWrapper>
-                <ModifyButton>수정하기</ModifyButton>
+                <ModifyButton data-cy='recruitment-update-button'>수정하기</ModifyButton>
               </RowWrapper>
             </ContentBox>
           </form>
