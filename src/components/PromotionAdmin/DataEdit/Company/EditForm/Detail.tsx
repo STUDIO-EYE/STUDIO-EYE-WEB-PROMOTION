@@ -23,6 +23,7 @@ import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { useNavigate } from 'react-router-dom';
 import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
+import { aboutPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IDetailFormData {
   [x: string]: any;
@@ -47,7 +48,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
 
   useEffect(() => {
     if (data) {
-      const detailInformationArray = data.map((item: { key: string; value: { toString: () => string; }; }) => ({
+      const detailInformationArray = data.map((item: { key: string; value: { toString: () => string } }) => ({
         key: item.key,
         value: item.value.toString(),
       }));
@@ -71,7 +72,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
     const requestBody = {
       detailInformation: data?.detailInformation,
     };
-    
+
     if (window.confirm(MSG.CONFIRM_MSG.SAVE)) {
       axios
         .put(`${PROMOTION_BASIC_PATH}/api/company/detail`, requestBody)
@@ -83,7 +84,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
         .catch((error) => console.error('Error updating company detail:', error));
     }
   };
-  
+
   if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
 
@@ -110,7 +111,12 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
             <div>
               {fields.map((field, index) => (
                 <DetailItem key={field.id}>
-                  <DeleteIcon width={15} height={15} onClick={() => safeRemove(index)} />
+                  <DeleteIcon
+                    data-cy={aboutPageAttributes.DELETE_DETAIL}
+                    width={15}
+                    height={15}
+                    onClick={() => safeRemove(index)}
+                  />
                   <Controller
                     name={`detailInformation.${index}.key`}
                     control={control}
@@ -118,6 +124,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
                     render={({ field }) => (
                       <DetailTitleInputWrapper>
                         <input
+                          data-cy={aboutPageAttributes.DETAIL_KEY_INPUT}
                           {...register(`detailInformation.${index}.key`, {
                             required: MSG.PLACEHOLDER_MSG.DETAIL.TITLE,
                             maxLength: INPUT_MAX_LENGTH.DETAIL_TITLE,
@@ -145,6 +152,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
                     render={({ field }) => (
                       <DetailContentWrapper>
                         <textarea
+                          data-cy={aboutPageAttributes.DETAIL_VALUE_INPUT}
                           {...register(`detailInformation.${index}.value`, {
                             required: MSG.PLACEHOLDER_MSG.DETAIL.CONTENT,
                             maxLength: INPUT_MAX_LENGTH.DETAIL_CONTENT,
