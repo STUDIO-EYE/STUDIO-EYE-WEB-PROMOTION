@@ -111,6 +111,7 @@ const TitleWrapper = styled.div`
     margin-left: -0.1rem;
     width: 100%;
     font-size: 1.5rem;
+    word-break: keep-all;
   }
 `;
 
@@ -130,7 +131,7 @@ const OverviewWrapper = styled.div`
   color: white;
 
   @media ${theme.media.mobile} {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     word-break: keep-all;
   }
 `;
