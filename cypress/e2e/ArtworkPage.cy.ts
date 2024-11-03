@@ -152,7 +152,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
         { name: '설명',selector: '[data-cy="create_artwork_overview"]', value: data[0].overview, type:'type' },
         { name: '고객사',selector: '[data-cy="create_artwork_customer"]', value: data[0].customer, type:'type' },
         { name: '제작 일시',selector: '[data-cy="create_artwork_date"]', value: data[0].date, type:'type' },
-        { name: '카테고리',selector: '[data-cy="PA_artwork_category"]', value: data[0].category, type: 'dropdown' },
+        { name: '카테고리',selector: '[data-cy="create_artwork_category"]', value: data[0].category, type: 'dropdown' },
         { name: '링크',selector: '[data-cy="create_artwork_link"]', value: data[0].link, type:'type' },
         { name: '타입',selector: '[data-cy="create_artwork_artworkType"]', value: data[0].artworkType, type: 'select' },
         { name: '공개 여부',selector: '[data-cy="create_artwork_isOpened"]', value: data[0].isOpened, type: 'select' },
@@ -164,11 +164,11 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     cy.visit('/promotion-admin/artwork');
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
-    cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+    cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
       requiredFields.forEach((field, idx) => {
         if(field.type==='dropdown'){
           cy.get(field.selector).click()
-          cy.get('[data-cy="PA_artwork_category_dropdown"]').contains(field.value).click()
+          cy.get('[data-cy="create_artwork_category_dropdown"]').contains(field.value).click()
         } else if (field.type === 'select') {
           cy.get(field.selector).contains(field.value).click();
         } else {
@@ -190,12 +190,12 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     filteredRequiredFields.forEach((field) => {
       cy.contains('아트워크 생성하기').click();
       cy.wait(100);
-      cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+      cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
         requiredFields.forEach((f) => {
           //category와 공개여부, 아트워크 타입은 빈값넣기 없이 그냥 진행
           if (f.type === 'dropdown') {
             cy.get(f.selector).click();
-            cy.get('[data-cy="PA_artwork_category_dropdown"]').contains(f.value).click();
+            cy.get('[data-cy="create_artwork_category_dropdown"]').contains(f.value).click();
           } else if (f.type === 'select') {
             cy.get(f.selector).contains(f.value).click();
           }else{
@@ -222,10 +222,10 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     cy.visit('/promotion-admin/artwork')
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
-    cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+    cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
       cy.get('[data-cy="create_artwork_link"]').type('testing testing')
     })
-    cy.contains('외부 연결 링크는 http 혹은 https로 시작해야합니다.').should('be.exist') //fixed position이라 PP_artwork_createBox내에선 확인 못할것으로 보임
+    cy.contains('외부 연결 링크는 http 혹은 https로 시작해야합니다.').should('be.exist') //fixed position이라 PA_artwork_createBox내에선 확인 못할것으로 보임
   });
 
   it('관리 페이지에서 추가한 아트워크가 정상적으로 나타나는지 확인한다.',()=>{

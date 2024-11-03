@@ -30,12 +30,14 @@ const Index = () => {
   return (
     <>
     {producingIsOpend && <BackDrop children={<NewsWritePage/>} isOpen={producingIsOpend} />}
-    <Container>
+    <Container data-cy="news-index-container">
         <HeaderWrapper>
-        <span style={{marginTop:"auto",marginBottom:"auto"}}>News 목록</span>
-        <SendButton onClick={handleWritingNews}>글쓰기</SendButton>
+        <span style={{marginTop:"auto",marginBottom:"auto"}} data-cy="news-header-title">News 목록</span>
+        <SendButton onClick={handleWritingNews} data-cy="news-write-button">글쓰기</SendButton>
         </HeaderWrapper>
-        <div style={{display:'flex'}}><NewsList handler={handleViewNews}/><Outlet/></div>
+        <div style={{display:'flex'}}><NewsList handler={handleViewNews} data-cy="news-list"/>
+        <Outlet data-cy="news-outlet" />
+        </div>
     </Container>
     </>
   );
