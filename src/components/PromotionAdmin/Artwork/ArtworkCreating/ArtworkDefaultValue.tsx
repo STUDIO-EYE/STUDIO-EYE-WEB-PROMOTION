@@ -50,7 +50,7 @@ export const getArtworkDefaultValue = (
         <GetInputWrapper>{title}</GetInputWrapper>
       ) : (
         <StyledInput
-          id='create_artwork_title'
+          data-cy='create_artwork_title'
           required
           value={title}
           type='text'
@@ -67,7 +67,7 @@ export const getArtworkDefaultValue = (
         <GetInputWrapper>{overview}</GetInputWrapper>
       ) : (
         <OverviewInput
-          id='create_artwork_overview'
+          data-cy='create_artwork_overview'
           required
           type='text'
           value={overview}
@@ -84,7 +84,7 @@ export const getArtworkDefaultValue = (
         <GetInputWrapper>{customer}</GetInputWrapper>
       ) : (
         <StyledInput
-          id='create_artwork_customer'
+          data-cy='create_artwork_customer'
           required
           type='text'
           value={customer}
@@ -107,7 +107,7 @@ export const getArtworkDefaultValue = (
             onChange={(newValue) => handleDateChange(newValue ? newValue.toDate() : null)}
             slotProps={{
               textField: {
-                id:'create_artwork_date',
+                inputProps:{'data-cy':'create_artwork_date'},
                 sx: {
                   backgroundColor: '#dadada9f',
                   '.MuiOutlinedInput-root': {
@@ -136,7 +136,7 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{selectedCategory}</GetInputWrapper>
       ) : (
-        <CategoryDropDown putCategory={selectedCategory.toString()} setSelectedCategory={setSelectedCategory} />
+        <CategoryDropDown data-cy='create_artwork_category' putCategory={selectedCategory.toString()} setSelectedCategory={setSelectedCategory} />
       ),
     },
     {
@@ -151,7 +151,7 @@ export const getArtworkDefaultValue = (
         </GetHrefContainer>
       ) : (
         <StyledInput
-          id='create_artwork_link'
+          data-cy='create_artwork_link'
           required
           type='text'
           value={link}
@@ -165,7 +165,7 @@ export const getArtworkDefaultValue = (
       title: '아트워크 타입',
       description: `① Top\n 메인 페이지에서 가장 먼저 보이는 아트워크이며, 1개만 지정할 수 있습니다. \n\n ③ Main\n 메인 페이지에서 슬라이드로 보이는 아트워크이며, 최대 5개까지 지정할 수 있습니다. \n\n ② Others\n 그 외의 아트워크 유형으로, 아트워크 페이지에서 보여집니다.`,
       content: (
-        <TypeContainer id='create_artwork_artworkType' projectType={projectType}>
+        <TypeContainer data-cy='create_artwork_artworkType' projectType={projectType}>
           <div onClick={() => !isGetMode && projectType !== 'top' && setProjectType('top')}>Top</div>
           <div onClick={() => !isGetMode && projectType !== 'main' && setProjectType('main')}>Main</div>
           <div onClick={() => !isGetMode && projectType !== 'others' && setProjectType('others')}>Others</div>
@@ -179,15 +179,15 @@ export const getArtworkDefaultValue = (
       content: isTopMainArtwork ? (
         <>
           <IsTopMainArtworkText>⚠ Top, Main 선택 시 항상 프로모션 페이지에 공개됩니다.</IsTopMainArtworkText>
-          <IsTopMainArtworkContainer id='create_artwork_isOpened'>
-            <div id='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
-            <div id='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
+          <IsTopMainArtworkContainer data-cy='create_artwork_isOpened'>
+            <div data-cy='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
+            <div data-cy='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
           </IsTopMainArtworkContainer>
         </>
       ) : (
-        <Ispostedcontainer id='create_artwork_isOpened' isopened={isprojectopened ? 'true' : 'false'}>
-          <div id='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
-          <div id='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
+        <Ispostedcontainer data-cy='create_artwork_isOpened' isopened={isprojectopened ? 'true' : 'false'}>
+          <div data-cy='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
+          <div data-cy='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
         </Ispostedcontainer>
       ),
     },
