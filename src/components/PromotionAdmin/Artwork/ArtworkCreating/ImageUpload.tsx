@@ -64,6 +64,7 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
         <UploadLabel htmlFor={`${type}-image-upload`}>이미지 업로드</UploadLabel>
         <input
           id={`${type}-image-upload`}
+          data-cy={`create_${type}_image`}
           type='file'
           accept='image/*'
           multiple={type === 'detail'}
