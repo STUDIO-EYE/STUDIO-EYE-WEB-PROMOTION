@@ -285,7 +285,7 @@ function BenefitManagePage() {
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
               </div>
-              새로운 복지 등록
+              새로운 복지
             </Button>
           </TitleWrapper>
           <ListWrapper>
@@ -296,7 +296,7 @@ function BenefitManagePage() {
                 onClick={() => fetchBenefitData(benefit)}
               >
                 <BenefitImage src={benefit.imageUrl} alt={benefit.imageFileName} />
-                <BenefitTitle>{benefit.title}</BenefitTitle>
+                <BenefitTitle data-cy='posted-benefit-title'>{benefit.title}</BenefitTitle>
                 <BenefitContent>{benefit.content}</BenefitContent>
               </BenefitItem>
             ))}
@@ -338,6 +338,7 @@ function BenefitManagePage() {
                     required: '복지 제목을 입력해주세요.',
                   })}
                   name='title'
+                  data-cy='benefit-title'
                   value={currentBenefit?.title || ''}
                   onChange={handleChange}
                   maxLength={14}
@@ -360,6 +361,7 @@ function BenefitManagePage() {
                     required: '복지 내용을 입력해주세요',
                   })}
                   name='content'
+                  data-cy='benefit-content'
                   value={currentBenefit?.content || ''}
                   onChange={handleChange}
                   maxLength={34}
@@ -367,10 +369,14 @@ function BenefitManagePage() {
                 />
                 {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
                 <RowWrapper>
-                  <ModifyButton type='button' onClick={() => handleDelete(currentBenefit.id)}>
+                  <ModifyButton
+                    type='button'
+                    data-cy='benefit-delete-button'
+                    onClick={() => handleDelete(currentBenefit.id)}
+                  >
                     삭제하기
                   </ModifyButton>
-                  <ModifyButton>수정하기</ModifyButton>
+                  <ModifyButton data-cy='benefit-update-button'>수정하기</ModifyButton>
                 </RowWrapper>
               </InputWrapper>
             </ContentBox>
