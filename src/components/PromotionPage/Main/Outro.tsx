@@ -38,6 +38,10 @@ const Container = styled.div`
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: 73%;
+    height: 80%;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    height: -webkit-fill-available;
   }
 `;
