@@ -134,7 +134,7 @@ const MainPage = () => {
           </ArtworkSection>
           <OutroSection>
             <Outro />
-            {/* <Footer /> */}
+            <Footer />
           </OutroSection>
         </ChakraProvider>
       </div>

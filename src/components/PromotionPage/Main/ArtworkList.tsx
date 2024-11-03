@@ -46,6 +46,11 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${data.backgroundImg || defaultMainImg})`}
       backgroundSize="cover"
       backgroundPosition="center"
+      css={`
+        @supports (-webkit-touch-callout: none) {
+          height: -webkit-fill-available;
+        }
+      `}
     >
       {isLoading ? (
         <SkeletonWrapper>
@@ -93,7 +98,7 @@ const TextWrapper = styled.div`
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: 100%;
+    height: 80%; // 80?
     padding: 6rem 1.75rem 0 1rem;
     line-height: 1.2;
   }
@@ -111,6 +116,7 @@ const TitleWrapper = styled.div`
     margin-left: -0.1rem;
     width: 100%;
     font-size: 1.5rem;
+    word-break: keep-all;
   }
 `;
 
@@ -130,7 +136,7 @@ const OverviewWrapper = styled.div`
   color: white;
 
   @media ${theme.media.mobile} {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     word-break: keep-all;
   }
 `;
