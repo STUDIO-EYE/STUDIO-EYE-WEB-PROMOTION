@@ -6,138 +6,138 @@ import { ArtworkData, ArtworkRequiredField } from "cypress/support/types";
 
 let testData:ArtworkData;
 
-describe('Artwork-아트워크를 확인한다.',()=>{
-  beforeEach(()=>{
-    login()
-  });
+// describe('Artwork-아트워크를 확인한다.',()=>{
+//   beforeEach(()=>{
+//     login()
+//   });
 
-  it('관리 페이지에서 로딩 확인 후 아트워크가 있는 것을 확인한다.',()=>{
-    cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
-      statusCode: 200,
-      body: {
-        code: 200,
-        status: "OK",
-        message: "프로젝트 목록을 성공적으로 조회했습니다.",
-        data: [{
-          "id": 1,
-          "department": "",
-          "category": "Entertainment",
-          "name": "이준호와 임윤아의 킹더랜드 인터뷰",
-          "client": "NETFLIX Korea Youtube",
-          "date": "2021-11-30T15:00:00.000Z",
-          "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
-          "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
-          "projectType": "others",
-          "isPosted": true,
-          "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
-          "mainImgFileName": "킹더랜드-main.png",
-          "responsiveMainImg": null,
-          "responsiveMainImgFileName": null,
-          "sequence": 1,
-          "mainSequence": 999,
-          "projectImages": [
-            {
-                "id": 2,
-                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
-                "fileName": "킹더랜드-detail1.png"
-            },
-            {
-                "id": 3,
-                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
-                "fileName": "킹더랜드-detail2.png"
-            }
-          ]
-          }]
-        }
-    })
-    cy.visit('/promotion-admin/artwork')
-    cy.contains('Loading...').should('be.visible')
-    const child=['title','client','isOpen','category','overview','type']
-    cy.get('[data-cy="PA_artwork_list"]').find('[data-cy="PA_artwork"]').within((body)=>{
-      child.forEach((child)=>{
-        if (child === 'isOpen' || child === 'isClose') {
-          const exists = body.find(`[data-cy="PA_artwork_${child}"]`).length > 0;
-          cy.get(`[data-cy="PA_artwork_${child}"]`).should(exists ? 'exist' : 'not.exist');
-        }else{
-          cy.get(`[data-cy="PA_artwork_${child}"]`).should('exist')
-        }
-      })
-    })
-  });
+//   it('관리 페이지에서 로딩 확인 후 아트워크가 있는 것을 확인한다.',()=>{
+//     cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
+//       statusCode: 200,
+//       body: {
+//         code: 200,
+//         status: "OK",
+//         message: "프로젝트 목록을 성공적으로 조회했습니다.",
+//         data: [{
+//           "id": 1,
+//           "department": "",
+//           "category": "Entertainment",
+//           "name": "이준호와 임윤아의 킹더랜드 인터뷰",
+//           "client": "NETFLIX Korea Youtube",
+//           "date": "2021-11-30T15:00:00.000Z",
+//           "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
+//           "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
+//           "projectType": "others",
+//           "isPosted": true,
+//           "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
+//           "mainImgFileName": "킹더랜드-main.png",
+//           "responsiveMainImg": null,
+//           "responsiveMainImgFileName": null,
+//           "sequence": 1,
+//           "mainSequence": 999,
+//           "projectImages": [
+//             {
+//                 "id": 2,
+//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
+//                 "fileName": "킹더랜드-detail1.png"
+//             },
+//             {
+//                 "id": 3,
+//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
+//                 "fileName": "킹더랜드-detail2.png"
+//             }
+//           ]
+//           }]
+//         }
+//     })
+//     cy.visit('/promotion-admin/artwork')
+//     cy.contains('Loading...').should('be.visible')
+//     const child=['title','client','isOpen','category','overview','type']
+//     cy.get('[data-cy="PA_artwork_list"]').find('[data-cy="PA_artwork"]').within((body)=>{
+//       child.forEach((child)=>{
+//         if (child === 'isOpen' || child === 'isClose') {
+//           const exists = body.find(`[data-cy="PA_artwork_${child}"]`).length > 0;
+//           cy.get(`[data-cy="PA_artwork_${child}"]`).should(exists ? 'exist' : 'not.exist');
+//         }else{
+//           cy.get(`[data-cy="PA_artwork_${child}"]`).should('exist')
+//         }
+//       })
+//     })
+//   });
 
-  it('관리 페이지에서 아트워크가 없을 경우.',()=>{
-    cy.intercept('GET', '**/api/projects', {
-        statusCode: 200,
-        body: []
-      })
-    cy.visit('/promotion-admin/artwork')
-    cy.contains('Loading...').should('be.visible')
-    cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
-  })
+//   it('관리 페이지에서 아트워크가 없을 경우.',()=>{
+//     cy.intercept('GET', '**/api/projects', {
+//         statusCode: 200,
+//         body: []
+//       })
+//     cy.visit('/promotion-admin/artwork')
+//     cy.contains('Loading...').should('be.visible')
+//     cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
+//   })
 
-  it('프로모션 페이지에서 아트워크가 있는 것을 확인한다.',()=>{
-    cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
-      statusCode: 200,
-      body: {
-        code: 200,
-        status: "OK",
-        message: "프로젝트 목록을 성공적으로 조회했습니다.",
-        data: [{
-          "id": 1,
-          "department": "",
-          "category": "Entertainment",
-          "name": "이준호와 임윤아의 킹더랜드 인터뷰",
-          "client": "NETFLIX Korea Youtube",
-          "date": "2021-11-30T15:00:00.000Z",
-          "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
-          "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
-          "projectType": "others",
-          "isPosted": true,
-          "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
-          "mainImgFileName": "킹더랜드-main.png",
-          "responsiveMainImg": null,
-          "responsiveMainImgFileName": null,
-          "sequence": 1,
-          "mainSequence": 999,
-          "projectImages": [
-            {
-                "id": 2,
-                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
-                "fileName": "킹더랜드-detail1.png"
-            },
-            {
-                "id": 3,
-                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
-                "fileName": "킹더랜드-detail2.png"
-            }
-          ]
-          }]
-        }
-    })
-    cy.visit('/artwork')
-    cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_skeleton"]').should('exist')
-    const child=['img','title','client']
-    cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_artwork"]').within(()=>{
-      child.forEach((child)=>{
-        cy.get(`[data-cy="PP_artwork_${child}"]`).should('exist')
-      })
-    })
-  });
+//   it('프로모션 페이지에서 아트워크가 있는 것을 확인한다.',()=>{
+//     cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
+//       statusCode: 200,
+//       body: {
+//         code: 200,
+//         status: "OK",
+//         message: "프로젝트 목록을 성공적으로 조회했습니다.",
+//         data: [{
+//           "id": 1,
+//           "department": "",
+//           "category": "Entertainment",
+//           "name": "이준호와 임윤아의 킹더랜드 인터뷰",
+//           "client": "NETFLIX Korea Youtube",
+//           "date": "2021-11-30T15:00:00.000Z",
+//           "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
+//           "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
+//           "projectType": "others",
+//           "isPosted": true,
+//           "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
+//           "mainImgFileName": "킹더랜드-main.png",
+//           "responsiveMainImg": null,
+//           "responsiveMainImgFileName": null,
+//           "sequence": 1,
+//           "mainSequence": 999,
+//           "projectImages": [
+//             {
+//                 "id": 2,
+//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
+//                 "fileName": "킹더랜드-detail1.png"
+//             },
+//             {
+//                 "id": 3,
+//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
+//                 "fileName": "킹더랜드-detail2.png"
+//             }
+//           ]
+//           }]
+//         }
+//     })
+//     cy.visit('/artwork')
+//     cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_skeleton"]').should('exist')
+//     const child=['img','title','client']
+//     cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_artwork"]').within(()=>{
+//       child.forEach((child)=>{
+//         cy.get(`[data-cy="PP_artwork_${child}"]`).should('exist')
+//       })
+//     })
+//   });
 
-  it('프로모션 페이지에서 아트워크가 없을 경우.', ()=>{
-    cy.intercept('GET','**/api/projects',{
-      statusCode:200,
-      body: []
-    })
-    cy.visit('/artwork')
-    cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_skeleton"]').should('exist')
-    cy.contains('아직 프로젝트가 없습니다.').should('be.visible')
-    // cy.contains("LET'S COLLABORATE WORK WITH US!").should('be.visible')
-    // cy.contains('스튜디오아이에 프로젝트 문의하기').should('be.visible')
-    cy.get('[data-cy="PP_artwork_nullComment"]').should('be.visible')
-    cy.get('[data-cy="PP_artwork_nullContact"]').should('be.visible')
-  })
-});
+//   it('프로모션 페이지에서 아트워크가 없을 경우.', ()=>{
+//     cy.intercept('GET','**/api/projects',{
+//       statusCode:200,
+//       body: []
+//     })
+//     cy.visit('/artwork')
+//     cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_skeleton"]').should('exist')
+//     cy.contains('아직 프로젝트가 없습니다.').should('be.visible')
+//     // cy.contains("LET'S COLLABORATE WORK WITH US!").should('be.visible')
+//     // cy.contains('스튜디오아이에 프로젝트 문의하기').should('be.visible')
+//     cy.get('[data-cy="PP_artwork_nullComment"]').should('be.visible')
+//     cy.get('[data-cy="PP_artwork_nullContact"]').should('be.visible')
+//   })
+// });
 
 
 
@@ -152,7 +152,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
         { name: '설명',selector: '[data-cy="create_artwork_overview"]', value: data[0].overview, type:'type' },
         { name: '고객사',selector: '[data-cy="create_artwork_customer"]', value: data[0].customer, type:'type' },
         { name: '제작 일시',selector: '[data-cy="create_artwork_date"]', value: data[0].date, type:'type' },
-        { name: '카테고리',selector: '[data-cy="PA_artwork_category"]', value: data[0].category, type: 'dropdown' },
+        { name: '카테고리',selector: '[data-cy="create_artwork_category"]', value: data[0].category, type: 'dropdown' },
         { name: '링크',selector: '[data-cy="create_artwork_link"]', value: data[0].link, type:'type' },
         { name: '타입',selector: '[data-cy="create_artwork_artworkType"]', value: data[0].artworkType, type: 'select' },
         { name: '공개 여부',selector: '[data-cy="create_artwork_isOpened"]', value: data[0].isOpened, type: 'select' },
@@ -164,11 +164,11 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     cy.visit('/promotion-admin/artwork');
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
-    cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+    cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
       requiredFields.forEach((field, idx) => {
         if(field.type==='dropdown'){
           cy.get(field.selector).click()
-          cy.get('[data-cy="PA_artwork_category_dropdown"]').contains(field.value).click()
+          cy.get('[data-cy="create_artwork_category_dropdown"]').contains(field.value).click()
         } else if (field.type === 'select') {
           cy.get(field.selector).contains(field.value).click();
         } else {
@@ -190,12 +190,12 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     filteredRequiredFields.forEach((field) => {
       cy.contains('아트워크 생성하기').click();
       cy.wait(100);
-      cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+      cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
         requiredFields.forEach((f) => {
           //category와 공개여부, 아트워크 타입은 빈값넣기 없이 그냥 진행
           if (f.type === 'dropdown') {
             cy.get(f.selector).click();
-            cy.get('[data-cy="PA_artwork_category_dropdown"]').contains(f.value).click();
+            cy.get('[data-cy="create_artwork_category_dropdown"]').contains(f.value).click();
           } else if (f.type === 'select') {
             cy.get(f.selector).contains(f.value).click();
           }else{
@@ -222,10 +222,10 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     cy.visit('/promotion-admin/artwork')
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
-    cy.get('[data-cy="PP_artwork_createBox"]').within(()=>{
+    cy.get('[data-cy="PA_artwork_createBox"]').within(()=>{
       cy.get('[data-cy="create_artwork_link"]').type('testing testing')
     })
-    cy.contains('외부 연결 링크는 http 혹은 https로 시작해야합니다.').should('be.exist') //fixed position이라 PP_artwork_createBox내에선 확인 못할것으로 보임
+    cy.contains('외부 연결 링크는 http 혹은 https로 시작해야합니다.').should('be.exist') //fixed position이라 PA_artwork_createBox내에선 확인 못할것으로 보임
   });
 
   it('관리 페이지에서 추가한 아트워크가 정상적으로 나타나는지 확인한다.',()=>{

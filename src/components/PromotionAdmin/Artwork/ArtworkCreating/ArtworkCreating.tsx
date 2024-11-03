@@ -168,7 +168,7 @@ const ArtworkCreating = () => {
   return (
     <Container>
       <CloseContainer onClick={() => setProducingIsOpened(false)}>x</CloseContainer>
-      <ValueWrapper data-cy='PP_artwork_createBox'>
+      <ValueWrapper data-cy='PA_artwork_createBox'>
         {defaultValue.map((item: DefaultValueItem, index: number) => (
           <div key={index}>
             {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}

@@ -13,89 +13,89 @@ const mainTestImage2 = 'cypress/fixtures/MainPage/main2.png';
 const mainTestImage3 = 'cypress/fixtures/MainPage/main3.png';
 const clientTestImages = ['cypress/fixtures/MainPage/Netflix_Logo.png', 'cypress/fixtures/MainPage/CJ_ENM_Logo.png'];
 
-// describe('Artwork 데이터 생성, 수정, 삭제 및 확인', () => {
-//   beforeEach(() => {
-//     login();
-//     cy.fixture<ArtworkData>('MainPage/PA_artwork_data.json').then((data) => {
-//       PAartworkTestData = data;
-//     });
-//   });
+describe('Artwork 데이터 생성, 수정, 삭제 및 확인', () => {
+  beforeEach(() => {
+    login();
+    cy.fixture<ArtworkData>('MainPage/PA_artwork_data.json').then((data) => {
+      PAartworkTestData = data;
+    });
+  });
 
-//   it('Artwork 데이터를 추가한다.', () => {
-//     cy.visit('/promotion-admin/artwork');
-//     cy.contains('아트워크 생성하기').click();
-//     cy.wait(500);
-//     cy.get('[data-cy="create_artwork_title"]').type(PAartworkTestData.title);
-//     cy.get('[data-cy="create_artwork_overview"]').type(PAartworkTestData.overview);
-//     cy.get('[data-cy="create_artwork_customer"]').type(PAartworkTestData.customer);
-//     cy.get('[data-cy="create_artwork_date"]').type(PAartworkTestData.date);
-//     cy.get('[data-cy="create_artwork_category"]').click();
-//     cy.get('[data-cy="create_artwork_category"]').contains(PAartworkTestData.category).click();
-//     cy.get('[data-cy="create_artwork_link"]').type(PAartworkTestData.link);
-//     cy.get('[data-cy="create_artwork_artworkType"]').contains(PAartworkTestData.artworkType).click();
-//     cy.get('[data-cy="main-image-upload"]').selectFile(mainTestImage1, { force: true });
-//     cy.scrollTo('bottom');
-//     cy.get('[data-cy="detail-image-upload"]').selectFile(mainTestImage2, { force: true });
-//     cy.get('[data-cy="create_artwork_submit"]').click();
-//     cy.wait(1000);
-//   });
+  it('Artwork 데이터를 추가한다.', () => {
+    cy.visit('/promotion-admin/artwork');
+    cy.contains('아트워크 생성하기').click();
+    cy.wait(500);
+    cy.get('[data-cy="create_artwork_title"]').type(PAartworkTestData.title);
+    cy.get('[data-cy="create_artwork_overview"]').type(PAartworkTestData.overview);
+    cy.get('[data-cy="create_artwork_customer"]').type(PAartworkTestData.customer);
+    cy.get('[data-cy="create_artwork_date"]').type(PAartworkTestData.date);
+    cy.get('[data-cy="create_artwork_category"]').click();
+    cy.get('[data-cy="create_artwork_category"]').contains(PAartworkTestData.category).click();
+    cy.get('[data-cy="create_artwork_link"]').type(PAartworkTestData.link);
+    cy.get('[data-cy="create_artwork_artworkType"]').contains(PAartworkTestData.artworkType).click();
+    cy.get('[data-cy="main-image-upload"]').selectFile(mainTestImage1, { force: true });
+    cy.scrollTo('bottom');
+    cy.get('[data-cy="detail-image-upload"]').selectFile(mainTestImage2, { force: true });
+    cy.get('[data-cy="create_artwork_submit"]').click();
+    cy.wait(1000);
+  });
 
-//   it('수정된 Artwork 데이터를 확인한다.', () => {
-//     cy.visit('/');
-//     cy.get('[data-cy="artwork-section"]').each($section => { // 각 요소에 대해
-//       cy.wrap($section).within(() => {
-//         cy.contains(PAartworkTestData.title).should('exist');
-//         cy.contains(PAartworkTestData.overview).should('exist');
-//         cy.contains(PAartworkTestData.customer).should('exist');
-//       });
-//     });
-//   });
+  it('수정된 Artwork 데이터를 확인한다.', () => {
+    cy.visit('/');
+    cy.get('[data-cy="artwork-section"]').each($section => { // 각 요소에 대해
+      cy.wrap($section).within(() => {
+        cy.contains(PAartworkTestData.title).should('exist');
+        cy.contains(PAartworkTestData.overview).should('exist');
+        cy.contains(PAartworkTestData.customer).should('exist');
+      });
+    });
+  });
 
-//   it('Artwork 데이터를 수정한다.', () => {
-//     cy.visit('/promotion-admin/artwork');
-//     cy.wait(500);
-//     cy.contains(PAartworkTestData.title).click({ force: true });
-//     cy.wait(500);
-//     cy.get('[data-cy=modify_artwork_submit]').click();
+  it('Artwork 데이터를 수정한다.', () => {
+    cy.visit('/promotion-admin/artwork');
+    cy.wait(500);
+    cy.contains(PAartworkTestData.title).click({ force: true });
+    cy.wait(500);
+    cy.get('[data-cy=modify_artwork_submit]').click();
 
-//     cy.get('[data-cy="create_artwork_title"]')
-//       .click({ force: true })
-//       .type('{end}')
-//       .type(' - 수정');
+    cy.get('[data-cy="create_artwork_title"]')
+      .click({ force: true })
+      .type('{end}')
+      .type(' - 수정');
 
-//       cy.get('[data-cy="create_artwork_overview"]').click({ force: true }).type('{end}').type(` - 수정`);
-//       cy.get('[data-cy="create_artwork_customer"]').click({ force: true }).type('{end}').type(` - 수정`);
-//       cy.get('[data-cy="main-image-upload"]').selectFile(mainTestImage1, { force: true });
-//       cy.get('[data-cy="detail-image-upload"]').selectFile(mainTestImage3, { force: true });
-//       cy.get('저장하기').click({ force: true });
-//       cy.wait(1000);
-//   });
+      cy.get('[data-cy="create_artwork_overview"]').click({ force: true }).type('{end}').type(` - 수정`);
+      cy.get('[data-cy="create_artwork_customer"]').click({ force: true }).type('{end}').type(` - 수정`);
+      cy.get('[data-cy="main-image-upload"]').selectFile(mainTestImage1, { force: true });
+      cy.get('[data-cy="detail-image-upload"]').selectFile(mainTestImage3, { force: true });
+      cy.get('저장하기').click({ force: true });
+      cy.wait(1000);
+  });
 
-//   it('수정된 Artwork 데이터 확인', () => {
-//     cy.visit('/');
-//     cy.get('[data-cy="artwork-section"]').within(() => {
-//       cy.contains(`${PAartworkTestData.title} - 수정`).should('exist');
-//       cy.contains(`${PAartworkTestData.overview} - 수정`).should('exist');
-//       cy.contains(`${PAartworkTestData.customer} - 수정`).should('exist');
-//     });
-//   });
+  it('수정된 Artwork 데이터 확인', () => {
+    cy.visit('/');
+    cy.get('[data-cy="artwork-section"]').within(() => {
+      cy.contains(`${PAartworkTestData.title} - 수정`).should('exist');
+      cy.contains(`${PAartworkTestData.overview} - 수정`).should('exist');
+      cy.contains(`${PAartworkTestData.customer} - 수정`).should('exist');
+    });
+  });
 
-//   it('Artwork 데이터를 전체 삭제한다.', () => {
-//     cy.visit('/promotion-admin/artwork');
-//     cy.contains(PAartworkTestData.title).click();
-//     cy.contains('삭제하기').click();
-//     cy.on('window:confirm', () => true);
-//   });
+  it('Artwork 데이터를 전체 삭제한다.', () => {
+    cy.visit('/promotion-admin/artwork');
+    cy.contains(PAartworkTestData.title).click();
+    cy.contains('삭제하기').click();
+    cy.on('window:confirm', () => true);
+  });
 
-//   it('삭제 후 Artwork 섹션에 디폴트 아트워크 데이터가 있는지 확인한다.', () => {
-//     cy.visit('/');
-//     cy.get('[data-cy="artwork-section"]').within(() => {
-//       cy.get('[data-cy="artwork_name"]').should('contain', ARTWORKLIST_DATA.TITLE);
-//       cy.get('[data-cy="artwork_client"]').should('contain', ARTWORKLIST_DATA.CLIENT);
-//       cy.get('[data-cy="artwork_overview"]').should('contain', ARTWORKLIST_DATA.OVERVIEW);
-//     });
-//   });
-// });
+  it('삭제 후 Artwork 섹션에 디폴트 아트워크 데이터가 있는지 확인한다.', () => {
+    cy.visit('/');
+    cy.get('[data-cy="artwork-section"]').within(() => {
+      cy.get('[data-cy="artwork_name"]').should('contain', ARTWORKLIST_DATA.TITLE);
+      cy.get('[data-cy="artwork_client"]').should('contain', ARTWORKLIST_DATA.CLIENT);
+      cy.get('[data-cy="artwork_overview"]').should('contain', ARTWORKLIST_DATA.OVERVIEW);
+    });
+  });
+});
 
 describe('Client 데이터 생성, 수정, 삭제 및 확인', () => {
   beforeEach(() => {
