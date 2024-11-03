@@ -32,17 +32,6 @@ export const getAllRecruitmentData = async (page: number, size: number): Promise
   }
 };
 
-// export const getRecruitmentList = async () => {
-//   try {
-//     const response = await axios.get('http://www.studioeye-promotion.kro.kr:8080/api/recruitment?page=0&size=10');
-//     console.log(response.data.data.content);
-//     return response.data.data;
-//   } catch (error) {
-//     console.log('[❌ Error fetching RecruitmentData]', error);
-//     throw error;
-//   }
-// };
-
 export const getRecruitmentData = async (id: number) => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/recruitment/${id}`);
