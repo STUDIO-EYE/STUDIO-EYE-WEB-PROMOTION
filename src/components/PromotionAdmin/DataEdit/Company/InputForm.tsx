@@ -186,12 +186,12 @@ const InputForm = () => {
 
   const handleSaveClick = async (data: IFormData) => {
     const formData = new FormData();
-  
+
     const transformedDetailInformation = data.detailInformation.map(item => ({
       key: item.key.toString(),
       value: item.value.toString(),
     }));
-  
+
     const requestData = {
       address: data.address,
       addressEnglish: data.addressEnglish,
@@ -202,26 +202,26 @@ const InputForm = () => {
       introduction: introductionState,
       detailInformation: transformedDetailInformation,
     };
-  
+
     console.log("requestData: ", requestData);
-  
+
     const json = JSON.stringify({
       ...requestData,
       detailInformation: transformedDetailInformation,
     });
     const blob = new Blob([json], { type: "application/json" });
     formData.append("request", blob);
-  
+
     const isEmpty =
       checkIsEmpty(mainOverviewState, 'Main Overview') ||
       checkIsEmpty(commitmentState, 'Commitment') ||
       checkIsEmpty(introductionState, 'Introduction');
-  
+
     const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
     formData.append("logoImageUrl", logoFile);
     const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
     formData.append("sloganImageUrl", sloganFile);
-  
+
     if (!isEmpty && window.confirm(MSG.CONFIRM_MSG.POST)) {
       axios
         .post(`${PROMOTION_BASIC_PATH}/api/company/information`, formData)
@@ -234,12 +234,12 @@ const InputForm = () => {
         .catch((error) => {
           console.error('Error post partner:', error);
         });
-    }  
+    }
     // formData.forEach((value, key) => {
     //   console.log(key, value);
     // });
   };
-  
+
 
   const handleLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -427,19 +427,23 @@ const InputForm = () => {
               {DATAEDIT_NOTICE_COMPONENTS.TEXT.INTRODUCTION}
               <InputWrapper>
                 <InputTitle>Main Overview</InputTitle>
-                <TextColorEditor
-                  editorState={mainOverviewState}
-                  onEditorStateChange={updateMainOverview}
-                  attribute='Main Overview'
-                  charLimit={INPUT_MAX_LENGTH.INFOMATION_MAIN_OVERVIEW}
-                />
+                <MainOverviewContainer id='create_intro_mainoverview'>
+                  <TextColorEditor
+                    editorState={mainOverviewState}
+                    onEditorStateChange={updateMainOverview}
+                    attribute='Main Overview'
+                    charLimit={INPUT_MAX_LENGTH.INFOMATION_MAIN_OVERVIEW}
+                  />
+                </MainOverviewContainer>
                 <InputTitle>Commitment</InputTitle>
-                <TextColorEditor
-                  editorState={commitmentState}
-                  onEditorStateChange={updateCommitment}
-                  attribute='Commitment'
-                  charLimit={INPUT_MAX_LENGTH.INFOMATION_COMMITMENT}
-                />
+                <CommitmentContainer id='create_intro_commitment'>
+                  <TextColorEditor
+                    editorState={commitmentState}
+                    onEditorStateChange={updateCommitment}
+                    attribute='Commitment'
+                    charLimit={INPUT_MAX_LENGTH.INFOMATION_COMMITMENT}
+                  />
+                </CommitmentContainer>
                 <InputTitle>Introduction</InputTitle>
                 <TextColorEditor
                   editorState={introductionState}
@@ -528,7 +532,7 @@ const InputForm = () => {
               </InputWrapper>
             </ContentBlock>
             <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '29px' }}>
-              <Button description={MSG.BUTTON_MSG.POST} fontSize={14} width={100} />
+              <Button id='create_intro' description={MSG.BUTTON_MSG.POST} fontSize={14} width={100} />
             </div>
           </RightContentWrapper>
         </Form>
@@ -553,4 +557,10 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
   margin-left: 10px;
   font-size: 13px;
+`;
+
+const MainOverviewContainer = styled.div`
+`;
+
+const CommitmentContainer = styled.div`
 `;

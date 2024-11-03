@@ -8,6 +8,7 @@ type ButtonType = {
   onClick?: () => void;
   svgComponent?: React.ReactNode;
   as?: keyof JSX.IntrinsicElements | React.ComponentType<any>;
+  id?: string;
 };
 
 const Button = (props: ButtonType) => {
@@ -18,6 +19,7 @@ const Button = (props: ButtonType) => {
       description={props.description}
       onClick={props.onClick}
       as={props.as}
+      id={props.id}
     >
       {props.svgComponent}
       {props.description}
