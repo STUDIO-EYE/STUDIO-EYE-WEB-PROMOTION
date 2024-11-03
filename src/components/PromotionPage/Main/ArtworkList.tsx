@@ -107,9 +107,10 @@ const TitleWrapper = styled.div`
   margin: -1rem 0 -0.5rem -0.2rem;
 
   @media ${theme.media.mobile} {
-    margin: 0;
+    margin: 0.3rem 0;
     margin-left: -0.1rem;
-    font-size: 2rem;
+    width: 100%;
+    font-size: 1.5rem;
   }
 `;
 
@@ -119,7 +120,7 @@ const ClientWrapper = styled(motion.h2)`
   color: #cccccc;
 
   @media ${theme.media.mobile} {
-    font-size: 1.5rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -129,7 +130,8 @@ const OverviewWrapper = styled.div`
   color: white;
 
   @media ${theme.media.mobile} {
-    font-size: 1rem;
+    font-size: 0.7rem;
+    word-break: keep-all;
   }
 `;
 

@@ -76,7 +76,7 @@ const Link = styled.a`
     font-size: 1.3rem;
     display: block;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 `;
 
