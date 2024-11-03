@@ -38,7 +38,7 @@ const Container = styled.div`
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: 80%;
+    height: calc(100vh-2.75rem);
   }
 
   @supports (-webkit-touch-callout: none) {
