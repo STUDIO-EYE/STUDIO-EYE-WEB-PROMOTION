@@ -49,18 +49,37 @@ function IntroPage() {
     fetchData();
   }, []);
 
+  const removeParagraphTags = (htmlString: string) => {
+    return htmlString
+      .replace(/<\/?p\s*\/?>/gi, '') // <p> 태그를 제거
+      .replace(/<\/?br\s*\/?>/gi, ' '); // <br> 태그를 공백으로 대체
+  };
+
   return (
-    <Container>
-      <InitContainer>
+    <Container data-cy='intro-container'>
+      <InitContainer data-cy='init-container'>
         <div>
-          <InitTitleWrapper>
-            <InitTitle custom={0} initial='hidden' animate='visible' variants={bounceAnimation}>
+          <InitTitleWrapper data-cy='init-title-wrapper'>
+            <InitTitle
+              custom={0}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              data-cy='init-title-what'
+            >
               WHAT
             </InitTitle>
-            <InitTitle custom={1} initial='hidden' animate='visible' variants={bounceAnimation} color='#ffa900'>
+            <InitTitle
+              custom={1}
+              initial='hidden'
+              animate='visible'
+              variants={bounceAnimation}
+              color='#ffa900'
+              data-cy='init-title-we'
+            >
               WE
             </InitTitle>
-            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation}>
+            <InitTitle custom={2} initial='hidden' animate='visible' variants={bounceAnimation} data-cy='init-title-do'>
               DO
             </InitTitle>
           </InitTitleWrapper>
@@ -69,34 +88,40 @@ function IntroPage() {
         <BackgroundYellowCircle> </BackgroundYellowCircle>
       </InitContainer>
 
-      <IntroContainer>
-        <AboutWrapper ref={aboutRef}>
+      <IntroContainer data-cy='intro-container-content'>
+        <AboutWrapper ref={aboutRef} data-cy='about-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: aboutInView ? 1 : 0, y: aboutInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <BackgroundText>ABOUT</BackgroundText>
+            <BackgroundText data-cy='about-title'>ABOUT</BackgroundText>
             <AboutText
+              data-cy='about-content'
               dangerouslySetInnerHTML={{
-                __html:
-                  companyIntroData ||
-                  '2010년 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여 <br> <span style="color:#ffa900;">클라이언트 맞춤형 콘텐츠 제작</span>과 <span style="color:#ffa900;">운영 대행 서비스</span>를 제공하고 있으며 <br> 드라마, 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.',
+                __html: isMobile
+                  ? removeParagraphTags(
+                      companyIntroData ||
+                        '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
+                    )
+                  : companyIntroData ||
+                    '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
               }}
             />
           </motion.div>
         </AboutWrapper>
-        <MissionWrapper ref={missionRef}>
+        <MissionWrapper ref={missionRef} data-cy='mission-wrapper'>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             animate={{ opacity: missionInView ? 1 : 0, y: missionInView ? 0 : 100 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <BackgroundText> MISSION</BackgroundText>
+            <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
             {sloganImageUrl !== '' ? (
               <img
+                data-cy='mission-image'
                 src={sloganImageUrl}
                 alt='SloganLabel'
                 style={
@@ -107,6 +132,7 @@ function IntroPage() {
               />
             ) : (
               <img
+                data-cy='mission-image-fallback'
                 src={MissionLabel}
                 alt='MissionLabel'
                 style={isMobile ? { width: '80%', objectFit: 'contain' } : { width: '50%', objectFit: 'contain' }}
@@ -155,11 +181,8 @@ const InitTitleWrapper = styled.div`
 `;
 const InitTitle = styled(motion.div)<IFontStyleProps>`
   font-family: ${theme.font.bold};
-  font-size: 7.5rem;
+  font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};
-  @media ${theme.media.mobile} {
-    font-size: 2.75rem;
-  }
 `;
 
 const IntroContainer = styled.div`
@@ -177,14 +200,13 @@ const IntroContainer = styled.div`
 `;
 const BackgroundText = styled.div`
   font-family: ${theme.font.bold};
-  font-size: 10vw;
+  font-size: clamp(3.5rem, 10vw, 12rem);
   letter-spacing: 0.625rem;
   opacity: 0.2;
   filter: blur(3px);
   color: '#FFFFFF';
   user-select: none;
   @media ${theme.media.mobile} {
-    font-size: 3.5rem;
     font-family: ${theme.font.thin};
   }
 `;

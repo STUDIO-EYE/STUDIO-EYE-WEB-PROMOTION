@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { IFAQ, getFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useState, useEffect } from 'react';
 import { theme } from '@/styles/theme';
-import axios from 'axios';
+import { updateFAQData, deleteFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
@@ -80,41 +80,42 @@ function FAQManagePage() {
     }
   }, [currentFAQ, setValue]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      axios
-        .delete(`${PROMOTION_BASIC_PATH}/api/faq/${id}`)
-        .then((response) => {
-          alert('FAQ가 삭제되었습니다.');
-          console.log(response);
-          refetch();
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 삭제 중 오류가 발생했습니다.');
-        });
+      try {
+        await deleteFAQData(id);
+        alert('FAQ가 삭제되었습니다.');
+        refetch();
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 삭제 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  const onValid = (data: IFAQ) => {
+  const onValid = async (data: IFAQ) => {
+    if (!currentFAQ) {
+      alert('수정할 FAQ가 선택되지 않았습니다.');
+      return;
+    }
+
     const formData = {
-      id: currentFAQ?.id,
-      question: currentFAQ?.question,
-      answer: currentFAQ?.answer,
-      visibility: currentFAQ?.visibility,
+      id: currentFAQ.id,
+      question: data.question,
+      answer: data.answer,
+      visibility: currentFAQ.visibility,
     };
+
     if (!(data.question === '' || data.answer === '') && window.confirm('수정하시겠습니까?')) {
-      axios
-        .put(`${PROMOTION_BASIC_PATH}/api/faq`, formData)
-        .then((response) => {
-          alert('FAQ가 수정되었습니다.');
-          console.log(response);
-          setIsEditing(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 수정 중 오류가 발생했습니다.');
-        });
+      try {
+        const response = await updateFAQData(formData);
+        alert('FAQ가 수정되었습니다.');
+        console.log(response);
+        setIsEditing(false);
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 수정 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -187,129 +188,136 @@ function FAQManagePage() {
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>
-      <LeftContentWrapper>
+    <LeftContentWrapper>
+      <ContentBox>
+        <TitleWrapper>
+          <Title data-cy="faq-manage-title">
+            {DATAEDIT_TITLES_COMPONENTS.FAQ}
+            FAQ 게시글 관리
+            <Info>등록된 게시글 {data?.length}건 </Info>
+          </Title>
+          <Button onClick={handleAddNewFAQ} data-cy="add-new-faq-button">
+            <div style={{ paddingRight: 10 }}>
+              <AddedIcon />
+            </div>
+            Add New FAQ
+          </Button>
+        </TitleWrapper>
+        <ListWrapper data-cy="faq-list">
+          {slicedFAQ?.map((faq) => (
+            <FAQList key={faq.id}>
+              <DeleteIcon width={15} height={15} onClick={() => handleDelete(faq.id)}
+               data-cy={`faq-delete-icon-${faq.id}`} 
+               />
+              <FAQItem
+                key={faq.id}
+                isSelected={currentFAQ?.id === faq.id && isSelected}
+                onClick={() => {
+                  handleSelectFAQ(faq);
+                }}
+                data-cy={`faq-item-${faq.id}`} // FAQ 목록의 각 항목 식별 ID
+              >
+                <FAQQuestion data-cy={`faq-question-text-${faq.id}`}>{faq.question}</FAQQuestion> 
+                {faq.visibility ? <PublicIcon data-cy={`faq-visibility-public-${faq.id}`} /> : <PrivateIcon data-cy={`faq-visibility-private-${faq.id}`} />}
+              </FAQItem>
+            </FAQList>
+          ))}
+        </ListWrapper>
+        {data && (
+          <PaginationWrapper>
+            <Pagination postsPerPage={FAQsPerPage} totalPosts={data.length} paginate={paginate} />
+          </PaginationWrapper>
+        )}
+      </ContentBox>
+    </LeftContentWrapper>
+
+    <RightContentWrapper>
+     <form onSubmit={handleSubmit(onValid)} data-cy="faq-edit-form">
         <ContentBox>
           <TitleWrapper>
-            <Title>
-              {DATAEDIT_TITLES_COMPONENTS.FAQ}
-              FAQ 게시글 관리
-              <Info>등록된 게시글 {data?.length}건 </Info>
-            </Title>
-            <Button onClick={handleAddNewFAQ}>
-              <div style={{ paddingRight: 10 }}>
-                <AddedIcon />
-              </div>
-              Add New FAQ
-            </Button>
+           <Title data-cy="faq-edit-title">FAQ 게시글 수정</Title>
           </TitleWrapper>
-          <ListWrapper>
-            {slicedFAQ?.map((faq) => (
-              <FAQList key={faq.id}>
-                <DeleteIcon width={15} height={15} onClick={() => handleDelete(faq.id)} />
-                <FAQItem
-                  key={faq.id}
-                  isSelected={currentFAQ?.id === faq.id && isSelected}
+          <InputWrapper>
+            <InputTitle style={{ justifyContent: 'space-between' }}>
+             <p data-cy="faq-question-label">Question</p>
+              <div
+                style={{
+                  fontSize: 12,
+                  paddingTop: 10,
+                }}
+              >
+                {questionLength}/{maxQuestionLength}
+              </div>
+            </InputTitle>
+            <input
+              {...register('question', {
+                required: 'Question을 입력해주세요. (200자 내로 작성해 주세요.)',
+              })}
+              name='question'
+              value={currentFAQ?.question || ''}
+              onChange={handleChange}
+              maxLength={200}
+              data-cy="faq-question-input" // Question input test ID
+              placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
+            />
+            {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
+            <InputTitle style={{ justifyContent: 'space-between' }}>
+              <p>Answer</p>
+              <div
+                style={{
+                  fontSize: 12,
+                  paddingTop: 10,
+                }}
+              >
+                {answerLength}/{maxAnswerLength}
+              </div>
+            </InputTitle>
+            <textarea
+              {...register('answer', {
+                required: 'Answer를 입력해주세요. (1500자 내로 작성해 주세요.)',
+              })}
+              name='answer'
+              value={currentFAQ?.answer || ''}
+              onChange={handleChange}
+              maxLength={1500}
+              data-cy="faq-answer-input" // Answer input test ID
+              placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
+            />
+            {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
+          </InputWrapper>
+          <RowWrapper>
+            {currentFAQ && (
+              <VisibilityWrapper>
+                <CheckBox
                   onClick={() => {
-                    handleSelectFAQ(faq);
+                    setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: true } : null));
                   }}
+                  className='public'
+                  selected={currentFAQ?.visibility}
+                  data-cy="faq-visibility-public"
                 >
-                  <FAQQuestion>{faq.question}</FAQQuestion>
-                  {faq.visibility ? <PublicIcon /> : <PrivateIcon />}
-                </FAQItem>
-              </FAQList>
-            ))}
-          </ListWrapper>
-          {data && (
-            <PaginationWrapper>
-              <Pagination postsPerPage={FAQsPerPage} totalPosts={data.length} paginate={paginate} />
-            </PaginationWrapper>
-          )}
+                  공개
+                </CheckBox>
+                <CheckBox
+                  onClick={() => {
+                    setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: false } : null));
+                  }}
+                  className='private'
+                  selected={!currentFAQ?.visibility}
+                  data-cy="faq-visibility-private"
+                >
+                  비공개
+                </CheckBox>
+              </VisibilityWrapper>
+            )}
+            <ButtonWrapper>
+            <ModifyButton type="submit" data-cy="faq-submit-button">수정하기</ModifyButton>
+            </ButtonWrapper>
+          </RowWrapper>
         </ContentBox>
-      </LeftContentWrapper>
-
-      <RightContentWrapper>
-        <form onSubmit={handleSubmit(onValid)}>
-          <ContentBox>
-            <TitleWrapper>
-              <Title>FAQ 게시글 수정</Title>
-            </TitleWrapper>
-            <InputWrapper>
-              <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Question</p>
-                <div
-                  style={{
-                    fontSize: 12,
-                    paddingTop: 10,
-                  }}
-                >
-                  {questionLength}/{maxQuestionLength}
-                </div>
-              </InputTitle>
-              <input
-                {...register('question', {
-                  required: 'Question을 입력해주세요. (200자 내로 작성해 주세요.)',
-                })}
-                name='question'
-                value={currentFAQ?.question || ''}
-                onChange={handleChange}
-                maxLength={200}
-                placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
-              />
-              {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
-              <InputTitle style={{ justifyContent: 'space-between' }}>
-                <p>Answer</p>
-                <div
-                  style={{
-                    fontSize: 12,
-                    paddingTop: 10,
-                  }}
-                >
-                  {answerLength}/{maxAnswerLength}
-                </div>
-              </InputTitle>
-              <textarea
-                {...register('answer', {
-                  required: 'Answer를 입력해주세요. (1500자 내로 작성해 주세요.)',
-                })}
-                name='answer'
-                value={currentFAQ?.answer || ''}
-                onChange={handleChange}
-                maxLength={1500}
-                placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
-              />
-              {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
-            </InputWrapper>
-            <RowWrapper>
-              {currentFAQ && (
-                <VisibilityWrapper>
-                  <CheckBox
-                    onClick={() => {
-                      setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: true } : null));
-                    }}
-                    className='public'
-                    selected={currentFAQ?.visibility}
-                  >
-                    공개
-                  </CheckBox>
-                  <CheckBox
-                    onClick={() => {
-                      setCurrentFAQ((prevFAQ) => (prevFAQ ? { ...prevFAQ, visibility: false } : null));
-                    }}
-                    className='private'
-                    selected={!currentFAQ?.visibility}
-                  >
-                    비공개
-                  </CheckBox>
-                </VisibilityWrapper>
-              )}
-              <ButtonWrapper>
-                <ModifyButton>수정하기</ModifyButton>
-              </ButtonWrapper>
-            </RowWrapper>
-          </ContentBox>
-        </form>
-      </RightContentWrapper>
-    </Wrapper>
+      </form>
+    </RightContentWrapper>
+  </Wrapper>
   );
 }
 export default FAQManagePage;

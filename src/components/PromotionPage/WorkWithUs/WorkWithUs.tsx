@@ -16,9 +16,9 @@ function WorkWithUs() {
         />
         <Link onClick={() => navigator(`/${PP_ROUTES_CHILD.CONTACT}`)}>스튜디오아이에 프로젝트 문의하기 →</Link>
       </div>
-      <div>
+      <CircleWrapper>
         <Circle label='CONTACT US' />
-      </div>
+      </CircleWrapper>
     </Container>
   );
 }
@@ -34,8 +34,7 @@ const Container = styled.div`
   padding: 20px 60px;
   
   @media ${theme.media.mobile} {
-    width: 100%;
-    height: 80vh;
+    height: 90%;
     padding: 0.75rem;
     margin: 0;
     align-items: center;
@@ -52,7 +51,9 @@ const Title = styled.div`
     display: flex;
   }
   margin-bottom: 35px;
-  
+  @media ${theme.media.tablet} {
+    font-size: 5rem;
+  }
   @media ${theme.media.mobile} {
     font-size: 2.5rem;
     text-align: center;
@@ -75,6 +76,16 @@ const Link = styled.a`
     font-size: 1.3rem;
     display: block;
     text-align: center;
-    margin-bottom: -5rem; // 임시
+    margin-bottom: 2rem;
+  }
+`;
+
+const CircleWrapper = styled.div`
+  @media ${theme.media.tablet} {
+    display: none;
+  }
+
+  @media ${theme.media.mobile} {
+    display: block;
   }
 `;

@@ -1,7 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FaArrowDown } from 'react-icons/fa';
 import { theme } from '@/styles/theme';
 
 type Props = {
@@ -14,7 +13,7 @@ const Top = ({ backgroundImg }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Background
+    <Background data-cy="top-section"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImg})`,
         backgroundPosition: 'center',
@@ -118,13 +117,17 @@ const BackWrapper = styled(motion.div)`
   color: white;
   letter-spacing: -0.02em;
 
+  @media ${theme.media.tablet} {
+    font-size: 0.75rem;
+  }
+
   @media ${theme.media.mobile}{
     font-size: 1rem;
     line-height: 1;
     text-align: left;
     width: 100%;
     padding-left: 0.75rem;
-    }
+  }
 `;
 
 const NameWrapper = styled.div`
@@ -132,6 +135,7 @@ const NameWrapper = styled.div`
   font-size: 150px;
   z-index: 10;
   white-space: nowrap;
+
   overflow: hidden;
   span {
     display: inline-block;
@@ -145,6 +149,10 @@ const NameWrapper = styled.div`
   }
   span:last-child {
     color: #ffa900;
+  }
+  
+  @media ${theme.media.tablet} {
+    font-size: 6rem;
   }
 
   @media ${theme.media.mobile}{

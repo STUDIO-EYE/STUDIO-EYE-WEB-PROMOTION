@@ -31,7 +31,7 @@ function BenefitWritePage() {
   const titleLength = putData.request.title.length;
   const contentLength = putData.request.content.length;
   const maxTitleLength = 14;
-  const maxContentLength = 35;
+  const maxContentLength = 34;
 
   const {
     register,
@@ -65,7 +65,7 @@ function BenefitWritePage() {
     if (name === 'title' && value.length > 14) {
       return;
     }
-    if (name === 'content' && value.length > 35) {
+    if (name === 'content' && value.length > 34) {
       return;
     }
     setPutData((prevData) => ({
@@ -132,22 +132,22 @@ function BenefitWritePage() {
         img.src = reader.result as string;
 
         img.onload = () => {
-          // 이미지가 100x100인 경우 리사이즈 생략
-          if (img.width === 100 && img.height === 100) {
-            // 100x100일 경우, Base64 string 그대로 putData에 저장
+          // 이미지가 256x256인 경우 리사이즈 생략
+          if (img.width === 256 && img.height === 256) {
+            // 512x512일 경우, Base64 string 그대로 putData에 저장
             setPutData((prevData) => ({
               ...prevData,
               file: reader.result as string, // 이미지를 string 형태로 저장
             }));
           } else {
-            // 이미지 크기가 100x100이 아닌 경우 리사이즈 수행
+            // 이미지 크기가 256x256이 아닌 경우 리사이즈 수행
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 100;
-            canvas.height = 100;
+            canvas.width = 256;
+            canvas.height = 256;
 
             if (ctx) {
-              ctx.drawImage(img, 0, 0, 100, 100);
+              ctx.drawImage(img, 0, 0, 256, 256);
               const resizedImage = canvas.toDataURL(file.type);
               setPutData((prevData) => ({
                 ...prevData,
@@ -207,6 +207,7 @@ function BenefitWritePage() {
               required: '복지 제목을 입력해주세요.',
             })}
             name='title'
+            data-cy='benefit-title'
             value={putData.request.title}
             onChange={handleChange}
             maxLength={14}
@@ -229,14 +230,15 @@ function BenefitWritePage() {
               required: '복지 내용을 입력해주세요',
             })}
             name='content'
+            data-cy='benefit-content'
             value={putData.request.content}
             onChange={handleChange}
-            maxLength={35}
-            placeholder='복지 내용 (35자 내로 작성해 주세요.)'
+            maxLength={34}
+            placeholder='복지 내용 (34자 내로 작성해 주세요.)'
           />
           {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
           <RowWrapper>
-            <PostButton>등록하기</PostButton>
+            <PostButton data-cy='benefit-submit-button'>등록하기</PostButton>
           </RowWrapper>
         </InputWrapper>
       </ContentBox>

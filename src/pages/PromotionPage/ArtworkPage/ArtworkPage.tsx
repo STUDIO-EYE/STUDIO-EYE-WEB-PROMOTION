@@ -33,7 +33,7 @@ function ArtworkPage() {
   if (isLoading) {
     return (
       <Wrapper>
-        <ArtworkWrapper>
+        <ArtworkWrapper data-cy='PP_artwork_list'>
           {Array.from({ length: 6 }).map((_, index) => (
             <SkeletonComponent
               key={index}
@@ -59,7 +59,7 @@ function ArtworkPage() {
           <ScrollToTop />
           <Wrapper>
             {data && categoryId === null ? (
-              <ArtworkWrapper>
+              <ArtworkWrapper data-cy='PP_artwork_list'>
                 {postedData?.length === 0 || data === null ? (
                   <NullException />
                 ) : (
@@ -115,6 +115,7 @@ const Wrapper = styled.div`
 
   @media ${theme.media.mobile}{
     width: 100%;
+    min-height: fit-content;
     align-items: left;
   }
 `;

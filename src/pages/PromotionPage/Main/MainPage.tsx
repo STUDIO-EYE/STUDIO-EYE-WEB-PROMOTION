@@ -13,7 +13,6 @@ import Outro from '@/components/PromotionPage/Main/Outro';
 import styled from 'styled-components';
 import Footer from '@/components/PromotionPage/Footer/Footer';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
-import { theme } from '@/styles/theme';
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
@@ -62,7 +61,7 @@ const MainPage = () => {
           overflow: hidden;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1500px) {
           div {
             &::-webkit-scrollbar {
               display: none;

@@ -84,9 +84,10 @@ const NewsBoardPage: React.FC = () => {
       </div>
       <div onClick={handleScroll}>
       <NewsPagination
-        postsPerPage={postsPerPage}
-        totalPosts={newsData.length}
-        paginate={paginate}
+          postsPerPage={postsPerPage}
+          totalPosts={newsData.length}
+          paginate={paginate}
+          data-cy="news-pagination"
       />
       </div>
     </Container>

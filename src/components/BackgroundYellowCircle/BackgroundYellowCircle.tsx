@@ -26,13 +26,18 @@ const YellowCircle = styled.div<YellowCircleProps>`
   top: ${(props) => props.top};
   left: ${(props) => props.left};
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: clamp(4rem, 10vw, 12.5rem);
+  height: clamp(4rem, 10vw, 12.5rem);
   background-color: rgba(255, 169, 0, 0.1943);
-  box-shadow: 0 0 250px 240px rgba(255, 169, 0, 0.2);
+  box-shadow: 0 0 14.5rem 14rem rgba(255, 169, 0, 0.2);
+
+  @media ${theme.media.large_tablet} {
+    box-shadow: 0 0 12.5rem 12rem rgba(255, 169, 0, 0.2);
+  }
+  @media ${theme.media.tablet} {
+    box-shadow: 0 0 10.5rem 10rem rgba(255, 169, 0, 0.2);
+  }
   @media ${theme.media.mobile} {
-    width: 4rem;
-    height: 4rem;
     box-shadow: 0 0 4.5rem 4.5rem rgba(255, 169, 0, 0.2);
   }
 `;

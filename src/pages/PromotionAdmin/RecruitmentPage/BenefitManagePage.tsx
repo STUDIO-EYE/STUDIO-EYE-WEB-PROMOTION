@@ -43,7 +43,7 @@ function BenefitManagePage() {
   const [titleLength, setTitleLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
   const maxTitleLength = 14;
-  const maxContentLength = 35;
+  const maxContentLength = 34;
 
   useEffect(() => {
     if (!isFetching && !isRefetching && (data === null || data?.length === 0)) {
@@ -161,9 +161,9 @@ function BenefitManagePage() {
         img.src = reader.result as string;
 
         img.onload = () => {
-          // 이미지가 100x100인 경우 리사이즈 생략
-          if (img.width === 100 && img.height === 100) {
-            // 100x100일 경우, Base64 string 그대로 putData에 저장
+          // 이미지가 256x256인 경우 리사이즈 생략
+          if (img.width === 256 && img.height === 256) {
+            // 256x256일 경우, Base64 string 그대로 putData에 저장
             setCurrentBenefit((prevData) => ({
               ...prevData,
               imageUrl: reader.result as string,
@@ -173,14 +173,14 @@ function BenefitManagePage() {
               content: prevData?.content ?? '',
             }));
           } else {
-            // 이미지 크기가 100x100이 아닌 경우 리사이즈 수행
+            // 이미지 크기가 256x256이 아닌 경우 리사이즈 수행
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 100;
-            canvas.height = 100;
+            canvas.width = 256;
+            canvas.height = 256;
 
             if (ctx) {
-              ctx.drawImage(img, 0, 0, 100, 100);
+              ctx.drawImage(img, 0, 0, 256, 256);
               const resizedImage = canvas.toDataURL(file.type);
               setCurrentBenefit((prevData) => ({
                 ...prevData,
@@ -231,7 +231,7 @@ function BenefitManagePage() {
     if (/^\s/.test(value.charAt(0))) {
       return;
     }
-    if ((name === 'title' && value.length > 14) || (name === 'content' && value.length > 35)) {
+    if ((name === 'title' && value.length > 14) || (name === 'content' && value.length > 34)) {
       return;
     }
 
@@ -285,7 +285,7 @@ function BenefitManagePage() {
               <div style={{ paddingRight: 10 }}>
                 <AddedIcon />
               </div>
-              새로운 복지 등록
+              새로운 복지
             </Button>
           </TitleWrapper>
           <ListWrapper>
@@ -296,7 +296,7 @@ function BenefitManagePage() {
                 onClick={() => fetchBenefitData(benefit)}
               >
                 <BenefitImage src={benefit.imageUrl} alt={benefit.imageFileName} />
-                <BenefitTitle>{benefit.title}</BenefitTitle>
+                <BenefitTitle data-cy='posted-benefit-title'>{benefit.title}</BenefitTitle>
                 <BenefitContent>{benefit.content}</BenefitContent>
               </BenefitItem>
             ))}
@@ -338,6 +338,7 @@ function BenefitManagePage() {
                     required: '복지 제목을 입력해주세요.',
                   })}
                   name='title'
+                  data-cy='benefit-title'
                   value={currentBenefit?.title || ''}
                   onChange={handleChange}
                   maxLength={14}
@@ -360,17 +361,22 @@ function BenefitManagePage() {
                     required: '복지 내용을 입력해주세요',
                   })}
                   name='content'
+                  data-cy='benefit-content'
                   value={currentBenefit?.content || ''}
                   onChange={handleChange}
-                  maxLength={35}
-                  placeholder='복지 내용 (35자 내로 작성해 주세요.)'
+                  maxLength={34}
+                  placeholder='복지 내용 (34자 내로 작성해 주세요.)'
                 />
                 {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
                 <RowWrapper>
-                  <ModifyButton type='button' onClick={() => handleDelete(currentBenefit.id)}>
+                  <ModifyButton
+                    type='button'
+                    data-cy='benefit-delete-button'
+                    onClick={() => handleDelete(currentBenefit.id)}
+                  >
                     삭제하기
                   </ModifyButton>
-                  <ModifyButton>수정하기</ModifyButton>
+                  <ModifyButton data-cy='benefit-update-button'>수정하기</ModifyButton>
                 </RowWrapper>
               </InputWrapper>
             </ContentBox>

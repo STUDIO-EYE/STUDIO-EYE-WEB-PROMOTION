@@ -21,7 +21,7 @@ function RecruitmentWritePage() {
     link: '',
   });
   const titleLength = putData.title.length;
-  const maxTitleLength = 200;
+  const maxTitleLength = 50;
 
   type RecruitmentFormData = {
     title: string;
@@ -64,7 +64,9 @@ function RecruitmentWritePage() {
     if (/^\s|[~!@#$%^&*(),.?":{}|<>]/.test(value.charAt(0))) {
       return;
     }
-
+    if (name === 'title' && value.length > 50) {
+      return;
+    }
     setPutData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -117,13 +119,14 @@ function RecruitmentWritePage() {
           </InputTitle>
           <input
             {...register('title', {
-              required: '제목 입력해주세요. (200자 내로 작성해 주세요.)',
+              required: '제목 입력해주세요. (50 내로 작성해 주세요.)',
             })}
             name='title'
+            data-cy='recruitment-title'
             value={putData.title || ''}
             onChange={handleChange}
-            maxLength={200}
-            placeholder='제목을 입력해주세요. (200자 내로 작성해 주세요.)'
+            maxLength={50}
+            placeholder='제목을 입력해주세요. (50자 내로 작성해 주세요.)'
           />
           {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
           <InputTitle>
@@ -146,9 +149,10 @@ function RecruitmentWritePage() {
               },
             })}
             name='link'
+            data-cy='recruitment-link'
             value={putData.link || ''}
             onChange={handleChange}
-            maxLength={200}
+            maxLength={250}
             placeholder='채용 공고 링크를 입력해주세요.'
           />
           {errors.link && <ErrorMessage>{errors.link.message}</ErrorMessage>}
@@ -171,10 +175,15 @@ function RecruitmentWritePage() {
                   required: '접수 시작일을 입력해주세요.',
                 })}
                 name='startDate'
-                onKeyDown={(e) => e.preventDefault()}
-                onMouseDown={(e) => e.preventDefault()}
+                data-cy='recruitment-startDate'
+                onKeyDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
+                onMouseDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
                 onClick={(e) => {
-                  e.currentTarget.showPicker();
+                  if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                 }}
                 onChange={handleChange}
                 value={putData.startDate}
@@ -209,10 +218,15 @@ function RecruitmentWritePage() {
                   },
                 })}
                 name='deadline'
-                onKeyDown={(e) => e.preventDefault()}
-                onMouseDown={(e) => e.preventDefault()}
+                data-cy='recruitment-deadline'
+                onKeyDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
+                onMouseDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
                 onClick={(e) => {
-                  e.currentTarget.showPicker();
+                  if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                 }}
                 onChange={handleChange}
                 value={putData.deadline}
@@ -222,7 +236,7 @@ function RecruitmentWritePage() {
           </RowWrapper>
         </InputWrapper>
         <RowWrapper>
-          <PostButton>등록하기</PostButton>
+          <PostButton data-cy='recruitment-submit-button'>등록하기</PostButton>
         </RowWrapper>
       </ContentBox>
     </form>

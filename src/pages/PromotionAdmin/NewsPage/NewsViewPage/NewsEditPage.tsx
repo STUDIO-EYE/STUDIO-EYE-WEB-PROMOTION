@@ -101,8 +101,8 @@ const NewsEditPage = () => {
       <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',marginBottom:5}}>
         <Description>제목</Description>
         <div style={{display:'flex',flexDirection:'row',marginTop:'auto',marginBottom:'auto'}}>
-            <SendButton onClick={handlePut}>완료</SendButton>
-            <SendButton onClick={handleCancelWriting}>취소</SendButton>
+            <SendButton onClick={handlePut} data-cy="news-submit-button">완료</SendButton>
+            <SendButton onClick={handleCancelWriting} data-cy="news-cancel-button">취소</SendButton>
         </div>
       </div>
       <InputBlock
@@ -111,6 +111,7 @@ const NewsEditPage = () => {
             value={putData.title}
             onChange={handleChange}
             placeholder='News 제목'
+            data-cy='news-title-input'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginRight:10}}/>
       
       <div>
@@ -121,6 +122,7 @@ const NewsEditPage = () => {
             value={putData.source}
             onChange={handleChange}
             placeholder='출처/작성자'
+            data-cy='news-source-input'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
       </div>
       <div style={{display:'flex',flexDirection:'row'}}>
@@ -136,6 +138,7 @@ const NewsEditPage = () => {
                 setValue('pubDate', formattedDate); // 변환한 string을 form에 저장
                 setPutData((prevData) => ({ ...prevData, pubDate: formattedDate })); // 상태에도 저장
               }}
+              data-cy="news-date-picker"
               slotProps={{
                 textField: {
                   sx: {
@@ -169,13 +172,23 @@ const NewsEditPage = () => {
         <div style={{margin:'auto'}}>
           <Description>공개 여부</Description>
           <VisibilityWrapper>
-                <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
+                <CheckBox 
+                  onClick={() => handleChangeVisibility(true)} 
+                  className='public' 
+                  selected={visibility}
+                  data-cy="news-visibility-public"
+                >
                   공개
                 </CheckBox>
-                <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility}>
+                <CheckBox 
+                  onClick={() => handleChangeVisibility(false)} 
+                  className='private' 
+                  selected={!visibility}
+                  data-cy="news-visibility-private"
+                >
                   비공개
                 </CheckBox>
-        </VisibilityWrapper>
+          </VisibilityWrapper>
         </div>
       </div>
       <div>
@@ -186,6 +199,7 @@ const NewsEditPage = () => {
             value={putData.url}
             onChange={handleChange}
             placeholder='기사 링크'
+            data-cy='news-link-input'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
       </div>
     </Container>

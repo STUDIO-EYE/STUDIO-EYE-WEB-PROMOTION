@@ -6,7 +6,7 @@ export const getAllMenuData = async () => {
       const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/menu`);
       return response.data.data;
     } catch (error) {
-      console.log('[❌ Error fetching all artworks]', error);
+      console.log('[❌ Error fetching all menus]', error);
       throw error;
     }
   };

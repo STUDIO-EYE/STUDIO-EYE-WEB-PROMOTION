@@ -12,10 +12,6 @@ import WhatWeDoPage from './WhatWeDoPage';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
 
-interface IFontStyleProps {
-  fontSize?: string;
-  fontFamily?: string;
-}
 interface IContainerStyleProps {
   backgroundColor?: string;
 }
@@ -107,62 +103,38 @@ const AboutPage = () => {
     <ScrollContainer>
       <IntroPage />
       <WhatWeDoPage />
-      <Section>
+      <Section data-cy='about-section'>
         {CEOData.id !== -1 ? (
-          <RowCoontainer backgroundColor='#1a1a1a' style={isMobile ? { flexDirection: 'column-reverse' } : {}}>
-            <CeoInfoContainer>
-              <CeoInfo fontFamily={theme.font.semiBold} fontSize='4.375rem'>
-                CEO&nbsp;{CEOData.name}
-              </CeoInfo>
-              <CeoInfo>
-                {isMobile ? (
-                  CEOData.introduction.replace(/\n/g, ' ')
-                ) : (
-                  <span dangerouslySetInnerHTML={{ __html: CEOData.introduction }} />
-                )}
+          <RowContainer
+            data-cy='ceo-info'
+            backgroundColor='#1a1a1a'
+            style={isMobile ? { flexDirection: 'column-reverse' } : {}}
+          >
+            <CeoInfoContainer data-cy='ceo-info-container'>
+              <CeoNameInfo data-cy='ceo-name'>CEO&nbsp;{CEOData.name}</CeoNameInfo>
+              <CeoInfo data-cy='ceo-intro'>
+                {isMobile ? CEOData.introduction.replace(/\n/g, ' ') : CEOData.introduction}
               </CeoInfo>
             </CeoInfoContainer>
-            <CeoImageContainer>
-              <img
-                src={CEOData.imageUrl}
-                alt='CEO Character'
-                style={
-                  isMobile
-                    ? { width: '8rem', height: '8rem', objectFit: 'contain' }
-                    : { width: '21.875rem', height: '18.75rem', objectFit: 'contain' }
-                }
-              />
+            <CeoImageContainer data-cy='ceo-image-container'>
+              <img data-cy='ceo-image' src={CEOData.imageUrl} alt='CEO Character' />
             </CeoImageContainer>
-          </RowCoontainer>
+          </RowContainer>
         ) : (
-          <div>CEO 정보가 없습니다.</div>
+          <div data-cy='ceo-no-data'>CEO 정보가 없습니다.</div>
         )}
       </Section>
-      <Section>
+      <Section data-cy='corp-section'>
         {corpInfoData.length !== 0 ? (
-          <CorpLogoContainer>
-            <CorpText>CORP</CorpText>
-            <CorpLogoRowContainer>
+          <CorpLogoContainer data-cy='corp-logo-container'>
+            <CorpText data-cy='corp-title'>CORP</CorpText>
+            <CorpLogoRowContainer data-cy='corp-logo-row'>
               {corpInfoData.map((info) => (
-                <CorpLogoItem key={info.partnerInfo.id}>
+                <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
                     src={info.logoImg}
                     alt='CORP Logo'
-                    style={
-                      isMobile
-                        ? {
-                            width: '6.25rem',
-                            height: '3.125rem',
-                            objectFit: 'contain',
-                            cursor: info.partnerInfo.link ? 'pointer' : 'default',
-                          }
-                        : {
-                            width: '18.75rem',
-                            height: '9.375rem',
-                            objectFit: 'contain',
-                            cursor: info.partnerInfo.link ? 'pointer' : 'default',
-                          }
-                    }
+                    data-link={info.partnerInfo.link ? 'true' : 'false'}
                     onClick={() => {
                       if (info.partnerInfo.link) {
                         window.open(info.partnerInfo.link, '_blank');
@@ -174,7 +146,7 @@ const AboutPage = () => {
             </CorpLogoRowContainer>
           </CorpLogoContainer>
         ) : (
-          <div>기업 정보가 없습니다.</div>
+          <div data-cy='company-no-data'>기업 정보가 없습니다.</div>
         )}
       </Section>
     </ScrollContainer>
@@ -199,12 +171,13 @@ const Section = styled.div`
     margin-bottom: 0;
   }
 `;
-const RowCoontainer = styled.div<IContainerStyleProps>`
+const RowContainer = styled.div<IContainerStyleProps>`
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   background-color: ${(props) => props.backgroundColor || 'black'};
+  gap: 1vw;
   padding-top: 5rem;
   padding-bottom: 5rem;
   @media ${theme.media.mobile} {
@@ -219,43 +192,81 @@ const CeoInfoContainer = styled.div`
   flex-direction: column;
   text-align: right;
   justify-content: center;
-  width: 40%;
+
   @media ${theme.media.mobile} {
     width: 100%;
     text-align: center;
   }
 `;
 const CeoImageContainer = styled.div`
-  padding-left: 70px;
+  img {
+    width: 18vw;
+    min-width: 13rem;
+    object-fit: contain;
+  }
+
   @media ${theme.media.mobile} {
+    width: 100%;
     text-align: center;
     padding: 0;
+    margin: 0;
     margin-bottom: 0.5rem;
+
+    img {
+      width: 8rem;
+      height: 8rem;
+      object-fit: contain;
+    }
   }
 `;
 
-const CeoInfo = styled.div<IFontStyleProps>`
-  white-space: pre-line;
-  word-wrap: break-word;
-  word-break: keep-all;
-  line-height: 1.3;
+const CeoNameInfo = styled.div`
+  font-family: ${theme.font.semiBold};
+  font-size: clamp(2.5rem, 4vw, 4.375rem);
   margin-bottom: 1.875rem;
-  font-family: ${(props) => props.fontFamily || theme.font.regular};
-  font-size: ${(props) => props.fontSize || '1.5rem'};
-  color: ${theme.color.white.light};
+
   @media ${theme.media.mobile} {
     text-align: center;
     margin-bottom: 0.5rem;
-    font-size: ${(props) => (props.fontSize ? '2rem' : '1rem')};
-    font-family: ${(props) => (props.fontFamily ? props.fontFamily : theme.font.regular)};
+    font-size: 2rem;
+  }
+`;
+
+const CeoInfo = styled.div`
+  white-space: pre-line;
+  line-height: 1.3;
+  margin-bottom: 1.875rem;
+  font-family: ${theme.font.regular};
+  font-size: clamp(0.8rem, 1.5vw, 1.5rem);
+  color: ${theme.color.white.light};
+
+  @media ${theme.media.mobile} {
+    text-align: center;
+    margin-bottom: 0.5rem;
   }
 `;
 const CorpLogoItem = styled.div`
-  flex: 1 1 30%;
+  flex: 1 1 25%;
   display: flex;
   justify-content: center;
   margin: 10px 0;
+
+  img {
+    width: 15vw;
+    max-width: 22rem;
+    min-width: 6.25rem;
+    height: 12vw;
+    max-height: 10rem;
+    min-height: 3.125rem;
+    object-fit: contain;
+    cursor: default;
+
+    &[data-link='true'] {
+      cursor: pointer;
+    }
+  }
 `;
+
 const CorpLogoContainer = styled.div`
   width: 100%;
   display: flex;
@@ -264,10 +275,10 @@ const CorpLogoContainer = styled.div`
 `;
 const CorpLogoRowContainer = styled.a`
   margin-bottom: 5rem;
-  width: 80%;
+  width: 70%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 3.125rem;
   flex-wrap: wrap;
   @media ${theme.media.mobile} {
@@ -280,13 +291,13 @@ const CorpLogoRowContainer = styled.a`
 const CorpText = styled.div`
   margin-bottom: 1.875rem;
   font-family: ${theme.font.regular};
-  font-size: 7.5rem;
+  font-size: clamp(3rem, 5vw, 7.5rem);
   letter-spacing: 5px;
   opacity: 0.2;
   filter: blur(2px);
   color: ${theme.color.white.light};
+
   @media ${theme.media.mobile} {
-    font-size: 3rem;
     margin-bottom: 1.5rem;
   }
 `;

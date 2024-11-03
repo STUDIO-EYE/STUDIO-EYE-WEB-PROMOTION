@@ -10,8 +10,8 @@ const Outro = () => {
   const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
 
   return (
-    <Container>
-      <ClientRowAnimation data={data} isLoading={isLoading} error={error} />
+    <Container data-cy="outro-section">
+      <ClientRowAnimation data-cy="outro_image" data={data} isLoading={isLoading} error={error} />
       <WorkWithUs />
     </Container>
   );
@@ -21,7 +21,7 @@ export default Outro;
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -30,10 +30,18 @@ const Container = styled.div`
   padding: 20px 0;
   box-sizing: border-box;
   margin-top: 40px;
-  /* margin-bottom: 40px; */
+  margin-bottom: 70px;
+
+  @media ${theme.media.tablet} {
+    margin-bottom: 3rem;
+  }
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: 100%;
+    height: 80%;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    height: -webkit-fill-available;
   }
 `;

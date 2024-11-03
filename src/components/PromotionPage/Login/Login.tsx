@@ -32,6 +32,7 @@ const Login = ({ email, setEmail, pwd, setPwd, handleLogin }: Props) => {
           onChange={(e) => setEmail(e.target.value)}
         /> */}
         <input
+          data-cy='id'
           required
           type='text'
           placeholder='yourmail@domain.com'
@@ -42,6 +43,7 @@ const Login = ({ email, setEmail, pwd, setPwd, handleLogin }: Props) => {
       <InputWrapper>
         <h1>비밀번호</h1>
         <input
+          data-cy='pw'
           required
           type='password'
           placeholder='enter password'

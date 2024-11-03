@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { theme } from '@/styles/theme';
 import { ContentBox } from '@/components/PromotionAdmin/FAQ/Components';
+import { postFAQ } from '@/apis/PromotionAdmin/faq';
 import { IFAQ } from '../../../types/PromotionAdmin/faq';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
@@ -72,37 +72,36 @@ function FAQWritePage() {
     setValue('visibility', value);
   };
 
-  const onValid = (data: IFAQ) => {
+  const onValid = async (data: IFAQ) => {
     const formData = {
       question: data.question,
       answer: data.answer,
       visibility: data.visibility,
     };
+
     if (!(data.question === '' || data.answer === '') && window.confirm('등록하시겠습니까?')) {
-      axios
-        .post(`${PROMOTION_BASIC_PATH}/api/faq`, formData)
-        .then((response) => {
-          alert('FAQ가 등록되었습니다.');
-          console.log(response);
-          setIsEditing(false);
-          navigator(`${PA_ROUTES.FAQ}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('FAQ 등록 중 오류가 발생했습니다.');
-        });
+      try {
+        const response = await postFAQ(formData);
+        alert('FAQ가 등록되었습니다.');
+        console.log(response);
+        setIsEditing(false);
+        navigator(`${PA_ROUTES.FAQ}`);
+      } catch (error) {
+        console.log(error);
+        alert('FAQ 등록 중 오류가 발생했습니다.');
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <form onSubmit={handleSubmit(onValid)} data-cy="faq-write-form">
       <ContentBox>
         <TitleWrapper>
-          <Title>FAQ 게시글 등록</Title>
+          <Title data-cy="faq-write-title">FAQ 게시글 등록</Title>
         </TitleWrapper>
         <InputWrapper>
           <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Question</p>
+            <p data-cy="faq-question-label">Question</p>
             <div
               style={{
                 fontSize: 12,
@@ -121,10 +120,11 @@ function FAQWritePage() {
             onChange={handleChange}
             maxLength={200}
             placeholder='Question을 입력해주세요. (200자 내로 작성해 주세요.)'
+            data-cy="faq-question-input"
           />
-          {errors.question && <ErrorMessage>{errors.question.message}</ErrorMessage>}
+          {errors.question && <ErrorMessage data-cy="faq-question-error">{errors.question.message}</ErrorMessage>}
           <InputTitle style={{ justifyContent: 'space-between' }}>
-            <p>Answer</p>
+            <p data-cy="faq-answer-label">Answer</p>
             <div
               style={{
                 fontSize: 12,
@@ -143,22 +143,23 @@ function FAQWritePage() {
             onChange={handleChange}
             maxLength={1500}
             placeholder='Answer를 입력해주세요. (1500자 내로 작성해 주세요.)'
+            data-cy="faq-answer-input"
           />
-          {errors.answer && <ErrorMessage>{errors.answer.message}</ErrorMessage>}
+          {errors.answer && <ErrorMessage data-cy="faq-answer-error">{errors.answer.message}</ErrorMessage>}
         </InputWrapper>
         <RowWrapper>
           {putData && (
             <VisibilityWrapper>
-              <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility}>
+              <CheckBox onClick={() => handleChangeVisibility(true)} className='public' selected={visibility} data-cy="faq-visibility-public">
                 공개
               </CheckBox>
-              <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility}>
+              <CheckBox onClick={() => handleChangeVisibility(false)} className='private' selected={!visibility} data-cy="faq-visibility-private">
                 비공개
               </CheckBox>
             </VisibilityWrapper>
           )}
           <ButtonWrapper>
-            <ModifyButton>등록하기</ModifyButton>
+            <ModifyButton data-cy="faq-submit-button">등록하기</ModifyButton>
           </ButtonWrapper>
         </RowWrapper>
       </ContentBox>

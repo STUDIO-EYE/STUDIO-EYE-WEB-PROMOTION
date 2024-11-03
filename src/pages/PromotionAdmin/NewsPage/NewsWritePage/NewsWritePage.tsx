@@ -121,6 +121,7 @@ const NewsWritePage = () => {
               onChange={handleChange}
               placeholder='News 제목 입력'
               style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}
+              data-cy="news-title-input"         
             />
           </InputTitle>
 
@@ -133,52 +134,53 @@ const NewsWritePage = () => {
             onChange={handleChange}
             placeholder='출처 혹은 작성자 입력'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}
+            data-cy="news-source-input"
             />
           </InputTitle>
 
           <div style={{display:'flex',flexDirection:'row'}}>
-            <InputTitle>
+            <InputTitle data-cy="news-pubdate-wrapper">
             <p>원문 날짜</p>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-                {...register('pubDate')}
-                format='YYYY-MM-DD'
-                value={dayjs(putData.pubDate)}
-                onChange={(newValue) => {
-                  const formattedDate = dayjs(newValue).format('YYYY-MM-DD'); // 날짜를 string으로 변환
-                  setValue('pubDate', formattedDate); // 변환한 string을 form에 저장
-                  setPutData((prevData) => ({ ...prevData, pubDate: formattedDate })); // 상태에도 저장
-                }}
-                slotProps={{
-                  textField: {
-                    sx: {
-                      backgroundColor: '#ffffff',
-                      borderRadius:'5px',
-                      fontFamily:'pretendard',
-                      fontSize: '14px',
-                      // margin: 'auto 0 auto 5px',
-                      boxShadow: '1px 1px 4px 0.3px #c6c6c6',
-                      '.MuiInputBase-input':{
-                        padding: '5px',
-                        boxShadow:'none',
-                        margin:'auto',
-                      },
-                      '.MuiOutlinedInput-root': {
-                        border: 'none',
-                        '&:hover': {
-                          backgroundColor: '#ffffff73',
-                        },
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          border: 'none',
-                        },
-                      },
-                      '.MuiOutlinedInput-notchedOutline': {
-                        border: 'none',
-                      },
-                    },
-                  },
-                }}
-              />
+              {...register('pubDate')}
+              format='YYYY-MM-DD'
+              value={dayjs(putData.pubDate)}
+              onChange={(newValue) => {
+                const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
+                setValue('pubDate', formattedDate);
+                setPutData((prevData) => ({ ...prevData, pubDate: formattedDate }));
+              }}
+      data-cy="news-pubdate-input"  // DatePicker에 직접 data-cy 추가
+      slotProps={{
+        textField: {
+          sx: {
+            backgroundColor: '#ffffff',
+            borderRadius: '5px',
+            fontFamily: 'pretendard',
+            fontSize: '14px',
+            boxShadow: '1px 1px 4px 0.3px #c6c6c6',
+            '.MuiInputBase-input': {
+              padding: '5px',
+              boxShadow: 'none',
+              margin: 'auto',
+            },
+            '.MuiOutlinedInput-root': {
+              border: 'none',
+              '&:hover': {
+                backgroundColor: '#ffffff73',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
+            },
+            '.MuiOutlinedInput-notchedOutline': {
+              border: 'none',
+            },          
+          },
+        },
+      }}
+    />
             </LocalizationProvider>
           </InputTitle>
           <InputTitle style={{margin:'auto'}}>
@@ -203,6 +205,7 @@ const NewsWritePage = () => {
             onChange={handleChange}
             placeholder='기사 링크 입력'
             style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginTop:"auto",marginBottom:"auto",}}
+            data-cy="news-link-input"
             />
           </InputTitle>
           {linkRegexMessage && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
@@ -211,6 +214,7 @@ const NewsWritePage = () => {
                 title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
                 disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
                 onClick={handleCompleteWriting}
+                data-cy="news-submit-button"  // 제출 버튼 data-cy 속성 추가
               >완료</SendButton>
             </div>
         </InputWrapper>

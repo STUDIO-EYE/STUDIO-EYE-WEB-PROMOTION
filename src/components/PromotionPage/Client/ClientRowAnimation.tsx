@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { theme } from '@/styles/theme';
 
 type Props = {
   data?: string[];
@@ -79,12 +80,21 @@ const Container = styled.div`
   width: 100%;
   overflow-x: hidden;
   white-space: nowrap;
+
+  @media ${theme.media.mobile} {
+    margin-top:5rem;
+    padding: 30px 0 0 0;
+  }
 `;
 
 const MarqueeRow = styled(motion.div)`
   display: flex;
   width: max-content;
   padding: 30px 0;
+
+  @media ${theme.media.mobile} {
+    padding: 10px 0;
+  }
 `;
 
 const ImgWrapper = styled.div`
@@ -94,5 +104,11 @@ const ImgWrapper = styled.div`
     height: 62px;
     object-fit: contain;
     margin: 0 25px;
+  }
+
+  @media ${theme.media.tablet} {
+  }
+
+  @media ${theme.media.mobile} {
   }
 `;

@@ -177,7 +177,7 @@ function ClientEditPage() {
     if (window.confirm(MSG.CONFIRM_MSG.DELETE)) {
       axios
         .delete(`${PROMOTION_BASIC_PATH}/api/client/${id}`)
-        .then((response) => {})
+        .then((response) => { })
         .catch((error) => console.log(error));
       alert(MSG.ALERT_MSG.DELETE);
       setIsEditing(false);
@@ -212,6 +212,7 @@ function ClientEditPage() {
                   <SubTitle description='Name' />
                   <div style={{ display: 'flex' }}>
                     <input
+                      data-cy='edit_client_name'
                       style={{ paddingLeft: '10px' }}
                       {...register('name', {
                         required: MSG.PLACEHOLDER_MSG.NAME,
@@ -230,7 +231,7 @@ function ClientEditPage() {
                 </InputWrapper>
                 <VisibilityWrapper>
                   공개여부
-                  <input type='checkbox' id='switch' defaultChecked {...register('visibility')} />
+                  <input type='checkbox' data-cy='switch' defaultChecked {...register('visibility')} />
                   <ToggleSwitch
                     option1='공개'
                     option2='비공개'
@@ -240,7 +241,7 @@ function ClientEditPage() {
                 </VisibilityWrapper>
               </RightContainer>
               <ButtonWrapper>
-                <Button description={MSG.BUTTON_MSG.SAVE} width={100} />
+                <Button data-cy='save_client_changes' description={MSG.BUTTON_MSG.SAVE} width={100} />
                 <Button
                   onClick={() => {
                     handleDelete(clickedClient.clientInfo.id);
