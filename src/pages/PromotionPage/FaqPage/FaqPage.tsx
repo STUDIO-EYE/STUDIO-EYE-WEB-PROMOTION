@@ -177,7 +177,7 @@ const Container = styled.div`
 const Header = styled.div`
   position: relative;
   text-align: center;
-  margin-top: 4rem;
+  margin-top: 5.5rem;
 
   @media (max-width: 1366px) and (min-width: 768px) {
     margin-top: 3rem;
@@ -299,34 +299,43 @@ const InputWrapper = styled.div`
 `;
 
 const SearchFaqQuestion = styled.input`
-  width: 80%; 
+    width: 80%; 
   padding: 1.8rem 1rem;
   border: 1px solid white;
   background-color: transparent;
   color: white;
   text-align: center;
+  
 
   &::placeholder {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.2rem; /* 기본 placeholder 폰트 크기 */
   }
-
   @media (max-width: 1366px) and (min-width: 768px) {
     width: 70%; /* 중간 화면에서는 70%로 설정 */
     padding: 1.3rem 0.9rem;
     font-size: 1.2rem;
+    &::placeholder {
+      font-size: 1.1rem; // 중간 화면에서의 폰트 크기 조정
+    } /* 여기에 중괄호 추가 */
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
     width: 90%; /* 작은 화면에서는 90% */
     padding: 1.2rem 0.8rem;
     font-size: 1rem;
+    &::placeholder {
+      font-size: 0.9rem; // 모바일 화면에서의 폰트 크기 조정
+    } /* 여기에 중괄호 추가 */
   }
 
   @media (max-width: 374px) {
     width: 100%;
     padding: 1rem 0.7rem;
     font-size: 0.9rem;
+    &::placeholder {
+      font-size: 0.8rem; // 가장 작은 화면에서의 폰트 크기 조정
+    } /* 여기에 중괄호 추가 */
   }
 `;
 
