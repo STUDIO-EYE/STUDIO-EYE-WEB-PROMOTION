@@ -34,9 +34,10 @@ const Container = styled.div`
   padding: 20px 60px;
   
   @media ${theme.media.mobile} {
-    height: 90%;
     padding: 0.75rem;
     margin: 0;
+    margin-bottom: 5rem;
+
     align-items: center;
     flex-direction: column;
   }
