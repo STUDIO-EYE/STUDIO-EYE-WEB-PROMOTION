@@ -136,7 +136,7 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{selectedCategory}</GetInputWrapper>
       ) : (
-        <CategoryDropDown data-cy='create_artwork_category' putCategory={selectedCategory.toString()} setSelectedCategory={setSelectedCategory} />
+        <CategoryDropDown data-cy="create_artwork_category" putCategory={selectedCategory.toString()} setSelectedCategory={setSelectedCategory} />
       ),
     },
     {

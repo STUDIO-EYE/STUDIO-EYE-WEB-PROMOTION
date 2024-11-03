@@ -45,6 +45,7 @@ const Client = () => {
         <TitleWrapper>
           {DATAEDIT_TITLES_COMPONENTS.Client}
           <Button
+            id='create_client'
             description={MSG.BUTTON_MSG.ADD.CLIENT}
             svgComponent={<AddedIcon width={14} height={14} />}
             onClick={() => {

@@ -34,7 +34,7 @@ const NavBtn = ({ path, pathName }: Props) => {
     }
   };
   return (
-    <LinkStyle onClick={handleClick} isActive={isActive}>
+    <LinkStyle data-cy={`nav-btn-${pathName.toLowerCase()}`} onClick={handleClick} isActive={isActive}>
       <Name>{pathName}</Name>
     </LinkStyle>
   );
