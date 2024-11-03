@@ -12,6 +12,7 @@ import { MSG } from '@/constants/messages';
 import TextColorEditor from '@/components/TextEditor/TextColorEditor';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -94,7 +95,12 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
       <ContentBlock isFocused={true}>
         <TitleWrapper>
           {DATAEDIT_TITLES_COMPONENTS.Introduction}
-          <Button description={MSG.BUTTON_MSG.SAVE} onClick={handleSaveClick} width={100} />
+          <Button
+            data-cy={dataEditCompanyPageAttributes.SAVE_INTRO_BUTTON}
+            description={MSG.BUTTON_MSG.SAVE}
+            onClick={handleSaveClick}
+            width={100}
+          />
         </TitleWrapper>
         {DATAEDIT_NOTICE_COMPONENTS.TEXT.INTRODUCTION}
 
@@ -115,6 +121,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
           />
           <InputTitle>Introduction</InputTitle>
           <TextColorEditor
+            data-cy={aboutPageAttributes.UPDATE_INTRO}
             editorState={introductionState}
             onEditorStateChange={updateIntroduction}
             attribute='Introduction'

@@ -9,6 +9,7 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import InnerHTML from '../../StyleComponents/InnerHTML';
 import Button from '../../StyleComponents/Button';
 import { MSG } from '@/constants/messages';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -24,8 +25,13 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
       {data && (
         <ContentBlock>
           <TitleWrapper>
-            {DATAEDIT_TITLES_COMPONENTS.Introduction}
-            <Button description={MSG.BUTTON_MSG.MODIFY} onClick={() => setEditIntroduction(true)} width={100} />
+            {DATAEDIT_TITLES_COMPONENTS.Introduction}ㅁㄴㅇㄻㄴㅇㄻㄴㅇ
+            <Button
+              data-cy={dataEditCompanyPageAttributes.MODIFY_INTRO_BUTTON}
+              description={MSG.BUTTON_MSG.MODIFY}
+              onClick={() => setEditIntroduction(true)}
+              width={100}
+            />
           </TitleWrapper>
           <InputWrapper>
             <InputTitle>Main Overview</InputTitle>
@@ -36,8 +42,8 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
             <Content>
               <InnerHTML description={data.commitment} />
             </Content>
-            <InputTitle>Introduction</InputTitle>
-            <Content>
+            <InputTitle>Intro씨빨ducㄴㅇㄻㄴㅇㄹ??tion</InputTitle>
+            <Content data-cy={aboutPageAttributes.VIEW_INTRO}>
               <InnerHTML description={data.introduction} />
             </Content>
           </InputWrapper>
