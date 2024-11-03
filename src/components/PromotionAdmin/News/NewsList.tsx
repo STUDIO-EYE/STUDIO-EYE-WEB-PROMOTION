@@ -34,7 +34,8 @@ const NewsList = ({handler}:{handler:(id:number)=>void}) => {
             <div
             key={i.id}
             style={{marginBottom:"5px"}}
-            onClick={()=>handleClick(i.id)}>
+            onClick={()=>handleClick(i.id)}
+            data-cy={`news-item-${i.id}`} >
             <NewsItem data={i}/>
             </div>
           ))}
