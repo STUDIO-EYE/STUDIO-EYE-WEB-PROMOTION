@@ -14,7 +14,7 @@ const Layout = () => {
   const queryParams = new URLSearchParams(location.search);
   const category = queryParams.get('category');
 
-  const pathsWithoutFooter = ['/contact'];
+  const pathsWithoutFooter = ['/contact', `/${PP_ROUTES_CHILD.MAIN}`];
 
   const hideFooter = pathsWithoutFooter.includes(location.pathname);
 

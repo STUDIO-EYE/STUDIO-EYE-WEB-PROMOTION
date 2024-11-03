@@ -1,11 +1,11 @@
-import { MSG } from '@/constants/messages';
-
 export const login = () => {
-  cy.visit('/login');
-  cy.get('#id').type('master');
-  cy.get('#pw').type('master');
-  cy.contains('로그인').click();
-  cy.url().should('include', '/promotion-admin/home');
+  cy.session('로그인', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="id"]').type('master');
+    cy.get('[data-cy="pw"]').type('master');
+    cy.contains('로그인').click();
+    cy.url().should('include', '/promotion-admin/home');
+  });
 };
 
 // 메시지를 매개변수로 받아 사용하는 범용 훅

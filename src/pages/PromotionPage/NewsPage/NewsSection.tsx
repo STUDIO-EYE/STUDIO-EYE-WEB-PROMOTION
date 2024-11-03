@@ -66,12 +66,15 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
           onClick={() => handleNewsClick(news.url,news.id)}
           onMouseEnter={() => !isMobile && setIsClicked(news.id)} //모바일에서만 news.id 설정
           // onMouseLeave={() => !isMobile && setIsClicked(null)} //모바일에서만 null로 변경 가능하도록
+          data-cy={`news-item-${news.id}`}
         >
           <TextWrapper>
             <Title>{news.title}</Title>
             <Source>{news.source} | {new Date(news.pubDate).toLocaleDateString()}</Source>
           </TextWrapper>
-          <ArrowIcon> <GoArrowRight /> </ArrowIcon>
+          <ArrowIcon data-cy={`news-delete-button-${news.id}`}>
+             <GoArrowRight /> 
+          </ArrowIcon>
         </NewsCard>
       ))}
     </Container>

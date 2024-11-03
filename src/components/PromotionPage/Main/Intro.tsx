@@ -5,6 +5,7 @@ import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
+import { INTRO_DATA } from '@/constants/introdutionConstants';
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -35,24 +36,23 @@ const Intro = () => {
   const isMobile = window.innerWidth < 768;
 
   return (
-    <Container data-testid="intro-section">
-      <IntroWrapper data-testid="intro_mainOverview" ref={introRef} >
+    <Container data-cy="intro-section">
+      <IntroWrapper data-cy="intro_mainOverview" ref={introRef} >
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
           dangerouslySetInnerHTML={{
-            __html: companyMainOverview ||
-              `<p><span style="color:#ffa900;">STUDIO EYE</span> IS ${isMobile ? '<br />' : ' '} THE <span style="color:#ffa900;">BEST</span>${isMobile ? '<br />' : ' '} NEW MEDIA</p> <p>PRODUCTION ${isMobile ? '<br />' : ' '} BASED ON ${isMobile ? '<br />' : ' '} OTT & YOUTUBE</p>`
+            __html: companyMainOverview || INTRO_DATA.MAIN_OVERVIEW
           }}
         ></motion.div>
       </IntroWrapper>
-      <DesWrapper data-testid="intro_commitment" ref={desRef}>
+      <DesWrapper data-cy="intro_commitment" ref={desRef}>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
-          dangerouslySetInnerHTML={{ __html: companyCommitment || `<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 ${isMobile ? '<br />' : ' '} 끊임없이 고민하고 변화합니다.</p>` }}
+          dangerouslySetInnerHTML={{ __html: companyCommitment || INTRO_DATA.COMMITMENT }}
         ></motion.div>
       </DesWrapper>
       <CircleWrapper ref={circleRef}>

@@ -34,7 +34,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
   };
 
   return (
-    <MotionBox data-testid="artwork-section"
+    <MotionBox data-cy="artwork-section"
       w="100%"
       h="100vh"
       scrollSnapAlign="center"
@@ -46,6 +46,11 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${data.backgroundImg || defaultMainImg})`}
       backgroundSize="cover"
       backgroundPosition="center"
+      css={`
+        @supports (-webkit-touch-callout: none) {
+          height: -webkit-fill-available;
+        }
+      `}
     >
       {isLoading ? (
         <SkeletonWrapper>
@@ -57,15 +62,15 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       ) : (
         <motion.div variants={cardInView}>
           <TextWrapper>
-            <ClientWrapper data-testid='artwork_client'>{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
-            <TitleWrapper data-testid='artwork_name'>{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
-            <OverviewWrapper data-testid='artwork_overview'>{data.overview}</OverviewWrapper>
+            <ClientWrapper data-cy="artwork_client">{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
+            <TitleWrapper data-cy="artwork_name">{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
+            <OverviewWrapper data-cy="artwork_overview">{data.overview}</OverviewWrapper>
           </TextWrapper>
           <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
         </motion.div>
       )}
       {data.link && (
-        <a data-testid='artwork_link'
+        <a data-cy='artwork_link'
           href={data.link}
           target="_blank"
           rel="noopener noreferrer"
@@ -93,7 +98,7 @@ const TextWrapper = styled.div`
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: 100%;
+    height: 80%; // 80?
     padding: 6rem 1.75rem 0 1rem;
     line-height: 1.2;
   }
@@ -107,9 +112,11 @@ const TitleWrapper = styled.div`
   margin: -1rem 0 -0.5rem -0.2rem;
 
   @media ${theme.media.mobile} {
-    margin: 0;
+    margin: 0.3rem 0;
     margin-left: -0.1rem;
-    font-size: 2rem;
+    width: 100%;
+    font-size: 1.5rem;
+    word-break: keep-all;
   }
 `;
 
@@ -119,7 +126,7 @@ const ClientWrapper = styled(motion.h2)`
   color: #cccccc;
 
   @media ${theme.media.mobile} {
-    font-size: 1.5rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -129,7 +136,8 @@ const OverviewWrapper = styled.div`
   color: white;
 
   @media ${theme.media.mobile} {
-    font-size: 1rem;
+    font-size: 0.8rem;
+    word-break: keep-all;
   }
 `;
 

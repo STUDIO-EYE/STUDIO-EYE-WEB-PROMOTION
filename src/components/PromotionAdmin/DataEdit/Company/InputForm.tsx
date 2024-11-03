@@ -428,19 +428,23 @@ const InputForm = () => {
               {DATAEDIT_NOTICE_COMPONENTS.TEXT.INTRODUCTION}
               <InputWrapper>
                 <InputTitle>Main Overview</InputTitle>
-                <TextColorEditor
-                  editorState={mainOverviewState}
-                  onEditorStateChange={updateMainOverview}
-                  attribute='Main Overview'
-                  charLimit={INPUT_MAX_LENGTH.INFOMATION_MAIN_OVERVIEW}
-                />
+                <MainOverviewContainer id='create_intro_mainoverview'>
+                  <TextColorEditor
+                    editorState={mainOverviewState}
+                    onEditorStateChange={updateMainOverview}
+                    attribute='Main Overview'
+                    charLimit={INPUT_MAX_LENGTH.INFOMATION_MAIN_OVERVIEW}
+                  />
+                </MainOverviewContainer>
                 <InputTitle>Commitment</InputTitle>
-                <TextColorEditor
-                  editorState={commitmentState}
-                  onEditorStateChange={updateCommitment}
-                  attribute='Commitment'
-                  charLimit={INPUT_MAX_LENGTH.INFOMATION_COMMITMENT}
-                />
+                <CommitmentContainer id='create_intro_commitment'>
+                  <TextColorEditor
+                    editorState={commitmentState}
+                    onEditorStateChange={updateCommitment}
+                    attribute='Commitment'
+                    charLimit={INPUT_MAX_LENGTH.INFOMATION_COMMITMENT}
+                  />
+                </CommitmentContainer>
                 <InputTitle>Introduction</InputTitle>
                 <TextColorEditor
                   data-cy={aboutPageAttributes.CREATE_INTRO}
@@ -531,6 +535,7 @@ const InputForm = () => {
             </ContentBlock>
             <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '29px' }}>
               <Button
+                id='create_intro'
                 data-cy={dataEditCompanyPageAttributes.SUBMIT_BUTTON}
                 description={MSG.BUTTON_MSG.POST}
                 fontSize={14}
@@ -561,3 +566,7 @@ const ErrorMessage = styled.div`
   margin-left: 10px;
   font-size: 13px;
 `;
+
+const MainOverviewContainer = styled.div``;
+
+const CommitmentContainer = styled.div``;

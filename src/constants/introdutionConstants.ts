@@ -21,9 +21,14 @@ export const PARTER_DATA = {
 };
 
 export const ARTWORKLIST_DATA = {
-  TITLE: '절대 떠들면 안 되는 호텔',
-  CLIENT: '넷플릭스 코리아',
-  OVERVIEW: '설명',
+  TITLE: '이준호와 임윤아의 킹더랜드 인터뷰',
+  CLIENT: 'NETFLIX Korea Youtube',
+  OVERVIEW: '쉿!!🤫 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.',
+};
+
+export const INTRO_DATA = {
+  MAIN_OVERVIEW: `<p><span style="color:#ffa900;">STUDIO EYE</span> IS THE <span style="color:#ffa900;">BEST</span> NEW MEDIA PRODUCTION BASED ON OTT & YOUTUBE</p>`,
+  COMMITMENT: `<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 끊임없이 고민하고 변화합니다.</p>`
 };
 
 export const ABOUT_DATA = {};

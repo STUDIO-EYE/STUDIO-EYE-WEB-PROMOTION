@@ -139,3 +139,9 @@ const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+const MainOverviewContainer = styled.div`
+`;
+
+const CommitmentContainer = styled.div`
+`;
