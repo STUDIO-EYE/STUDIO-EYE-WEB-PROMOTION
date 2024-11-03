@@ -24,14 +24,9 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
     <Wrapper>
       {data && (
         <ContentBlock>
-          <TitleWrapper>
-            {DATAEDIT_TITLES_COMPONENTS.Introduction}ㅁㄴㅇㄻㄴㅇㄻㄴㅇ
-            <Button
-              data-cy={dataEditCompanyPageAttributes.MODIFY_INTRO_BUTTON}
-              description={MSG.BUTTON_MSG.MODIFY}
-              onClick={() => setEditIntroduction(true)}
-              width={100}
-            />
+          <TitleWrapper data-cy='MODIFY_INTRO_TITLE'>
+            {DATAEDIT_TITLES_COMPONENTS.Introduction}
+            <Button description={MSG.BUTTON_MSG.MODIFY} onClick={() => setEditIntroduction(true)} width={100} />
           </TitleWrapper>
           <InputWrapper>
             <InputTitle>Main Overview</InputTitle>
@@ -42,7 +37,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
             <Content>
               <InnerHTML description={data.commitment} />
             </Content>
-            <InputTitle>Intro씨빨ducㄴㅇㄻㄴㅇㄹ??tion</InputTitle>
+            <InputTitle>Introduction</InputTitle>
             <Content data-cy={aboutPageAttributes.VIEW_INTRO}>
               <InnerHTML description={data.introduction} />
             </Content>

@@ -9,11 +9,13 @@ type ButtonType = {
   svgComponent?: React.ReactNode;
   as?: keyof JSX.IntrinsicElements | React.ComponentType<any>;
   id?: string;
+  dataCy?: string;
 };
 
 const Button = (props: ButtonType) => {
   return (
     <ButtonStyle
+      data-cy='dataEdit-Button'
       width={props.width}
       height={props.height}
       description={props.description}

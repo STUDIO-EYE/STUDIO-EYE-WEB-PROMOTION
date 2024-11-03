@@ -95,12 +95,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
       <ContentBlock isFocused={true}>
         <TitleWrapper>
           {DATAEDIT_TITLES_COMPONENTS.Introduction}
-          <Button
-            data-cy={dataEditCompanyPageAttributes.SAVE_INTRO_BUTTON}
-            description={MSG.BUTTON_MSG.SAVE}
-            onClick={handleSaveClick}
-            width={100}
-          />
+          <Button description={MSG.BUTTON_MSG.SAVE} onClick={handleSaveClick} width={100} />
         </TitleWrapper>
         {DATAEDIT_NOTICE_COMPONENTS.TEXT.INTRODUCTION}
 
@@ -121,7 +116,6 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
           />
           <InputTitle>Introduction</InputTitle>
           <TextColorEditor
-            data-cy={aboutPageAttributes.UPDATE_INTRO}
             editorState={introductionState}
             onEditorStateChange={updateIntroduction}
             attribute='Introduction'
@@ -140,8 +134,6 @@ const TitleWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const MainOverviewContainer = styled.div`
-`;
+const MainOverviewContainer = styled.div``;
 
-const CommitmentContainer = styled.div`
-`;
+const CommitmentContainer = styled.div``;
