@@ -17,20 +17,21 @@ function ArtworkCard({ id, name, client, mainImg, category }: IArtworkCardProps)
 
   return (
     <ArtworkItem
+      data-cy='PP_artwork'
       onClick={() => navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${id}`, { state: { category } })}
       variants={itemVariants}
       initial='initial'
       whileHover='hover'
     >
-      <ArtworkImg key={mainImg} variants={imgVariants(mainImg)} ArtworkPhoto={mainImg}>
+      <ArtworkImg data-cy='PP_artwork_img' key={mainImg} variants={imgVariants(mainImg)} ArtworkPhoto={mainImg}>
         <img src={mainImg} />
         <div className='overlay' />
       </ArtworkImg>
       <Info>
-        <motion.span variants={spanVariants} className='info_client'>
+        <motion.span data-cy='PP_artwork_client' variants={spanVariants} className='info_client'>
           {client}
         </motion.span>
-        <motion.span variants={spanVariants} className='info_name'>
+        <motion.span data-cy='PP_artwork_title' variants={spanVariants} className='info_name'>
           {name}
         </motion.span>
       </Info>

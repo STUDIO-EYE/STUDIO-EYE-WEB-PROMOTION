@@ -14,7 +14,7 @@ const SkeletonComponent: React.FC<SkeletonProps> = ({
   borderRadius = '10px',
   margin = '10px',
 }) => {
-  return <SkeletonWrapper width={width} height={height} borderRadius={borderRadius} margin={margin} />;
+  return <SkeletonWrapper data-cy='PP_skeleton' width={width} height={height} borderRadius={borderRadius} margin={margin} />;
 };
 
 export default SkeletonComponent;

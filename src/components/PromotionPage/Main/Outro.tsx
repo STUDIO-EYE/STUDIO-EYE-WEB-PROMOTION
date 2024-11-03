@@ -11,7 +11,7 @@ const Outro = () => {
 
   return (
     <Container data-cy="outro-section">
-      <ClientRowAnimation data={data} isLoading={isLoading} error={error} />
+      <ClientRowAnimation data-cy="outro_image" data={data} isLoading={isLoading} error={error} />
       <WorkWithUs />
     </Container>
   );

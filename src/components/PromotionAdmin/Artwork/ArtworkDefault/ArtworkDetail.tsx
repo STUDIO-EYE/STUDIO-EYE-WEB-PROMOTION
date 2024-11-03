@@ -299,7 +299,7 @@ const ArtworkDetail = () => {
   return (
     <Container>
       <ScrollToTop />
-      <ValueWrapper>
+      <ValueWrapper data-cy='PP_artwork_detail'>
         {defaultValue.map((item: DefaultValueItem, index: number) => (
           <div key={index}>
             {errorMessage && !isGetMode && item.name === 'artworkType' && (

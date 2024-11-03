@@ -19,12 +19,12 @@ const CategoryDropDown = ({ setSelectedCategory, putCategory }: CategoryDropDown
 
   return (
     <Wrapper>
-      <CategoryButton id='create_artwork_category' onClick={() => setIsOpen(!isOpen)}>
+      <CategoryButton data-cy='PA_artwork_category' onClick={() => setIsOpen(!isOpen)}>
         {selectedCategory}
         {isOpen ? <DropdownIcon>&#9650;</DropdownIcon> : <DropdownIcon>&#9660;</DropdownIcon>}
       </CategoryButton>
       {isOpen && (
-        <Dropdown id='create_artwork_category_dropdown'>
+        <Dropdown data-cy='PA_artwork_category_dropdown'>
           {['All', ...CATEGORIES].map((category, index) => (
             <CategoryItem key={index} onClick={() => handleCategorySelect(category)}>
               {category}

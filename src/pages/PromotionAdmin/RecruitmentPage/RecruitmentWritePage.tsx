@@ -122,6 +122,7 @@ function RecruitmentWritePage() {
               required: '제목 입력해주세요. (50 내로 작성해 주세요.)',
             })}
             name='title'
+            data-cy='recruitment-title'
             value={putData.title || ''}
             onChange={handleChange}
             maxLength={50}
@@ -148,9 +149,10 @@ function RecruitmentWritePage() {
               },
             })}
             name='link'
+            data-cy='recruitment-link'
             value={putData.link || ''}
             onChange={handleChange}
-            maxLength={50}
+            maxLength={250}
             placeholder='채용 공고 링크를 입력해주세요.'
           />
           {errors.link && <ErrorMessage>{errors.link.message}</ErrorMessage>}
@@ -173,10 +175,15 @@ function RecruitmentWritePage() {
                   required: '접수 시작일을 입력해주세요.',
                 })}
                 name='startDate'
-                onKeyDown={(e) => e.preventDefault()}
-                onMouseDown={(e) => e.preventDefault()}
+                data-cy='recruitment-startDate'
+                onKeyDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
+                onMouseDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
                 onClick={(e) => {
-                  e.currentTarget.showPicker();
+                  if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                 }}
                 onChange={handleChange}
                 value={putData.startDate}
@@ -211,10 +218,15 @@ function RecruitmentWritePage() {
                   },
                 })}
                 name='deadline'
-                onKeyDown={(e) => e.preventDefault()}
-                onMouseDown={(e) => e.preventDefault()}
+                data-cy='recruitment-deadline'
+                onKeyDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
+                onMouseDown={(e) => {
+                  if (typeof Cypress === 'undefined') e.preventDefault();
+                }}
                 onClick={(e) => {
-                  e.currentTarget.showPicker();
+                  if (typeof Cypress === 'undefined') e.currentTarget.showPicker();
                 }}
                 onChange={handleChange}
                 value={putData.deadline}
@@ -224,7 +236,7 @@ function RecruitmentWritePage() {
           </RowWrapper>
         </InputWrapper>
         <RowWrapper>
-          <PostButton>등록하기</PostButton>
+          <PostButton data-cy='recruitment-submit-button'>등록하기</PostButton>
         </RowWrapper>
       </ContentBox>
     </form>

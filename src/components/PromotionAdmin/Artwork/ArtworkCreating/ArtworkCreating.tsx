@@ -168,7 +168,7 @@ const ArtworkCreating = () => {
   return (
     <Container>
       <CloseContainer onClick={() => setProducingIsOpened(false)}>x</CloseContainer>
-      <ValueWrapper>
+      <ValueWrapper data-cy='PP_artwork_createBox'>
         {defaultValue.map((item: DefaultValueItem, index: number) => (
           <div key={index}>
             {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
@@ -178,7 +178,7 @@ const ArtworkCreating = () => {
         ))}
         <div />
         <SubmitBtn
-          data-cy="create_artwork_submit"
+          data-cy='create_artwork_submit'
           title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
           disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
           onClick={() => handleSubmit()}

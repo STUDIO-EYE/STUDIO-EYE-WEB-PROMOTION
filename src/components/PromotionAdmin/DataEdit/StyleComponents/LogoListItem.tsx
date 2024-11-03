@@ -19,7 +19,8 @@ const LogoItemList = (props: LogoItemListType) => {
           <img src={props.logo} />
         </ImgBox>
         <InfoBox>
-          <div className='info_name'>{props.name}</div>
+          <div data-cy="client_name"
+            className='info_name'>{props.name}</div>
           {props.link && <div className='info_link'>{props.link}</div>}
         </InfoBox>
       </ContentWrapper>

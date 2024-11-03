@@ -16,6 +16,12 @@ export interface PPArtworkData {
   customer: string;
   link: string;
 }
+export interface ArtworkRequiredField {
+  name: string;
+  selector: string;
+  value: string;
+  type?: 'type' | 'dropdown' | 'select';
+}
 
 export interface IntroData {
   mainOverview: string;
