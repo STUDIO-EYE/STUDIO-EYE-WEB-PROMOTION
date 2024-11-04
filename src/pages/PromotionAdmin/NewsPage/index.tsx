@@ -11,16 +11,11 @@ const Index = () => {
   const [producingIsOpend, setProducingIsOpened] = useRecoilState(backdropState);
   const navigator = useNavigate();
 
-  const location = useLocation();
-  // useEffect(() => {
-  //   if (location.pathname.includes('writing')) {
-  //     setOnWriting(true);
-  //   } else {
-  //     setOnWriting(false);
-  //   }}, [location.pathname]);
+  useEffect(() => {
+    
+  }, [producingIsOpend]);
 
   const handleWritingNews=()=>{
-    // navigator(`writing`);
     setProducingIsOpened(!producingIsOpend);
   }
   const handleViewNews=(id:number)=>{

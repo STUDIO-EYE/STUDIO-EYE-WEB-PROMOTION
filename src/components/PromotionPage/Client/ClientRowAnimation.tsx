@@ -78,7 +78,7 @@ export default ClientRowAnimation;
 
 const Container = styled.div`
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   white-space: nowrap;
 
   @media ${theme.media.mobile} {

@@ -113,6 +113,9 @@ const Wrapper = styled.div`
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.background};
 
+  @media ${theme.media.large_tablet} {
+    min-height: auto;
+  }
   @media ${theme.media.mobile}{
     width: 100%;
     min-height: fit-content;
@@ -125,6 +128,9 @@ const ArtworkWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   grid-gap: 50px;
+
+  @media ${theme.media.large_tablet} {
+  }
 
   @media ${theme.media.mobile}{
     display: block; // 임시
