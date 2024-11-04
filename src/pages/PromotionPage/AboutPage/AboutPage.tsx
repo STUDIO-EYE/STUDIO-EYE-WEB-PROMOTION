@@ -112,7 +112,7 @@ const AboutPage = () => {
           >
             <CeoInfoContainer data-cy='ceo-info-container'>
               <CeoNameInfo data-cy='ceo-name'>CEO&nbsp;{CEOData.name}</CeoNameInfo>
-              <CeoInfo data-cy='ceo-intro'>
+              <CeoInfo data-cy='ceo-introduction'>
                 {isMobile ? CEOData.introduction.replace(/\n/g, ' ') : CEOData.introduction}
               </CeoInfo>
             </CeoInfoContainer>
