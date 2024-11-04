@@ -9,6 +9,7 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import InnerHTML from '../../StyleComponents/InnerHTML';
 import Button from '../../StyleComponents/Button';
 import { MSG } from '@/constants/messages';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -23,7 +24,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
     <Wrapper>
       {data && (
         <ContentBlock>
-          <TitleWrapper>
+          <TitleWrapper data-cy='MODIFY_INTRO_TITLE'>
             {DATAEDIT_TITLES_COMPONENTS.Introduction}
             <Button description={MSG.BUTTON_MSG.MODIFY} onClick={() => setEditIntroduction(true)} width={100} />
           </TitleWrapper>
@@ -37,7 +38,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
               <InnerHTML description={data.commitment} />
             </Content>
             <InputTitle>Introduction</InputTitle>
-            <Content>
+            <Content data-cy={aboutPageAttributes.VIEW_INTRO}>
               <InnerHTML description={data.introduction} />
             </Content>
           </InputWrapper>
