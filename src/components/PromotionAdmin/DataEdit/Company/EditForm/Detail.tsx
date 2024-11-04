@@ -89,7 +89,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
   if (error) return <>{error.message}</>;
 
   return (
-    <Wrapper>
+    <Wrapper data-cy='detail-wrapper'>
       <Form onSubmit={handleSubmit(onValid)}>
         <ContentBlock isFocused={true}>
           <TitleWrapper>
