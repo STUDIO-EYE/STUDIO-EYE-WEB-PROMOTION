@@ -167,4 +167,6 @@ const OutroSection = styled.section`
 
 const FooterSection = styled.section`
   scroll-snap-align: start;
+  scroll-snap-type: y proximity;
+
 `;
