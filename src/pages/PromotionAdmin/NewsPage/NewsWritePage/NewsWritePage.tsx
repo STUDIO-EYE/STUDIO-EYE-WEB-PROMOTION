@@ -19,7 +19,7 @@ const NewsWritePage = () => {
   const navigator = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const listPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+  // const listPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
   const [producingIsOpend, setProducingIsOpened] = useRecoilState(backdropState);
   const [linkRegexMessage, setLinkRegexMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -57,7 +57,7 @@ const NewsWritePage = () => {
 
   const handleCompleteWriting=()=>{//전송하는 로직
     sendNews();
-    navigator(listPath);
+    // navigator(listPath);
   }
 
   const sendNews = async () => {
@@ -72,12 +72,12 @@ const NewsWritePage = () => {
       const response = await postNews(requestData);
       if (response.code === 400 && response.data === null && response.message) {
         setErrorMessage(response.message);
-        alert(MSG.ALERT_MSG.POST)
-        setIsEditing(false)
-        setProducingIsOpened(false)
+        alert(MSG.CONFIRM_MSG.FAILED)
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
+      setIsEditing(false);
+      setProducingIsOpened(false);
     } catch (error: any) {
       alert(MSG.CONFIRM_MSG.FAILED);
     }
@@ -92,23 +92,6 @@ const NewsWritePage = () => {
   };
   const handleChangeVisibility = (value: boolean) => {
     setValue('visibility', value);
-  };
-
-  // 빈 값 확인 함수
-  const checkEmptyFields = () => {
-    const values = getValues(); // 폼의 모든 값을 가져옴
-
-    // 빈 값 확인
-    const emptyFields = Object.keys(values).filter((key) => {
-      const value = values[key as keyof INEWS]; // 각 필드의 값을 가져옴
-      return value === "" || value === null || value === undefined; // 빈 값이면 true
-    });
-
-    if (emptyFields.length > 0) {
-      alert(`The following fields are empty: ${emptyFields.join(", ")}`);
-    } else {
-      alert("All fields are filled.");
-    }
   };
 
   //링크 유효성 검사----------------------------------------
