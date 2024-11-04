@@ -78,12 +78,12 @@ export default ClientRowAnimation;
 
 const Container = styled.div`
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   white-space: nowrap;
 
   @media ${theme.media.mobile} {
-    margin-top:5rem;
-    padding: 30px 0 0 0;
+    margin-top:2rem;
+    padding: 0.5rem 0 0 0;
   }
 `;
 
@@ -93,7 +93,7 @@ const MarqueeRow = styled(motion.div)`
   padding: 30px 0;
 
   @media ${theme.media.mobile} {
-    padding: 10px 0;
+    padding: 0;
   }
 `;
 
