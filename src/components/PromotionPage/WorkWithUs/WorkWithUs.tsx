@@ -36,7 +36,7 @@ const Container = styled.div`
   @media ${theme.media.mobile} {
     padding: 0.75rem;
     margin: 0;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
 
     align-items: center;
     flex-direction: column;
