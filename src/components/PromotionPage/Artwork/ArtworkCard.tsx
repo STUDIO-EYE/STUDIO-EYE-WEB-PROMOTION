@@ -96,6 +96,8 @@ const ArtworkItem = styled(motion.div)`
     pointer-events: none;
   }
 
+
+
   @media ${theme.media.mobile} {
     &:hover .overlay {
       width: 20rem;
