@@ -85,19 +85,53 @@ export const InputTitle = styled.div`
   }
 `;
 
-export const Box = styled.div`
-  width: 100%;
+export const RowWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
-export const ImgBox = styled.div`
+export const SloganWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  input {
+    display: none;
+  }
+
+  img {
+    max-width: 450px;
+    max-height: 150px;
+    margin-bottom: 10px;
+  }
+`;
+
+export const SloganBox = styled.div`
   display: flex;
   height: 200px;
-  width: 95%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.color.background};
   border-radius: 5px;
   margin-top: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+`;
+
+export const Box = styled.div`
+  width: 48%;
+`;
+
+export const ImgBox = styled.div`
+  display: flex;
+  height: 200px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.color.background};
+  border-radius: 5px;
+  margin-top: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 `;
 
 export const Button = styled.div`

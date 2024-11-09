@@ -20,20 +20,29 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useRecoilState(ppHeaderScrolledState);
   const headerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const [companyLogo, setCompanyLogo] = useState<string>('');
+  const [companyLightLogo, setCompanyLightLogo] = useState<string>('');
+  const [companyDarkLogo, setCompanyDarkLogo] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCompanyLogoData();
-        if (data) {
-          setCompanyLogo(data);
+        const lightLogoData = await getCompanyLogoData(true);
+        if (lightLogoData) {
+          setCompanyLightLogo(lightLogoData);
         } else {
-          setCompanyLogo(defaultLogo);
+          setCompanyLightLogo(defaultLogo);
+        }
+
+        const darkLogoData = await getCompanyLogoData(false);
+        if (darkLogoData) {
+          setCompanyDarkLogo(darkLogoData);
+        } else {
+          setCompanyDarkLogo(defaultLogo);
         }
       } catch (error) {
         console.error('Error fetching company data: ', error);
-        setCompanyLogo(defaultLogo);
+        setCompanyLightLogo(defaultLogo);
+        setCompanyDarkLogo(defaultLogo);
       }
     };
 
@@ -84,11 +93,13 @@ const Header = () => {
 
   return (
     <>
-      <Container ref={headerRef} isScrolled={isScrolled} isRecruitmentPage={isRecruitmentPage}> {/* isRecruitmentPage 전달 */}
+      <Container ref={headerRef} isScrolled={isScrolled} isRecruitmentPage={isRecruitmentPage}>
+        {' '}
+        {/* isRecruitmentPage 전달 */}
         <HeaderContainer>
           <HomeLinkWrapper to={'/'}>
             {/* 조건부로 로고 변경 */}
-            <LogoImg src={isRecruitmentPage ? recruitmentLogo : companyLogo} alt='Company Logo' />
+            <LogoImg src={isRecruitmentPage ? companyDarkLogo : companyLightLogo} alt='Company Logo' />
           </HomeLinkWrapper>
         </HeaderContainer>
         <AnimatePresence>
@@ -125,8 +136,12 @@ const Container = styled.div<ContainerProps>`
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
-  background-color: ${({ isScrolled, isRecruitmentPage }) => 
-    isRecruitmentPage ? 'transparent' : (isScrolled ? 'rgba(0,0,0,0.1)' : 'transparent')}; // recruitment 페이지에서 투명하게
+  background-color: ${({ isScrolled, isRecruitmentPage }) =>
+    isRecruitmentPage
+      ? 'transparent'
+      : isScrolled
+        ? 'rgba(0,0,0,0.1)'
+        : 'transparent'}; // recruitment 페이지에서 투명하게
   backdrop-filter: ${({ isScrolled }) => (isScrolled ? 'blur(15px)' : 'none')};
   position: fixed;
   z-index: 100;
