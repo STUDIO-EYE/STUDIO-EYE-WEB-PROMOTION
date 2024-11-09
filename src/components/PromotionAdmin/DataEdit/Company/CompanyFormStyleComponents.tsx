@@ -115,6 +115,7 @@ export const SloganBox = styled.div`
   background-color: ${(props) => props.theme.color.background};
   border-radius: 5px;
   margin-top: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 `;
 
 export const Box = styled.div`
@@ -130,6 +131,7 @@ export const ImgBox = styled.div`
   background-color: ${(props) => props.theme.color.background};
   border-radius: 5px;
   margin-top: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 `;
 
 export const Button = styled.div`

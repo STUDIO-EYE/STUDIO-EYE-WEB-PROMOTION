@@ -1,6 +1,7 @@
 import { getCompanyData } from '@/apis/PromotionAdmin/dataEdit';
 import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
 import React, { useEffect, useState } from 'react';
+import { theme } from '@/styles/theme';
 import { useQuery } from 'react-query';
 
 import {
@@ -63,7 +64,7 @@ const Image = ({ setEditImage }: IImageProps) => {
                     {DATAEDIT_TITLES_COMPONENTS.Logo}
 
                     <LogoWrapper style={{ alignItems: 'flex-end' }}>
-                      <ImgBox>
+                      <ImgBox style={{ backgroundColor: theme.color.white.light }}>
                         <img src={`${putData.darkLogoImageUrl}`} />
                       </ImgBox>
                     </LogoWrapper>

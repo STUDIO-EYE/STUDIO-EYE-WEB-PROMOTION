@@ -1,9 +1,9 @@
 import { getCompanyData } from '@/apis/PromotionAdmin/dataEdit';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
 import { putCompanySloganData, putCompanyLogosData, putCompanyLogosSloganData } from '@/apis/PromotionAdmin/dataEdit';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { theme } from '@/styles/theme';
 
 import {
   Wrapper,
@@ -36,8 +36,6 @@ const Image = ({ setEditImage }: IImageProps) => {
     darkLogoImageUrl: '',
     sloganImageUrl: '',
   });
-  const [previewLogo, setPreviewLogo] = useState<string | null>(null);
-  const [previewSlogan, setPreviewSlogan] = useState<string | null>(null);
   const setIsEditing = useSetRecoilState(dataUpdateState);
 
   useEffect(() => {
@@ -47,94 +45,90 @@ const Image = ({ setEditImage }: IImageProps) => {
         darkLogoImageUrl: data.darkLogoImageUrl,
         sloganImageUrl: data.sloganImageUrl,
       });
-      setPreviewLogo(null);
-      setPreviewSlogan(null);
     }
   }, [data]);
 
   const handleSaveClick = async () => {
     const formData = new FormData();
 
-    const fileAppend = (file: File, fileName: string) => {
-      if (file) {
-        formData.append(fileName, file);
-      } else {
-        console.log(fileName, '이미지 가져오기 실패');
-      }
-    };
-
     if (window.confirm(MSG.CONFIRM_MSG.SAVE)) {
       try {
+        if (logoChange) {
+          const lightLogoFile = putData.lightLogoImageUrl
+            ? await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png')
+            : null;
+          const darkLogoFile = putData.darkLogoImageUrl
+            ? await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png')
+            : null;
+          if (lightLogoFile) formData.append('lightLogoImage', lightLogoFile);
+          if (darkLogoFile) formData.append('darkLogoImage', darkLogoFile);
+        }
+
+        if (sloganChange) {
+          const sloganFile = putData.sloganImageUrl ? await urlToFile(putData.sloganImageUrl, 'Slogan.png') : null;
+          if (sloganFile) formData.append('sloganImageUrl', sloganFile);
+        }
+
         if (logoChange && sloganChange) {
-          const lightLogoFile = await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png');
-          const darkLogoFile = await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png');
-          const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-          fileAppend(lightLogoFile, 'lightLogoImageUrl');
-          fileAppend(darkLogoFile, 'darkLogoImageUrl');
-          fileAppend(sloganFile, 'sloganImageUrl');
           await putCompanyLogosSloganData(formData);
         } else if (logoChange) {
-          const lightLogoFile = await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png');
-          const darkLogoFile = await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png');
-          fileAppend(lightLogoFile, 'lightLogoImageUrl');
-          fileAppend(darkLogoFile, 'darkLogoImageUrl');
           await putCompanyLogosData(formData);
         } else if (sloganChange) {
-          const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-          fileAppend(sloganFile, 'sloganImageUrl');
           await putCompanySloganData(formData);
+        }
+
+        const updatedData = await refetch();
+        if (updatedData.data) {
+          setPutData(updatedData.data);
         }
 
         alert(MSG.ALERT_MSG.SAVE);
         setEditImage(false);
         setLogoChange(false);
         setSloganChange(false);
-        refetch(); // Refetch the data to get the updated image URLs
       } catch (error) {
         console.error('Error updating company:', error);
+        alert('저장 중 문제가 발생했습니다. 다시 시도해 주세요.');
       }
     }
   };
 
-  const handleLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const logoImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewLogo(reader.result as string);
-      };
-      reader.readAsDataURL(logoImageUrl);
+  const handleImageChange = (file: File, key: string, changeSetter: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
       setPutData((prevData) => ({
         ...prevData,
-        logoImageUrl: URL.createObjectURL(logoImageUrl),
+        [key]: reader.result as string,
       }));
-      setLogoChange(true);
+      changeSetter(true);
       setIsEditing(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleLightLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0], 'lightLogoImageUrl', setLogoChange);
+    }
+  };
+
+  const handleDarkLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0], 'darkLogoImageUrl', setLogoChange);
     }
   };
 
   const handleSloganImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const sloganImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewSlogan(reader.result as string);
-      };
-      reader.readAsDataURL(sloganImageUrl);
-      setPutData((prevData) => ({
-        ...prevData,
-        sloganImageUrl: URL.createObjectURL(sloganImageUrl),
-      }));
-      setSloganChange(true);
-      setIsEditing(true);
+      handleImageChange(e.target.files[0], 'sloganImageUrl', setSloganChange);
     }
   };
 
   async function urlToFile(url: string, fileName: string): Promise<File> {
     try {
       const response = await fetch(url);
+      if (!response.ok) throw new Error('네트워크 오류로 파일을 가져올 수 없습니다.');
       const blob = await response.blob();
-      console.log(blob);
       return new File([blob], fileName);
     } catch (error) {
       console.error('Error URL to file:', error);
@@ -159,13 +153,13 @@ const Image = ({ setEditImage }: IImageProps) => {
 
                     <LogoWrapper>
                       <FileButton
-                        id='logoFile'
+                        id='lightLogo'
                         description={MSG.BUTTON_MSG.UPLOAD.LOGO}
-                        onChange={handleLogoImageChange}
+                        onChange={handleLightLogoImageChange}
                       />
 
                       <ImgBox>
-                        <img src={previewLogo || `${putData.lightLogoImageUrl}`} />
+                        <img src={putData.lightLogoImageUrl} alt='' />
                       </ImgBox>
                     </LogoWrapper>
                   </Box>
@@ -176,13 +170,13 @@ const Image = ({ setEditImage }: IImageProps) => {
 
                     <LogoWrapper>
                       <FileButton
-                        id='logoFile'
+                        id='darkLogo'
                         description={MSG.BUTTON_MSG.UPLOAD.LOGO}
-                        onChange={handleLogoImageChange}
+                        onChange={handleDarkLogoImageChange}
                       />
 
-                      <ImgBox>
-                        <img src={previewLogo || `${putData.lightLogoImageUrl}`} />
+                      <ImgBox style={{ backgroundColor: theme.color.white.light }}>
+                        <img src={putData.darkLogoImageUrl} alt='' />
                       </ImgBox>
                     </LogoWrapper>
                   </Box>
@@ -199,7 +193,7 @@ const Image = ({ setEditImage }: IImageProps) => {
                     />
 
                     <SloganBox>
-                      <img src={previewSlogan || `${putData.sloganImageUrl}`} />
+                      <img src={putData.sloganImageUrl} alt='' />
                     </SloganBox>
                   </SloganWrapper>
                 </Box>
