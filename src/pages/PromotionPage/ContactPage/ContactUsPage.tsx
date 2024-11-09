@@ -113,38 +113,6 @@ const ContactUsPage = () => {
     }
   }, [requestStep]);
 
-  ///////////////////////////////////////////////////////////////////////////////////////
-  // mainpage와 같은 fullpage scroll
-  // const [elementHeight, setElementHeight] = useState(window.innerHeight);
-  // const [activeIndex, setActiveIndex] = useState(0);
-
-  // const sectionsRef = useRef<HTMLElement[]>([]);
-  // const { height } = useWindowSize();
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScroll = window.scrollY;
-  //     const index = sectionsRef.current.findIndex(
-  //       (section) =>
-  //         section.offsetTop <= currentScroll + window.innerHeight / 2 &&
-  //         section.offsetTop + section.offsetHeight > currentScroll + window.innerHeight / 2,
-  //     );
-  //     setActiveIndex(index !== -1 ? index : 0);
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, [sectionsRef]);
-
-  // useEffect(() => {
-  //   if (sectionsRef.current && sectionsRef.current[0]) {
-  //     setElementHeight(sectionsRef.current[0].offsetHeight);
-  //   }
-  // }, [height]);
-  //////////////////////////////////////////////////////////////////////////////////
-
   const [selectedCategory, setSelectedCategory] = useState('');
   // 새로고침 경고
   useEffect(() => {
@@ -285,23 +253,6 @@ const ContactUsPage = () => {
         [name]: truncatedValue,
       }));
     }
-    //////////////////////////////////////////////////////////// 2번
-
-    //////////////////////////////////////////////////////////// 1번
-    // if (name === 'contact') {
-    //   if (!phoneFaxCheck(value)) {
-    //     setErrors({
-    //       ...errors,
-    //       contact: '숫자로만 구성된 "010-1234-5678" 형식의 값을 넣어주세요',
-    //     });
-    //   } else {
-    //     setErrors({
-    //       ...errors,
-    //       contact: '',
-    //     });
-    //   }
-    // }
-    //////////////////////////////////////////////////////////// 1번
 
     if (name === 'email') {
       if (value && !emailCheck(value)) {
@@ -419,20 +370,20 @@ const ContactUsPage = () => {
   };
 
   return (
-    <Container ref={containerRef}>
-      <IntroSection>
+    <Container ref={containerRef} data-cy="contact-page">
+      <IntroSection data-cy="intro-section">
         <IntroWrapper>
           <IntroTitleWrapper>
-            <IntroTitleCONTACT>CONTACT</IntroTitleCONTACT>
-            <IntroTitleUS>US</IntroTitleUS>
+            <IntroTitleCONTACT data-cy="intro-title-contact">CONTACT</IntroTitleCONTACT>
+            <IntroTitleUS data-cy="intro-title-us">US</IntroTitleUS>
           </IntroTitleWrapper>
           <IntroSubTitleWrapper>
-            <IntroSubtitle>대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!</IntroSubtitle>
+            <IntroSubtitle data-cy="intro-subtitle">대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!</IntroSubtitle>
           </IntroSubTitleWrapper>
-          <IntroAboutWrapper>
+          <IntroAboutWrapper data-cy="intro-about-wrapper">
             <div style={{ width: '100%' }}>
               {(!addressInvalid || !addressEnglishInvalid) && (
-                <IntroAdress style={{ color: '#8a8a8a' }}>Address</IntroAdress>
+                <IntroAdress data-cy="intro-address-label" style={{ color: '#8a8a8a' }}>Address</IntroAdress>
               )}
 
               {addressInvalid && !addressEnglishInvalid && <IntroAdress>{companyBasicData.addressEnglish}</IntroAdress>}
@@ -486,7 +437,7 @@ const ContactUsPage = () => {
               ) : (
                 <>
                   <RequestExplanationWrapper>
-                    <RequestExplanationSmall>Project Request</RequestExplanationSmall>
+                    <RequestExplanationSmall data-cy="project-request-title" >Project Request</RequestExplanationSmall>
                     {requestStep === 0 ? (
                       <>
                         <RequestExplanation>문의할 프로젝트 항목을 선택해주세요. *</RequestExplanation>
@@ -522,6 +473,7 @@ const ContactUsPage = () => {
                           key={category.value}
                           checked={selectedCategory === category.value}
                           onClick={() => handleButtonClick(category.value)}
+                          data-cy="category-button"
                         >
                           {category.label}
                         </RequestCategoryButton>
@@ -529,7 +481,7 @@ const ContactUsPage = () => {
                     </RequestCategoryButtonWrapper>
                   </RequestInputWrapper>
                 ) : requestStep === 1 ? (
-                  <RequestInputWrapper>
+                  <RequestInputWrapper data-cy="request-input-personal">
                     <RequestInfoInput
                       autoComplete='off'
                       type='text'
@@ -538,6 +490,7 @@ const ContactUsPage = () => {
                       name='clientName'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
+                      data-cy="input-client-name" 
                     ></RequestInfoInput>
                     <RequestInfoInput
                       autoComplete='off'
@@ -547,6 +500,7 @@ const ContactUsPage = () => {
                       name='organization'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
+                      data-cy="input-organization"
                     ></RequestInfoInput>
                     <RequestInfoInput
                       autoComplete='off'
@@ -556,6 +510,7 @@ const ContactUsPage = () => {
                       name='contact'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
+                      data-cy="input-contact"
                     ></RequestInfoInput>{' '}
                     {errors.contact && <ErrorMessage>{errors.contact}</ErrorMessage>}
                     <RequestInfoInput
@@ -566,6 +521,7 @@ const ContactUsPage = () => {
                       name='email'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
+                      data-cy="input-email"
                     ></RequestInfoInput>
                     {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
                     <RequestInfoInput
@@ -576,6 +532,7 @@ const ContactUsPage = () => {
                       name='position'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
+                      data-cy="input-position"
                     ></RequestInfoInput>
                   </RequestInputWrapper>
                 ) : (
@@ -587,15 +544,17 @@ const ContactUsPage = () => {
                       value={formData.projectName}
                       name='projectName'
                       onChange={handleDataChange}
+                      data-cy="input-project-name"
                     ></RequestInfoInput>
-                    <RowWrapper>
-                      <RequestFileText ref={FileTextRef} type='text' readOnly></RequestFileText>
+                    <RowWrapper data-cy="file-upload-wrapper">
+                      <RequestFileText ref={FileTextRef} type='text' readOnly data-cy="file-text"></RequestFileText>
                       <RequestFileUploadInput
                         id='uploadfile'
                         type='file'
                         accept='*/*'
                         multiple
                         onChange={handleFileChange}
+                        data-cy="file-upload-input"
                       />
                       <RequestUploadLabel htmlFor='uploadfile'>파일 선택</RequestUploadLabel>
                     </RowWrapper>
@@ -606,14 +565,23 @@ const ContactUsPage = () => {
                       value={formData.description}
                       name='description'
                       onChange={handleDataChange}
+                      data-cy="input-project-details"
                     ></RequestInfoTextarea>
                   </RequestInputWrapper>
                 )}
                 <RequestStepButtonWrapper>
-                  <RequestStepButton onClick={handlePrev} disabled={requestStep === 0}>
+                  <RequestStepButton 
+                  onClick={handlePrev} 
+                  disabled={requestStep === 0}
+                  data-cy="prev-step-button"
+                  >
                     이전
                   </RequestStepButton>
-                  <RequestStepButton onClick={handleNext} disabled={requestStep >= 3}>
+                  <RequestStepButton 
+                  onClick={handleNext}     
+                  disabled={requestStep >= 3}
+                  data-cy="next-step-button"
+                  >
                     {requestStep === 2 ? '문의 접수' : '다음'}
                   </RequestStepButton>
                 </RequestStepButtonWrapper>
@@ -623,7 +591,7 @@ const ContactUsPage = () => {
           {requestStep === 3 ? (
             <>
               <RequestCompleteContentWrapper>
-                <RequestExplanationBig>문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.</RequestExplanationBig>
+                <RequestExplanationBig data-cy="success-message">문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.</RequestExplanationBig>
                 <RequestExplanationSmall style={{ textAlign: 'center' }}>
                   담당자 배정 후 연락 드리겠습니다. 감사합니다.
                 </RequestExplanationSmall>

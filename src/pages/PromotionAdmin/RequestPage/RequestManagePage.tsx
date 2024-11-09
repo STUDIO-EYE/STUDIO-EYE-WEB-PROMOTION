@@ -41,66 +41,73 @@ function RequestList() {
   const slicedRequests = filteredRequests?.slice(indexOfFirst, indexOfLast) || [];
 
   return (
-    <Wrapper>
-      <TitleWrapper>
-        <Title>
-          Request 관리
-          <Info>총 {filteredRequests.length}건</Info>
-        </Title>
-        <DropDown onChange={(e) => {
+    <Wrapper data-cy="request-list-wrapper">
+    <TitleWrapper data-cy="request-list-title">
+      <Title>
+        Request 관리
+        <Info data-cy="request-list-total-count">총 {filteredRequests.length}건</Info>
+      </Title>
+      <DropDown
+        onChange={(e) => {
           setFilterState(e.target.value);
           setCurrentPage(1);
-        }}>
-          <option value="ALL">전체 문의</option>
-          <option value="WAITING">대기 중인 문의</option>
-          <option value="APPROVED">승인된 문의</option>
-          <option value="REJECTED">거절된 문의</option>
-          <option value="DISCUSSING">논의 중인 문의</option>
-        </DropDown>
-      </TitleWrapper>
-      <ContentBox>
-        {!data || data.length === 0 ? (
-          <> 😊 문의 데이터가 존재하지 않습니다.</>
-        ) : (
-          <>
-            <TableWrapper>
-              {isLoading ? (
-                <h1>Loading...</h1>
-              ) : slicedRequests && slicedRequests.length > 0 ? (
-                slicedRequests.map((request) => {
-                  return (
-                    <RequestWrapper key={request.id}>
-                      <StateText requestState={request.state}>
-                        {request.state === 'DISCUSSING' ? '논의' :
-                          (request.state === 'APPROVED' ? '승인' :
-                            (request.state === 'REJECTED' ? '거절' : '대기')
-                          )}
-                      </StateText>
-                      <WaitingRequestsList
-                        organization={request.organization}
-                        clientName={request.clientName}
-                        description={request.description}
-                        category={request.category}
-                        date={`${request.year}년 ${request.month.toString().padStart(2, '0')}월`}
-                        email={request.email}
-                        requestId={request.id.toString()}
-                        hoverBackgroundColor={'transparent'}
-                      />
-                    </RequestWrapper>
-                  );
-                })
-              ) : (
-                <h1>대기 중인 문의가 없습니다.</h1>
-              )}
-            </TableWrapper>
-            <PaginationWrapper>
-              <Pagination postsPerPage={postsPerPage} totalPosts={filteredRequests.length} paginate={paginate} />
-            </PaginationWrapper>
-          </>
-        )}
-      </ContentBox>
-      <Outlet />
-    </Wrapper>
+        }}
+        data-cy="filter-dropdown" // 필터 드롭다운
+      >
+        <option value="ALL">전체 문의</option>
+        <option value="WAITING">대기 중인 문의</option>
+        <option value="APPROVED">승인된 문의</option>
+        <option value="REJECTED">거절된 문의</option>
+        <option value="DISCUSSING">논의 중인 문의</option>
+      </DropDown>
+    </TitleWrapper>
+    <ContentBox data-cy="request-list-content">
+      {!data || data.length === 0 ? (
+        <p data-cy="no-requests-message">😊 문의 데이터가 존재하지 않습니다.</p>
+      ) : (
+        <>
+          <TableWrapper data-cy="request-list-table">
+            {isLoading ? (
+              <h1 data-cy="loading-message">Loading...</h1>
+            ) : slicedRequests && slicedRequests.length > 0 ? (
+              slicedRequests.map((request) => (
+                <RequestWrapper key={request.id} data-cy="request-list-item">
+                  <StateText requestState={request.state} data-cy={`request-state-${request.id}`}>
+                    {request.state === 'DISCUSSING' ? '논의' :
+                      (request.state === 'APPROVED' ? '승인' :
+                        (request.state === 'REJECTED' ? '거절' : '대기')
+                      )}
+                  </StateText>
+                  <WaitingRequestsList
+                    organization={request.organization}
+                    clientName={request.clientName}
+                    description={request.description}
+                    category={request.category}
+                    date={`${request.year}년 ${request.month.toString().padStart(2, '0')}월`}
+                    email={request.email}
+                    requestId={request.id.toString()}
+                    hoverBackgroundColor={'transparent'}
+                    data-cy="email-list-item" // 이메일 리스트 아이템
+                  />
+                </RequestWrapper>
+              ))
+            ) : (
+              <h1 data-cy="no-waiting-requests">대기 중인 문의가 없습니다.</h1>
+            )}
+          </TableWrapper>
+          <PaginationWrapper data-cy="pagination-wrapper">
+            <Pagination
+              postsPerPage={postsPerPage}
+              totalPosts={filteredRequests.length}
+              paginate={paginate}
+              data-cy="pagination-button" // 페이지네이션 버튼
+            />
+          </PaginationWrapper>
+        </>
+      )}
+    </ContentBox>
+    <Outlet />
+  </Wrapper>
   );
 }
 

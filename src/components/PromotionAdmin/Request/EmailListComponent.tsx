@@ -27,17 +27,20 @@ const EmailList: React.FC<EmailListProps> = ({ emailItems }) => {
   };
 
   return (
-    <EmailListWrapper>
+    <EmailListWrapper data-cy="email-list">
       {emailItems.map((email) => (
-        <EmailItem key={email.id}>
+        <EmailItem key={email.id} data-cy="email-item">
           <StateButton state={email.state}>
             {email.state === 'REJECTED' ? '거절' : email.state === 'APPROVED' ? '승인' : '논의'}
           </StateButton>
-          <EmailSubject onClick={() => toggleEmailExpansion(email.id)}>
+          <EmailSubject 
+          data-cy="email-subject"
+          onClick={() => toggleEmailExpansion(email.id)}
+          >
             {email.subject}
           </EmailSubject>
           <EmailDate>{email.date}</EmailDate>
-          {expandedItems.has(email.id) && <EmailContent>{email.content}</EmailContent>}
+          {expandedItems.has(email.id) && <EmailContent data-cy="email-content">{email.content}</EmailContent>}
         </EmailItem>
       ))}
     </EmailListWrapper>
