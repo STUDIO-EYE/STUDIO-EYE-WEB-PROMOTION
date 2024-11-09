@@ -164,84 +164,95 @@ const RequestDetailPage = () => {
   const emailItemsSliced = emailItems.slice(indexOfFirst, indexOfLast);
 
   return (
-    <PageWrapper>
-      {requestDetailMatch && clickedRequest && (
-        <>
-          <LeftContainer>
-            <Box>
-              <Wrapper>
-                <TitleWrapper>
-                  <Title>
-                    {clickedRequest.clientName} 님의 {clickedRequest.category} 문의
-                  </Title>
-                </TitleWrapper>
-                <UserInfoWrapper>
-                  <UserInfo clickedRequest={clickedRequest} />
-                </UserInfoWrapper>
-                <Answer className='article' dangerouslySetInnerHTML={{ __html: clickedRequest.description }} />
-              </Wrapper>
-            </Box>
+    <PageWrapper data-cy="request-detail-page">
+    {requestDetailMatch && clickedRequest && (
+      <>
+        <LeftContainer>
+          <Box data-cy="client-info-box">
+            <Wrapper>
+              <TitleWrapper>
+                <Title data-cy="client-name-title">
+                  {clickedRequest.clientName} 님의 {clickedRequest.category} 문의
+                </Title>
+              </TitleWrapper>
+              <UserInfoWrapper data-cy="client-info-wrapper">
+                <UserInfo clickedRequest={clickedRequest} />
+              </UserInfoWrapper>
+              <Answer
+                className="article"
+                data-cy="request-description"
+                dangerouslySetInnerHTML={{ __html: clickedRequest.description }}
+              />
+            </Wrapper>
+          </Box>
 
-            <Box>
-              <Wrapper>
-                {loading && (
-                  <Overlay visible={loading}>
-                    <Spinner />
-                  </Overlay>
-                )}
-                <Tooltip
-                  description='대기: 아직 답장을 하지 않은 상태 / 논의: 내부적으로 승인과 거절 논의 중인 상태 / 승인: 문의를 승인한 상태 / 거절: 문의를 거절한 상태'
-                  svgComponent={<InfoIcon width={18} height={18} />}
-                />
-                <DropDown
-                  onChange={(e) => {
-                    const newState = e.target.value;
-                    setReplyState(newState);
-                    const content = createDefaultContent(newState);
-                    setTextValue(content);
-                  }}
-                >
-                  <option value='WAITING' selected disabled hidden>
-                    대기
-                  </option>
-                  <option value='DISCUSSING'>논의</option>
-                  <option value='APPROVED'>승인</option>
-                  <option value='REJECTED'>거절</option>
-                </DropDown>
-                <StyledTextArea
-                  placeholder={createDefaultContent(replyState)}
-                  value={textValue}
-                  onChange={handleTextChange}
-                  maxLength={MAX_TEXT_LENGTH}
-                  style={{ whiteSpace: 'pre-wrap' }}
-                />
-                <TextCounter>
-                  {textLength}/{MAX_TEXT_LENGTH}자
-                </TextCounter>
-              </Wrapper>
-              <ButtonWrapper>
-                <Button
-                  onClick={() => {
-                    clickedRequest && replyRequest(replyState);
-                  }}
-                >
-                  답변 보내기
-                </Button>
-              </ButtonWrapper>
-            </Box>
-          </LeftContainer>
-          <RightContainer>
-            <Box>
-              {/* <div>총 {emailItems.length}개</div> */}
-              <EmailListComponent emailItems={emailItemsSliced} />
-              <ButtonWrapper>
-                <Pagination postsPerPage={postsPerPage} totalPosts={emailItems.length} paginate={paginate} />
-              </ButtonWrapper>
-            </Box>
-          </RightContainer>
-        </>
-      )}
-    </PageWrapper>
+          <Box data-cy="reply-box">
+            <Wrapper>
+              {loading && (
+                <Overlay visible={loading}>
+                  <Spinner data-cy="loading-spinner" />
+                </Overlay>
+              )}
+              <Tooltip
+                description="대기: 아직 답장을 하지 않은 상태 / 논의: 내부적으로 승인과 거절 논의 중인 상태 / 승인: 문의를 승인한 상태 / 거절: 문의를 거절한 상태"
+                svgComponent={<InfoIcon width={18} height={18} />}
+              />
+              <DropDown
+                data-cy="status-dropdown"
+                onChange={(e) => {
+                  const newState = e.target.value;
+                  setReplyState(newState);
+                  const content = createDefaultContent(newState);
+                  setTextValue(content);
+                }}
+              >
+                <option value="WAITING" selected disabled hidden>
+                  대기
+                </option>
+                <option value="DISCUSSING">논의</option>
+                <option value="APPROVED">승인</option>
+                <option value="REJECTED">거절</option>
+              </DropDown>
+              <StyledTextArea
+                data-cy="response-textarea"
+                placeholder={createDefaultContent(replyState)}
+                value={textValue}
+                onChange={handleTextChange}
+                maxLength={MAX_TEXT_LENGTH}
+                style={{ whiteSpace: 'pre-wrap' }}
+              />
+              <TextCounter data-cy="text-counter">
+                {textLength}/{MAX_TEXT_LENGTH}자
+              </TextCounter>
+            </Wrapper>
+            <ButtonWrapper>
+              <Button
+                data-cy="send-reply-button"
+                onClick={() => {
+                  clickedRequest && replyRequest(replyState);
+                }}
+              >
+                답변 보내기
+              </Button>
+            </ButtonWrapper>
+          </Box>
+        </LeftContainer>
+        <RightContainer data-cy="email-list-container">
+          <Box>
+            <EmailListComponent data-cy="email-list" emailItems={emailItemsSliced} />
+            <ButtonWrapper>
+              <Pagination
+                data-cy="pagination-component"
+                postsPerPage={postsPerPage}
+                totalPosts={emailItems.length}
+                paginate={paginate}
+              />
+            </ButtonWrapper>
+          </Box>
+        </RightContainer>
+      </>
+    )}
+  </PageWrapper>
   );
 };
 
