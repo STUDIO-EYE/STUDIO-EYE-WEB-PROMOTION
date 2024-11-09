@@ -16,19 +16,21 @@ export interface ICEOData {
 }
 
 export interface ICompanyData {
+  id: number;
   mainOverview: string;
   commitment: string;
   address: string;
   addressEnglish: string;
-  fax: string;
-  id: number;
-  introduction: string;
-  logoImageFileName: string;
-  logoImageUrl: string;
+  lightLogoImageFileName: string;
+  lightLogoImageUrl: string;
+  darkLogoImageFileName: string;
+  darkLogoImageUrl: string;
   phone: string;
+  fax: string;
+  introduction: string;
   sloganImageFileName: string;
   sloganImageUrl: string;
-  detailInformation: { key: string; value: string }[];
+  detailInformation: { id: number; key: string; value: string }[];
 }
 export interface IPartnersData {
   logoImg: string;

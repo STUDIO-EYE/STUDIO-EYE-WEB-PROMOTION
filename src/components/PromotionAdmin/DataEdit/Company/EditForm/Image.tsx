@@ -1,11 +1,20 @@
 import { getCompanyData } from '@/apis/PromotionAdmin/dataEdit';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
-import axios from 'axios';
+import { putCompanySloganData, putCompanyLogosData, putCompanyLogosSloganData } from '@/apis/PromotionAdmin/dataEdit';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { Wrapper, ContentBlock, ImgBox, LogoWrapper, Box } from '../CompanyFormStyleComponents';
+import {
+  Wrapper,
+  ContentBlock,
+  ImgBox,
+  LogoWrapper,
+  Box,
+  RowWrapper,
+  SloganWrapper,
+  SloganBox,
+} from '../CompanyFormStyleComponents';
 import { DATAEDIT_NOTICE_COMPONENTS, DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import FileButton from '../../StyleComponents/FileButton';
 import Button from '../../StyleComponents/Button';
@@ -23,7 +32,8 @@ const Image = ({ setEditImage }: IImageProps) => {
   const [logoChange, setLogoChange] = useState(false);
   const [sloganChange, setSloganChange] = useState(false);
   const [putData, setPutData] = useState({
-    logoImageUrl: '',
+    lightLogoImageUrl: '',
+    darkLogoImageUrl: '',
     sloganImageUrl: '',
   });
   const [previewLogo, setPreviewLogo] = useState<string | null>(null);
@@ -33,7 +43,8 @@ const Image = ({ setEditImage }: IImageProps) => {
   useEffect(() => {
     if (data) {
       setPutData({
-        logoImageUrl: data.logoImageUrl,
+        lightLogoImageUrl: data.lightLogoImageUrl,
+        darkLogoImageUrl: data.darkLogoImageUrl,
         sloganImageUrl: data.sloganImageUrl,
       });
       setPreviewLogo(null);
@@ -55,19 +66,23 @@ const Image = ({ setEditImage }: IImageProps) => {
     if (window.confirm(MSG.CONFIRM_MSG.SAVE)) {
       try {
         if (logoChange && sloganChange) {
-          const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
+          const lightLogoFile = await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png');
+          const darkLogoFile = await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png');
           const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-          fileAppend(logoFile, 'logoImageUrl');
+          fileAppend(lightLogoFile, 'lightLogoImageUrl');
+          fileAppend(darkLogoFile, 'darkLogoImageUrl');
           fileAppend(sloganFile, 'sloganImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/logo&slogan`, formData);
+          await putCompanyLogosSloganData(formData);
         } else if (logoChange) {
-          const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
-          fileAppend(logoFile, 'logoImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/logo`, formData);
+          const lightLogoFile = await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png');
+          const darkLogoFile = await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png');
+          fileAppend(lightLogoFile, 'lightLogoImageUrl');
+          fileAppend(darkLogoFile, 'darkLogoImageUrl');
+          await putCompanyLogosData(formData);
         } else if (sloganChange) {
           const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
           fileAppend(sloganFile, 'sloganImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/slogan`, formData);
+          await putCompanySloganData(formData);
         }
 
         alert(MSG.ALERT_MSG.SAVE);
@@ -136,38 +151,57 @@ const Image = ({ setEditImage }: IImageProps) => {
           <>
             <ContentBlock isFocused={true}>
               <InputImgWrapper>
-                <Box>
-                  {DATAEDIT_TITLES_COMPONENTS.Logo}
-                  {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
-                  {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+                <RowWrapper>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
 
-                  <LogoWrapper>
-                    <FileButton
-                      id='logoFile'
-                      description={MSG.BUTTON_MSG.UPLOAD.LOGO}
-                      onChange={handleLogoImageChange}
-                    />
+                    <LogoWrapper>
+                      <FileButton
+                        id='logoFile'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleLogoImageChange}
+                      />
 
-                    <ImgBox>
-                      <img src={previewLogo || `${putData.logoImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
-                </Box>
-                <Box>
+                      <ImgBox>
+                        <img src={previewLogo || `${putData.lightLogoImageUrl}`} />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+
+                    <LogoWrapper>
+                      <FileButton
+                        id='logoFile'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleLogoImageChange}
+                      />
+
+                      <ImgBox>
+                        <img src={previewLogo || `${putData.lightLogoImageUrl}`} />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                </RowWrapper>
+                <Box style={{ marginTop: '20px', width: '100%' }}>
                   {DATAEDIT_TITLES_COMPONENTS.Slogan}
                   {DATAEDIT_NOTICE_COMPONENTS.IMAGE.SLOGAN}
                   {DATAEDIT_NOTICE_COMPONENTS.COLOR.SLOGAN}
-                  <LogoWrapper>
+                  <SloganWrapper>
                     <FileButton
                       id='sloganFile'
                       description={MSG.BUTTON_MSG.UPLOAD.SLOGAN}
                       onChange={handleSloganImageChange}
                     />
 
-                    <ImgBox>
-                      <img src={previewSlogan || `${putData.sloganImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
+                    <SloganBox>
+                      <img src={previewSlogan || `${putData.sloganImageUrl}`} />
+                    </SloganBox>
+                  </SloganWrapper>
                 </Box>
                 <ButtonWrapper>
                   <Button fontSize={14} width={100} description={MSG.BUTTON_MSG.SAVE} onClick={handleSaveClick} />
@@ -193,4 +227,5 @@ const InputImgWrapper = styled.div`
   position: relative;
   width: 100%;
   justify-content: space-between;
+  flex-direction: column;
 `;
