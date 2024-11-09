@@ -22,8 +22,8 @@ const ArtworkDetail = () => {
   const [isProjectOpened, setIsProjectOpened] = useState<boolean>(false);
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
-  const [mainImage, setMainImage] = useState<File|null>();
-  const [responsiveMainImage, setResponsiveMainImage]=useState<File|null>();
+  const [mainImage, setMainImage] = useState<File|null>(null);
+  const [responsiveMainImage, setResponsiveMainImage]=useState<File|null>(null);
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');

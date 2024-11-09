@@ -211,7 +211,6 @@ export const getArtworkDefaultValue = (
             <ImageUpload
               type='main'
               value={mainImage}
-              isGetMode={isGetMode}
               onChange={(newImage: File | File[]) => handleMainImageChange(newImage)}
             />
           </>
@@ -233,7 +232,6 @@ export const getArtworkDefaultValue = (
           <ImageUpload
             type='responsiveMain'
             value={responsiveMain}
-            isGetMode={isGetMode}
             onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
           />
         </>
@@ -258,7 +256,6 @@ export const getArtworkDefaultValue = (
           <ImageUpload
             type='detail'
             value={detailImage}
-            isGetMode={isGetMode}
             onChange={(newImages: File | File[]) => handleDetailImageChange(newImages)}
           />
         ),

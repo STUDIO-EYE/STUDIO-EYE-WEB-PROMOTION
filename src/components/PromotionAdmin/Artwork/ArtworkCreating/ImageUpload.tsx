@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface ImageUploadProps {
   type: 'main' | 'responsiveMain' | 'detail';
   value?: null | File | File[];
-  isGetMode: boolean|undefined;
   onChange: (newImage: File | File[]) => void;
 }
 
-const ImageUpload = ({ type, value, isGetMode, onChange }: ImageUploadProps) => {
+const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [previewURLs, setPreviewURLs] = useState<string[]>([]);
 
@@ -62,7 +61,7 @@ const ImageUpload = ({ type, value, isGetMode, onChange }: ImageUploadProps) => 
   return (
     <>
       <ImageUploadContainer>
-        <UploadLabel aria-disabled={isGetMode} htmlFor={`${type}-image-upload`}>이미지 업로드</UploadLabel>
+        <UploadLabel htmlFor={`${type}-image-upload`}>이미지 업로드</UploadLabel>
         <input
           id={`${type}-image-upload`}
           data-cy={`create_${type}_image`}
@@ -71,7 +70,6 @@ const ImageUpload = ({ type, value, isGetMode, onChange }: ImageUploadProps) => 
           multiple={type === 'detail'}
           onChange={handleImageChange}
           style={{ display: 'none' }}
-          disabled={isGetMode}
         />
       </ImageUploadContainer>
       <ImagesPreviewContainer>
