@@ -22,8 +22,8 @@ const ArtworkDetail = () => {
   const [isProjectOpened, setIsProjectOpened] = useState<boolean>(false);
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
-  const [mainImage, setMainImage] = useState<File>();
-  const [responsiveMainImage, setResponsiveMainImage]=useState<File>();
+  const [mainImage, setMainImage] = useState<File|null>();
+  const [responsiveMainImage, setResponsiveMainImage]=useState<File|null>();
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -146,6 +146,9 @@ const ArtworkDetail = () => {
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
+      }else{
+        setGetModeMainImg('');
+        setMainImage(null);
       }
       if(data.responsiveMainImg){
         setGetModeResponsiveMainImg(data.responsiveMainImg);
@@ -156,6 +159,9 @@ const ArtworkDetail = () => {
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
+      }else{
+        setGetModeResponsiveMainImg('');
+        setResponsiveMainImage(null);
       }
       if (data.projectImages && data.projectImages.length > 0) {
         try {
@@ -176,6 +182,9 @@ const ArtworkDetail = () => {
           console.error('Error fetching artwork details:', error);
         }
         setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
+      }else{
+        setGetModeDetailImgs([]);
+        setDetailImages([]);
       }
       setCustomer(data.client);
       setOverview(data.overView);

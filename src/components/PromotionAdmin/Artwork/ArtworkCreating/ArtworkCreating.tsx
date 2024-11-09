@@ -36,7 +36,8 @@ const ArtworkCreating = () => {
         selectedCategory === '' ||
         projectType === null ||
         link === '' ||
-        mainImage === null ||
+        !mainImage ||
+        !responsiveMainImage ||
         detailImages.length === 0 ||
         title === '' ||
         customer === '' ||
@@ -49,6 +50,7 @@ const ArtworkCreating = () => {
     projectType,
     link,
     mainImage,
+    responsiveMainImage,
     detailImages,
     title,
     customer,

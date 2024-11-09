@@ -3,11 +3,12 @@ import styled from 'styled-components';
 
 interface ImageUploadProps {
   type: 'main' | 'responsiveMain' | 'detail';
-  value?: File | File[];
+  value?: null | File | File[];
+  isGetMode: boolean|undefined;
   onChange: (newImage: File | File[]) => void;
 }
 
-const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
+const ImageUpload = ({ type, value, isGetMode, onChange }: ImageUploadProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [previewURLs, setPreviewURLs] = useState<string[]>([]);
 
@@ -61,7 +62,7 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
   return (
     <>
       <ImageUploadContainer>
-        <UploadLabel htmlFor={`${type}-image-upload`}>이미지 업로드</UploadLabel>
+        <UploadLabel aria-disabled={isGetMode} htmlFor={`${type}-image-upload`}>이미지 업로드</UploadLabel>
         <input
           id={`${type}-image-upload`}
           data-cy={`create_${type}_image`}
@@ -70,6 +71,7 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
           multiple={type === 'detail'}
           onChange={handleImageChange}
           style={{ display: 'none' }}
+          disabled={isGetMode}
         />
       </ImageUploadContainer>
       <ImagesPreviewContainer>
@@ -102,6 +104,14 @@ const UploadLabel = styled.label`
 
   &:hover {
     background-color: #5a6268;
+  }
+
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: default;
+    &:hover {
+      background-color: #6c757d;
+    }
   }
 `;
 
