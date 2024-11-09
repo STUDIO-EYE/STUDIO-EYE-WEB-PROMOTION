@@ -26,8 +26,10 @@ export const getArtworkDefaultValue = (
   setProjectType: (type: projectType) => void,
   link: string,
   handleLinkChange: (newLink: string) => void,
-  mainImage: File | undefined,
+  mainImage: File | undefined | null,
   handleMainImageChange: (newImage: File | File[]) => void,
+  responsiveMain: File | undefined | null,
+  handleResponsiveMainImageChange: (newImage: File|File[])=>void,
   detailImage: File[],
   handleDetailImageChange: (newImages: File | File[]) => void,
   title: string,
@@ -38,6 +40,7 @@ export const getArtworkDefaultValue = (
   handleOverviewChange: (newOverview: string) => void,
   isTopMainArtwork: boolean,
   getModeMainImg?: string,
+  getModeResponsiveMainImg? : string,
   getModeDetailImgs?: string[],
   isGetMode?: boolean,
 ) => {
@@ -212,6 +215,27 @@ export const getArtworkDefaultValue = (
             />
           </>
         ),
+    },
+    {
+      name: 'responsiveMainImage',
+      title: '아트워크 반응형 썸네일 이미지 설정',
+      description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
+      content:
+      isGetMode && getModeResponsiveMainImg ? (
+        <IsGetModeImg
+          src={getModeResponsiveMainImg}
+          alt='메인 반응형 이미지'
+          style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+        />
+      ) : (
+        <>
+          <ImageUpload
+            type='responsiveMain'
+            value={responsiveMain}
+            onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
+          />
+        </>
+      ),
     },
     {
       name: 'detailImages',
