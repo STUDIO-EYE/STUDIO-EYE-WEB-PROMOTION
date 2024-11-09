@@ -1,11 +1,20 @@
 import { getCompanyData } from '@/apis/PromotionAdmin/dataEdit';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
-import axios from 'axios';
+import { putCompanySloganData, putCompanyLogosData, putCompanyLogosSloganData } from '@/apis/PromotionAdmin/dataEdit';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { theme } from '@/styles/theme';
 
-import { Wrapper, ContentBlock, ImgBox, LogoWrapper, Box } from '../CompanyFormStyleComponents';
+import {
+  Wrapper,
+  ContentBlock,
+  ImgBox,
+  LogoWrapper,
+  Box,
+  RowWrapper,
+  SloganWrapper,
+  SloganBox,
+} from '../CompanyFormStyleComponents';
 import { DATAEDIT_NOTICE_COMPONENTS, DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import FileButton from '../../StyleComponents/FileButton';
 import Button from '../../StyleComponents/Button';
@@ -23,103 +32,103 @@ const Image = ({ setEditImage }: IImageProps) => {
   const [logoChange, setLogoChange] = useState(false);
   const [sloganChange, setSloganChange] = useState(false);
   const [putData, setPutData] = useState({
-    logoImageUrl: '',
+    lightLogoImageUrl: '',
+    darkLogoImageUrl: '',
     sloganImageUrl: '',
   });
-  const [previewLogo, setPreviewLogo] = useState<string | null>(null);
-  const [previewSlogan, setPreviewSlogan] = useState<string | null>(null);
   const setIsEditing = useSetRecoilState(dataUpdateState);
 
   useEffect(() => {
     if (data) {
       setPutData({
-        logoImageUrl: data.logoImageUrl,
+        lightLogoImageUrl: data.lightLogoImageUrl,
+        darkLogoImageUrl: data.darkLogoImageUrl,
         sloganImageUrl: data.sloganImageUrl,
       });
-      setPreviewLogo(null);
-      setPreviewSlogan(null);
     }
   }, [data]);
 
   const handleSaveClick = async () => {
     const formData = new FormData();
 
-    const fileAppend = (file: File, fileName: string) => {
-      if (file) {
-        formData.append(fileName, file);
-      } else {
-        console.log(fileName, '이미지 가져오기 실패');
-      }
-    };
-
     if (window.confirm(MSG.CONFIRM_MSG.SAVE)) {
       try {
+        if (logoChange) {
+          const lightLogoFile = putData.lightLogoImageUrl
+            ? await urlToFile(putData.lightLogoImageUrl, 'LightLogo.png')
+            : null;
+          const darkLogoFile = putData.darkLogoImageUrl
+            ? await urlToFile(putData.darkLogoImageUrl, 'DarkLogo.png')
+            : null;
+          if (lightLogoFile) formData.append('lightLogoImage', lightLogoFile);
+          if (darkLogoFile) formData.append('darkLogoImage', darkLogoFile);
+        }
+
+        if (sloganChange) {
+          const sloganFile = putData.sloganImageUrl ? await urlToFile(putData.sloganImageUrl, 'Slogan.png') : null;
+          if (sloganFile) formData.append('sloganImageUrl', sloganFile);
+        }
+
         if (logoChange && sloganChange) {
-          const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
-          const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-          fileAppend(logoFile, 'logoImageUrl');
-          fileAppend(sloganFile, 'sloganImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/logo&slogan`, formData);
+          await putCompanyLogosSloganData(formData);
         } else if (logoChange) {
-          const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
-          fileAppend(logoFile, 'logoImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/logo`, formData);
+          await putCompanyLogosData(formData);
         } else if (sloganChange) {
-          const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-          fileAppend(sloganFile, 'sloganImageUrl');
-          await axios.put(`${PROMOTION_BASIC_PATH}/api/company/slogan`, formData);
+          await putCompanySloganData(formData);
+        }
+
+        const updatedData = await refetch();
+        if (updatedData.data) {
+          setPutData(updatedData.data);
         }
 
         alert(MSG.ALERT_MSG.SAVE);
         setEditImage(false);
         setLogoChange(false);
         setSloganChange(false);
-        refetch(); // Refetch the data to get the updated image URLs
       } catch (error) {
         console.error('Error updating company:', error);
+        alert('저장 중 문제가 발생했습니다. 다시 시도해 주세요.');
       }
     }
   };
 
-  const handleLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const logoImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewLogo(reader.result as string);
-      };
-      reader.readAsDataURL(logoImageUrl);
+  const handleImageChange = (file: File, key: string, changeSetter: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
       setPutData((prevData) => ({
         ...prevData,
-        logoImageUrl: URL.createObjectURL(logoImageUrl),
+        [key]: reader.result as string,
       }));
-      setLogoChange(true);
+      changeSetter(true);
       setIsEditing(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleLightLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0], 'lightLogoImageUrl', setLogoChange);
+    }
+  };
+
+  const handleDarkLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0], 'darkLogoImageUrl', setLogoChange);
     }
   };
 
   const handleSloganImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const sloganImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewSlogan(reader.result as string);
-      };
-      reader.readAsDataURL(sloganImageUrl);
-      setPutData((prevData) => ({
-        ...prevData,
-        sloganImageUrl: URL.createObjectURL(sloganImageUrl),
-      }));
-      setSloganChange(true);
-      setIsEditing(true);
+      handleImageChange(e.target.files[0], 'sloganImageUrl', setSloganChange);
     }
   };
 
   async function urlToFile(url: string, fileName: string): Promise<File> {
     try {
       const response = await fetch(url);
+      if (!response.ok) throw new Error('네트워크 오류로 파일을 가져올 수 없습니다.');
       const blob = await response.blob();
-      console.log(blob);
       return new File([blob], fileName);
     } catch (error) {
       console.error('Error URL to file:', error);
@@ -136,38 +145,57 @@ const Image = ({ setEditImage }: IImageProps) => {
           <>
             <ContentBlock isFocused={true}>
               <InputImgWrapper>
-                <Box>
-                  {DATAEDIT_TITLES_COMPONENTS.Logo}
-                  {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
-                  {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+                <RowWrapper>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
 
-                  <LogoWrapper>
-                    <FileButton
-                      id='logoFile'
-                      description={MSG.BUTTON_MSG.UPLOAD.LOGO}
-                      onChange={handleLogoImageChange}
-                    />
+                    <LogoWrapper>
+                      <FileButton
+                        id='lightLogo'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleLightLogoImageChange}
+                      />
 
-                    <ImgBox>
-                      <img src={previewLogo || `${putData.logoImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
-                </Box>
-                <Box>
+                      <ImgBox>
+                        <img src={putData.lightLogoImageUrl} alt='' />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+
+                    <LogoWrapper>
+                      <FileButton
+                        id='darkLogo'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleDarkLogoImageChange}
+                      />
+
+                      <ImgBox style={{ backgroundColor: theme.color.white.light }}>
+                        <img src={putData.darkLogoImageUrl} alt='' />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                </RowWrapper>
+                <Box style={{ marginTop: '20px', width: '100%' }}>
                   {DATAEDIT_TITLES_COMPONENTS.Slogan}
                   {DATAEDIT_NOTICE_COMPONENTS.IMAGE.SLOGAN}
                   {DATAEDIT_NOTICE_COMPONENTS.COLOR.SLOGAN}
-                  <LogoWrapper>
+                  <SloganWrapper>
                     <FileButton
                       id='sloganFile'
                       description={MSG.BUTTON_MSG.UPLOAD.SLOGAN}
                       onChange={handleSloganImageChange}
                     />
 
-                    <ImgBox>
-                      <img src={previewSlogan || `${putData.sloganImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
+                    <SloganBox>
+                      <img src={putData.sloganImageUrl} alt='' />
+                    </SloganBox>
+                  </SloganWrapper>
                 </Box>
                 <ButtonWrapper>
                   <Button fontSize={14} width={100} description={MSG.BUTTON_MSG.SAVE} onClick={handleSaveClick} />
@@ -193,4 +221,5 @@ const InputImgWrapper = styled.div`
   position: relative;
   width: 100%;
   justify-content: space-between;
+  flex-direction: column;
 `;

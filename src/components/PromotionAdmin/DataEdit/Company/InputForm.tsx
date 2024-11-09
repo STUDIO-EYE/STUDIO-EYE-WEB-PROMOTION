@@ -1,9 +1,8 @@
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
-import axios from 'axios';
+import { postCompanyInformation } from '@/apis/PromotionAdmin/dataEdit';
 import React, { useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { IEditorData } from '@/types/PromotionAdmin/faq';
+import { theme } from '@/styles/theme';
 import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
@@ -20,6 +19,9 @@ import {
   DetailTitleInputWrapper,
   Form,
   Box,
+  RowWrapper,
+  SloganWrapper,
+  SloganBox,
   LeftContentWrapper,
   RightContentWrapper,
   DetailContentWrapper,
@@ -33,6 +35,7 @@ import { MSG } from '@/constants/messages';
 import { useRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import TextColorEditor from '@/components/TextEditor/TextColorEditor';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IFormData {
   mainOverview?: string;
@@ -71,8 +74,9 @@ const InputForm = () => {
       introduction: '',
       detailInformation: '',
     },
-    logoImageUrl: '',
-    sloganImageUrl: '',
+    lightLogoImage: '',
+    darkLogoImage: '',
+    sloganImage: '',
   });
 
   const {
@@ -165,10 +169,13 @@ const InputForm = () => {
       return;
     }
 
-    if (putData.logoImageUrl == '') {
+    if (putData.darkLogoImage == '') {
       alert(MSG.INVALID_MSG.LOGO);
       return;
-    } else if (putData.sloganImageUrl == '') {
+    } else if (putData.lightLogoImage == '') {
+      alert(MSG.INVALID_MSG.LOGO);
+      return;
+    } else if (putData.sloganImage == '') {
       alert(MSG.INVALID_MSG.SLOGAN);
       return;
     }
@@ -187,7 +194,7 @@ const InputForm = () => {
   const handleSaveClick = async (data: IFormData) => {
     const formData = new FormData();
 
-    const transformedDetailInformation = data.detailInformation.map(item => ({
+    const transformedDetailInformation = data.detailInformation.map((item) => ({
       key: item.key.toString(),
       value: item.value.toString(),
     }));
@@ -203,72 +210,69 @@ const InputForm = () => {
       detailInformation: transformedDetailInformation,
     };
 
-    console.log("requestData: ", requestData);
+    console.log('requestData: ', requestData);
 
     const json = JSON.stringify({
       ...requestData,
       detailInformation: transformedDetailInformation,
     });
-    const blob = new Blob([json], { type: "application/json" });
-    formData.append("request", blob);
+    const blob = new Blob([json], { type: 'application/json' });
+    formData.append('request', blob);
 
     const isEmpty =
       checkIsEmpty(mainOverviewState, 'Main Overview') ||
       checkIsEmpty(commitmentState, 'Commitment') ||
       checkIsEmpty(introductionState, 'Introduction');
 
-    const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
-    formData.append("logoImageUrl", logoFile);
-    const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-    formData.append("sloganImageUrl", sloganFile);
+    const lightLogoFile = await urlToFile(putData.lightLogoImage, 'LightLogo.png');
+    formData.append('lightLogoImage', lightLogoFile);
+    const darkLogoFile = await urlToFile(putData.darkLogoImage, 'DarkLogo.png');
+    formData.append('darkLogoImage', darkLogoFile);
+    const sloganFile = await urlToFile(putData.sloganImage, 'Slogan.png');
+    formData.append('sloganImage', sloganFile);
 
     if (!isEmpty && window.confirm(MSG.CONFIRM_MSG.POST)) {
-      axios
-        .post(`${PROMOTION_BASIC_PATH}/api/company/information`, formData)
-        .then((response) => {
-          console.log('Company Information post:', response);
-          alert(MSG.ALERT_MSG.POST);
-          setIsEditing(false);
-          navigator(`${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_COMPANY}`);
-        })
-        .catch((error) => {
-          console.error('Error post partner:', error);
-        });
+      try {
+        const response = await postCompanyInformation(formData);
+        console.log('Company Information post:', response);
+        alert(MSG.ALERT_MSG.POST);
+        setIsEditing(false);
+        navigator(`${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_COMPANY}`);
+      } catch (error) {
+        console.error('Error posting company information:', error);
+        alert('저장 중 문제가 발생했습니다. 다시 시도해 주세요.');
+      }
     }
-    // formData.forEach((value, key) => {
-    //   console.log(key, value);
-    // });
   };
 
+  const handleImageChange = (file: File, key: string) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPutData((prevData) => ({
+        ...prevData,
+        [key]: reader.result as string,
+      }));
+      setIsEditing(true);
+    };
+    reader.readAsDataURL(file);
+  };
 
-  const handleLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLightLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const logoImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPutData((prevData) => ({
-          ...prevData,
-          logoImageUrl: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(logoImageUrl);
+      handleImageChange(e.target.files[0], 'lightLogoImage');
     }
-    setIsEditing(true);
+  };
+
+  const handleDarkLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0], 'darkLogoImage');
+    }
   };
 
   const handleSloganImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const sloganImageUrl = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPutData((prevData) => ({
-          ...prevData,
-          sloganImageUrl: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(sloganImageUrl);
+      handleImageChange(e.target.files[0], 'sloganImage');
     }
-    setIsEditing(true);
   };
 
   async function urlToFile(url: string, fileName: string): Promise<File> {
@@ -384,37 +388,57 @@ const InputForm = () => {
             {/* Logo & Slogan */}
             <ContentBlock>
               <InputImgWrapper>
-                <Box>
-                  {DATAEDIT_TITLES_COMPONENTS.Logo}
-                  {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
-                  {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+                <RowWrapper>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
 
-                  <LogoWrapper>
-                    <FileButton
-                      id='logoFile'
-                      description={MSG.BUTTON_MSG.UPLOAD.LOGO}
-                      onChange={handleLogoImageChange}
-                    />
-                    <ImgBox>
-                      <img src={putData.logoImageUrl} alt='' />
-                    </ImgBox>
-                  </LogoWrapper>
-                </Box>
-                <Box>
+                    <LogoWrapper>
+                      <FileButton
+                        id='lightLogo'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleLightLogoImageChange}
+                      />
+
+                      <ImgBox>
+                        <img src={putData.lightLogoImage} alt='' />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+                    {DATAEDIT_NOTICE_COMPONENTS.IMAGE.LOGO}
+                    {DATAEDIT_NOTICE_COMPONENTS.COLOR.LOGO}
+
+                    <LogoWrapper>
+                      <FileButton
+                        id='darkLogo'
+                        description={MSG.BUTTON_MSG.UPLOAD.LOGO}
+                        onChange={handleDarkLogoImageChange}
+                      />
+
+                      <ImgBox style={{ backgroundColor: theme.color.white.light }}>
+                        <img src={putData.darkLogoImage} alt='' />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                </RowWrapper>
+                <Box style={{ marginTop: '20px', width: '100%' }}>
                   {DATAEDIT_TITLES_COMPONENTS.Slogan}
                   {DATAEDIT_NOTICE_COMPONENTS.IMAGE.SLOGAN}
                   {DATAEDIT_NOTICE_COMPONENTS.COLOR.SLOGAN}
-
-                  <LogoWrapper>
+                  <SloganWrapper>
                     <FileButton
                       id='sloganFile'
                       description={MSG.BUTTON_MSG.UPLOAD.SLOGAN}
                       onChange={handleSloganImageChange}
                     />
-                    <ImgBox>
-                      <img src={putData.sloganImageUrl} alt='' />
-                    </ImgBox>
-                  </LogoWrapper>
+
+                    <SloganBox>
+                      <img src={putData.sloganImage} alt='' />
+                    </SloganBox>
+                  </SloganWrapper>
                 </Box>
               </InputImgWrapper>
             </ContentBlock>
@@ -446,6 +470,7 @@ const InputForm = () => {
                 </CommitmentContainer>
                 <InputTitle>Introduction</InputTitle>
                 <TextColorEditor
+                  data-cy={aboutPageAttributes.CREATE_INTRO}
                   editorState={introductionState}
                   onEditorStateChange={updateIntroduction}
                   attribute='Introduction'
@@ -532,7 +557,13 @@ const InputForm = () => {
               </InputWrapper>
             </ContentBlock>
             <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '29px' }}>
-              <Button id='create_intro' description={MSG.BUTTON_MSG.POST} fontSize={14} width={100} />
+              <Button
+                id='create_intro'
+                data-cy={dataEditCompanyPageAttributes.SUBMIT_BUTTON}
+                description={MSG.BUTTON_MSG.POST}
+                fontSize={14}
+                width={100}
+              />
             </div>
           </RightContentWrapper>
         </Form>
@@ -559,8 +590,6 @@ const ErrorMessage = styled.div`
   font-size: 13px;
 `;
 
-const MainOverviewContainer = styled.div`
-`;
+const MainOverviewContainer = styled.div``;
 
-const CommitmentContainer = styled.div`
-`;
+const CommitmentContainer = styled.div``;

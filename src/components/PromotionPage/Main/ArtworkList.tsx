@@ -95,6 +95,12 @@ const TextWrapper = styled.div`
   padding: 100px;
   position: relative;
   z-index: 1;
+  word-break: keep-all;
+  
+  @media ${theme.media.tablet} {
+    line-height: 1.6;
+    padding: 6rem 2rem 0 2rem;
+  }
 
   @media ${theme.media.mobile} {
     width: 100%;
@@ -111,6 +117,12 @@ const TitleWrapper = styled.div`
   white-space: nowrap;
   margin: -1rem 0 -0.5rem -0.2rem;
 
+  @media ${theme.media.tablet} {
+    max-width: 5rem;
+    font-size: 2.3rem;
+    margin: 0.1rem 0;
+  }
+
   @media ${theme.media.mobile} {
     margin: 0.3rem 0;
     margin-left: -0.1rem;
@@ -124,7 +136,9 @@ const ClientWrapper = styled(motion.h2)`
   font-family: 'pretendard-bold';
   font-size: 25px;
   color: #cccccc;
-
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
   @media ${theme.media.mobile} {
     font-size: 0.7rem;
   }
@@ -135,8 +149,13 @@ const OverviewWrapper = styled.div`
   font-size: 20px;
   color: white;
 
+  @media ${theme.media.tablet} {
+    word-break: keep-all;
+    max-width: 35rem;
+    font-size: 1rem;
+  }
   @media ${theme.media.mobile} {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     word-break: keep-all;
   }
 `;

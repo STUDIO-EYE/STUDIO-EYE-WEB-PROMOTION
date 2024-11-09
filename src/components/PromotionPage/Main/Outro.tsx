@@ -21,7 +21,7 @@ export default Outro;
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -37,8 +37,6 @@ const Container = styled.div`
   }
 
   @media ${theme.media.mobile} {
-    width: 100%;
-    height: 80%;
   }
 
   @supports (-webkit-touch-callout: none) {

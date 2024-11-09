@@ -12,6 +12,7 @@ import { MSG } from '@/constants/messages';
 import TextColorEditor from '@/components/TextEditor/TextColorEditor';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -133,8 +134,6 @@ const TitleWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const MainOverviewContainer = styled.div`
-`;
+const MainOverviewContainer = styled.div``;
 
-const CommitmentContainer = styled.div`
-`;
+const CommitmentContainer = styled.div``;

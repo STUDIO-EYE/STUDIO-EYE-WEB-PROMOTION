@@ -193,7 +193,7 @@ describe('PA 페이지에서 새로운 사내 복지를 등록하고 PP 화면�
       cy.log(JSON.stringify(benefitData, null, 1));
 
       cy.get('@benefitsData').then((data) => {
-        const hasIncentive = data.some((item) => item.title === '성과급');
+        const hasIncentive = data.some((item) => item.title === '테스트 등록 제목');
         expect(hasIncentive).to.be.true;
       });
     });
@@ -212,7 +212,7 @@ describe('PA 페이지에서 사내 복지를 수정하고 PP 화면에 정상�
     cy.visit('/promotion-admin/recruitment/manage');
     cy.contains('Benefit').should('be.visible').click();
     cy.wait(500);
-    cy.contains('[data-cy="posted-benefit-title"]', '성과급').click();
+    cy.contains('[data-cy="posted-benefit-title"]', '테스트 등록 제목').click();
 
     cy.get('#BenefitImgFile').selectFile(testImage2, { force: true });
     cy.get('[data-cy="benefit-title"]').clear().type(testBenefitData.title);
@@ -232,7 +232,7 @@ describe('PA 페이지에서 사내 복지를 수정하고 PP 화면에 정상�
       cy.log(JSON.stringify(benefitData, null, 1));
 
       cy.get('@benefitsData').then((data) => {
-        const hasIncentive = data.some((item) => item.title === '장기근속 포상');
+        const hasIncentive = data.some((item) => item.title === '테스트 수정 제목');
         expect(hasIncentive).to.be.true;
       });
     });
@@ -248,7 +248,7 @@ describe('PA 페이지에서 사내 복지를 삭제하고 PP 화면에 정상�
     cy.visit('/promotion-admin/recruitment/manage');
     cy.contains('Benefit').should('be.visible').click();
     cy.wait(500);
-    cy.contains('[data-cy="posted-benefit-title"]', '장기근속 포상').click();
+    cy.contains('[data-cy="posted-benefit-title"]', '테스트 수정 제목').click();
     cy.get('[data-cy="benefit-delete-button"]').click();
   });
 
@@ -263,7 +263,7 @@ describe('PA 페이지에서 사내 복지를 삭제하고 PP 화면에 정상�
     });
 
     cy.get('@benefitsData').then((benefitsData) => {
-      const titleExists = benefitsData.some((item) => item.title === '장기근속 포상');
+      const titleExists = benefitsData.some((item) => item.title === '테스트 수정 제목');
 
       expect(titleExists).to.be.false;
     });

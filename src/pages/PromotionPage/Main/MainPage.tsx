@@ -134,8 +134,11 @@ const MainPage = () => {
           </ArtworkSection>
           <OutroSection>
             <Outro />
-            <Footer />
+
           </OutroSection>
+          <FooterSection>
+            <Footer />
+          </FooterSection>
         </ChakraProvider>
       </div>
     </>
@@ -154,8 +157,16 @@ const IntroSection = styled.section`
 
 const ArtworkSection = styled.section`
   scroll-snap-align: start;
+  scroll-snap-type: y proximity;
 `;
 
 const OutroSection = styled.section`
   scroll-snap-align: start;
+  scroll-snap-type: y proximity;
+`;
+
+const FooterSection = styled.section`
+  scroll-snap-align: start;
+  scroll-snap-type: y proximity;
+
 `;
