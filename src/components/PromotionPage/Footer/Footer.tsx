@@ -43,6 +43,7 @@ const Footer = () => {
   const addressData = companyBasicData ? companyBasicData.address : COMPANY_DATA.Address;
   const phoneData = companyBasicData ? companyBasicData.phone : COMPANY_DATA.Number;
   const faxData = companyBasicData ? companyBasicData.fax : COMPANY_DATA.Number;
+  const isMainPage = location.pathname === '/';
 
   return (
     <Container whiteFooter={whiteFooter}>

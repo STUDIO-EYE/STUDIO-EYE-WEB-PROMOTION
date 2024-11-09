@@ -214,6 +214,7 @@ const Wrapper = styled.div`
   }
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard';
     width: 100vw;
     height: auto;
     overflow: hidden;
@@ -396,6 +397,7 @@ const Nav = styled.div<{location:string}>`
   }
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-bold';
     width: 100%;
   }
 `;
@@ -414,6 +416,7 @@ const List = styled.div`
   background-color: ${(props) => props.theme.color.white.bold};
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-bold';
     font-size: 1.5rem;
   }
 `;

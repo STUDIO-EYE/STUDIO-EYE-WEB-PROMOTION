@@ -85,8 +85,13 @@ const Container = styled.div`
   line-height: normal;
 
   @media ${theme.media.mobile} {
-    width: 100%;
-    height: 100vh;
+    height: 100dvh;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    .modal { /* 넘어가지 않는 요소에 사용 */
+        height: -webkit-fill-available;
+    }
   }
 `;
 
@@ -106,10 +111,10 @@ const IntroWrapper = styled.div`
   }
 
   @media ${theme.media.mobile}{
-    width: 100%;
+    width: 80%;
     max-height: fit-content;
     font-size: 1.9rem;
-    text-align: left;
+    text-align: center;
     padding: 0.75rem;
     margin-top: 5rem;
   }
@@ -131,12 +136,12 @@ const DesWrapper = styled.div`
     max-width: 50rem;
   }
   @media ${theme.media.mobile}{
-    width: 100%;
+    width: 90%;
     padding: 0.75rem;
     height: fit-content;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 300;
-    text-align: left;
+    text-align: center;
     word-break: keep-all;
     margin-top: 0;
   }

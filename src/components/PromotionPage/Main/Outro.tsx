@@ -37,6 +37,7 @@ const Container = styled.div`
   }
 
   @media ${theme.media.mobile} {
+    height: calc(100dvh - 15rem);
   }
 
   @supports (-webkit-touch-callout: none) {

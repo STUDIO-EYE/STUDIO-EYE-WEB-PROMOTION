@@ -7,6 +7,7 @@ import MissionLabel from '../../../assets/images/Mission.png';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
+import { INTRO_DATA } from '@/constants/introdutionConstants';
 
 interface IFontStyleProps {
   color?: string;
@@ -102,11 +103,11 @@ function IntroPage() {
               dangerouslySetInnerHTML={{
                 __html: isMobile
                   ? removeParagraphTags(
-                      companyIntroData ||
-                        '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
-                    )
+                    companyIntroData ||
+                    INTRO_DATA.COMPANY_INTRO,
+                  )
                   : companyIntroData ||
-                    '<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: rgb(255, 138, 8);">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: rgb(255, 138, 8);"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며</span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>',
+                  INTRO_DATA.COMPANY_INTRO,
               }}
             />
           </motion.div>
@@ -179,7 +180,7 @@ const InitTitleWrapper = styled.div`
     gap: 0.5rem;
   }
 `;
-const InitTitle = styled(motion.div)<IFontStyleProps>`
+const InitTitle = styled(motion.div) <IFontStyleProps>`
   font-family: ${theme.font.bold};
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};
