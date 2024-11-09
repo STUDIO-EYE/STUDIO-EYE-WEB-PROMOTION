@@ -55,6 +55,7 @@ export type UpdateArtwork = {
     deletedImageId: number[];
   };
   file: string;
+  responsiveFile: string;
   files: string[];
 };
 

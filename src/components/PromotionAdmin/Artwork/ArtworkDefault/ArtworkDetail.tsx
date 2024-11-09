@@ -15,6 +15,7 @@ import { MSG } from '@/constants/messages';
 
 const ArtworkDetail = () => {
   const [getModeMainImg, setGetModeMainImg] = useState('');
+  const [getModeResponsiveMainImg, setGetModeResponsiveMainImg] = useState('');
   const [getModeDetailImgs, setGetModeDetailImgs] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -22,6 +23,7 @@ const ArtworkDetail = () => {
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
   const [mainImage, setMainImage] = useState<File>();
+  const [responsiveMainImage, setResponsiveMainImage]=useState<File>();
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -48,6 +50,7 @@ const ArtworkDetail = () => {
       deletedImageId: [],
     },
     file: '',
+    responsiveFile: '',
     files: [],
   });
 
@@ -58,6 +61,7 @@ const ArtworkDetail = () => {
       projectType === null ||
       link === '' ||
       !mainImage ||
+      !responsiveMainImage ||
       !detailImages ||
       detailImages.length === 0 ||
       title === '' ||
@@ -71,6 +75,7 @@ const ArtworkDetail = () => {
     projectType,
     link,
     mainImage,
+    responsiveMainImage,
     detailImages,
     title,
     customer,
@@ -124,6 +129,7 @@ const ArtworkDetail = () => {
           deletedImageId: [],
         },
         file: data.mainImg,
+        responsiveFile: data.responsiveMainImg,
         files: [],
       });
       if (data.projectType === 'top' || data.projectType === 'main') {
@@ -137,6 +143,16 @@ const ArtworkDetail = () => {
           const mainImgFile = await urlToFile(data.mainImg + '?t=' + Date.now(), `${data.mainimg}.png`);
           setMainImage(mainImgFile);
           console.log(mainImgFile, 'main ImgFile Blob');
+        } catch (error) {
+          console.error('Error fetching artwork details:', error);
+        }
+      }
+      if(data.responsiveMainImg){
+        setGetModeResponsiveMainImg(data.responsiveMainImg);
+        try {
+          const responsiveMainImgFile = await urlToFile(data.responsiveMainImg + '?t=' + Date.now(), `${data.responsiveMainImg}.png`);
+          setResponsiveMainImage(responsiveMainImgFile);
+          console.log(responsiveMainImgFile, 'main ImgFile Blob');
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
@@ -199,6 +215,10 @@ const ArtworkDetail = () => {
     setMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
   };
 
+  const handleResponsiveMainImageChange=(newImage:File|File[])=>{
+    setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
+  };
+
   const handleDetailImageChange = (newImages: File | File[]) => {
     setDetailImages(Array.isArray(newImages) ? newImages : [newImages]);
   };
@@ -229,6 +249,9 @@ const ArtworkDetail = () => {
 
     if (mainImage) {
       formData.append('file', mainImage);
+    }
+    if (responsiveMainImage){
+      formData.append('responsiveFile',responsiveMainImage);
     }
     if (detailImages) {
       detailImages.forEach((file, index) => {
@@ -281,6 +304,8 @@ const ArtworkDetail = () => {
     handleLinkChange,
     mainImage,
     handleMainImageChange,
+    responsiveMainImage,
+    handleResponsiveMainImageChange,
     detailImages,
     handleDetailImageChange,
     title,
@@ -290,8 +315,8 @@ const ArtworkDetail = () => {
     overview,
     handleOverviewChange,
     isTopMainArtwork,
-
     getModeMainImg,
+    getModeResponsiveMainImg,
     getModeDetailImgs,
     isGetMode,
   );
@@ -301,6 +326,14 @@ const ArtworkDetail = () => {
       <ScrollToTop />
       <ValueWrapper data-cy='PP_artwork_detail'>
         {defaultValue.map((item: DefaultValueItem, index: number) => (
+          item.name==='responsiveMainImage'?null:
+          item.name === 'mainImage' && defaultValue[index + 1]?.name === 'responsiveMainImage'?
+              <div key={index}>
+                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content}/>
+                <ArtworkValueLayout valueTitle={defaultValue[index + 1].title} description={defaultValue[index + 1].description} content={defaultValue[index + 1].content}/>
+              </div>
+          :
           <div key={index}>
             {errorMessage && !isGetMode && item.name === 'artworkType' && (
               <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>

@@ -18,6 +18,7 @@ const ArtworkCreating = () => {
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
   const [mainImage, setMainImage] = useState<File>();
+  const [responsiveMainImage, setResponsiveMainImage]=useState<File>();
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -90,6 +91,10 @@ const ArtworkCreating = () => {
     setMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
   };
 
+  const handleResponsiveMainImageChange=(newImage:File|File[])=>{
+    setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
+  }
+
   const handleDetailImageChange = (newImages: File | File[]) => {
     setDetailImages(Array.isArray(newImages) ? newImages : [newImages]);
   };
@@ -119,6 +124,9 @@ const ArtworkCreating = () => {
 
     if (mainImage) {
       formData.append('file', mainImage);
+    }
+    if (responsiveMainImage){
+      formData.append('responsiveFile',responsiveMainImage);
     }
     if (detailImages) {
       detailImages.forEach((file, index) => {
@@ -154,6 +162,8 @@ const ArtworkCreating = () => {
     handleLinkChange,
     mainImage,
     handleMainImageChange,
+    responsiveMainImage,
+    handleResponsiveMainImageChange,
     detailImages,
     handleDetailImageChange,
     title,
@@ -170,6 +180,14 @@ const ArtworkCreating = () => {
       <CloseContainer onClick={() => setProducingIsOpened(false)}>x</CloseContainer>
       <ValueWrapper data-cy='PA_artwork_createBox'>
         {defaultValue.map((item: DefaultValueItem, index: number) => (
+          item.name==='responsiveMainImage'?null:
+          item.name === 'mainImage' && defaultValue[index + 1]?.name === 'responsiveMainImage'?
+              <div key={index}>
+                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content}/>
+                <ArtworkValueLayout valueTitle={defaultValue[index + 1].title} description={defaultValue[index + 1].description} content={defaultValue[index + 1].content}/>
+              </div>
+          :
           <div key={index}>
             {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
             {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
@@ -237,6 +255,7 @@ const SubmitBtn = styled.button`
   padding: 10px 20px;
   margin-left: auto;
   margin-top: 20px;
+  grid-column: 1 / -1;
   &:disabled {
     opacity: 0.5;
     cursor: default;
