@@ -36,7 +36,10 @@ const Footer = () => {
   const { data: companyBasicData } = useQuery<ICompanyBasic>(['getCompanyBasic'], getCompanyBasic, {
     staleTime: 1000 * 60 * 10,
   });
-  const { data: companyLogoData } = useQuery<string>(['getCompanyLogo'], getCompanyLogo, {
+  const { data: companyLightLogoData } = useQuery<string>(['getCompanyLogo', true], () => getCompanyLogo(true), {
+    staleTime: 1000 * 60 * 10,
+  });
+  const { data: companyDarkLogoData } = useQuery<string>(['getCompanyLogo', false], () => getCompanyLogo(false), {
     staleTime: 1000 * 60 * 10,
   });
 
@@ -62,13 +65,19 @@ const Footer = () => {
               <span>COPYRIGHTⓒSTUDIOEYE,LTD. ALL RIGHTS RESERVED </span>
             </CopyrightWrapper>{' '}
             <div>
-              <img src={companyLogoData ? companyLogoData : defaultFooterLogo} alt='회사 로고' />
+              <img
+                src={whiteFooter ? companyDarkLogoData || defaultFooterLogo : companyLightLogoData || defaultFooterLogo}
+                alt='회사 로고'
+              />
             </div>
           </>
         ) : (
           <>
             <div>
-              <img src={companyLogoData ? companyLogoData : defaultFooterLogo} alt='회사 로고' />
+              <img
+                src={whiteFooter ? companyDarkLogoData || defaultFooterLogo : companyLightLogoData || defaultFooterLogo}
+                alt='회사 로고'
+              />
             </div>
             <CopyrightWrapper>
               <span>COPYRIGHTⓒSTUDIOEYE,LTD. ALL RIGHTS RESERVED </span>

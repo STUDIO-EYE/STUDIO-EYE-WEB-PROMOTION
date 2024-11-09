@@ -9,6 +9,16 @@
     "isOpened": "공개"
 },
 {
+    "title": "너와 결혼하기 싫은 8가지 이유",
+    "overview": "너와 결혼하기 싫은 8가지 이유. 왜 결혼이 싫지? 앞으로의 이유들이 궁금해지네",
+    "customer": "경기도 주식회사",
+    "date": "2021-04-01",
+    "category": "Drama",
+    "link": "https://www.youtube.com/watch?v=lmB7s3sOqbw",
+    "artworkType": "Main",
+    "isOpened": "공개"
+},
+{
     "title": "하이스코어",
     "overview": "이건 평범한 수학여행이 아니다! 필요한 건 오직 점수, 점수를 얻기 위해 펼쳐지는 고등학생들의 고득점 수학여행",
     "customer": "언더아머 X CJ ENM",
@@ -25,16 +35,6 @@
     "date": "2021-12",
     "category": "Entertainment",
     "link": "https://www.youtube.com/watch?v=ys1BGlHvnCw",
-    "artworkType": "Main",
-    "isOpened": "공개"
-},
-{
-    "title": "너와 결혼하기 싫은 8가지 이유",
-    "overView": "너와 결혼하기 싫은 8가지 이유.\n왜 결혼이 싫지? 앞으로의 이유들이 궁금해지네",
-    "customer": "경기도 주식회사",
-    "date": "2021-04",
-    "category": "Drama",
-    "link": "https://www.youtube.com/watch?v=lmB7s3sOqbw",
     "artworkType": "Main",
     "isOpened": "공개"
 },

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface ImageUploadProps {
-  type: 'main' | 'detail';
-  value?: File | File[];
+  type: 'main' | 'responsiveMain' | 'detail';
+  value?: null | File | File[];
   onChange: (newImage: File | File[]) => void;
 }
 
@@ -25,12 +25,12 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files);
-      const maxFiles = type === 'main' ? 1 : 3;
+      const maxFiles = type === 'main'||'responsiveMain' ? 1 : 3;
       const newFiles = selectedFiles.slice(0, maxFiles);
 
       const newPreviewURLs = newFiles.map((file) => URL.createObjectURL(file));
 
-      if (type === 'main') {
+      if (type === 'main'||'responsiveMain') {
         setImages(newFiles);
         setPreviewURLs(newPreviewURLs);
         onChange(newFiles[0]);
@@ -102,6 +102,14 @@ const UploadLabel = styled.label`
 
   &:hover {
     background-color: #5a6268;
+  }
+
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: default;
+    &:hover {
+      background-color: #6c757d;
+    }
   }
 `;
 
