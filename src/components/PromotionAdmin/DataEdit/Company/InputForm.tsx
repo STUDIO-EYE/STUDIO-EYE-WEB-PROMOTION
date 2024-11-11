@@ -33,6 +33,7 @@ import { MSG } from '@/constants/messages';
 import { useRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import TextColorEditor from '@/components/TextEditor/TextColorEditor';
+import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IFormData {
   mainOverview?: string;
@@ -187,7 +188,7 @@ const InputForm = () => {
   const handleSaveClick = async (data: IFormData) => {
     const formData = new FormData();
 
-    const transformedDetailInformation = data.detailInformation.map(item => ({
+    const transformedDetailInformation = data.detailInformation.map((item) => ({
       key: item.key.toString(),
       value: item.value.toString(),
     }));
@@ -203,14 +204,14 @@ const InputForm = () => {
       detailInformation: transformedDetailInformation,
     };
 
-    console.log("requestData: ", requestData);
+    console.log('requestData: ', requestData);
 
     const json = JSON.stringify({
       ...requestData,
       detailInformation: transformedDetailInformation,
     });
-    const blob = new Blob([json], { type: "application/json" });
-    formData.append("request", blob);
+    const blob = new Blob([json], { type: 'application/json' });
+    formData.append('request', blob);
 
     const isEmpty =
       checkIsEmpty(mainOverviewState, 'Main Overview') ||
@@ -218,9 +219,9 @@ const InputForm = () => {
       checkIsEmpty(introductionState, 'Introduction');
 
     const logoFile = await urlToFile(putData.logoImageUrl, 'Logo.png');
-    formData.append("logoImageUrl", logoFile);
+    formData.append('logoImageUrl', logoFile);
     const sloganFile = await urlToFile(putData.sloganImageUrl, 'Slogan.png');
-    formData.append("sloganImageUrl", sloganFile);
+    formData.append('sloganImageUrl', sloganFile);
 
     if (!isEmpty && window.confirm(MSG.CONFIRM_MSG.POST)) {
       axios
@@ -239,7 +240,6 @@ const InputForm = () => {
     //   console.log(key, value);
     // });
   };
-
 
   const handleLogoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -407,6 +407,7 @@ const InputForm = () => {
 
                   <LogoWrapper>
                     <FileButton
+                      data-cy={aboutPageAttributes.CREATE_SLOGAN_IMAGE}
                       id='sloganFile'
                       description={MSG.BUTTON_MSG.UPLOAD.SLOGAN}
                       onChange={handleSloganImageChange}
@@ -446,6 +447,7 @@ const InputForm = () => {
                 </CommitmentContainer>
                 <InputTitle>Introduction</InputTitle>
                 <TextColorEditor
+                  data-cy={aboutPageAttributes.CREATE_INTRO}
                   editorState={introductionState}
                   onEditorStateChange={updateIntroduction}
                   attribute='Introduction'
@@ -532,7 +534,13 @@ const InputForm = () => {
               </InputWrapper>
             </ContentBlock>
             <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '29px' }}>
-              <Button id='create_intro' description={MSG.BUTTON_MSG.POST} fontSize={14} width={100} />
+              <Button
+                id='create_intro'
+                data-cy={dataEditCompanyPageAttributes.SUBMIT_BUTTON}
+                description={MSG.BUTTON_MSG.POST}
+                fontSize={14}
+                width={100}
+              />
             </div>
           </RightContentWrapper>
         </Form>
@@ -559,8 +567,6 @@ const ErrorMessage = styled.div`
   font-size: 13px;
 `;
 
-const MainOverviewContainer = styled.div`
-`;
+const MainOverviewContainer = styled.div``;
 
-const CommitmentContainer = styled.div`
-`;
+const CommitmentContainer = styled.div``;

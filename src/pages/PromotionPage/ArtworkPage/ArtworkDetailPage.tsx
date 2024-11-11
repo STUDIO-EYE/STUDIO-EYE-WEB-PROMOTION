@@ -208,9 +208,15 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.color.black.bold};
   height: max-content;
 
+  @media ${theme.media.tablet} {
+    overflow: hidden;
+
+  }
+
   @media ${theme.media.mobile} {
     width: 100vw;
     height: auto;
+    overflow: hidden;
   }
 `;
 
@@ -232,6 +238,10 @@ const Title = styled.div`
   font-weight: 800;
   font-family: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.white.bold};
+  @media ${theme.media.mobile} {
+    word-break: keep-all;
+    font-size: 4rem;
+  }
 `;
 const LongTitle = styled.div`
   font-size: 30px;
@@ -274,6 +284,20 @@ const OverviewWrapper = styled(motion.div)`
   font-family: ${(props) => props.theme.font.bold};
   color: ${(props) => props.theme.color.white.bold};
   background-color: ${(props) => props.theme.color.black.bold};
+
+  @media ${theme.media.large_tablet} {
+    word-break: keep-all;
+    padding: 2rem;
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  @media ${theme.media.mobile} {
+    word-break: keep-all;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
 `;
 const Overview1 = styled(motion.div)`
   position: absolute;

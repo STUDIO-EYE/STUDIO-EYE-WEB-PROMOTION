@@ -80,6 +80,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  word-break: keep-all;
 
   line-height: normal;
 
@@ -98,6 +99,11 @@ const IntroWrapper = styled.div`
   max-height: 12rem;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @media ${theme.media.tablet} {
+    padding: 0 2rem;
+    max-width: 45rem;
+  }
 
   @media ${theme.media.mobile}{
     width: 100%;
@@ -119,7 +125,11 @@ const DesWrapper = styled.div`
   max-height: 50rem;
   text-overflow: ellipsis;
   overflow: hidden;
-
+  
+@media ${theme.media.tablet} {
+    padding: 0 2rem;
+    max-width: 50rem;
+  }
   @media ${theme.media.mobile}{
     width: 100%;
     padding: 0.75rem;

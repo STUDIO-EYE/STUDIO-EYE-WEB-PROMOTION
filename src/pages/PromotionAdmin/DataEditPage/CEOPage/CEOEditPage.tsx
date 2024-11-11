@@ -196,7 +196,7 @@ const CEOEditPage = () => {
         <form onSubmit={handleSubmit(onValid)}>
           <ContentBlock>
             <ButtonWrapper>
-              <Button>등록하기</Button>
+              <Button data-cy='ceo-submit'>등록하기</Button>
             </ButtonWrapper>
             {DATAEDIT_TITLES_COMPONENTS.CEO}
             <InputWrapper>
@@ -204,6 +204,7 @@ const CEOEditPage = () => {
                 <p>Name</p>
               </InputTitle>
               <input
+                data-cy='ceo-name-input'
                 {...register('name', {
                   required: 'CEO 이름을 입력해주세요',
                 })}
@@ -225,6 +226,7 @@ const CEOEditPage = () => {
                 </div>
               </InputTitle>
               <textarea
+                data-cy='ceo-introduction-input'
                 {...register('introduction', {
                   required: 'CEO 소개 (5줄, 200자 내로 작성해 주세요.)',
                 })}
@@ -248,7 +250,9 @@ const CEOEditPage = () => {
                 </Box>
               </InputImgWrapper>
               <ButtonWrapper>
-                <Button onClick={() => handleDelete()}>삭제하기</Button>
+                <Button data-cy='dataEdit-DeleteButton' onClick={() => handleDelete()}>
+                  삭제하기
+                </Button>
               </ButtonWrapper>
             </InputWrapper>
           </ContentBlock>
