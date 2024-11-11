@@ -40,14 +40,14 @@ function Navigation() {
     setSelectedCategory(categoryKey);
     setIsDropdownOpen(false);
   };
+  
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   useEffect(() => {
     if (categoryId === null) {
       setSelectedCategory(ARTWORK_CATECORY.ALL);
     }
   }, [categoryId]);
-
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
     <>
@@ -129,6 +129,7 @@ const MobileDropdown = styled.div`
   display: none;
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-light';
     display: block;
     position: relative;
     width: 20rem;

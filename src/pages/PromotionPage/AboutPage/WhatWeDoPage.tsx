@@ -109,6 +109,7 @@ const Container = styled.div`
   align-items: center;
   margin-top: 6.25rem;
   margin-bottom: 9.375rem;
+
 `;
 
 const WhatWeDoContainer = styled.div`

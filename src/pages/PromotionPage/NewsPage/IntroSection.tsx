@@ -9,31 +9,33 @@ const IntroSection: React.FC = () => {
       <IntroTitleWrapper>
         <IntroLine>
           <MobileWrapper>
-          <IntroNewsWhite>REA</IntroNewsWhite>
-          <IntroNewsMovingContainer>
-            <IntroNewsMovingDAnimated delay="0s">D</IntroNewsMovingDAnimated>
-            <IntroNewsMovingDAnimated delay="0.2s">D</IntroNewsMovingDAnimated>
-            <IntroNewsMovingDAnimated delay="0.4s">D</IntroNewsMovingDAnimated>
-          </IntroNewsMovingContainer>
+            <IntroNewsWhite>REA</IntroNewsWhite>
+            <IntroNewsMovingContainer>
+              <IntroNewsMovingDAnimated delay="0s">D</IntroNewsMovingDAnimated>
+              <IntroNewsMovingDAnimated delay="0.2s">D</IntroNewsMovingDAnimated>
+              <IntroNewsMovingDAnimated delay="0.4s">D</IntroNewsMovingDAnimated>
+              <StaticD>D</StaticD>
+            </IntroNewsMovingContainer>
           </MobileWrapper>
           <IntroNewsWhite>THE NEWS</IntroNewsWhite>
         </IntroLine>
 
         <IntroLine>
-        <MobileWrapper>
-          <IntroNewsYellow>AB</IntroNewsYellow>
-          <IntroNewsMovingContainer>
-            <IntroNewsMovingOAnimated delay="0s">O</IntroNewsMovingOAnimated>
-            <IntroNewsMovingOAnimated delay="0.2s">O</IntroNewsMovingOAnimated>
-            <IntroNewsMovingOAnimated delay="0.4s">O</IntroNewsMovingOAnimated>
-          </IntroNewsMovingContainer>
-          <IntroNewsYellowNoMargin>UT</IntroNewsYellowNoMargin>
+          <MobileWrapper>
+            <IntroNewsYellow>AB</IntroNewsYellow>
+            <IntroNewsMovingContainer>
+              <IntroNewsMovingOAnimated delay="0s">O</IntroNewsMovingOAnimated>
+              <IntroNewsMovingOAnimated delay="0.2s">O</IntroNewsMovingOAnimated>
+              <IntroNewsMovingOAnimated delay="0.4s">O</IntroNewsMovingOAnimated>
+              <StaticO>O</StaticO>
+            </IntroNewsMovingContainer>
+            <IntroNewsYellowNoMargin>UT</IntroNewsYellowNoMargin>
           </MobileWrapper>
           <IntroNewsYellowMargin>STUDIOEYE!</IntroNewsYellowMargin>
         </IntroLine>
       </IntroTitleWrapper>
       <BackgroundYellowCircle> </BackgroundYellowCircle>
-      </Container>
+    </Container>
   );
 };
 
@@ -74,10 +76,12 @@ const IntroTitleWrapper = styled.div`
 const IntroLine = styled.div`
   display: flex;
   justify-content: center;
+
   @media ${theme.media.tablet}{
     flex-direction:column;
     margin-left: 1rem;
   }
+
 `;
 
 const IntroNewsWhite = styled.span`
@@ -87,6 +91,7 @@ const IntroNewsWhite = styled.span`
   color: white;
 
   @media ${theme.media.tablet}{
+    font-family: 'pretendard-bold';
     font-size: 6rem;
   }
   @media ${theme.media.mobile}{
@@ -102,6 +107,7 @@ const IntroNewsYellow = styled.span`
   color: #ffa900;
 
   @media ${theme.media.tablet}{
+    font-family: 'pretendard-bold';
     font-size: 6rem;
     margin-left:0px;
   }
@@ -115,17 +121,17 @@ const IntroNewsYellowNoMargin = styled.span`
   font-weight: 700;
   font-size: 96px;
   color: #ffa900;
-  margin-left:25px;
+  margin-left: -4rem;
 
   @media ${theme.media.tablet}{
+    font-family: 'pretendard-bold';
     font-size: 6rem;
-    margin-left: 0.2rem;
   }
   @media ${theme.media.mobile}{
     font-size: 3rem;
-    margin-left: -1.9rem;
   }
 `;
+
 const IntroNewsYellowMargin = styled.span`
   font-family: Pretendard;
   font-weight: 700;
@@ -134,6 +140,7 @@ const IntroNewsYellowMargin = styled.span`
   margin-left:25px;
 
   @media ${theme.media.tablet}{
+    font-family: 'pretendard-bold';
     font-size: 6rem;
     margin-left: 0;
   }
@@ -149,6 +156,40 @@ const IntroNewsMovingContainer = styled.span`
   margin-right: 70px;
 `;
 
+const StaticD = styled.span`
+  font-family: Pretendard;
+  font-weight: 50;
+  font-size: 96px;
+  color: #ffa900;
+  position: relative;
+
+  @media ${theme.media.tablet}{
+    font-family: 'pretendard-light';
+    font-size: 6rem;
+    margin-left:0px;
+  }
+  @media ${theme.media.mobile}{
+    font-size: 3rem;
+  }
+`;
+
+const StaticO = styled.span`
+  font-family: Pretendard;
+  font-weight: 50;
+  font-size: 96px;
+  color: #ffffff;
+  position: relative;
+
+  @media ${theme.media.tablet}{
+    font-family: 'pretendard-light';
+    font-size: 6rem;
+    margin-left:0px;
+  }
+  @media ${theme.media.mobile}{
+    font-size: 3rem;
+  }
+`;
+
 interface IntroNewsMovingProps {
   delay: string;
 }
@@ -159,34 +200,25 @@ const IntroNewsMovingDAnimated = styled.span<IntroNewsMovingProps>`
   font-size: 96px;
   color: #ffa900;
   position: absolute;
-  margin-left: -5px;
   animation: move-diagonal 0.7s ease-in-out infinite alternate;
-  animation-delay: ${(props) => props.delay}; 
-  
+  animation-delay: ${(props) => props.delay};
+
   @keyframes move-diagonal {
     0% {
-      transform: translate(-5px, -5px);
+      transform: translate(-2px, -2px);
     }
     100% {
-      transform: translate(5px, 5px);
+      transform: translate(2px, 2px);
     }
   }
 
-  @media ${theme.media.tablet}{
+  @media ${theme.media.tablet} {
+    font-family: 'pretendard-light';
     font-size: 6rem;
     margin-left: 0px;
-
-    @keyframes move-diagonal {
-      0% {
-        transform: translate(-2px, -2px);
-      }
-      100% {
-        transform: translate(2px, 2px);
-      }
-    }
   }
 
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     font-size: 3rem;
   }
 `;
@@ -198,41 +230,29 @@ const IntroNewsMovingOAnimated = styled.span<IntroNewsMovingProps>`
   color: #ffffff;
   position: absolute;
   animation: move-horizontal 0.7s ease-in-out infinite alternate;
-  animation-delay: ${(props) => props.delay}; 
-  animation-delay: ${(props) => props.delay}; 
-  margin-left:0.8rem;
   animation-delay: ${(props) => props.delay};
-  margin-left:0.8rem;
-  
+
   @keyframes move-horizontal {
     0% {
-      transform: translateX(-6px);
+      transform: translateX(-2px);
     }
     100% {
-      transform: translateX(6px);
+      transform: translateX(4px);
     }
   }
 
-  @media ${theme.media.tablet}{
+  @media ${theme.media.tablet} {
+    font-family: 'pretendard-light';
     font-size: 6rem;
-    margin-left:0.2rem;
-
-    @keyframes move-horizontal {
-      0% {
-        transform: translateX(-3px);
-      }
-      100% {
-        transform: translateX(3px);
-      }
-    }
+    margin-left: 0.2rem;
   }
 
-  @media ${theme.media.mobile}{
+  @media ${theme.media.mobile} {
     font-size: 3rem;
   }
 `;
 
-const MobileWrapper=styled.div`
-display:flex;
-flex-direction:row;
-`
+const MobileWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;

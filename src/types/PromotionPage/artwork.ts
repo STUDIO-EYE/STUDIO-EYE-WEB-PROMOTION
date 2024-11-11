@@ -7,6 +7,7 @@ export interface IArtwork {
   client: string;
   date: string;
   mainImg: string;
+  responsiveMainImg: string;
   overView: string;
   isPosted: boolean;
   projectImages: IProjectImages[];

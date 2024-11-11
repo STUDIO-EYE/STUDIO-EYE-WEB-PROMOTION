@@ -80,7 +80,7 @@ function ArtworkDetailPage() {
             <>
               <ScrollToTop />
               <Wrapper>
-                <Thumbnail bgPhoto={clickedArtwork.mainImg}>
+                <Thumbnail bgPhoto={clickedArtwork.mainImg} bgMobilePhoto={clickedArtwork.responsiveMainImg}>
                   {clickedArtwork.name.length>40
                   ?<LongTitle>{clickedArtwork.name}</LongTitle>
                   :<Title>{clickedArtwork.name}</Title>
@@ -214,13 +214,14 @@ const Wrapper = styled.div`
   }
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard';
     width: 100vw;
     height: auto;
     overflow: hidden;
   }
 `;
 
-const Thumbnail = styled.div<{ bgPhoto: string }>`
+const Thumbnail = styled.div<{ bgPhoto: string, bgMobilePhoto: string }>`
   z-index: 99;
   position: relative;
   height: 90vh;
@@ -229,8 +230,11 @@ const Thumbnail = styled.div<{ bgPhoto: string }>`
   justify-content: center;
   align-items: center;
   padding: 50px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${(props) => props.bgPhoto});
   background-size: cover;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${(props) => props.bgPhoto});
+  @media ${theme.media.mobile}{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${(props) => props.bgMobilePhoto});
+  }
 `;
 
 const Title = styled.div`
@@ -396,6 +400,7 @@ const Nav = styled.div<{location:string}>`
   }
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-bold';
     width: 100%;
   }
 `;
@@ -414,6 +419,7 @@ const List = styled.div`
   background-color: ${(props) => props.theme.color.white.bold};
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-bold';
     font-size: 1.5rem;
   }
 `;

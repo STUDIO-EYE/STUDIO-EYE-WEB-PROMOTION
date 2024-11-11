@@ -1,9 +1,19 @@
 import { getCompanyData } from '@/apis/PromotionAdmin/dataEdit';
 import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
 import React, { useEffect, useState } from 'react';
+import { theme } from '@/styles/theme';
 import { useQuery } from 'react-query';
 
-import { Wrapper, ContentBlock, ImgBox, LogoWrapper, Box } from '../CompanyFormStyleComponents';
+import {
+  Wrapper,
+  ContentBlock,
+  ImgBox,
+  LogoWrapper,
+  Box,
+  RowWrapper,
+  SloganWrapper,
+  SloganBox,
+} from '../CompanyFormStyleComponents';
 import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import Button from '../../StyleComponents/Button';
 import styled from 'styled-components';
@@ -16,14 +26,16 @@ interface IImageProps {
 const Image = ({ setEditImage }: IImageProps) => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
   const [putData, setPutData] = useState({
-    logoImageUrl: '',
+    lightLogoImageUrl: '',
+    darkLogoImageUrl: '',
     sloganImageUrl: '',
   });
 
   useEffect(() => {
     if (data) {
       setPutData({
-        logoImageUrl: data.logoImageUrl,
+        lightLogoImageUrl: data.lightLogoImageUrl,
+        darkLogoImageUrl: data.darkLogoImageUrl,
         sloganImageUrl: data.sloganImageUrl,
       });
     }
@@ -38,23 +50,34 @@ const Image = ({ setEditImage }: IImageProps) => {
           <>
             <ContentBlock>
               <InputImgWrapper>
-                <Box>
-                  {DATAEDIT_TITLES_COMPONENTS.Logo}
+                <RowWrapper>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
 
-                  <LogoWrapper>
-                    <ImgBox>
-                      <img src={`${putData.logoImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
-                </Box>
-                <Box>
+                    <LogoWrapper>
+                      <ImgBox>
+                        <img src={`${putData.lightLogoImageUrl}`} />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                  <Box>
+                    {DATAEDIT_TITLES_COMPONENTS.Logo}
+
+                    <LogoWrapper style={{ alignItems: 'flex-end' }}>
+                      <ImgBox style={{ backgroundColor: theme.color.white.light }}>
+                        <img src={`${putData.darkLogoImageUrl}`} />
+                      </ImgBox>
+                    </LogoWrapper>
+                  </Box>
+                </RowWrapper>
+                <Box style={{ marginTop: '20px', width: '100%' }}>
                   {DATAEDIT_TITLES_COMPONENTS.Slogan}
 
-                  <LogoWrapper>
-                    <ImgBox>
-                      <img src={`${putData.sloganImageUrl}?timestamp=${Date.now()}`} />
-                    </ImgBox>
-                  </LogoWrapper>
+                  <SloganWrapper>
+                    <SloganBox>
+                      <img src={`${putData.sloganImageUrl}`} />
+                    </SloganBox>
+                  </SloganWrapper>
                 </Box>
                 <ButtonWrapper>
                   <Button
@@ -85,4 +108,5 @@ const InputImgWrapper = styled.div`
   position: relative;
   width: 100%;
   justify-content: space-between;
+  flex-direction: column;
 `;

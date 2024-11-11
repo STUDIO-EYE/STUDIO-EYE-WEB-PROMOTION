@@ -10,8 +10,8 @@ const Outro = () => {
   const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
 
   return (
-    <Container data-cy="outro-section">
-      <ClientRowAnimation data-cy="outro_image" data={data} isLoading={isLoading} error={error} />
+    <Container data-cy='outro-section'>
+      <ClientRowAnimation data-cy='outro_image' data={data} isLoading={isLoading} error={error} />
       <WorkWithUs />
     </Container>
   );
@@ -38,7 +38,8 @@ const Container = styled.div`
 
   @media ${theme.media.mobile} {
     width: 100%;
-    height: calc(100vh-2.75rem);
+    // height: calc(100vh-2.75rem);
+    height: calc(100dvh - 15rem);
   }
 
   @supports (-webkit-touch-callout: none) {

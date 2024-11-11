@@ -39,9 +39,10 @@ font-family: 'pretendard';
   left: 3%;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 10;
 
   @media ${theme.media.mobile} {
+    font-family: 'pretendard-bold';
     top: 70%;
   }
 `;
@@ -67,7 +68,7 @@ const NavItem = styled(motion.div)<{ active: boolean }>`
 `;
 
 const IndexNumber = styled.div<{ visible: boolean }>`
-font-weight: 600;
+  font-weight: 600;
   position: relative;
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `;

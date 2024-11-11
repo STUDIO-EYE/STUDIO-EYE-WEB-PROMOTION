@@ -37,6 +37,8 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
     <MotionBox data-cy="artwork-section"
       w="100%"
       h="100vh"
+      scrollSnapType='y mandatory'
+      overflowY='scroll'
       scrollSnapAlign="center"
       initial="offscreen"
       whileInView="onscreen"
@@ -48,13 +50,17 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       backgroundPosition="center"
       css={`
         @supports (-webkit-touch-callout: none) {
-          height: -webkit-fill-available;
+          height: 100dvh;
+        }
+
+        @media ${theme.media.mobile} {
+          scroll-snap-type: none;
+          overflow-y: auto;
         }
       `}
     >
       {isLoading ? (
         <SkeletonWrapper>
-          {/* Skeleton 컴포넌트를 제목, 클라이언트, 개요 부분에 적용 */}
           <SkeletonComponent width="60%" height="40px" margin="0 0 10px 0" />
           <SkeletonComponent width="80%" height="20px" margin="0 0 10px 0" />
           <SkeletonComponent width="90%" height="20px" />
@@ -69,7 +75,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
           <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
         </motion.div>
       )}
-      {data.link && (
+      {/* {data.link && (
         <a data-cy='artwork_link'
           href={data.link}
           target="_blank"
@@ -82,9 +88,10 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
             height: '100%',
             textDecoration: 'none',
             color: 'inherit',
+            zIndex: '1'
           }}
         />
-      )}
+      )} */}
     </MotionBox>
   );
 });
