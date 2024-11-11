@@ -91,8 +91,12 @@ const Background = styled(motion.div)`
   position: relative;
 
   @media ${theme.media.mobile}{
-    width: 100%;
-    height: 100vh;
+    height: 100dvh;
+  }
+  @supports (-webkit-touch-callout: none) {
+    .modal { /* 넘어가지 않는 요소에 사용 */
+        height: -webkit-fill-available;
+    }
   }
 `;
 

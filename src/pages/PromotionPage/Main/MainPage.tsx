@@ -13,6 +13,7 @@ import Outro from '@/components/PromotionPage/Main/Outro';
 import styled from 'styled-components';
 import Footer from '@/components/PromotionPage/Footer/Footer';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
+import { theme } from '@/styles/theme';
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
@@ -83,14 +84,25 @@ const MainPage = () => {
           </IntroSection>
           <ArtworkSection>
             <Box
+              w="100%"
+              h="100vh"
               scrollSnapType='y mandatory'
               overflowY='scroll'
-              h='100vh'
               sx={{
                 '&::-webkit-scrollbar': {
                   display: 'none',
                 },
               }}
+              css={`
+                @supports (-webkit-touch-callout: none) {
+                  height: 100dvh;
+                }
+
+                @media ${theme.media.mobile} {
+                  overflow: hidden;
+                  scroll-snap-type: y mandatory;
+                }
+              `}
             >
               {isLoading ? (
                 <div>데이터 로딩 중...</div>
@@ -134,10 +146,10 @@ const MainPage = () => {
           </ArtworkSection>
           <OutroSection>
             <Outro />
-
+            <Footer />
           </OutroSection>
           <FooterSection>
-            <Footer />
+            
           </FooterSection>
         </ChakraProvider>
       </div>
@@ -157,16 +169,16 @@ const IntroSection = styled.section`
 
 const ArtworkSection = styled.section`
   scroll-snap-align: start;
-  scroll-snap-type: y proximity;
 `;
 
 const OutroSection = styled.section`
   scroll-snap-align: start;
-  scroll-snap-type: y proximity;
+  @supports (-webkit-touch-callout: none) {
+    margin-bottom: 7rem;
+  }
 `;
 
 const FooterSection = styled.section`
   scroll-snap-align: start;
-  scroll-snap-type: y proximity;
-
+  
 `;

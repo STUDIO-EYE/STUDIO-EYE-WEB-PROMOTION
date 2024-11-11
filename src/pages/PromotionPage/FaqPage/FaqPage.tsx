@@ -165,6 +165,7 @@ const Container = styled.div`
 
   /* 큰 휴대폰 ~ 작은 휴대폰 */
   @media (max-width: 540px) and (min-width: 375px) {
+    font-family: 'Pretendard-bold';
     font-size: 130%;
   }
 
@@ -419,6 +420,8 @@ const FaqDetailAnswer = styled.p`
   font-weight: 100 !important; 
   white-space: pre-line; /* 줄바꿈을 적용하기 위해 설정 */
   font-size: 1.1rem; /* 기본 폰트 사이즈 */
+  line-height: 1.5;
+  font-family: 'pretendard-light';
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 1rem;

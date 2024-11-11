@@ -284,7 +284,7 @@ const CorpLogoRowContainer = styled.a`
   @media ${theme.media.mobile} {
     width: 95%;
     gap: 0.5rem;
-    margin: 0;
+    margin-bottom: 10rem;
     padding: 0;
   }
 `;

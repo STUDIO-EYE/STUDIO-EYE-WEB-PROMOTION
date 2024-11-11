@@ -28,7 +28,8 @@ export const ARTWORKLIST_DATA = {
 
 export const INTRO_DATA = {
   MAIN_OVERVIEW: `<p><span style="color:#ffa900;">STUDIO EYE</span> IS THE <span style="color:#ffa900;">BEST</span> NEW MEDIA PRODUCTION BASED ON OTT & YOUTUBE</p>`,
-  COMMITMENT: `<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 끊임없이 고민하고 변화합니다.</p>`
+  COMMITMENT: `<p>우리는 급변하는 뉴 미디어 시대를 반영한 콘텐츠 제작을 위해 끊임없이 고민하고 변화합니다.</p>`,
+  COMPANY_INTRO: `<p>2010년에 설립된 스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</p><p><span style="color: #ffa900;">클라이언트 맞춤형 콘텐츠 제작</span><span style="color: rgb(251, 251, 251);">과</span><span style="color: #ffa900;"> 운영 대책 서비스</span><span style="color: rgb(251, 251, 251);">를 제공하고 있으며, </span></p><p>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</p>`
 };
 
 export const ABOUT_DATA = {};

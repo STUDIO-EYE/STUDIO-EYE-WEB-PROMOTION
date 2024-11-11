@@ -55,7 +55,7 @@ const RecruitmentPage = () => {
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
       <IntroSection data-cy='intro-section'>
         <IntroTitleWrapper>
-          <RecruitText>RECRUIT</RecruitText>
+          <RecruitText>RECRUITMENT</RecruitText>
           <IntroLine>
             <IntroText>WOUL</IntroText>
             <AnimatedD>
@@ -135,6 +135,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${theme.color.white.light};
+
+  @media ${theme.media.mobile} {
+    overflow-x: hidden;
+  }
 `;
 
 const IntroSection = styled.div`
@@ -235,6 +239,10 @@ const AnimatedD = styled.span`
       transform: translate(0, 0);
     }
   }
+
+  @media ${theme.media.mobile} {
+    font-family: 'pretendard-light';
+  }
 `;
 
 const AnimatedO = styled.span`
@@ -283,6 +291,10 @@ const AnimatedO = styled.span`
       opacity: 1;
       transform: translate(0, 0);
     }
+  }
+
+  @media ${theme.media.mobile} {
+    font-family: 'pretendard-light';
   }
 `;
 
@@ -353,6 +365,10 @@ const PostItem = styled.div<{ isOpen: boolean }>`
   &:hover {
     background-color: ${(props) => (props.isOpen ? '#f9f9f9' : theme.color.white.light)};
     transform: ${(props) => (props.isOpen ? 'scale(1.02)' : 'scale(1)')};
+  }
+
+  @media ${theme.media.mobile} {
+    padding: 1.25rem 0.75rem;
   }
 `;
 

@@ -106,6 +106,11 @@ const NewsSectionIntro = styled.h3`
   margin-bottom: 20px;
   max-width: 1200px;
   width: 100%;
+
+  @media ${theme.media.mobile} {
+    font-size: 1rem;
+    margin-left: 1rem;
+  }
 `;
 
 const TextWrapper = styled.div`
@@ -120,6 +125,13 @@ const Title = styled.h3`
   font-weight: 600;
   color: white;
   transition: color 0.3s ease-in-out;
+  word-break: keep-all;
+  
+  @media ${theme.media.mobile}{
+    font-family: 'pretendard-bold';
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
 `;
 
 const Source = styled.p`
@@ -129,6 +141,8 @@ const Source = styled.p`
 
   @media ${theme.media.mobile}{
     flex-direction: column;
+    font-family: 'pretendard-light';
+    font-size: 1.2rem;
   }
 `;
 

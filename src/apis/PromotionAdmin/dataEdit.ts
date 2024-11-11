@@ -193,7 +193,7 @@ export const getClientDetailData = async (id: number) => {
 
 export const getClientLogoData = async () => {
   try {
-    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/client/logoImgList`);
+    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/client/logoImgList`); // client.ts에 존재
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);
