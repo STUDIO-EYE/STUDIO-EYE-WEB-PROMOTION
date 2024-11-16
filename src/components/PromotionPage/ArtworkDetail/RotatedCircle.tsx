@@ -30,7 +30,7 @@ const RotatedCircle = ({ label, link }: Props) => {
   }
 
   return (
-    <Container href={link} target='_blank' onClick={handleClick}>
+    <Container data-cy='PP_link' href={link} target='_blank' onClick={handleClick}>
       <RotatingWrapper
         animate={rotateAnimation}
         whileHover={{ scale: 0.9 }} // 호버 시 90% 크기로 변경
