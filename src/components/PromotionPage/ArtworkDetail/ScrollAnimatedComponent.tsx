@@ -14,7 +14,7 @@ function ScrollAnimatedComponent({ article }: string | any) {
         y: { duration: 1 },
       }}
     >
-      <Article>{article}</Article>
+      <Article data-cy='PP_article'>{article}</Article>
     </motion.div>
   );
 }

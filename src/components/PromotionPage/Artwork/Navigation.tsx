@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { theme } from '@/styles/theme';
-import { PP_ROUTES_CHILD } from '@/constants/routerConstants';
 
 export const ARTWORK_CATECORY = {
   ALL: 'All',

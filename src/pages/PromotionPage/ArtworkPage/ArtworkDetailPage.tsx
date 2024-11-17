@@ -25,7 +25,7 @@ function ArtworkDetailPage() {
 
   const clickedArtwork =
     artworkDetailMatch?.params.id && data?.data.find((artwork) => String(artwork.id) === artworkDetailMatch.params.id);
-  useEffect(()=>{
+    useEffect(()=>{
     if(data){
       if(category!=="all"){
         setFilteredData(data.data.filter((d)=>{return d.category===category && d.isPosted===true}))
@@ -80,10 +80,10 @@ function ArtworkDetailPage() {
             <>
               <ScrollToTop />
               <Wrapper>
-                <Thumbnail bgPhoto={clickedArtwork.mainImg} bgMobilePhoto={clickedArtwork.responsiveMainImg}>
+                <Thumbnail data-cy='PP_artwork_detail_img' bgPhoto={clickedArtwork.mainImg} bgMobilePhoto={clickedArtwork.responsiveMainImg}>
                   {clickedArtwork.name.length>40
-                  ?<LongTitle>{clickedArtwork.name}</LongTitle>
-                  :<Title>{clickedArtwork.name}</Title>
+                  ?<LongTitle data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</LongTitle>
+                  :<Title data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</Title>
                   }
                   
                   <InfoWrapper>
@@ -96,7 +96,7 @@ function ArtworkDetailPage() {
                         y: { duration: 1 },
                       }}
                     >
-                      <p className='attribute'>Client</p> <p>{clickedArtwork.client}</p>
+                      <p className='attribute'>Client</p> <p data-cy='PP_artwork_detail_client'>{clickedArtwork.client}</p>
                     </Info>
                     <Info
                       initial={{ opacity: 0, y: 50 }}
@@ -107,7 +107,7 @@ function ArtworkDetailPage() {
                         y: { duration: 2 },
                       }}
                     >
-                      <p className='attribute'>Category</p> <p>{clickedArtwork.category}</p>
+                      <p className='attribute'>Category</p> <p data-cy='PP_artwork_detail_category'>{clickedArtwork.category}</p>
                     </Info>
                     <Info
                       initial={{ opacity: 0, y: 50 }}
@@ -118,7 +118,7 @@ function ArtworkDetailPage() {
                         y: { duration: 3 },
                       }}
                     >
-                      <p className='attribute'>Date</p> <p>{formatDate(clickedArtwork.date)}</p>
+                      <p className='attribute'>Date</p> <p data-cy='PP_artwork_detail_date'>{formatDate(clickedArtwork.date)}</p>
                     </Info>
                   </InfoWrapper>
                 </Thumbnail>
