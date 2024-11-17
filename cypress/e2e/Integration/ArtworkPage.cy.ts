@@ -61,7 +61,7 @@ describe('Artwork-아트워크를 확인한다.',()=>{
       cy.contains('Do you want to see the project?')
     });
   
-    it('프로모션 페이지에서 아트워크가 없을 경우.', ()=>{
+    it('권장 예외) 프로모션 페이지에서 아트워크가 없을 경우.', ()=>{
       cy.intercept('GET','**/api/projects',{
         statusCode:200,
         body: []

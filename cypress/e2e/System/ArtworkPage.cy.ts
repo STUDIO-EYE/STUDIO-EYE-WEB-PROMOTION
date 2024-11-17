@@ -49,7 +49,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     })
   });
 
-  it('관리 페이지에서 새로운 아트워크를 추가하나, 안 채운 값이 있을 경우.',()=>{
+  it('권장 예외) 관리 페이지에서 새로운 아트워크를 추가하나, 안 채운 값이 있을 경우.',()=>{
     const filteredRequiredFields = requiredFields.filter(field => field.type==='type');
     cy.visit('/promotion-admin/artwork');
     filteredRequiredFields.forEach((field) => {
@@ -83,7 +83,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     })
   });
 
-  it('관리 페이지에서 새로운 아트워크를 추가하나, 링크가 잘못됐을 경우.',()=>{
+  it('필수 예외) 관리 페이지에서 새로운 아트워크를 추가하나, 링크가 잘못됐을 경우.',()=>{
     cy.visit('/promotion-admin/artwork')
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
@@ -140,7 +140,7 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
     });
   });
 
-  it('PA 페이지에서 아트워크를 수정하나, 안 채운 값이 있을 경우.',()=>{
+  it('권장 예외) PA 페이지에서 아트워크를 수정하나, 안 채운 값이 있을 경우.',()=>{
     const filteredRequiredFields = requiredFields.filter(field => field.type==='type')
     cy.visit('/promotion-admin/artwork')
     filteredRequiredFields.forEach((field) => {
@@ -172,7 +172,7 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
     })
   });
 
-  it('PA 페이지에서 아트워크를 수정하나, 링크가 잘못됐을 경우.',()=>{
+  it('필수 예외) PA 페이지에서 아트워크를 수정하나, 링크가 잘못됐을 경우.',()=>{
       cy.visit('/promotion-admin/artwork')
       cy.get('[data-cy="PA_artwork_list"]').contains('이준호와 임윤아의 킹더랜드 인터뷰').click()
       cy.get('[data-cy="modify_artwork_submit"]').click()
