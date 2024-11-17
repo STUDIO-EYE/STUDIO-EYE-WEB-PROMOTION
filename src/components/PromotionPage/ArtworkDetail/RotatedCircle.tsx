@@ -2,7 +2,6 @@ import React, { MouseEvent } from 'react';
 import circle from '@/assets/images/PP/circle.png';
 import styled from 'styled-components';
 import { motion, TargetAndTransition } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { linkCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 
 type Props = {
@@ -11,7 +10,6 @@ type Props = {
 };
 
 const RotatedCircle = ({ label, link }: Props) => {
-  const navigator = useNavigate();
   const rotateAnimation: TargetAndTransition = {
     rotate: [0, 360],
     transition: {

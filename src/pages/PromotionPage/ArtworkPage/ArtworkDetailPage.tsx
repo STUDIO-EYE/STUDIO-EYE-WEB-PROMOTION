@@ -25,7 +25,7 @@ function ArtworkDetailPage() {
 
   const clickedArtwork =
     artworkDetailMatch?.params.id && data?.data.find((artwork) => String(artwork.id) === artworkDetailMatch.params.id);
-  useEffect(()=>{
+    useEffect(()=>{
     if(data){
       if(category!=="all"){
         setFilteredData(data.data.filter((d)=>{return d.category===category && d.isPosted===true}))
