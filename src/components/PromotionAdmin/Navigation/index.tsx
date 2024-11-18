@@ -4,8 +4,7 @@ import { ReactComponent as Home } from '@/assets/images/PA-Navigation/home.svg';
 import { ReactComponent as Request } from '@/assets/images/PA-Navigation/request.svg';
 import { ReactComponent as Artwork } from '@/assets/images/PA-Navigation/artwork.svg';
 import { ReactComponent as PageEdit } from '@/assets/images/PA-Navigation/pageEdit.svg';
-import { ReactComponent as Statistics } from '@/assets/images/PA-Navigation/statistics.svg';
-import { ReactComponent as Setting } from '@/assets/images/PA-Navigation/setting.svg';
+
 import { ReactComponent as Faq } from '@/assets/images/PA-Navigation/faq.svg';
 import { ReactComponent as Recruitment } from '@/assets/images/PA-Navigation/recruitment.svg';
 import { ReactComponent as News } from '@/assets/images/PA-Navigation/news.svg';
@@ -31,7 +30,7 @@ const linksData = [
     svgComponent: <Artwork width={20} height={20} />,
   },
   {
-    path: PA_ROUTES.DATA_EDIT,
+    path: `${PA_ROUTES.DATA_EDIT}/ceo`,
     pathName: 'Data Edit',
     svgComponent: <PageEdit width={20} height={20} />,
   },
