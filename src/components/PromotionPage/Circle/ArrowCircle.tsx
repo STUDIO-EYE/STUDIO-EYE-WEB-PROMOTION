@@ -20,7 +20,7 @@ const ArrowCircle = () => {
   };
 
   return (
-    <Container onClick={handleClick}>
+    <Container onClick={handleClick} data-cy='intro-scrollDown-circle'>
       <RotatingWrapper animate={rotateAnimation}>
         <RotatingImage src={circle} alt='circle' />
       </RotatingWrapper>

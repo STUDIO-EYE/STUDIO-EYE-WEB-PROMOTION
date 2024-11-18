@@ -102,12 +102,8 @@ function IntroPage() {
               data-cy='about-content'
               dangerouslySetInnerHTML={{
                 __html: isMobile
-                  ? removeParagraphTags(
-                    companyIntroData ||
-                    INTRO_DATA.COMPANY_INTRO,
-                  )
-                  : companyIntroData ||
-                  INTRO_DATA.COMPANY_INTRO,
+                  ? removeParagraphTags(companyIntroData || INTRO_DATA.COMPANY_INTRO)
+                  : companyIntroData || INTRO_DATA.COMPANY_INTRO,
               }}
             />
           </motion.div>
@@ -180,7 +176,7 @@ const InitTitleWrapper = styled.div`
     gap: 0.5rem;
   }
 `;
-const InitTitle = styled(motion.div) <IFontStyleProps>`
+const InitTitle = styled(motion.div)<IFontStyleProps>`
   font-family: ${theme.font.bold};
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};
