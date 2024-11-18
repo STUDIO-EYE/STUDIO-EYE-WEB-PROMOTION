@@ -153,23 +153,19 @@ const Container = styled.div`
   color: white;
   padding: 2rem 1rem;
 
-  /* iPad Pro ~ 작은 iPad */
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 80%;
   }
 
-  /* 작은 iPad ~ 큰 휴대폰 */
   @media (max-width: 1024px) and (min-width: 540px) {
     font-size: 70%;
   }
 
-  /* 큰 휴대폰 ~ 작은 휴대폰 */
   @media (max-width: 540px) and (min-width: 375px) {
     font-family: 'Pretendard-bold';
     font-size: 130%;
   }
 
-  /* 작은 휴대폰 이하 */
   @media (max-width: 374px) {
     font-size: 110%;
   }
@@ -194,7 +190,7 @@ const Title = styled.h1`
   font-weight: 600;
   color: white;
   text-align: center;
-  line-height: 1.5; /* 줄 간격을 늘림 */
+  line-height: 1.5; 
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 3rem;
@@ -236,11 +232,11 @@ const AnimatedSpan = styled.span<{ delay?: number }>`
 `;
 
 const SubContent = styled.p`
-  font-family: 'Pretendard-medium'; // 원하는 폰트 추가
+  font-family: 'Pretendard-medium'; 
   font-size: 1.2rem;
   margin-top: 2rem;
   color: white;
-  word-break: keep-all; /* 단어가 잘리지 않도록 설정 */
+  word-break: keep-all;
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 1.1rem;
@@ -271,8 +267,8 @@ const Content = styled.div`
 
 const NoResults = styled.p`
   color: white;
-  font-family: 'Pretendard'; /* 폰트 적용 */
-  font-size: 1.2rem; /* 원하는 폰트 크기로 수정 */
+  font-family: 'Pretendard'; 
+  font-size: 1.2rem; 
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 1.1rem;
@@ -286,9 +282,9 @@ const NoResults = styled.p`
 
 const InputWrapper = styled.div`
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
+  justify-content: center;
   margin-bottom: 2rem;
-  width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+  width: 100%; 
 
   @media (max-width: 1366px) and (min-width: 768px) {
     width: 100%;
@@ -300,45 +296,47 @@ const InputWrapper = styled.div`
 `;
 
 const SearchFaqQuestion = styled.input`
-    width: 80%; 
+  width: 80%; 
   padding: 1.8rem 1rem;
   border: 1px solid white;
   background-color: transparent;
   color: white;
   text-align: center;
-  
+  font-size: 1.5rem; 
 
   &::placeholder {
     text-align: center;
-    font-size: 1.2rem; /* 기본 placeholder 폰트 크기 */
+    font-size: 1.2rem; 
   }
+
   @media (max-width: 1366px) and (min-width: 768px) {
-    width: 70%; /* 중간 화면에서는 70%로 설정 */
-    padding: 1.3rem 0.9rem;
-    font-size: 1.2rem;
+    width: 70%; 
+    padding: 1.8rem 1rem;
+    font-size: 1.6rem; 
     &::placeholder {
-      font-size: 1.1rem; // 중간 화면에서의 폰트 크기 조정
-    } /* 여기에 중괄호 추가 */
+      font-size: 1.1rem;
+    }
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
-    width: 90%; /* 작은 화면에서는 90% */
-    padding: 1.2rem 0.8rem;
-    font-size: 1rem;
+    width: 90%; 
+    padding: 1.6rem 0.9rem;
+    font-size: 1.4rem; 
     &::placeholder {
-      font-size: 0.9rem; // 모바일 화면에서의 폰트 크기 조정
-    } /* 여기에 중괄호 추가 */
+      font-size: 0.9rem;
+    }
   }
 
   @media (max-width: 374px) {
     width: 100%;
-    padding: 1rem 0.7rem;
-    font-size: 0.9rem;
+    padding: 1.4rem 0.8rem;
+    font-size: 0.8rem; 
     &::placeholder {
-      font-size: 0.8rem; // 가장 작은 화면에서의 폰트 크기 조정
-    } /* 여기에 중괄호 추가 */
+      font-size: 1rem;
+    }
   }
 `;
+
 
 
 const FaqDetailButton = styled(motion.button)<FaqDetailButtonProps>`
@@ -351,20 +349,20 @@ const FaqDetailButton = styled(motion.button)<FaqDetailButtonProps>`
   margin-bottom: 1rem;
   width: 80%;
   cursor: pointer;
-  text-align: left; /* 텍스트를 왼쪽 정렬 */
-  height: auto; /* 높이를 자동으로 조정 */
+  text-align: left; 
+  height: auto; 
 
   opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0.5)};
   transform: ${({ isExpanded }) => (isExpanded ? 'scale(1)' : 'scale(0.9)')};
   transition: opacity 0.4s ease, transform 0.4s ease;
 
-  display: flex; /* Flexbox를 사용 */
-  flex-direction: column; /* 세로 방향으로 정렬 */
-  align-items: flex-start; /* 왼쪽 정렬 */
-  justify-content: flex-start; /* 왼쪽 정렬 */
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-start; 
+  justify-content: flex-start; 
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* 호버 시 약간의 배경색 추가 */
+    background-color: rgba(255, 255, 255, 0.1); 
   }
 
   @media (max-width: 1366px) and (min-width: 768px) {
@@ -381,45 +379,45 @@ const FaqDetailButton = styled(motion.button)<FaqDetailButtonProps>`
 const FaqBrief = styled.div`
 font-size: 1.2rem;
 font-weight: bold;
-color: yellow; /* 타이틀을 노란색으로 */
+color: yellow; 
 `;
 
 const FaqBriefQuestion = styled.p`
   margin: 0;
-  color: #ffa900; /* 제목을 노란색으로 설정 */
-  cursor: pointer; /* 클릭 가능함을 나타내기 위해 커서 모양 변경 */
+  color: #ffa900; 
+  cursor: pointer; 
   
-  font-size: 1.6rem; /* 기본 폰트 사이즈 */
+  font-size: 1.6rem;
 
   @media (max-width: 1366px) and (min-width: 768px) {
-    font-size: 1.4rem; /* 태블릿에서 폰트 사이즈 조정 */
+    font-size: 1.4rem; 
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
-    font-size: 1.2rem; /* 모바일에서 폰트 사이즈 조정 */
+    font-size: 1.2rem; 
   }
 
   @media (max-width: 374px) {
-    font-size: 1.1rem; /* 모바일에서 더 작은 폰트 사이즈 조정 */
+    font-size: 1.1rem; 
   }
 `;
 
 const FaqDetailBox = styled.div<{ isExpanded: boolean }>`
   margin-top: 1rem;
-  padding-left: 1rem; /* 들여쓰기 적용 */
+  padding-left: 1rem;
   font-size: 1rem;
-  font-weight: 100; /* 폰트를 얇게 설정 */
-  color: white; /* 세부 내용은 하얀 글씨 */
-  font-family: 'Pretendard'; /* 폰트 적용 */
-  display: ${({ isExpanded }) => (isExpanded ? 'block' : 'none')}; /* isExpanded가 true일 때만 보여주기 */
+  font-weight: 100; 
+  color: white; 
+  font-family: 'Pretendard'; 
+  display: ${({ isExpanded }) => (isExpanded ? 'block' : 'none')}; 
 `;
 
 
 const FaqDetailAnswer = styled.p`
   margin: 0;
   font-weight: 100 !important; 
-  white-space: pre-line; /* 줄바꿈을 적용하기 위해 설정 */
-  font-size: 1.1rem; /* 기본 폰트 사이즈 */
+  white-space: pre-line; 
+  font-size: 1.1rem; 
   line-height: 1.5;
   font-family: 'pretendard-light';
 
