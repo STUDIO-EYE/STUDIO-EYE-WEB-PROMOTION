@@ -34,6 +34,7 @@ const CEOEditPage = () => {
       introduction: data?.introduction,
     },
     file: data ? data?.imageUrl : '',
+    fileName: '',
   });
 
   const [imgChange, setImgChange] = useState(false);
@@ -90,12 +91,14 @@ const CEOEditPage = () => {
     if (window.confirm('수정하시겠습니까?')) {
       if (imgChange) {
         // 이미지를 변경한 경우
-        const file = await urlToFile(putData.file, 'CEOLogo.png');
+        const file = await urlToFile(putData.file, putData.fileName || 'default.png'); // 파일 이름 사용
         if (file) {
+          console.log('전송할 파일:', file); // 디버깅
           formData.append('file', file);
         } else {
           console.error('로고 이미지 가져오기 실패');
         }
+        console.log('이미지 변경 여부', imgChange);
         axios
           .put(`${PROMOTION_BASIC_PATH}/api/ceo`, formData)
           .then((response) => {
@@ -128,6 +131,7 @@ const CEOEditPage = () => {
         setPutData((prevData) => ({
           ...prevData,
           file: reader.result as string,
+          fileName: file.name,
         }));
       };
       reader.readAsDataURL(file);
@@ -196,7 +200,7 @@ const CEOEditPage = () => {
         <form onSubmit={handleSubmit(onValid)}>
           <ContentBlock>
             <ButtonWrapper>
-              <Button data-cy='ceo-submit'>등록하기</Button>
+              <Button data-cy='submit-button'>등록하기</Button>
             </ButtonWrapper>
             {DATAEDIT_TITLES_COMPONENTS.CEO}
             <InputWrapper>
@@ -204,7 +208,7 @@ const CEOEditPage = () => {
                 <p>Name</p>
               </InputTitle>
               <input
-                data-cy='ceo-name-input'
+                data-cy='ceo-edit-name-input'
                 {...register('name', {
                   required: 'CEO 이름을 입력해주세요',
                 })}
@@ -226,7 +230,7 @@ const CEOEditPage = () => {
                 </div>
               </InputTitle>
               <textarea
-                data-cy='ceo-introduction-input'
+                data-cy='ceo-edit-introduction-input'
                 {...register('introduction', {
                   required: 'CEO 소개 (5줄, 200자 내로 작성해 주세요.)',
                 })}
@@ -242,9 +246,14 @@ const CEOEditPage = () => {
                   {DATAEDIT_NOTICE_COMPONENTS.IMAGE.CEOIMG}
                   {DATAEDIT_NOTICE_COMPONENTS.COLOR.CEOIMG}
                   <LogoWrapper>
-                    <FileButton id='CEOImgFile' description='CEO Image Upload' onChange={handleImageChange} />
+                    <FileButton
+                      data-cy='ceo-edit-img'
+                      id='CEOImgFile'
+                      description='CEO Image Upload'
+                      onChange={handleImageChange}
+                    />
                     <ImgBox>
-                      <img src={putData.file} alt='' />
+                      <img src={putData.file} alt='' data-cy='edit-uploaded-image' />
                     </ImgBox>
                   </LogoWrapper>
                 </Box>
