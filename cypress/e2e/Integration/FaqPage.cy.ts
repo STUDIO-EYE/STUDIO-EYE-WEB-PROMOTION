@@ -6,43 +6,6 @@ describe('FAQ 페이지 통합 테스트', () => {
     login();
   });
 
-  // it('관리 페이지에서 FAQ 항목이 로딩되고 표시되는지 확인한다.', () => {
-  //   // FAQ 데이터 모킹
-  //   cy.intercept('GET', '**/api/faq', {
-  //     statusCode: 200,
-  //     body: {
-  //       code: 200,
-  //       status: "OK",
-  //       message: "FAQ 목록을 성공적으로 조회했습니다.",
-  //       data: [
-  //         {
-  //           "id": 1,
-  //           "question": "자주 묻는 질문 1",
-  //           "answer": "답변 1입니다.",
-  //           "visibility": true
-  //         },
-  //         {
-  //           "id": 2,
-  //           "question": "자주 묻는 질문 2",
-  //           "answer": "답변 2입니다.",
-  //           "visibility": true
-  //         }
-  //       ]
-  //     }
-  //   });
-    
-  //   cy.visit('/promotion-admin/faq');
-  //   // cy.contains('Loading...').should('be.visible'); // 로딩 메시지 확인
-  //   cy.get('[data-cy="PA_faq_list"]').find('[data-cy="PA_faq_item"]').should('have.length', 2); // FAQ 항목 개수 확인
-
-  //   const elements = ['question', 'answer', 'isActive'];
-  //   cy.get('[data-cy="PA_faq_list"]').find('[data-cy="PA_faq_item"]').within(() => {
-  //     elements.forEach((element) => {
-  //       cy.get(`[data-cy="PA_faq_${element}"]`).should('exist'); // 각 요소의 존재 여부 확인
-  //     });
-  //   });
-  // });
-
   it('FAQ 페이지에서 검색 기능이 정상적으로 작동하는지 확인한다.', () => {
     
     // Mock 데이터를 사용하여 API 응답 설정
@@ -78,7 +41,7 @@ describe('FAQ 페이지 통합 테스트', () => {
     
   });
 
-  it('FAQ 페이지에서 검색 결과가 없을 때 알림 메시지가 표시되는지 확인한다.', () => {
+  it('필수 예외) FAQ 페이지에서 검색 결과가 없을 때 알림 메시지가 표시되는지 확인한다.', () => {
     cy.intercept('GET', '**/api/faq', {
       statusCode: 200,
       body: {
