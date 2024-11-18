@@ -1,4 +1,3 @@
-import { should } from "chai";
 import { login } from "cypress/support/hooks";
 import { ArtworkData, ArtworkRequiredField } from "cypress/support/types";
 
@@ -50,7 +49,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     })
   });
 
-  it('관리 페이지에서 새로운 아트워크를 추가하나, 안 채운 값이 있을 경우.',()=>{
+  it('권장 예외) 관리 페이지에서 새로운 아트워크를 추가하나, 안 채운 값이 있을 경우.',()=>{
     const filteredRequiredFields = requiredFields.filter(field => field.type==='type');
     cy.visit('/promotion-admin/artwork');
     filteredRequiredFields.forEach((field) => {
@@ -84,7 +83,7 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     })
   });
 
-  it('관리 페이지에서 새로운 아트워크를 추가하나, 링크가 잘못됐을 경우.',()=>{
+  it('필수 예외) 관리 페이지에서 새로운 아트워크를 추가하나, 링크가 잘못됐을 경우.',()=>{
     cy.visit('/promotion-admin/artwork')
     cy.contains('아트워크 생성하기').click();
     cy.wait(100);
@@ -141,7 +140,7 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
     });
   });
 
-  it('PA 페이지에서 아트워크를 수정하나, 안 채운 값이 있을 경우.',()=>{
+  it('권장 예외) PA 페이지에서 아트워크를 수정하나, 안 채운 값이 있을 경우.',()=>{
     const filteredRequiredFields = requiredFields.filter(field => field.type==='type')
     cy.visit('/promotion-admin/artwork')
     filteredRequiredFields.forEach((field) => {
@@ -152,7 +151,7 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
         filteredRequiredFields.forEach((f) => {
           cy.get(f.selector).clear({force:true})
           if (f.selector==='[data-cy="create_artwork_date"]'){
-            cy.type('{rightarrow}').clear().type('rightarrow').clear();
+            cy.get(f.selector).type('{selectall}{backspace}');
           }
           if (f.selector !== field.selector) {
             cy.get(f.selector).type(f.value)
@@ -168,11 +167,12 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
         cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'title').should('equal', '모든 항목을 다 입력해주세요!')// title 메시지 확인
         cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'disabled', 'disabled') // 테스트 후 disabled 속성 원래 상태로 복구
         cy.wait(1000)
+        cy.reload()
       })
     })
   });
 
-  it('PA 페이지에서 아트워크를 수정하나, 링크가 잘못됐을 경우.',()=>{
+  it('필수 예외) PA 페이지에서 아트워크를 수정하나, 링크가 잘못됐을 경우.',()=>{
       cy.visit('/promotion-admin/artwork')
       cy.get('[data-cy="PA_artwork_list"]').contains('이준호와 임윤아의 킹더랜드 인터뷰').click()
       cy.get('[data-cy="modify_artwork_submit"]').click()
@@ -232,35 +232,66 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
 
 
 
-describe('Artwork 순서를 수정하고 수정한 순서가 반영되었는지 확인한다.',()=>{
-  it('아트워크 메인 순서를 변경한다.');
-  it('변경한 아트워크 메인 순서를 확인한다.');
-  it('아트워크 전체 순서를 변경한다.');
-  it('변경한 아트워크 전체 순서를 확인한다.');
-})
-
-
-
-// describe('Artwork-아트워크를 삭제하고, 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
-//   before(()=>{
-//     login();
-//     cy.fixture<ArtworkData[]>('Artwork/artwork_data.json').then((data) => {testData = data[1];});
+// describe('Artwork 순서를 수정하고 수정한 순서가 반영되었는지 확인한다.',()=>{
+//   beforeEach(()=>{
+//     login()
 //   });
 
-//   it('관리 페이지에서 아트워크를 삭제한다.',()=>{
+//   it('아트워크 메인 순서를 변경한다.',()=>{
 //     cy.visit('/promotion-admin/artwork')
-//     cy.get('[data-cy="PA_artwork_list"]').contains(testData.title).click()
-//     cy.contains('삭제하기').click()
-//     cy.on('window:confirm',()=>true)
+//     cy.wait(1000)
+//     cy.contains('메인 순서 관리').click()
+//     cy.contains('편집').click()
+//     cy.get('[data-cy="PA_droppable_container"]')
+//     .should('exist') // 요소가 존재하는지 확인
+//     .find('[data-cy^="PA_draggable_item"]')
+//     .then((items)=>{
+//         const lastIndex=items.length-1
+//         const lastItem=`[data-cy="PA_draggable_item_${lastIndex}"]`
+//         const firstItem='[data-cy="PA_draggable_item_0"]'
+
+//         // 마지막 아이템을 클릭하여 드래그 시작
+//         cy.get(lastItem)
+//           .trigger('mousedown', { button: 0 })  // 드래그 시작 (마우스 버튼 클릭)
+//           .trigger('mousemove', { clientY: 0 }); // 마우스를 첫 번째 아이템 위치로 이동
+
+//         // 첫 번째 아이템 위치에 마우스를 놓아줍니다.
+//         cy.get(firstItem)
+//           .trigger('mousemove', { clientY: 0 })
+//           .trigger('mouseup'); // 드래그 종료
+        
+//         cy.wait(200) //이벤트를 수동으로 발생시키면 완료될 때까지 대기 필요
+//         cy.get('[data-cy="PA_draggable_item_0"]').should("contain.text",items[lastIndex].innerText)
+//       })
 //   });
 
-//   it('관리 페이지에서 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
-//     cy.visit('/promotion-admin/artwork')
-//     cy.contains(testData.title).should('not.exist')//list가 없으면 PA_artwork_list 감지 못해서 그냥 전체로 확인
-//   });
+//   it('변경한 아트워크 메인 순서를 확인한다.');
+//   it('아트워크 전체 순서를 변경한다.');
+//   it('변경한 아트워크 전체 순서를 확인한다.');
+// })
 
-//   it('프로모션 페이지에서 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
-//     cy.visit('/artwork')
-//     cy.get('[data-cy="PP_artwork_list"]').contains(testData.title).should('not.exist')
-//   });
-// });
+
+
+describe('Artwork-아트워크를 삭제하고, 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
+  before(()=>{
+    login();
+    cy.fixture<ArtworkData[]>('Artwork/artwork_data.json').then((data) => {testData = data[1];});
+  });
+
+  it('관리 페이지에서 아트워크를 삭제한다.',()=>{
+    cy.visit('/promotion-admin/artwork')
+    cy.get('[data-cy="PA_artwork_list"]').contains(testData.title).click()
+    cy.contains('삭제하기').click()
+    cy.on('window:confirm',()=>true)
+  });
+
+  it('관리 페이지에서 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
+    cy.visit('/promotion-admin/artwork')
+    cy.contains(testData.title).should('not.exist')//list가 없으면 PA_artwork_list 감지 못해서 그냥 전체로 확인
+  });
+
+  it('프로모션 페이지에서 삭제한 아트워크가 뜨지 않는지 확인한다.',()=>{
+    cy.visit('/artwork')
+    cy.get('[data-cy="PP_artwork_list"]').contains(testData.title).should('not.exist')
+  });
+});

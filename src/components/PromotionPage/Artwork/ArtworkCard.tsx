@@ -24,7 +24,7 @@ function ArtworkCard({ id, name, client, mainImg, category }: IArtworkCardProps)
       whileHover='hover'
     >
       <ArtworkImg data-cy='PP_artwork_img' key={mainImg} variants={imgVariants(mainImg)} ArtworkPhoto={mainImg}>
-        <img src={mainImg} />
+        <img src={mainImg} alt='' />
         <div className='overlay' />
       </ArtworkImg>
       <Info>

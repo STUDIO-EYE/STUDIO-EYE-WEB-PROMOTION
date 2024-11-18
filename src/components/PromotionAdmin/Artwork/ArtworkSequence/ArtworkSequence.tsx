@@ -160,12 +160,12 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
             : null}
           <Droppable droppableId='one'>
             {(provided: DropProvied) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
+              <div ref={provided.innerRef} {...provided.droppableProps} data-cy='PA_droppable_container'>
                 {realData.map((data, index) => (
                   <div style={{ marginBottom: '3px' }}>
                     <Draggable key={data.id} draggableId={data.id.toString()} index={index}>
                       {(provided: DragProvied) => (
-                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} data-cy={`PA_draggable_item_${index}`}>
                           <ArtworkSequenceBox type={type === 'main' ? 'main' : 'other'} artworkData={data} />
                         </div>
                       )}
