@@ -169,7 +169,7 @@ function CEOWritePage() {
               maxLength={30}
               placeholder='이름'
             />
-            {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
+            {errors.name && <ErrorMessage data-cy='ceo-name-error'>{errors.name.message}</ErrorMessage>}
             <InputTitle style={{ justifyContent: 'space-between' }}>
               <p>Introduction</p>
               <div
@@ -192,7 +192,9 @@ function CEOWritePage() {
               maxLength={200}
               placeholder='CEO 소개 (5줄, 200자 내로 작성해 주세요.)'
             />
-            {errors.introduction && <ErrorMessage>{errors.introduction.message}</ErrorMessage>}
+            {errors.introduction && (
+              <ErrorMessage data-cy='ceo-introduction-error'>{errors.introduction.message}</ErrorMessage>
+            )}
             <InputImgWrapper>
               <Box>
                 <InputTitle>{DATAEDIT_TITLES_COMPONENTS.CEOIMG}</InputTitle>

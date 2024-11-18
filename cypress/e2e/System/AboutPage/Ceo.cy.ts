@@ -40,8 +40,8 @@ describe('4. CEO 정보를 관리한다.', () => {
     });
 
     // window.confirm, window.alert 처리
-    cy.on('window:confirm', () => true); // 모든 confirm 창에 대해 '확인' 클릭
-    cy.on('window:alert', () => true); // 모든 alert 창에 대해 '확인' 클릭
+    cy.on('window:confirm', () => true);
+    cy.on('window:alert', () => true);
 
     // /about 페이지 방문 후 생성된 CEO 정보 확인
     cy.visit('/about');
@@ -85,10 +85,10 @@ describe('4. CEO 정보를 관리한다.', () => {
     cy.get('[data-cy="submit-button"]').should('exist').and('be.visible').click({ force: true });
 
     // window.confirm 처리
-    cy.on('window:confirm', () => true); // 모든 confirm 창에 대해 '확인' 클릭
+    cy.on('window:confirm', () => true);
 
     // window.alert 처리
-    cy.on('window:alert', () => true); // 모든 alert 창에 대해 '확인' 클릭
+    cy.on('window:alert', () => true);
     cy.wait('@updateCeo').then((interception) => {
       // 상태 코드 확인
       cy.wrap(interception.response?.statusCode).should('eq', 200);
@@ -114,7 +114,9 @@ describe('4. CEO 정보를 관리한다.', () => {
     // 삭제하기 버튼 클릭
     cy.get(`[data-cy="dataEdit-DeleteButton"]`).should('exist').and('be.visible').click({ force: true });
 
+    // window.confirm, window.alert 처리
     cy.on('window:confirm', () => true);
+    cy.on('window:alert', () => true);
 
     // /about 페이지 방문 후 삭제된 CEO 정보 확인
     cy.visit('/about');
@@ -134,5 +136,36 @@ describe('4. CEO 정보를 관리한다.', () => {
       });
 
     cy.get('[data-cy="ceo-image"]').should('have.attr', 'src').and('include', 'studioeye_ceo');
+  });
+
+  it('권장 예외) 데이터 관리 중 페이지 이탈할 때 안내 문구가 뜬다.', () => {
+    cy.get('[data-cy="ceo-name-input"]').clear().type('이보현');
+
+    // 페이지 이동 시도
+    cy.on('window:confirm', (message) => {
+      cy.wrap(message).should('include', '현재 페이지를 나가면 변경 사항이 저장되지 않습니다. 나가시겠습니까?');
+      return false; // 취소
+    });
+
+    // 다른 페이지로 이동 시도
+    cy.visit('/about', { failOnStatusCode: false });
+  });
+
+  it('필수 예외) 데이터 관리 중 값을 채우지 않았을 때 적절한 에러 메시지가 뜬다.', () => {
+    // 이름 필드를 비운 채 등록
+    cy.get('[data-cy="ceo-name-input"]').clear();
+    cy.get('[data-cy="submit-button"]').should('exist').and('be.visible').click({ force: true });
+
+    // 이름 에러 메시지 확인
+    cy.get('[data-cy="ceo-name-error"]').should('exist').and('include.text', 'CEO 이름을 입력해주세요');
+
+    // 소개 필드를 비운 채 등록
+    cy.get('[data-cy="ceo-introduction-input"]').clear();
+    cy.get('[data-cy="submit-button"]').click({ force: true });
+
+    // 소개 에러 메시지 확인
+    cy.get('[data-cy="ceo-introduction-error"]')
+      .should('exist')
+      .and('include.text', 'CEO 소개 (5줄, 200자 내로 작성해 주세요.)');
   });
 });
