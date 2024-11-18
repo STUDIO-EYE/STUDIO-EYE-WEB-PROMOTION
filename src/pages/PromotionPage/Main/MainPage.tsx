@@ -148,9 +148,6 @@ const MainPage = () => {
             <Outro />
             <Footer />
           </OutroSection>
-          <FooterSection>
-            
-          </FooterSection>
         </ChakraProvider>
       </div>
     </>
@@ -175,10 +172,13 @@ const OutroSection = styled.section`
   scroll-snap-align: start;
   @supports (-webkit-touch-callout: none) {
     margin-bottom: 7rem;
+    overflow: hidden;
   }
 `;
 
 const FooterSection = styled.section`
   scroll-snap-align: start;
-  
+  @supports (-webkit-touch-callout: none) {
+    overflow: hidden;
+  }
 `;

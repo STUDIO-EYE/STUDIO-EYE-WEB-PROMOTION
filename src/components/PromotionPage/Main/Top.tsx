@@ -37,7 +37,7 @@ const Top = ({ backgroundImg }: Props) => {
         }}
         transition={{ duration: 1 }}
       >
-        <NameWrapper>
+        <NameWrapper data-cy="top_name">
           <span>
             <motion.div
               initial={{ y: '50%' }}
@@ -59,7 +59,7 @@ const Top = ({ backgroundImg }: Props) => {
             </motion.div>
           </span>
         </NameWrapper>
-        <BackWrapper
+        <BackWrapper data-cy="top_back"
           initial={{ opacity: 0 }}
           animate={{ opacity: isInView ? 1 : 0 }}
           transition={{ duration: 1.5 }}
