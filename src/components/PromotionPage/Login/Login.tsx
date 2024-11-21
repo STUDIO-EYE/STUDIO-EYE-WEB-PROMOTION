@@ -24,18 +24,10 @@ const Login = ({ email, setEmail, pwd, setPwd, handleLogin }: Props) => {
       <SloganImg src={slogan} alt='slogan img' />
       <InputWrapper>
         <h1>아이디</h1>
-        {/* <input
-          data-cy='id'
-          required
-          type='email'
-          placeholder='yourmail@domain.com'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        /> */}
         <input
           data-cy='id'
           required
-          type='text'
+          type='email'
           placeholder='yourmail@domain.com'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
