@@ -53,7 +53,7 @@ const Client = () => {
             }}
           />
         </TitleWrapper>
-        <ListWrapper>
+        <ListWrapper data-cy="PA_client_list_wrapper">
           {data?.content.length === 0 || data === null || data === undefined ? (
             <NoDataWrapper>😊 클라이언트 데이터가 존재하지 않습니다.</NoDataWrapper>
           ) : (

@@ -102,6 +102,7 @@ const PageLi = styled.div<{ selected: boolean }>`
   font-size: 16px;
   padding: 10px 15px;
   margin-right: 3px;
+  margin-bottom: 5rem;
   box-sizing: border-box;
   font-family: ${(props) => props.theme.font.regular};
   transition: all 300ms ease-in-out;
