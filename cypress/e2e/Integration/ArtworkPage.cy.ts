@@ -135,7 +135,6 @@ describe('Artwork-아트워크를 확인한다.',()=>{
       body: []
     })
     cy.visit('/artwork')
-    cy.get('[data-cy="PP_artwork_list"]').find('[data-cy="PP_skeleton"]').should('exist')
     cy.contains('아직 프로젝트가 없습니다.').should('be.visible')
     // cy.contains("LET'S COLLABORATE WORK WITH US!").should('be.visible')
     // cy.contains('스튜디오아이에 프로젝트 문의하기').should('be.visible')

@@ -3,6 +3,7 @@ import { PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { theme } from '@/styles/theme';
+import { useEffect, useState } from 'react';
 
 interface IArtworkCardProps {
   id: number;
@@ -24,7 +25,7 @@ function ArtworkCard({ id, name, client, mainImg, category }: IArtworkCardProps)
       whileHover='hover'
     >
       <ArtworkImg data-cy='PP_artwork_img' key={mainImg} variants={imgVariants(mainImg)} ArtworkPhoto={mainImg}>
-        <img src={mainImg} alt='' />
+        <img rel="preload" loading='lazy' src={mainImg} alt='' />
         <div className='overlay' />
       </ArtworkImg>
       <Info>

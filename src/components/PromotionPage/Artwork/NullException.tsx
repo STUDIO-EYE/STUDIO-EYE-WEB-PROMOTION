@@ -64,6 +64,14 @@ const Msg = styled.div`
 const Title = styled.svg`
   padding: 50px 0 60px 0;
 
+  @media ${theme.media.large_tablet}{
+    width: 60vw;
+  }
+  @media ${theme.media.tablet}{
+    padding: 20px 0 20px 0;
+    width: 53vw;
+  }
+
   @media ${theme.media.mobile} {
     width: 85vw;
     justify-content: center;
@@ -74,15 +82,26 @@ const Link = styled.a`
   cursor: pointer;
   color: ${(props) => props.theme.color.black.pale};
 
+  @media ${theme.media.tablet}{
+    svg{
+      width: 90%;
+      height: auto;
+    }
+  }
   @media ${theme.media.mobile} {
     width: 85vw;
     display: flex;
     justify-content: center;
+    svg{
+      width: 90%;
+      height: auto;
+    }
   }
 `;
 
 const Wrapper = styled.div`
   padding-top: 30px;
+  padding-bottom: 40px;
 
   @media ${theme.media.mobile} {
     width: 85vw;
