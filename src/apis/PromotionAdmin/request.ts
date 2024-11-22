@@ -31,3 +31,14 @@ export const updateRequestReply = async (id: number, replyData: { answer: string
     throw error;
   }
 };
+
+export const deleteRequest = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`${PROMOTION_BASIC_PATH}/api/requests/${id}`);
+    console.log(`[✅ Success] Request with ID ${id} has been deleted.`);
+  } catch (error) {
+    console.log('[❌ Error deleting request]', error);
+    throw error;
+  }
+};
+

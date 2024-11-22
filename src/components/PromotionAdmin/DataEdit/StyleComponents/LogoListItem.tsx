@@ -14,9 +14,9 @@ type LogoItemListType = {
 const LogoItemList = (props: LogoItemListType) => {
   return (
     <LogoItemListStyle onClick={props.onClick} as={props.as}>
-      <ContentWrapper>
+      <ContentWrapper data-cy="PA_client_list">
         <ImgBox>
-          <img src={props.logo} />
+          <img data-cy="client_img" src={props.logo} />
         </ImgBox>
         <InfoBox>
           <div data-cy="client_name"

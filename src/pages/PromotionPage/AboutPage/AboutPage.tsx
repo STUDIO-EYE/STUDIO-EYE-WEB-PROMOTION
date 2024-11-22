@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getCEOData, getPartnersData } from '../../../apis/PromotionAdmin/dataEdit';
-import NetflixLogo from '@/assets/images/PP/Netflix-Logo.jpg';
-import CJLogo from '@/assets/images/PP/CJ_ENM_Logo.png';
+import PladiLogo from '@/assets/images/Pladi.png';
 import LocomoLogo from '@/assets/images/Locomo.png';
 import defaultCEOLogo from '@/assets/images/PP/studioeye_ceo.png';
 import { CEO_DATA } from '@/constants/introdutionConstants';
@@ -45,18 +44,18 @@ const AboutPage = () => {
       partnerInfo: {
         id: 1,
         is_main: true,
-        link: 'https://www.netflix.com/browse',
+        link: 'https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE',
+      },
+      logoImg: PladiLogo,
+    },
+    {
+      partnerInfo: {
+        id: 2,
+        is_main: true,
+        link: 'https://www.pladi.tv/',
       },
       logoImg: LocomoLogo,
     },
-    // {
-    //   partnerInfo: {
-    //     id: 2,
-    //     is_main: true,
-    //     link: 'https://www.netflix.com/browse',
-    //   },
-    //   logoImg: CJLogo,
-    // },
   ];
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const [CEOData, setCEOData] = useState<ICEOInfoData>(defaultCEOData);

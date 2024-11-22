@@ -27,7 +27,7 @@ const Index = () => {
   const [iconStatus, setIconStatus] = useState<boolean>(false);
   const [isNotiOpened, setIsNotiOpened] = useRecoilState(notiState);
   const [sortedNotifications, setSortedNotifications] = useState<INotification[]>([]);
-  const [requests, setRequests] = useState<Request[]>([]);
+  const [requests, setRequests] = useState<Record<number, Request>>({});
   const auth = useRecoilValue(authState);
   const notiContainerRef = useRef<HTMLDivElement>(null);
 
@@ -54,26 +54,38 @@ const Index = () => {
       if (!notifications || notifications.length === 0) {
         setIconStatus(false);
         setSortedNotifications([]);
-        setRequests([]);
+        setRequests({});
         return;
       }
-      const unreadNotificationsExist: boolean = notifications.some((notification) => !notification.isRead);
+      const unreadNotificationsExist = notifications.some((notification) => !notification.isRead);
       setIconStatus(unreadNotificationsExist);
-
+  
       const sorted = notifications.sort((a, b) => Number(b.isRead) - Number(a.isRead));
-      setSortedNotifications(sorted);
-
-      const requestsPromise = notifications.map(async (notification) => {
-        const response = await fetchRequests({ requestId: notification.notification.requestId });
-        return response;
-      });
-
-      const resolvedRequests = await Promise.all(requestsPromise);
-      setRequests(resolvedRequests);
+      const validNotifications: INotification[] = [];
+      const requestsMap: Record<number, Request> = {};
+  
+      // 요청을 비동기적으로 가져오고 삭제된 요청 필터링
+      for (const notification of sorted) {
+        try {
+          const response = await fetchRequests({ requestId: notification.notification.requestId });
+          if (response) {
+            validNotifications.push(notification);
+            requestsMap[notification.notification.requestId] = response;
+          }
+        } catch (error) {
+          console.warn(`[❗ 삭제된 요청] ID ${notification.notification.requestId}은/는 유효하지 않습니다.`);
+        }
+      }
+  
+      setSortedNotifications(validNotifications);
+      setRequests(requestsMap);
+  
+      if (validNotifications.length === 0) setIconStatus(false);
     } catch (error) {
       console.error('[❌Error fetching notifications or requests]', error);
     }
   };
+  
 
   const handleNotificationClick = async (notificationId: number, userId: number) => {
     try {
@@ -87,7 +99,18 @@ const Index = () => {
   const handleNotificationDelete = async (notificationId: number, userId: number) => {
     try {
       await deleteNotification(notificationId, userId);
-      await fetchData(auth.userId);
+      const updatedNotifications = sortedNotifications.filter(
+        (notification) => notification.notification.id !== notificationId
+      );
+      setSortedNotifications(updatedNotifications);
+
+      const updatedRequests = { ...requests };
+      updatedNotifications.forEach(
+        (notification) => delete updatedRequests[notification.notification.requestId]
+      );
+      setRequests(updatedRequests);
+
+      if (updatedNotifications.length === 0) setIconStatus(false);
     } catch (error) {
       console.error('[❌Error deleting notification]', error);
     }
@@ -97,12 +120,12 @@ const Index = () => {
     <>
       <Container>
         <LeftWrapper>
-          <img src={slogan} alt='pa-header-slogan' />
+          <img src={slogan} alt="pa-header-slogan" />
           <h1>오늘도 스튜디오 아이와 함께 좋은 하루 되세요!</h1>
         </LeftWrapper>
         <RightWrapper>
-          <OpenLinkWrapper href={PP_ADDRESS} target='_blank'>
-            <img src={openIcon} alt='pa-header-open' /> <span>Open Promotion Page</span>
+          <OpenLinkWrapper href={PP_ADDRESS} target="_blank">
+            <img src={openIcon} alt="pa-header-open" /> <span>Open Promotion Page</span>
           </OpenLinkWrapper>
           <CircleBtnWrapper>
             {CircleBtns.map((item, index) => (
@@ -111,7 +134,9 @@ const Index = () => {
                   id={item.id}
                   defaultIcon={item.defaultIcon}
                   isNewIcon={
-                    sortedNotifications.some((notification) => !notification.isRead) ? item.isNewIcon : item.defaultIcon
+                    sortedNotifications.some((notification) => !notification.isRead)
+                      ? item.isNewIcon
+                      : item.defaultIcon
                   }
                   iconStatus={iconStatus}
                 />
@@ -123,18 +148,18 @@ const Index = () => {
       {isNotiOpened && (
         <NotiContainer ref={notiContainerRef}>
           <h1>Notification</h1>
-          {!iconStatus && <NoDataConatiner>새로운 알림이 존재하지 않습니다.</NoDataConatiner>}
+          {!iconStatus && <NoDataContainer>새로운 알림이 존재하지 않습니다.</NoDataContainer>}
           {[...sortedNotifications].reverse().map((notification, index) => (
             <li key={index}>
-              <NotificationList
-                requestId={notification.notification.requestId}
-                clientName={requests[sortedNotifications.length - 1 - index]?.clientName}
-                description={requests[sortedNotifications.length - 1 - index]?.description}
-                category={requests[sortedNotifications.length - 1 - index]?.category}
-                isRead={notification.isRead}
-                onClick={() => handleNotificationClick(notification.notification.id, auth.userId)}
-                onDelete={() => handleNotificationDelete(notification.notification.id, auth.userId)}
-              />
+            <NotificationList
+              requestId={notification.notification.requestId}
+              clientName={requests[notification.notification.requestId]?.clientName || '삭제된 요청'}
+              description={requests[notification.notification.requestId]?.description || '이 요청은 삭제되었습니다.'}
+              category={requests[notification.notification.requestId]?.category || '알 수 없음'}
+              isRead={notification.isRead}
+              onClick={() => handleNotificationClick(notification.notification.id, auth.userId)}
+              onDelete={() => handleNotificationDelete(notification.notification.id, auth.userId)}
+            />
             </li>
           ))}
         </NotiContainer>
@@ -232,8 +257,10 @@ const NotiContainer = styled.div`
   }
 `;
 
-const NoDataConatiner = styled.div`
-  font-family: 'pretendard-semibold';
-  margin-bottom: 15px;
-  color: #595959;
+const NoDataContainer = styled.div`
+  font-size: 1rem;
+  color: #aaa;
+  text-align: center;
+  padding: 1rem;
 `;
+

@@ -1,7 +1,3 @@
-import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
-import { MSG } from '@/constants/messages';
-import { confirmAndCheckCompletion, login } from 'cypress/support/hooks';
-
 describe('PP-AboutPage가 정상적으로 표시되는지 확인한다.', () => {
   beforeEach(() => {
     cy.visit('/about');
@@ -27,11 +23,11 @@ describe('PP-AboutPage가 정상적으로 표시되는지 확인한다.', () => 
     cy.window().then((win) => {
       let previousScrollY = win.scrollY;
       // 스크롤이 순차적으로 되는지 확인하여 부드럽게 스크롤이 되는지 확인
-      cy.wait(100).then(() => {
+      cy.wait(50).then(() => {
         expect(win.scrollY).to.be.greaterThan(previousScrollY);
         previousScrollY = win.scrollY;
 
-        cy.wait(100).then(() => {
+        cy.wait(50).then(() => {
           expect(win.scrollY).to.be.greaterThan(previousScrollY);
         });
       });
@@ -237,7 +233,7 @@ describe('PP-AboutPage가 정상적으로 표시되는지 확인한다.', () => 
               "link": "https://www.pladi.tv/",
               "is_main": true
             },
-            "logoImg" : "https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/99ed7a62-b7d9-4505-9f52-f34243ef718a.png"
+            "logoImg" : 'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/50ae5c15-6aad-4a05-a1b0-85aecb112cb6.png'
           },
           {
             "partnerInfo":  {
@@ -246,12 +242,36 @@ describe('PP-AboutPage가 정상적으로 표시되는지 확인한다.', () => 
               "link": "https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE",
               "is_main": true
             },
-            "logoImg" : "https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/09317317-a6d7-4e9f-bb5e-0ee20920f383.png"
+            "logoImg" : 'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/8efea072-0710-480a-aece-8f56c9144d78.png'
           },
         ],
       },
     });
 
+    cy.get('[data-cy="corp-logo-container"]').should('exist');
+    cy.get('[data-cy="corp-title"]').should('contain', 'CORP');
 
+    cy.get('[data-cy="company-image"]').should('have.length', 2);
+
+    const expectedLogos = [
+      'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/50ae5c15-6aad-4a05-a1b0-85aecb112cb6.png',
+      'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/8efea072-0710-480a-aece-8f56c9144d78.png',
+    ];
+  
+    cy.get('[data-cy="company-image"]').each((item, index) => {
+      cy.wrap(item).find('img').should('exist'); // img 태그가 존재하는지 확인
+      cy.wrap(item)
+        .find('img')
+        .should('have.attr', 'src')
+        .and('include', expectedLogos[index]); // `include`로 비교
+    });
+
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen');
+    });
+    cy.get('[data-cy="company-image"]').first().find('img').click();
+    cy.get('@windowOpen').should('be.calledWith', 'https://www.pladi.tv/');
+    cy.get('[data-cy="company-image"]').eq(1).find('img').click();
+    cy.get('@windowOpen').should('be.calledWith', 'https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE');
   });
 });
