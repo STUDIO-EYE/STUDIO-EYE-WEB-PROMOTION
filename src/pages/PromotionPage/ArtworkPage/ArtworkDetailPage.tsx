@@ -5,16 +5,17 @@ import { IArtwork, IArtworksData } from '@/types/PromotionPage/artwork';
 import { useQuery } from 'react-query';
 import { getArtworkData } from '@/apis/PromotionPage/artwork';
 import { motion, useTransform, useScroll } from 'framer-motion';
-import ScrollAnimatedComponent from '@/components/PromotionPage/ArtworkDetail/ScrollAnimatedComponent';
-import RotatedCircle from '@/components/PromotionPage/ArtworkDetail/RotatedCircle';
-import ImageSlider from '@/components/PromotionPage/ArtworkDetail/ImageSlider';
 import { NavWrapper } from '@/components/PromotionPage/ArtworkDetail/Components';
-import { useEffect, useState } from 'react';
-
+import React, { Suspense, useEffect, useState } from 'react';
 import { ReactComponent as PrevArrowIcon } from '@/assets/images/PP/leftArrow.svg';
 import { ReactComponent as NextArrowIcon } from '@/assets/images/PP/rightArrow.svg';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
 import { theme } from '@/styles/theme';
+
+const RotatedCircle = React.lazy(() => import('@/components/PromotionPage/ArtworkDetail/RotatedCircle'));
+const ImageSlider = React.lazy(()=>import('@/components/PromotionPage/ArtworkDetail/ImageSlider'));
+const ScrollAnimatedComponent = React.lazy(()=>import('@/components/PromotionPage/ArtworkDetail/ScrollAnimatedComponent'));
+
 
 function ArtworkDetailPage() {
   const navigator = useNavigate();
@@ -43,7 +44,6 @@ function ArtworkDetailPage() {
   // navigation
   const dataLength = filteredData?filteredData.length : 0;
   const category = artworkDetailMatch?.params.category;
-  console.log("카테고리 "+category)
   const artworkIndex = Number(artworkDetailMatch?.params.id);
   const currentIndex = filteredData ? filteredData.findIndex((artwork) => artwork.id === artworkIndex) : 0;
   const prevIndex = filteredData && currentIndex === 0 ? null : filteredData[currentIndex - 1]?.id;
@@ -71,136 +71,133 @@ function ArtworkDetailPage() {
 
   return (
     <>
-      {isLoading ? (
-        <div> is Loading... </div>
-      ) : (
+    {/* <Suspense fallback={<div style={{backgroundColor:'black'}}> is Loading... </div>}> */}
+      {clickedArtwork && (
         <>
-          {clickedArtwork && (
+          <ScrollToTop />
+          <Wrapper>
+            <Suspense fallback={<div>is Loading...</div>}>
+            <Thumbnail data-cy='PP_artwork_detail_img' bgPhoto={clickedArtwork.mainImg} bgMobilePhoto={clickedArtwork.responsiveMainImg}>
+              {clickedArtwork.name.length>40
+              ?<LongTitle data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</LongTitle>
+              :<Title data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</Title>
+              }
+              
+              <InfoWrapper>
+              <Suspense fallback={<div>...</div>}><Info
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ease: 'easeInOut',
+                    duration: 1,
+                    y: { duration: 1 },
+                  }}
+                >
+                  <p className='attribute'>Client</p> <p data-cy='PP_artwork_detail_client'>{clickedArtwork.client}</p>
+                </Info></Suspense>
+                <Suspense fallback={<div>...</div>}><Info
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ease: 'easeInOut',
+                    duration: 2,
+                    y: { duration: 2 },
+                  }}
+                >
+                  <p className='attribute'>Category</p> <p data-cy='PP_artwork_detail_category'>{clickedArtwork.category}</p>
+                </Info></Suspense>
+                <Suspense fallback={<div>...</div>}><Info
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ease: 'easeInOut',
+                    duration: 3,
+                    y: { duration: 3 },
+                  }}
+                >
+                  <p className='attribute'>Date</p> <p data-cy='PP_artwork_detail_date'>{formatDate(clickedArtwork.date)}</p>
+                </Info></Suspense>
+              </InfoWrapper>
+            </Thumbnail>
+            </Suspense>
+
+            <OverviewWrapper>
+              <Overview1 style={{ x }} drag='x' dragSnapToOrigin>
+                OVERVIEW
+              </Overview1>
+              <Suspense fallback={<div>...</div>}><ScrollAnimatedComponent article={clickedArtwork.overView} /></Suspense>
+              <Overview2 style={{ translateX }} drag='x' dragSnapToOrigin>
+                OVERVIEW
+              </Overview2>
+            </OverviewWrapper>
+            <Suspense fallback={<div>...</div>}>
+            <ContentWrapper>
+              <Img>
+                <ImageSlider projectImages={clickedArtwork?.projectImages} />
+              </Img>
+              <Content>
+                <p>
+                  Do you want to see the project?
+                </p>
+                <CircleWrapper>
+                  <RotatedCircle label='WATCH' link={clickedArtwork.link} />
+                </CircleWrapper>
+              </Content>
+            </ContentWrapper>
+            </Suspense>
+
             <>
-              <ScrollToTop />
-              <Wrapper>
-                <Thumbnail data-cy='PP_artwork_detail_img' bgPhoto={clickedArtwork.mainImg} bgMobilePhoto={clickedArtwork.responsiveMainImg}>
-                  {clickedArtwork.name.length>40
-                  ?<LongTitle data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</LongTitle>
-                  :<Title data-cy='PP_artwork_detail_title'>{clickedArtwork.name}</Title>
-                  }
-                  
-                  <InfoWrapper>
-                    <Info
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{
-                        ease: 'easeInOut',
-                        duration: 1,
-                        y: { duration: 1 },
-                      }}
-                    >
-                      <p className='attribute'>Client</p> <p data-cy='PP_artwork_detail_client'>{clickedArtwork.client}</p>
-                    </Info>
-                    <Info
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{
-                        ease: 'easeInOut',
-                        duration: 2,
-                        y: { duration: 2 },
-                      }}
-                    >
-                      <p className='attribute'>Category</p> <p data-cy='PP_artwork_detail_category'>{clickedArtwork.category}</p>
-                    </Info>
-                    <Info
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{
-                        ease: 'easeInOut',
-                        duration: 3,
-                        y: { duration: 3 },
-                      }}
-                    >
-                      <p className='attribute'>Date</p> <p data-cy='PP_artwork_detail_date'>{formatDate(clickedArtwork.date)}</p>
-                    </Info>
-                  </InfoWrapper>
-                </Thumbnail>
-                <OverviewWrapper>
-                  <Overview1 style={{ x }} drag='x' dragSnapToOrigin>
-                    OVERVIEW
-                  </Overview1>
-                  <ScrollAnimatedComponent article={clickedArtwork.overView} />
-                  <Overview2 style={{ translateX }} drag='x' dragSnapToOrigin>
-                    OVERVIEW
-                  </Overview2>
-                </OverviewWrapper>
-                <ContentWrapper>
-                  <Img>
-                    <ImageSlider projectImages={clickedArtwork?.projectImages} />
-                  </Img>
-                  <Content>
-                    <p>
-                      Do you want to see the project?
-                    </p>
-                    <CircleWrapper>
-                      <RotatedCircle label='WATCH' link={clickedArtwork.link} />
-                    </CircleWrapper>
-                  </Content>
-                </ContentWrapper>
-
-                {isLoading ? (
-                  <div>is Loading... </div>
-                ) : (
-                  <>
-                    {currentIndex === 0 ? null : (
-                      <NavWrapper
-                        onClick={() => {
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${prevIndex}`);
-                        }}
-                      >
-                        <PrevArrowIcon width={70} height={70} />
-                        <Nav location={"left"}>
-                          PREV PROJECT
-                          <div className='nav_title' style={{whiteSpace:"nowrap",textOverflow:"ellipsis",overflow : "hidden"}}>
-                            {filteredData[currentIndex - 1]?.name}</div>
-                        </Nav>
-                      </NavWrapper>
-                    )}
-
-                    {currentIndex === dataLength - 1 ? null : (
-                      <NavWrapper
-                        onClick={() => {
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${nextIndex}`);
-                        }}
-                      >
-                        <Nav location={"right"}>
-                          NEXT PROJECT
-                          <div className='nav_title' style={{whiteSpace:"nowrap",textOverflow:"ellipsis",overflow : "hidden"}}>
-                            {filteredData[currentIndex + 1]?.name}</div>
-                        </Nav>
-                        <NextArrowIcon width={70} height={70} />
-                      </NavWrapper>
-                    )}
-
-                    <List
-                      onClick={() => {
-                        if(category==="all"){
-                          console.log("됨")
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}`);
-                        }else{
-                          const key=artwork_categories.find((c) => c.label + '' === category);
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}?category=${key?.key}`)
-                        }
-                      }}
-                    >
-                      LIST
-                    </List>
-                  </>
+              <Suspense fallback={<div>is Loading...</div>}>
+                {currentIndex === 0 ? null : (
+                  <NavWrapper
+                    onClick={() => {
+                      navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${prevIndex}`);
+                    }}
+                  >
+                    <PrevArrowIcon width={70} height={70} />
+                    <Nav location={"left"}>
+                      PREV PROJECT
+                      <div className='nav_title' style={{whiteSpace:"nowrap",textOverflow:"ellipsis",overflow : "hidden"}}>
+                        {filteredData[currentIndex - 1]?.name}</div>
+                    </Nav>
+                  </NavWrapper>
                 )}
-              </Wrapper>
+
+                {currentIndex === dataLength - 1 ? null : (
+                  <NavWrapper
+                    onClick={() => {
+                      navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${nextIndex}`);
+                    }}
+                  >
+                    <Nav location={"right"}>
+                      NEXT PROJECT
+                      <div className='nav_title' style={{whiteSpace:"nowrap",textOverflow:"ellipsis",overflow : "hidden"}}>
+                        {filteredData[currentIndex + 1]?.name}</div>
+                    </Nav>
+                    <NextArrowIcon width={70} height={70} />
+                  </NavWrapper>
+                )}
+
+                <List
+                  onClick={() => {
+                    if(category==="all"){
+                      navigator(`/${PP_ROUTES_CHILD.ARTWORK}`);
+                    }else{
+                      const key=artwork_categories.find((c) => c.label + '' === category);
+                      navigator(`/${PP_ROUTES_CHILD.ARTWORK}?category=${key?.key}`)
+                    }
+                  }}
+                >
+                  LIST
+                </List>
+                </Suspense>
             </>
-          )}
+          </Wrapper>
         </>
       )}
+      {/* </Suspense> */}
     </>
-  );
-}
+  )}
 
 export default ArtworkDetailPage;
 
@@ -231,9 +228,9 @@ const Thumbnail = styled.div<{ bgPhoto: string, bgMobilePhoto: string }>`
   align-items: center;
   padding: 50px;
   background-size: cover;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${(props) => props.bgPhoto});
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(${(props) => props.bgPhoto});
   @media ${theme.media.mobile}{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${(props) => props.bgMobilePhoto});
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(${(props) => props.bgMobilePhoto});
   }
 `;
 
