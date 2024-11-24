@@ -35,7 +35,7 @@ function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCategoryChange = (categoryKey: string) => {
-    navigator(`?category=${categoryKey}`);
+    categoryKey==='0'?navigator(``):navigator(`?category=${categoryKey}`);
     setSelectedCategory(categoryKey);
     setIsDropdownOpen(false);
   };
@@ -55,7 +55,7 @@ function Navigation() {
           <CategoryItem
             key={category.key}
             onClick={() => {
-              navigator(`?category=${category.key}`);
+              category.key===0?navigator(``):navigator(`?category=${category.key}`);
               setSelectedCategory(category.label);
             }}
             selected={categoryId === category.key + ''}
