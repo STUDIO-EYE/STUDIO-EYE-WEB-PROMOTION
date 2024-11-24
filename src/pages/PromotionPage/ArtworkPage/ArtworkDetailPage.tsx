@@ -18,21 +18,19 @@ import { theme } from '@/styles/theme';
 
 function ArtworkDetailPage() {
   const navigator = useNavigate();
-  const artworkDetailMatch = useMatch(`${PP_ROUTES_CHILD.ARTWORK}/:id`);
+  const artworkDetailMatch = useMatch(`${PP_ROUTES_CHILD.ARTWORK}/:category/:id`);
   const { data, isLoading } = useQuery<IArtworksData>(['artwork', 'id'], getArtworkData);
   const [filteredData,setFilteredData]=useState<IArtwork[]>([])
-  const{state:{category}}= useLocation();
 
   const clickedArtwork =
     artworkDetailMatch?.params.id && data?.data.find((artwork) => String(artwork.id) === artworkDetailMatch.params.id);
     useEffect(()=>{
     if(data){
-      if(category!=="all"){
-        setFilteredData(data.data.filter((d)=>{return d.category===category && d.isPosted===true}))
+      if(artworkDetailMatch?.params.category!=="all"){
+        setFilteredData(data.data.filter((d)=>{return d.category===artworkDetailMatch?.params.category! && d.isPosted===true}))
       }
       else{
         setFilteredData(data.data.filter((d)=>{return d.isPosted===true}))
-        console.log(filteredData)
       }
     }
   },[])
@@ -44,9 +42,10 @@ function ArtworkDetailPage() {
 
   // navigation
   const dataLength = filteredData?filteredData.length : 0;
+  const category = artworkDetailMatch?.params.category;
+  console.log("카테고리 "+category)
   const artworkIndex = Number(artworkDetailMatch?.params.id);
   const currentIndex = filteredData ? filteredData.findIndex((artwork) => artwork.id === artworkIndex) : 0;
-  console.log(currentIndex)
   const prevIndex = filteredData && currentIndex === 0 ? null : filteredData[currentIndex - 1]?.id;
   const nextIndex = filteredData && currentIndex === dataLength - 1 ? null : filteredData[currentIndex + 1]?.id;
 
@@ -152,7 +151,7 @@ function ArtworkDetailPage() {
                     {currentIndex === 0 ? null : (
                       <NavWrapper
                         onClick={() => {
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${prevIndex}`,{state:{category}});
+                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${prevIndex}`);
                         }}
                       >
                         <PrevArrowIcon width={70} height={70} />
@@ -167,7 +166,7 @@ function ArtworkDetailPage() {
                     {currentIndex === dataLength - 1 ? null : (
                       <NavWrapper
                         onClick={() => {
-                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${nextIndex}`,{state:{category}});
+                          navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${nextIndex}`);
                         }}
                       >
                         <Nav location={"right"}>
@@ -182,6 +181,7 @@ function ArtworkDetailPage() {
                     <List
                       onClick={() => {
                         if(category==="all"){
+                          console.log("됨")
                           navigator(`/${PP_ROUTES_CHILD.ARTWORK}`);
                         }else{
                           const key=artwork_categories.find((c) => c.label + '' === category);

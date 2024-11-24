@@ -19,7 +19,7 @@ function ArtworkCard({ id, name, client, mainImg, category }: IArtworkCardProps)
   return (
     <ArtworkItem
       data-cy='PP_artwork'
-      onClick={() => navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${id}`, { state: { category } })}
+      onClick={() => navigator(`/${PP_ROUTES_CHILD.ARTWORK}/${category}/${id}`)}
       variants={itemVariants}
       initial='initial'
       whileHover='hover'
