@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import axios from 'axios';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import logo from '../../../assets/logo/Logo.png';
@@ -601,7 +601,6 @@ const ContactUsPage = () => {
               </RequestSuccessLogoWrapper>
               <BackToMainButton
                 onClick={() => {
-                  // console.log(formData);
                   navigator(`/${PP_ROUTES.MAIN}`);
                 }}
               >
