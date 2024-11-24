@@ -1,4 +1,3 @@
-import { PP_ROUTES } from '@/constants/routerConstants';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';

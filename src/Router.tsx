@@ -1,54 +1,64 @@
+import { Suspense, lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Root from './Root';
-import PAHomePage from './pages/PromotionAdmin/HomePage/index';
-import PARequestPage from './pages/PromotionAdmin/RequestPage/index';
-import PAArtworkPage from './pages/PromotionAdmin/ArtworkPage/Artwork';
-import PADataEditPage from './pages/PromotionAdmin/DataEditPage/index';
-import PAStatisticsPage from './pages/PromotionAdmin/StatisticsPage/index';
-import PAFaqPage from './pages/PromotionAdmin/FaqPage/index';
-import PARecruitmentPage from './pages/PromotionAdmin/RecruitmentPage/index';
-import PASettingPage from './pages/PromotionAdmin/SettingPage/index';
-import PANewsPage from './pages/PromotionAdmin/NewsPage/index';
-import PANewsWritePage from './pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage';
-import PANewsViewPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewsViewPage';
-import PANewsEditPage from './pages/PromotionAdmin/NewsPage/NewsViewPage/NewsEditPage';
-import PALayout from './components/PromotionAdmin/Layout/Layout';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
-import FAQWritePage from './pages/PromotionAdmin/FaqPage/FAQWritePage';
-import RecruitmentManagePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage';
-import RecruitmentWritePage from './pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage';
-import BenefitManagePage from './pages/PromotionAdmin/RecruitmentPage/BenefitManagePage';
-import BenefitWritePage from './pages/PromotionAdmin/RecruitmentPage/BenefitWritePage';
-import FAQManagePage from './pages/PromotionAdmin/FaqPage/FAQManagePage';
-import PARequestDetailPage from '@/pages/PromotionAdmin/RequestPage/RequestCheckPage';
-import FAQCheckPage from './pages/PromotionAdmin/FaqPage/FAQCheckPage';
-import RequestManagePage from './pages/PromotionAdmin/RequestPage/RequestManagePage';
-import RequestCheckPage from './pages/PromotionAdmin/RequestPage/RequestCheckPage';
-import PAArtworkDetail from '@/pages/PromotionAdmin/ArtworkPage/ArtworkDetail';
-import ArtworkDetailPage from './pages/PromotionPage/ArtworkPage/ArtworkDetailPage';
-import ArtworkPage from './pages/PromotionPage/ArtworkPage/ArtworkPage';
-import ArtworkLayout from './components/PromotionPage/Artwork/Layout';
-import Mainpage from '@/pages/PromotionPage/Main/MainPage';
-import PPLayout from '@/components/PromotionPage/Layout/Layout';
-import AboutPage from '@/pages/PromotionPage/AboutPage/AboutPage';
-import ContactUsPage from './pages/PromotionPage/ContactPage/ContactUsPage';
-import FaqPage from './pages/PromotionPage/FaqPage/FaqPage';
+import Root from './Root';
 
-import CEOPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOPage';
-import CompanyPage from './pages/PromotionAdmin/DataEditPage/CompanyPage/CompanyPage';
-import PartnerPage from './pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerPage';
-import ClientPage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientPage';
-import PartnerEditPage from './pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerEditPage';
-import ClientEditPage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientEditPage';
-import PartnerWritePage from './pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerWritePage';
+const Loading = lazy(() => import('./components/PromotionPage/Layout/Loading'));
 
-import Login from './pages/PromotionAdmin/Login/Login';
-import ClientWritePage from './pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage';
-import CEOEditPage from './pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage';
-import NewsBoardPage from './pages/PromotionPage/NewsPage/NewsBoardPage';
-import GreetingComponent from './pages/ForTest/GreetingComponent';
-import RecruitmentPage from './pages/PromotionPage/RecruitmentPage/RecruitmentPage';
-import MenuPage from './pages/PromotionAdmin/DataEditPage/MenuPage/MenuPage';
+// PromotionAdmin
+
+const PALayout = lazy(() => import('./components/PromotionAdmin/Layout/Layout'));
+const Login = lazy(() => import('./pages/PromotionAdmin/Login/Login'));
+const PAHomePage = lazy(() => import('./pages/PromotionAdmin/HomePage/index'));
+const PARequestPage = lazy(() => import('./pages/PromotionAdmin/RequestPage/index'));
+const PAArtworkPage = lazy(() => import('./pages/PromotionAdmin/ArtworkPage/Artwork'));
+const PADataEditPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/index'));
+const PAStatisticsPage = lazy(() => import('./pages/PromotionAdmin/StatisticsPage/index'));
+const PAFaqPage = lazy(() => import('./pages/PromotionAdmin/FaqPage/index'));
+const PARecruitmentPage = lazy(() => import('./pages/PromotionAdmin/RecruitmentPage/index'));
+const PASettingPage = lazy(() => import('./pages/PromotionAdmin/SettingPage/index'));
+const PANewsPage = lazy(() => import('./pages/PromotionAdmin/NewsPage/index'));
+const PANewsWritePage = lazy(() => import('./pages/PromotionAdmin/NewsPage/NewsWritePage/NewsWritePage'));
+const PANewsViewPage = lazy(() => import('./pages/PromotionAdmin/NewsPage/NewsViewPage/NewsViewPage'));
+const PANewsEditPage = lazy(() => import('./pages/PromotionAdmin/NewsPage/NewsViewPage/NewsEditPage'));
+const FAQWritePage = lazy(() => import('./pages/PromotionAdmin/FaqPage/FAQWritePage'));
+const FAQManagePage = lazy(() => import('./pages/PromotionAdmin/FaqPage/FAQManagePage'));
+const FAQCheckPage = lazy(() => import('./pages/PromotionAdmin/FaqPage/FAQCheckPage'));
+const RecruitmentManagePage = lazy(() => import('./pages/PromotionAdmin/RecruitmentPage/RecruitmentManagePage'));
+const RecruitmentWritePage = lazy(() => import('./pages/PromotionAdmin/RecruitmentPage/RecruitmentWritePage'));
+const BenefitManagePage = lazy(() => import('./pages/PromotionAdmin/RecruitmentPage/BenefitManagePage'));
+const BenefitWritePage = lazy(() => import('./pages/PromotionAdmin/RecruitmentPage/BenefitWritePage'));
+const PARequestDetailPage = lazy(() => import('@/pages/PromotionAdmin/RequestPage/RequestCheckPage'));
+const RequestManagePage = lazy(() => import('./pages/PromotionAdmin/RequestPage/RequestManagePage'));
+const RequestCheckPage = lazy(() => import('./pages/PromotionAdmin/RequestPage/RequestCheckPage'));
+const PAArtworkDetail = lazy(() => import('@/pages/PromotionAdmin/ArtworkPage/ArtworkDetail'));
+const MenuPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/MenuPage/MenuPage'));
+const ClientWritePage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/ClientPage/ClientWritePage'));
+const CEOEditPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/CEOPage/CEOEditPage'));
+const CEOPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/CEOPage/CEOPage'));
+const CompanyPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/CompanyPage/CompanyPage'));
+const PartnerPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerPage'));
+const ClientPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/ClientPage/ClientPage'));
+const PartnerEditPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerEditPage'));
+const ClientEditPage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/ClientPage/ClientEditPage'));
+const PartnerWritePage = lazy(() => import('./pages/PromotionAdmin/DataEditPage/PartnerPage/PartnerWritePage'));
+
+// PromotionPage
+
+const PPLayout = lazy(() => import('@/components/PromotionPage/Layout/Layout'));
+const Mainpage = lazy(() => import('@/pages/PromotionPage/Main/MainPage'));
+const AboutPage = lazy(() => import('@/pages/PromotionPage/AboutPage/AboutPage'));
+const ContactUsPage = lazy(() => import('./pages/PromotionPage/ContactPage/ContactUsPage'));
+const FaqPage = lazy(() => import('./pages/PromotionPage/FaqPage/FaqPage'));
+const NewsBoardPage = lazy(() => import('./pages/PromotionPage/NewsPage/NewsBoardPage'));
+const RecruitmentPage = lazy(() => import('./pages/PromotionPage/RecruitmentPage/RecruitmentPage'));
+const ArtworkPage = lazy(() => import('./pages/PromotionPage/ArtworkPage/ArtworkPage'));
+const ArtworkLayout = lazy(() => import('./components/PromotionPage/Artwork/Layout'));
+const ArtworkDetailPage = lazy(() => import('./pages/PromotionPage/ArtworkPage/ArtworkDetailPage'));
+
+// ForTest
+const GreetingComponent = lazy(() => import('./pages/ForTest/GreetingComponent'));
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -56,208 +66,384 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <PPLayout />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PPLayout />
+          </Suspense>
+        ),
         children: [
           {
             path: PP_ROUTES_CHILD.MAIN,
-            element: <Mainpage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Mainpage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.ABOUT,
-            element: <AboutPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AboutPage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.ARTWORK,
-            element: <ArtworkLayout />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ArtworkLayout />
+              </Suspense>
+            ),
             children: [
               {
                 path: '',
-                element: <ArtworkPage />,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <ArtworkPage />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PP_ROUTES_CHILD.ARTWORK_DETAIL,
-            element: <ArtworkDetailPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ArtworkDetailPage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.FAQ,
-            element: <FaqPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <FaqPage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.CONTACT,
-            element: <ContactUsPage />,
-          },
-          {
-            path: PP_ROUTES_CHILD.FAQ,
-            element: <FaqPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ContactUsPage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.LOGIN,
-            element: <Login />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Login />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.NEWSBOARD,
-            element: <NewsBoardPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <NewsBoardPage />
+              </Suspense>
+            ),
           },
           {
             path: PP_ROUTES_CHILD.RECRUITMENT,
-            element: <RecruitmentPage />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <RecruitmentPage />
+              </Suspense>
+            ),
           },
         ],
       },
 
       {
         path: '/promotion-admin',
-        element: <PALayout />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PALayout />
+          </Suspense>
+        ),
         children: [
           {
             path: PA_ROUTES_CHILD.HOME,
-            element: <PAHomePage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PAHomePage />
+              </Suspense>
+            ),
           },
           {
             path: PA_ROUTES_CHILD.REQUEST,
-            element: <PARequestPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PARequestPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: '',
-                element: <RequestManagePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RequestManagePage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.REQUEST}/:requestId`,
-                element: <RequestCheckPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RequestCheckPage />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PA_ROUTES_CHILD.REQUEST_DETAIL,
-            element: <PARequestDetailPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PARequestDetailPage />
+              </Suspense>
+            ),
           },
           {
             path: PA_ROUTES_CHILD.ARTWORK,
-            element: <PAArtworkPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PAArtworkPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: `${PA_ROUTES.ARTWORK}/:artworkId`,
-                element: <PAArtworkDetail />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <PAArtworkDetail />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PA_ROUTES_CHILD.DATA_EDIT,
-            element: <PADataEditPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PADataEditPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: `${PA_ROUTES.DATA_EDIT}/ceo`,
-                element: <CEOPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <CEOPage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.DATA_EDIT}/ceo/edit`,
-                element: <CEOEditPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <CEOEditPage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.DATA_EDIT}/company`,
-                element: <CompanyPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <CompanyPage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.DATA_EDIT}/partner`,
-                element: <PartnerPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <PartnerPage />
+                  </Suspense>
+                ),
                 children: [
                   {
                     path: `${PA_ROUTES.DATA_EDIT}/partner/:partnerId`,
-                    element: <PartnerEditPage />,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <PartnerEditPage />
+                      </Suspense>
+                    ),
                   },
                   {
                     path: `${PA_ROUTES.DATA_EDIT}/partner/write`,
-                    element: <PartnerWritePage />,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <PartnerWritePage />
+                      </Suspense>
+                    ),
                   },
                 ],
               },
               {
                 path: `${PA_ROUTES.DATA_EDIT}/client`,
-                element: <ClientPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ClientPage />
+                  </Suspense>
+                ),
                 children: [
                   {
-                    path: `${PA_ROUTES.DATA_EDIT}/client/:clientrId`,
-                    element: <ClientEditPage />,
+                    path: `${PA_ROUTES.DATA_EDIT}/client/:clientId`,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <ClientEditPage />
+                      </Suspense>
+                    ),
                   },
                   {
                     path: `${PA_ROUTES.DATA_EDIT}/client/write`,
-                    element: <ClientWritePage />,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <ClientWritePage />
+                      </Suspense>
+                    ),
                   },
                 ],
               },
               {
                 path: `${PA_ROUTES.DATA_EDIT}/menu`,
-                element: <MenuPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MenuPage />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PA_ROUTES_CHILD.STATISTICS,
-            element: <PAStatisticsPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PAStatisticsPage />
+              </Suspense>
+            ),
           },
           {
             path: PA_ROUTES_CHILD.FAQ,
-            element: <PAFaqPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PAFaqPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: '',
-                element: <FAQManagePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <FAQManagePage />
+                  </Suspense>
+                ),
                 children: [
                   {
                     path: `${PA_ROUTES.FAQ}/:faqId`,
-                    element: <FAQCheckPage />,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <FAQCheckPage />
+                      </Suspense>
+                    ),
                   },
                 ],
               },
               {
                 path: `${PA_ROUTES.FAQ}/write`,
-                element: <FAQWritePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <FAQWritePage />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PA_ROUTES_CHILD.RECRUITMENT,
-            element: <PARecruitmentPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PARecruitmentPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: `${PA_ROUTES.RECRUITMENT}/manage`,
-                element: <RecruitmentManagePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RecruitmentManagePage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.RECRUITMENT}/write`,
-                element: <RecruitmentWritePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RecruitmentWritePage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
-                element: <BenefitManagePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BenefitManagePage />
+                  </Suspense>
+                ),
               },
               {
                 path: `${PA_ROUTES.RECRUITMENT}/benefit/write`,
-                element: <BenefitWritePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BenefitWritePage />
+                  </Suspense>
+                ),
               },
             ],
           },
           {
             path: PA_ROUTES_CHILD.SETTING,
-            element: <PASettingPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PASettingPage />
+              </Suspense>
+            ),
           },
           {
             path: PA_ROUTES_CHILD.NEWS,
-            element: <PANewsPage />,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <PANewsPage />
+              </Suspense>
+            ),
             children: [
               {
                 path: `writing`,
-                element: <PANewsWritePage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <PANewsWritePage />
+                  </Suspense>
+                ),
               },
               {
                 path: `:id`,
-                element: <PANewsViewPage />,
+                element: (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <PANewsViewPage />
+                  </Suspense>
+                ),
                 children: [
                   {
                     path: `edit`,
-                    element: <PANewsEditPage />,
+                    element: (
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <PANewsEditPage />
+                      </Suspense>
+                    ),
                   },
                 ],
               },
@@ -267,8 +453,12 @@ const router = createBrowserRouter([
       },
       {
         path: '/api/greeting',
-        element: <GreetingComponent />,
-      }
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <GreetingComponent />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);

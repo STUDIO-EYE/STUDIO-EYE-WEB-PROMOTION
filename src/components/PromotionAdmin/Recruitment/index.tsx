@@ -1,4 +1,4 @@
-import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
+import { PA_ROUTES } from '@/constants/routerConstants';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
 

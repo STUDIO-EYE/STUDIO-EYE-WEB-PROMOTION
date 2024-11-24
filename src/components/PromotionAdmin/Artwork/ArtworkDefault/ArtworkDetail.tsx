@@ -1,12 +1,10 @@
-import { deleteArtwork, getArtworkDetail, postArtwork, putArtwork } from '@/apis/PromotionAdmin/artwork';
-import { backdropState } from '@/recoil/atoms';
+import { deleteArtwork, getArtworkDetail, putArtwork } from '@/apis/PromotionAdmin/artwork';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import getArtworkDefaultValue, { DefaultValueItem } from '../ArtworkCreating/ArtworkDefaultValue';
 import { ArtworkData, projectType, UpdateArtwork } from '@/types/PromotionAdmin/artwork';
 import styled from 'styled-components';
 import ArtworkValueLayout from '../ArtworkCreating/ArtworkValueLayout';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ScrollToTop from '@/hooks/useScrollToTop';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { linkCheck } from '@/components/ValidationRegEx/ValidationRegEx';

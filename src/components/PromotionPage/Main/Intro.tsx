@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { lazy, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Box, BoxProps } from '@chakra-ui/react';
 import { motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
-import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import ArtworkNav from './ArtworkNav';
-import SkeletonComponent from '../SkeletonComponent/SkeletonComponent';
 import { theme } from '@/styles/theme';
+
+const defaultMainImg = lazy(() => import('@/assets/images/PP/defaultMainImg.jpg'));
+const SkeletonComponent = lazy(() => import('../SkeletonComponent/SkeletonComponent'));
 
 interface SectionProps {
   elementHeight: number;
@@ -19,10 +20,9 @@ interface SectionProps {
   };
   count: number;
   scrollToSection: (index: number) => void;
-  isLoading: boolean; // 로딩 상태 추가
 }
 
-const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection, isLoading }, ref) => {
+const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection }, ref) => {
   const MotionBox = motion<BoxProps>(Box);
   const cardInView: Variants = {
     offscreen: {
@@ -59,13 +59,13 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
         }
       `}
     >
-      {isLoading ? (
+      <Suspense fallback={
         <SkeletonWrapper>
           <SkeletonComponent width="60%" height="40px" margin="0 0 10px 0" />
           <SkeletonComponent width="80%" height="20px" margin="0 0 10px 0" />
           <SkeletonComponent width="90%" height="20px" />
         </SkeletonWrapper>
-      ) : (
+      }>
         <motion.div variants={cardInView}>
           <TextWrapper>
             <ClientWrapper data-cy="artwork_client">{data.client.length > 30 ? `${data.client.slice(0, 30)}...` : data.client}</ClientWrapper>
@@ -74,7 +74,8 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
           </TextWrapper>
           <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
         </motion.div>
-      )}
+      </Suspense>
+
       {/* {data.link && (
         <a data-cy='artwork_link'
           href={data.link}

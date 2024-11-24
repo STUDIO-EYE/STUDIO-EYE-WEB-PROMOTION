@@ -1,7 +1,7 @@
 import BackDrop from '@/components/Backdrop/Backdrop';
 import NewsList from '@/components/PromotionAdmin/News/NewsList';
-import React, { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import NewsWritePage from './NewsWritePage/NewsWritePage';
 import { useRecoilState } from 'recoil';

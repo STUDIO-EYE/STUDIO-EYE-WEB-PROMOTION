@@ -1,5 +1,5 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
-import { ArtworkData, PostArtworkData, projectType } from '@/types/PromotionAdmin/artwork';
+import { projectType } from '@/types/PromotionAdmin/artwork';
 import axios from 'axios';
 
 export const getAllArtworks = async () => {

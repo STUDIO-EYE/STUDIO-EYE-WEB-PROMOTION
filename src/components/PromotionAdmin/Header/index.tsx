@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import slogan from '@/assets/images/PA-Header/slogan.png';
 import isNewIcon from '@/assets/images/PA-Header/isNewIcon.png';
 import defaultIcon from '@/assets/images/PA-Header/defaultIcon.png';
-import userIcon from '@/assets/images/PA-Header/userIcon.png';
 import openIcon from '@/assets/images/PA-Header/openIcon.png';
 import CircleBtn from '@/components/PromotionAdmin/Header/CircleBtn';
 import styled from 'styled-components';

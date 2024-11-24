@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import axios from 'axios';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
-import { theme } from '@/styles/theme'; // Import your theme for media queries
 import { getFaqData } from '@/apis/PromotionPage/faq';
 
 interface FaqData {
