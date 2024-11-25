@@ -7,7 +7,6 @@ import { ContentBox } from '@/components/PromotionAdmin/FAQ/Components';
 import { postFAQ } from '@/apis/PromotionAdmin/faq';
 import { IFAQ } from '../../../types/PromotionAdmin/faq';
 import { PA_ROUTES } from '@/constants/routerConstants';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { MSG } from '@/constants/messages';

@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { PA_ROUTES, PA_ROUTES_CHILD, PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import Root from './Root';
 
-const Loading = lazy(()=>import('./components/PromotionPage/Layout/Loading'));
+const Loading = lazy(() => import('./components/PromotionPage/Layout/Loading'));
 
 // PromotionAdmin
 

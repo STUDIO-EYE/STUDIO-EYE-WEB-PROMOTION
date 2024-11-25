@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import LineGraph from './LineGraph';
-import styled, { RuleSet, css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { ReactComponent as Icon } from '@/assets/images/PA-Navigation/statistics.svg';
 import { RequestData, ViewData } from '@/types/PromotionAdmin/statistics';
 import PeriodPicker from '@/components/PromotionAdmin/Home/Graph/PeriodPicker';
-import { Menu, MenuType } from '@/constants/cookiesName';
+import { MenuType } from '@/constants/cookiesName';
 
 type Props = {
   title: string;

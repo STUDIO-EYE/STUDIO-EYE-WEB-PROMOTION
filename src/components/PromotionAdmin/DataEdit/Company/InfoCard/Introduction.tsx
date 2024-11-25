@@ -9,7 +9,7 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import InnerHTML from '../../StyleComponents/InnerHTML';
 import Button from '../../StyleComponents/Button';
 import { MSG } from '@/constants/messages';
-import { aboutPageAttributes, dataEditCompanyPageAttributes } from '@/constants/dataCyAttributes';
+import { aboutPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;

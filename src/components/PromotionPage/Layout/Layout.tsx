@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import ScrollToTop from '@/hooks/useScrollToTop';
 import Footer from '../Footer/Footer';
 import { putViewIncrease } from '@/apis/PromotionAdmin/dashboard';
-import { theme } from '@/styles/theme';
 import { PP_ROUTES_CHILD } from '@/constants/routerConstants';
 import { ArtworkCategory, CategoryType, Menu, MenuType } from '@/constants/cookiesName';
 

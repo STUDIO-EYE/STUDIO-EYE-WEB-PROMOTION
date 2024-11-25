@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import defaultLogo from '@/assets/images/PP-Header/studioeyeyellow.png';
-import recruitmentLogo from '@/assets/logo/logo_yellow.png'; // 새로운 로고 임포트
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { ppHeaderScrolledState, ppHeaderState } from '@/recoil/atoms';

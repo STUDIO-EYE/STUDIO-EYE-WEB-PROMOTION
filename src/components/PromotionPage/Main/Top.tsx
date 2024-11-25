@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion';
-import React, { useRef, useState } from 'react';
+import React, { Suspense, useRef } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
@@ -10,73 +10,63 @@ type Props = {
 const Top = ({ backgroundImg }: Props) => {
   const ref = useRef(null);
   const isInView = useInView(ref);
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Background data-cy="top-section"
-      style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImg})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat'
-      }}
-      initial={{ opacity: 0, scale: 0.7 }}
-      animate={{ opacity: isInView ? 1 : 0.9, scale: 1 }}
-      transition={{ duration: 1.5 }}
-    >
-      <SloganWrapper
-        ref={ref}
-        initial={{ opacity: 0, y: '100%' }}
-        animate={{
-          opacity: isInView ? 1 : 0,
-          y: isInView ? '0%' : '100%',
+      <Background data-cy="top-section"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImg})`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
         }}
-        exit={{
-          opacity: 0,
-          y: '-100%'
-        }}
-        transition={{ duration: 1 }}
+        initial={{ opacity: 0, scale: 0.7 }}
+        animate={{ opacity: isInView ? 1 : 0.9, scale: 1 }}
+        transition={{ duration: 1.5 }}
       >
-        <NameWrapper data-cy="top_name">
-          <span>
-            <motion.div
-              initial={{ y: '50%' }}
-              animate={{ y: isInView ? '0%' : '50%' }}
-              exit={{ y: '-50%' }}
-              transition={{ duration: 1 }}
-            >
-              STUDIO
-            </motion.div>
-          </span>
-          <span>
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: isInView ? '0%' : '100%' }}
-              exit={{ y: '-50%' }}
-              transition={{ duration: 1, delay: 0.1 }}
-            >
-              EYE
-            </motion.div>
-          </span>
-        </NameWrapper>
-        <BackWrapper data-cy="top_back"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isInView ? 1 : 0 }}
-          transition={{ duration: 1.5 }}
+        <SloganWrapper
+          ref={ref}
+          initial={{ opacity: 0, y: '100%' }}
+          animate={{
+            opacity: isInView ? 1 : 0,
+            y: isInView ? '0%' : '100%',
+          }}
+          exit={{
+            opacity: 0,
+            y: '-100%'
+          }}
+          transition={{ duration: 1 }}
         >
-          NEW MEDIA <br /> CONTENTS GROUP
-        </BackWrapper>
-
-      </SloganWrapper>
-{/* 
-      <ArrowWrapper
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <FaArrowDown size={130} color="white" />
-        {isHovered && <ScrollDownText>SCROLL DOWN!</ScrollDownText>}
-      </ArrowWrapper> */}
-    </Background>
+          <NameWrapper data-cy="top_name">
+            <span>
+              <motion.div
+                initial={{ y: '50%' }}
+                animate={{ y: isInView ? '0%' : '50%' }}
+                exit={{ y: '-50%' }}
+                transition={{ duration: 1 }}
+              >
+                STUDIO
+              </motion.div>
+            </span>
+            <span>
+              <motion.div
+                initial={{ y: '100%' }}
+                animate={{ y: isInView ? '0%' : '100%' }}
+                exit={{ y: '-50%' }}
+                transition={{ duration: 1, delay: 0.1 }}
+              >
+                EYE
+              </motion.div>
+            </span>
+          </NameWrapper>
+          <BackWrapper data-cy="top_back"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ duration: 1.5 }}
+          >
+            NEW MEDIA <br /> CONTENTS GROUP
+          </BackWrapper>
+        </SloganWrapper>
+      </Background>
   );
 };
 
@@ -165,22 +155,4 @@ const NameWrapper = styled.div`
     padding: 0.75rem;
     height: 5rem; // 임시
   }
-`;
-
-const ArrowWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  &:hover {
-    cursor: pointer;
-    color: #ffa900;
-  }
-`;
-
-const ScrollDownText = styled.span`
-  text-align: right;
-  color: white;
-  font-size: 20px;
-  font-family: 'pretendard-bold';
-  position: relative;
 `;

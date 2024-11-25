@@ -1,4 +1,3 @@
-import { PP_ROUTES } from '@/constants/routerConstants';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
@@ -6,7 +5,9 @@ import { motion } from 'framer-motion';
 import { getAllMenuData } from '@/apis/PromotionPage/menu';
 
 const HeaderDetail = () => {
-  const [menuData, setMenuData] = useState<string[]>([]);
+  const defaultMenuData = ['ABOUT', 'ARTWORK', 'CONTACT', 'FAQ', 'RECRUITMENT', 'NEWS'];
+  const [menuData, setMenuData] = useState<string[]>(defaultMenuData);
+  // const [menuData, setMenuData] = useState<string[]>([]);
 
   const getPathForTitle = (title: string) => {
     return title ? `/${title.toLowerCase()}` : '/';
@@ -16,15 +17,14 @@ const HeaderDetail = () => {
     const fetchMenuData = async () => {
       try {
         const data = await getAllMenuData();
-        if (Array.isArray(data)) {
+
+        if (Array.isArray(data) && data.length > 0) {
           setMenuData(data);
         } else {
-          console.error('잘못된 데이터 형식:', data);
-          setMenuData([]);
+          setMenuData(defaultMenuData);
         }
       } catch (error) {
-        console.error('메뉴 데이터를 불러오는 중 에러 발생:', error);
-        setMenuData([]);
+        setMenuData(defaultMenuData);
       }
     };
 

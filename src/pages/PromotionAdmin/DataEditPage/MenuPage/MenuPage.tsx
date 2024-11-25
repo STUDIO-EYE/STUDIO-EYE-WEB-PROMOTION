@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled, { ExecutionProps } from 'styled-components';
 import {
   getAllMenuData,
-  deleteMenuData,
   putMenuData,
 } from '@/apis/PromotionAdmin/menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
