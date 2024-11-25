@@ -158,7 +158,6 @@ const ContactUsPage = () => {
           return;
         }
         handleSubmit(e);
-        // setRequestStep(requestStep + 1);
       }
       if (requestStep < 2) {
         setRequestStep(requestStep + 1);
@@ -298,7 +297,7 @@ const ContactUsPage = () => {
   };
 
   const [loading, setLoading] = useState(false);
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: Event) => {
     e.preventDefault();
 
     setLoading(true);

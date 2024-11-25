@@ -103,7 +103,7 @@ const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
-            {sloganImageUrl !== '' ? (
+            {sloganImageUrl ? (
               <img
                 data-cy='mission-image'
                 src={sloganImageUrl}

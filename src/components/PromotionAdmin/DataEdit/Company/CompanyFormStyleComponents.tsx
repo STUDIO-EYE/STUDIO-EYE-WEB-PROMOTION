@@ -70,8 +70,10 @@ export const InputWrapper = styled.div`
 
 export const InputImgWrapper = styled.div`
   display: flex;
+  position: relative;
   width: 100%;
   justify-content: space-between;
+  flex-direction: column;
 `;
 
 export const InputTitle = styled.div`
