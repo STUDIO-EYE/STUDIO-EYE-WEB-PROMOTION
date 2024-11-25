@@ -98,7 +98,7 @@ const MainPage = () => {
                 css={`
                 @supports (-webkit-touch-callout: none) {
                   height: 100dvh;
-                }
+                } 
 
                 @media ${theme.media.mobile} {
                   overflow: hidden;
