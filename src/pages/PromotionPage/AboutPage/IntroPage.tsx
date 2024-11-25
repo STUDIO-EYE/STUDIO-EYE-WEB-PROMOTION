@@ -116,7 +116,7 @@ function IntroPage() {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
-            {sloganImageUrl !== '' ? (
+            {sloganImageUrl !== null ? (
               <img
                 data-cy='mission-image'
                 src={sloganImageUrl}

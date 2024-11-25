@@ -72,7 +72,7 @@ const WhatWeDoPage = () => {
           <WhatWeDo
             data-cy='whatwedo-item'
             key={index}
-            className='WhatWeDo'
+            className={`WhatWeDo ${highlighted === index ? 'highlighted' : ''}`}
             isHighlighted={highlighted === index}
             leftInput={index % 2 === 0}
             style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '5%' : '95%' }}

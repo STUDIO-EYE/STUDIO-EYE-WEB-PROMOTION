@@ -45,12 +45,20 @@ describe('PA 페이지에서 새로운 채용 공고를 등록하고 PP 화면�
     });
 
     cy.get('@recruitmentListData').then((recruitmentListData) => {
-      recruitmentListData.forEach((item, index) => {
+      // Cypress 데이터가 배열인지 확인하고 변환
+      const recruitmentArray = Array.isArray(recruitmentListData)
+        ? recruitmentListData
+        : recruitmentListData.toArray(); // 배열로 변환
+    
+      recruitmentArray.forEach((item: IContent, index: number) => {
         cy.log(`Recruitment item ${index}:`, JSON.stringify(item, null, 1));
       });
-
-      const openRecruitment = recruitmentListData.find((item) => item.status === 'OPEN');
-
+    
+      // 배열에서 'OPEN' 상태를 가진 공고 찾기
+      const openRecruitment = recruitmentArray.find(
+        (item: IContent) => item.status === 'OPEN'
+      );
+    
       if (!openRecruitment) {
         cy.log("현재 '진행'인 채용 공고가 없습니다.");
         return; // `OPEN` 상태가 없으면 클릭 테스트를 건너뛰기
