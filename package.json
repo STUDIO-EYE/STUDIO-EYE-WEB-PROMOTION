@@ -120,5 +120,5 @@
     "react-app-rewired": "^2.2.1",
     "typescript-eslint": "^7.6.0"
   },
-  "proxy": "https://www.studio-eye.kro.kr/"
+  "proxy": "https://www.studio-eye.kro.kr"
 }
