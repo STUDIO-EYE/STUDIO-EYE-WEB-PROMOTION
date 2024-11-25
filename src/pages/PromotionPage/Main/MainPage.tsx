@@ -21,7 +21,7 @@ const MainPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { data, isLoading } = useQuery<MIArtworksData>(['artwork', 'id'], getArtworkMainData, {
     staleTime: 1000 * 60 * 10, // 10분
-  });
+  }); 
   const sectionsRef = useRef<HTMLElement[]>([]);
   const filteredMainData = data?.data ? data.data.filter((i) => i.projectType === 'main') : [];
   const filteredTopData = data?.data ? data.data.filter((i) => i.projectType === 'top') : [];
