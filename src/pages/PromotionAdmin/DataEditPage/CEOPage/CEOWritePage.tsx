@@ -4,7 +4,7 @@ import { ICEOData } from '@/types/PromotionAdmin/dataEdit';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import FileButton from '@/components/PromotionAdmin/DataEdit/StyleComponents/FileButton';
 import {
@@ -79,57 +79,42 @@ function CEOWritePage() {
 
   const [isInvalid, setInvalid] = useState(true);
 
-  const handleSaveClick = async () => {
-    const formData = new FormData();
-    // 기본 정보 추가
-    formData.append(
-      'request',
-      new Blob(
-        [
-          JSON.stringify({
-            name: putData.request.name,
-            introduction: putData.request.introduction,
-          }),
-        ],
-        { type: 'application/json' },
-      ),
-    );
+  const handleSaveClick: SubmitHandler<ICEOData> = async (formData) => {
+    // 유효성 검증
+    if (!formData.name.trim()) {
+      alert('이름을 입력해주세요.');
+      return;
+    }
 
-    // 이미지를 변경했는지 확인하고 추가
+    if (!formData.introduction.trim()) {
+      alert('소개를 입력해주세요.');
+      return;
+    }
+
+    if (!putData.file) {
+      alert('이미지를 업로드해주세요.');
+      return;
+    }
+
+    const apiFormData = new FormData();
+
+    apiFormData.append('request', new Blob([JSON.stringify(formData)], { type: 'application/json' }));
+
+    // 이미지 추가
     if (putData.file && putData.file !== data?.imageUrl) {
       const file = await urlToFile(putData.file, 'CEOLogo.png');
-      formData.append('file', file);
-    } else {
-      // 이미지를 변경하지 않은 경우에는 기존의 이미지를 그대로 전송
-      if (data?.imageUrl) {
-        const mainImgBlob = await urlToFile(data.imageUrl, 'CEOLogo.png');
-        formData.append('file', mainImgBlob);
-      } else {
-        formData.append('file', ''); // 이미지가 없는 경우 빈 값 추가
-      }
+      apiFormData.append('file', file);
     }
 
-    if (putData.request.name === undefined || putData.request.name === '') {
-      setInvalid(true);
-    } else if (putData.request.introduction === undefined || putData.request.introduction === '') {
-      setInvalid(true);
-    } else if (putData.file === undefined || putData.file === '') {
-      alert('이미지를 업로드해주세요');
-      setInvalid(true);
-    } else {
-      setInvalid(false);
-    }
-
-    if (!isInvalid) {
-      if (window.confirm('등록하시겠습니까?')) {
-        axios
-          .post(`${PROMOTION_BASIC_PATH}/api/ceo`, formData)
-          .then((response) => {
-            console.log('CEO posted:', response);
-            alert('등록되었습니다.');
-            setIsEditing(false);
-          })
-          .catch((error) => console.error('Error updating ceo:', error));
+    if (window.confirm('등록하시겠습니까?')) {
+      try {
+        const response = await axios.post(`${PROMOTION_BASIC_PATH}/api/ceo`, apiFormData);
+        console.log('CEO 등록 성공:', response);
+        alert('등록되었습니다.');
+        setIsEditing(false);
+      } catch (error) {
+        console.error('CEO 등록 실패:', error);
+        alert('등록에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };
@@ -177,13 +162,14 @@ function CEOWritePage() {
               {...register('name', {
                 required: 'CEO 이름을 입력해주세요',
               })}
+              data-cy='ceo-name-input'
               name='name'
               value={putData.request.name}
               onChange={handleChange}
               maxLength={30}
               placeholder='이름'
             />
-            {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
+            {errors.name && <ErrorMessage data-cy='ceo-name-error'>{errors.name.message}</ErrorMessage>}
             <InputTitle style={{ justifyContent: 'space-between' }}>
               <p>Introduction</p>
               <div
@@ -199,13 +185,16 @@ function CEOWritePage() {
               {...register('introduction', {
                 required: 'CEO 소개 (5줄, 200자 내로 작성해 주세요.)',
               })}
+              data-cy='ceo-introduction-input'
               name='introduction'
               value={putData.request.introduction}
               onChange={handleChange}
               maxLength={200}
               placeholder='CEO 소개 (5줄, 200자 내로 작성해 주세요.)'
             />
-            {errors.introduction && <ErrorMessage>{errors.introduction.message}</ErrorMessage>}
+            {errors.introduction && (
+              <ErrorMessage data-cy='ceo-introduction-error'>{errors.introduction.message}</ErrorMessage>
+            )}
             <InputImgWrapper>
               <Box>
                 <InputTitle>{DATAEDIT_TITLES_COMPONENTS.CEOIMG}</InputTitle>
@@ -214,13 +203,13 @@ function CEOWritePage() {
                 <LogoWrapper>
                   <FileButton id='CEOImgFile' description='CEO Image Upload' onChange={handleImageChange} />
                   <ImgBox>
-                    <img src={putData.file} alt='' />
+                    <img src={putData.file} alt='' data-cy='uploaded-image' />
                   </ImgBox>
                 </LogoWrapper>
               </Box>
             </InputImgWrapper>
             <ButtonWrapper>
-              <Button>등록하기</Button>
+              <Button data-cy='submit-button'>등록하기</Button>
             </ButtonWrapper>
           </InputWrapper>
         </ContentBlock>

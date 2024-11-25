@@ -59,7 +59,7 @@ const ClientRowAnimation = ({ data, isLoading, error }: Props) => {
       <MarqueeRow variants={marqueeVariants('right')} animate='animate'>
         {repeatedImages.map((imgUrl, index) => (
           <ImgWrapper key={`right-${index}`}>
-            <img src={imgUrl} alt={`clientLogoImg${index}`} />
+            <img data-cy='outro_image' src={imgUrl} alt={`clientLogoImg${index}`} />
           </ImgWrapper>
         ))}
       </MarqueeRow>

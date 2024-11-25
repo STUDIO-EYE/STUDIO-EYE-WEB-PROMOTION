@@ -35,7 +35,7 @@ export const PP_ROUTES_CHILD = {
   ABOUT: 'about',
   REQUEST: 'request',
   ARTWORK: 'artwork',
-  ARTWORK_DETAIL: 'artwork/:id',
+  ARTWORK_DETAIL: 'artwork/:category/:id',
   CONTACT: 'contact',
   FAQ: 'faq',
   LOGIN: 'login',

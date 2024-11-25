@@ -35,6 +35,7 @@ function ImageSlider({ projectImages }: IImageSliderProps) {
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 1 }}
           style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' }}
+          alt=''
         />
       </AnimatePresence>
       <div style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center' }}>
