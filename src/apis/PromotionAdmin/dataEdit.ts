@@ -14,6 +14,7 @@ export const postCompanyInformation = async (formData: FormData) => {
 export const getCompanyData = async () => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/company/information`);
+    console.log('Company Data: ', response.data);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);

@@ -40,8 +40,13 @@ function IntroPage() {
     const fetchData = async () => {
       try {
         const data = await getCompanyData();
-        setCompanyIntroData(data.introduction);
-        setSloganImageUrl(data.sloganImageUrl);
+        if (data) {
+          setCompanyIntroData(data.introduction || null);
+          setSloganImageUrl(data.sloganImageUrl || null);
+        } else {
+          setCompanyIntroData('');
+          setSloganImageUrl('');
+        }
       } catch (error) {
         console.error('Error fetching company data: ', error);
       }
@@ -116,7 +121,7 @@ function IntroPage() {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
-            {sloganImageUrl !== null ? (
+            {sloganImageUrl ? (
               <img
                 data-cy='mission-image'
                 src={sloganImageUrl}

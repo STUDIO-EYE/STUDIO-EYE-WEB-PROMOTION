@@ -44,7 +44,7 @@ const AboutPage = () => {
       partnerInfo: {
         id: 1,
         is_main: true,
-        link: 'https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE',
+        link: 'https://www.pladi.tv/',
       },
       logoImg: PladiLogo,
     },
@@ -52,7 +52,7 @@ const AboutPage = () => {
       partnerInfo: {
         id: 2,
         is_main: true,
-        link: 'https://www.pladi.tv/',
+        link: 'https://www.youtube.com/channel/UCDwpuTfjBB8ZOmbnE',
       },
       logoImg: LocomoLogo,
     },
