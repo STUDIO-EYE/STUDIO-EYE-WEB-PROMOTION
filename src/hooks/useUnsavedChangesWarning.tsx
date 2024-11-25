@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { unstable_usePrompt as usePrompt, useBeforeUnload } from 'react-router-dom';
 
 export function useUnsavedChangesWarning(message: string, when: boolean) {

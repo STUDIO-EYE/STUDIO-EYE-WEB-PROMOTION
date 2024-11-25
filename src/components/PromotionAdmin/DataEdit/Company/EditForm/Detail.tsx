@@ -22,7 +22,6 @@ import { MSG } from '@/constants/messages';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { useNavigate } from 'react-router-dom';
-import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
 import { aboutPageAttributes } from '@/constants/dataCyAttributes';
 
 interface IDetailFormData {

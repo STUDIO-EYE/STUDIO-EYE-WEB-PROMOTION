@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import NewsItem from './NewsItem';
 import { INEWS } from '@/types/PromotionAdmin/news';
 import { useQuery } from 'react-query';

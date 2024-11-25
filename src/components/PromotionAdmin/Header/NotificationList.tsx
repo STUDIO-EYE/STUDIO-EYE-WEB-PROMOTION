@@ -2,8 +2,6 @@ import { PA_ROUTES } from '@/constants/routerConstants';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import isReaded from '@/assets/images/PA-Header/notificationChecked.png';
-import isNotReaded from '@/assets/images/PA-Header/notificationUnChecked.png';
 
 type Props = {
   clientName: string;

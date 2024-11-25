@@ -1,5 +1,4 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
-import { INEWS } from '@/types/PromotionAdmin/news';
 import axios from 'axios';
 
 export const getNews = async () => {

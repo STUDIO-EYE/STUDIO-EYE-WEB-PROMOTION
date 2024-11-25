@@ -5,7 +5,6 @@ import FileButton from '@/components/PromotionAdmin/DataEdit/StyleComponents/Fil
 import SubTitle from '@/components/PromotionAdmin/DataEdit/StyleComponents/SubTitle';
 import Title from '@/components/PromotionAdmin/DataEdit/StyleComponents/Title';
 import ToggleSwitch from '@/components/PromotionAdmin/DataEdit/StyleComponents/ToggleSwitch';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { IPartnersData } from '@/types/PromotionAdmin/dataEdit';
 import { useEffect, useState } from 'react';

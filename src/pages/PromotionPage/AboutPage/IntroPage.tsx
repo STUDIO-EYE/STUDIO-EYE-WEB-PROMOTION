@@ -1,16 +1,20 @@
 import styled from 'styled-components';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Circle from '../../../components/PromotionPage/Circle/ArrowCircle';
 import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
 import MissionLabel from '../../../assets/images/Mission.png';
-import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
 
 interface IFontStyleProps {
   color?: string;
+}
+
+interface IntroPageProps {
+  companyIntroData: string;
+  sloganImageUrl: string;
 }
 
 const bounceAnimation = {
@@ -25,35 +29,13 @@ const bounceAnimation = {
   }),
 };
 
-function IntroPage() {
+const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const aboutRef = useRef(null);
   const missionRef = useRef(null);
 
   const aboutInView = useInView(aboutRef);
   const missionInView = useInView(missionRef);
-
-  const [companyIntroData, setCompanyIntroData] = useState('');
-  const [sloganImageUrl, setSloganImageUrl] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getCompanyData();
-        if (data) {
-          setCompanyIntroData(data.introduction || null);
-          setSloganImageUrl(data.sloganImageUrl || null);
-        } else {
-          setCompanyIntroData('');
-          setSloganImageUrl('');
-        }
-      } catch (error) {
-        console.error('Error fetching company data: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const removeParagraphTags = (htmlString: string) => {
     return htmlString
@@ -145,7 +127,7 @@ function IntroPage() {
       </IntroContainer>
     </Container>
   );
-}
+};
 
 export default IntroPage;
 
