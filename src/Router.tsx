@@ -52,8 +52,8 @@ const ContactUsPage = lazy(() => import('./pages/PromotionPage/ContactPage/Conta
 const FaqPage = lazy(() => import('./pages/PromotionPage/FaqPage/FaqPage'));
 const NewsBoardPage = lazy(() => import('./pages/PromotionPage/NewsPage/NewsBoardPage'));
 const RecruitmentPage = lazy(() => import('./pages/PromotionPage/RecruitmentPage/RecruitmentPage'));
-const ArtworkPage = lazy(() => import('./pages/PromotionPage/ArtworkPage/ArtworkPage'));
-const ArtworkLayout = lazy(() => import('./components/PromotionPage/Artwork/Layout'));
+const ArtworkPage=lazy(()=>import('./pages/PromotionPage/ArtworkPage/ArtworkPage'));
+const ArtworkLayout=lazy(()=>import('./components/PromotionPage/Artwork/Layout'));
 const ArtworkDetailPage = lazy(() => import('./pages/PromotionPage/ArtworkPage/ArtworkDetailPage'));
 
 // ForTest
@@ -67,7 +67,7 @@ const router = createBrowserRouter([
       {
         path: '',
         element: (
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading/>}>
             <PPLayout />
           </Suspense>
         ),
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.MAIN,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <Mainpage />
               </Suspense>
             ),
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.ABOUT,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <AboutPage />
               </Suspense>
             ),
@@ -91,7 +91,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.ARTWORK,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <ArtworkLayout />
               </Suspense>
             ),
@@ -99,7 +99,7 @@ const router = createBrowserRouter([
               {
                 path: '',
                 element: (
-                  <Suspense fallback={<Loading />}>
+                  <Suspense fallback={<Loading/>}>
                     <ArtworkPage />
                   </Suspense>
                 ),
@@ -109,7 +109,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.ARTWORK_DETAIL,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <ArtworkDetailPage />
               </Suspense>
             ),
@@ -117,7 +117,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.FAQ,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <FaqPage />
               </Suspense>
             ),
@@ -125,7 +125,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.CONTACT,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <ContactUsPage />
               </Suspense>
             ),
@@ -133,7 +133,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.LOGIN,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <Login />
               </Suspense>
             ),
@@ -141,7 +141,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.NEWSBOARD,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <NewsBoardPage />
               </Suspense>
             ),
@@ -149,7 +149,7 @@ const router = createBrowserRouter([
           {
             path: PP_ROUTES_CHILD.RECRUITMENT,
             element: (
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<Loading/>}>
                 <RecruitmentPage />
               </Suspense>
             ),
