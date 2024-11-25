@@ -1,5 +1,5 @@
 import { getAllNewsData } from "@/apis/PromotionPage/news";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
@@ -79,24 +79,23 @@ const NewsBoardPage: React.FC = () => {
       ) : newsData.length === 0 ? (
         <EmptyState>데이터가 없습니다.</EmptyState>
       ) : (
-        <>
-          <div ref={autoScrollRef}>
-            <NewsSection
-              currentNewsData={currentNewsData}
-              onNewsClick={(url) => window.open(url)}
-            />
-          </div>
+        <Suspense fallback={<EmptyState>로딩 중...</EmptyState>}>
+          <NewsSection
+            currentNewsData={currentNewsData}
+            onNewsClick={(url) => window.open(url)}
+          />
           <NewsPagination
             postsPerPage={postsPerPage}
             totalPosts={newsData.length}
             paginate={paginate}
             data-cy="news-pagination"
           />
-        </>
+        </Suspense>
       )}
     </Container>
   );
 };
+
 export default NewsBoardPage;
 
 
