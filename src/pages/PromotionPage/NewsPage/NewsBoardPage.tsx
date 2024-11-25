@@ -5,6 +5,7 @@ import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
 import { theme } from "@/styles/theme";
+import NullException from '@/components/PromotionPage/Artwork/NullException';
 
 interface INewsCardProps {
   id: number;
@@ -26,6 +27,7 @@ const NewsBoardPage: React.FC = () => {
       try {
         setLoading(true);
         const data = await getAllNewsData();
+        console.log(data.length);
 
         const formattedData: INewsCardProps[] = data.data.map((news: any) => ({
           id: news.id,
@@ -52,12 +54,11 @@ const NewsBoardPage: React.FC = () => {
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // No scroll behavior, just set the current page
   };
 
   const autoScrollRef = useRef<HTMLDivElement | null>(null);
-  const handleScroll=()=>{
-    if(autoScrollRef.current) {
+  const handleScroll = () => {
+    if (autoScrollRef.current) {
       const elementPosition = autoScrollRef.current.getBoundingClientRect().top; //요소 위치
       const offsetPosition = window.scrollY + elementPosition; //현재 스크롤 위치
       const headerOffset = 100; //헤더 높이
@@ -70,33 +71,51 @@ const NewsBoardPage: React.FC = () => {
     }
   }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <Container>
       <IntroSection />
-      <div ref={autoScrollRef}>
-      <NewsSection
-        currentNewsData={currentNewsData}
-        onNewsClick={(url) => window.open(url)} 
-      />
-      </div>
-      <div onClick={handleScroll}>
-      <NewsPagination
-          postsPerPage={postsPerPage}
-          totalPosts={newsData.length}
-          paginate={paginate}
-          data-cy="news-pagination"
-      />
-      </div>
+      {error ? (
+        <EmptyState>{error}</EmptyState>
+      ) : newsData.length === 0 ? (
+        <EmptyState>데이터가 없습니다.</EmptyState>
+      ) : (
+        <>
+          <div ref={autoScrollRef}>
+            <NewsSection
+              currentNewsData={currentNewsData}
+              onNewsClick={(url) => window.open(url)}
+            />
+          </div>
+          <NewsPagination
+            postsPerPage={postsPerPage}
+            totalPosts={newsData.length}
+            paginate={paginate}
+            data-cy="news-pagination"
+          />
+        </>
+      )}
     </Container>
   );
 };
-
 export default NewsBoardPage;
 
+
+const EmptyState = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'pretendard-bold';
+  font-size: 2rem;
+  color: gray;
+  text-align: center;
+  padding: 0.75rem;
+  word-break: keep-all;
+`;
+
 const Container = styled.div`
+  overflow-x: hidden;
+
   font-family: 'Pretendard';
   min-height: 100vh;
   background-color: black;

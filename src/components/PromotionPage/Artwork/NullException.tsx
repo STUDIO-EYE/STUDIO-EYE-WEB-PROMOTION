@@ -53,6 +53,7 @@ const Msg = styled.div`
   color: ${(props) => props.theme.color.white.bold};
   font-size: 20px;
 
+
   @media ${theme.media.mobile} {
     width: 85vw;
     display: flex;
@@ -63,6 +64,12 @@ const Msg = styled.div`
 
 const Title = styled.svg`
   padding: 50px 0 60px 0;
+
+  @media ${theme.media.large_tablet} {
+    padding: 1rem 0;
+    margin-right: 3rem;
+    width: 60vw;
+  }
 
   @media ${theme.media.mobile} {
     width: 85vw;
@@ -86,8 +93,7 @@ const Wrapper = styled.div`
 
   @media ${theme.media.mobile} {
     width: 85vw;
-    ${Title}, ${Msg}, ${Link} {  // 헤더 반응형 전까지 임시
-      margin-bottom: -3rem;
-    }
+    min-height: 60vh;
   }
+
 `;

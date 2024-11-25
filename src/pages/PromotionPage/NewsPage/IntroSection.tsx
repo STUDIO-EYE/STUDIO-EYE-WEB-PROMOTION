@@ -42,7 +42,7 @@ const IntroSection: React.FC = () => {
 export default IntroSection;
 
 const Container = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   background-color: black;
   display: flex;
   justify-content: center;

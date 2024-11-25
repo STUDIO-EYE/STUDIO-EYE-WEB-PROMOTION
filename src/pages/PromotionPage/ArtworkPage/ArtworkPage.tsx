@@ -112,6 +112,7 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.background};
+  overflow-x: hidden;
 
   @media ${theme.media.large_tablet} {
     min-height: auto;
@@ -130,6 +131,7 @@ const ArtworkWrapper = styled.div`
   grid-gap: 50px;
 
   @media ${theme.media.large_tablet} {
+    overflow: hidden;
   }
 
   @media ${theme.media.mobile}{
