@@ -76,7 +76,8 @@ describe('PA 페이지에서 새로운 채용 공고를 등록하고 PP 화면�
       // API 요청이 성공적으로 호출되는지 확인
       cy.wait('@getRecruitmentData').then((interception) => {
         recruitmentData = interception.response?.body?.data;
-        expect(recruitmentData).to.have.property('link');
+        expect(recruitmentData).toBeDefined(); 
+        expect(recruitmentData).toHaveProperty('link'); 
 
         // `window.open` 호출 및 URL 확인
         cy.get('@windowOpen').should('be.calledOnce');
