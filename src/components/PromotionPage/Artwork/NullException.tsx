@@ -81,15 +81,26 @@ const Link = styled.a`
   cursor: pointer;
   color: ${(props) => props.theme.color.black.pale};
 
+  @media ${theme.media.tablet}{
+    svg{
+      width: 90%;
+      height: auto;
+    }
+  }
   @media ${theme.media.mobile} {
     width: 85vw;
     display: flex;
     justify-content: center;
+    svg{
+      width: 90%;
+      height: auto;
+    }
   }
 `;
 
 const Wrapper = styled.div`
   padding-top: 30px;
+  padding-bottom: 40px;
 
   @media ${theme.media.mobile} {
     width: 85vw;
