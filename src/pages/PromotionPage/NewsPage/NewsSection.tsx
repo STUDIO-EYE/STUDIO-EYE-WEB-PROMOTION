@@ -59,32 +59,39 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
   return (
     <Container ref={containerRef}>
       <NewsSectionIntro>스튜디오아이 관련 뉴스 보기</NewsSectionIntro>
-      {currentNewsData.map((news) => (
-        <NewsCard 
-          key={news.id} 
-          className={isClicked===news.id?'clicked':''} // 클릭된 경우 'clicked' 클래스 추가
-          onClick={() => handleNewsClick(news.url,news.id)}
-          onMouseEnter={() => !isMobile && setIsClicked(news.id)} //모바일에서만 news.id 설정
-          // onMouseLeave={() => !isMobile && setIsClicked(null)} //모바일에서만 null로 변경 가능하도록
-          data-cy={`news-item-${news.id}`}
-        >
-          <TextWrapper>
-            <Title>{news.title}</Title>
-            <Source>{news.source} | {new Date(news.pubDate).toLocaleDateString()}</Source>
-          </TextWrapper>
-          <ArrowIcon data-cy={`news-delete-button-${news.id}`}>
-             <GoArrowRight /> 
-          </ArrowIcon>
-        </NewsCard>
-      ))}
+      {currentNewsData.length === 0 ? (
+        <div>
+          데이터가 없습니다.
+        </div>
+      ) : (
+        currentNewsData.map((news) => (
+          <NewsCard
+            key={news.id}
+            className={isClicked === news.id ? 'clicked' : ''}
+            onClick={() => handleNewsClick(news.url, news.id)}
+            onMouseEnter={() => !isMobile && setIsClicked(news.id)}
+            data-cy={`news-item-${news.id}`}
+          >
+            <TextWrapper>
+              <Title>{news.title}</Title>
+              <Source>
+                {news.source} | {new Date(news.pubDate).toLocaleDateString()}
+              </Source>
+            </TextWrapper>
+            <ArrowIcon data-cy={`news-delete-button-${news.id}`}>
+              <GoArrowRight />
+            </ArrowIcon>
+          </NewsCard>
+        ))
+      )}
     </Container>
-  );
-};
-
+  );  
+}
 export default NewsSection;
 
+
 const Container = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
