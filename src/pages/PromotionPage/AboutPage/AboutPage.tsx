@@ -50,6 +50,7 @@ const AboutPage = () => {
               {partnersData.map((info) => (
                 <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
+                  data-cy='partner-img'
                     src={info.logoImg}
                     alt='CORP Logo'
                     data-link={info.partnerInfo.link ? 'true' : 'false'}

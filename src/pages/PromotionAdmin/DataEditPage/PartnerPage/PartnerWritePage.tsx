@@ -189,6 +189,7 @@ function PartnerWritePage() {
           <InputWrapper>
             <div style={{ display: 'flex' }}>
               <input
+               data-cy="partner-link"
                 style={{ paddingLeft: '10px' }}
                 {...register('link', {
                   required: MSG.PLACEHOLDER_MSG.LINK,
@@ -207,6 +208,7 @@ function PartnerWritePage() {
             <SubTitle description='Name' />
             <div style={{ display: 'flex' }}>
               <input
+              data-cy="partner-name"
                 style={{ paddingLeft: '10px' }}
                 {...register('name', {
                   required: MSG.PLACEHOLDER_MSG.NAME,
@@ -223,7 +225,7 @@ function PartnerWritePage() {
           </InputWrapper>
           <VisibilityWrapper>
             공개여부
-            <input type='checkbox' id='switch' defaultChecked {...register('is_main')} />
+            <input  type='checkbox' id='switch' defaultChecked {...register('is_main')} />
             <ToggleSwitch option1='공개' option2='비공개' selected={true} />
           </VisibilityWrapper>
         </RightContainer>
