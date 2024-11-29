@@ -144,7 +144,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         </SendButton>
       )}
 
-      {data?.length === 0 ? (
+      {data?.length === 0 || data===null ? (
         <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
       ) : onEdit ? (
         <DragDropContext onDragEnd={onDragEnd}>
