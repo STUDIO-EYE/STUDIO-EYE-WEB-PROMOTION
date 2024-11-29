@@ -1,16 +1,20 @@
 import styled from 'styled-components';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Circle from '../../../components/PromotionPage/Circle/ArrowCircle';
 import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
 import MissionLabel from '../../../assets/images/Mission.png';
-import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
 
 interface IFontStyleProps {
   color?: string;
+}
+
+interface IntroPageProps {
+  companyIntroData: string;
+  sloganImageUrl: string;
 }
 
 const bounceAnimation = {
@@ -25,30 +29,13 @@ const bounceAnimation = {
   }),
 };
 
-function IntroPage() {
+const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
   const aboutRef = useRef(null);
   const missionRef = useRef(null);
 
   const aboutInView = useInView(aboutRef);
   const missionInView = useInView(missionRef);
-
-  const [companyIntroData, setCompanyIntroData] = useState('');
-  const [sloganImageUrl, setSloganImageUrl] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getCompanyData();
-        setCompanyIntroData(data.introduction);
-        setSloganImageUrl(data.sloganImageUrl);
-      } catch (error) {
-        console.error('Error fetching company data: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const removeParagraphTags = (htmlString: string) => {
     return htmlString
@@ -102,12 +89,8 @@ function IntroPage() {
               data-cy='about-content'
               dangerouslySetInnerHTML={{
                 __html: isMobile
-                  ? removeParagraphTags(
-                    companyIntroData ||
-                    INTRO_DATA.COMPANY_INTRO,
-                  )
-                  : companyIntroData ||
-                  INTRO_DATA.COMPANY_INTRO,
+                  ? removeParagraphTags(companyIntroData || INTRO_DATA.COMPANY_INTRO)
+                  : companyIntroData || INTRO_DATA.COMPANY_INTRO,
               }}
             />
           </motion.div>
@@ -120,7 +103,7 @@ function IntroPage() {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <BackgroundText data-cy='mission-title'> MISSION</BackgroundText>
-            {sloganImageUrl !== '' ? (
+            {sloganImageUrl ? (
               <img
                 data-cy='mission-image'
                 src={sloganImageUrl}
@@ -144,7 +127,7 @@ function IntroPage() {
       </IntroContainer>
     </Container>
   );
-}
+};
 
 export default IntroPage;
 
@@ -180,7 +163,7 @@ const InitTitleWrapper = styled.div`
     gap: 0.5rem;
   }
 `;
-const InitTitle = styled(motion.div) <IFontStyleProps>`
+const InitTitle = styled(motion.div)<IFontStyleProps>`
   font-family: ${theme.font.bold};
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};

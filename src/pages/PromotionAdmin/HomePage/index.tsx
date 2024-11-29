@@ -1,4 +1,3 @@
-import DateSelectBtn from '@/components/PromotionAdmin/Home/Graph/PeriodPicker';
 import RequestsGraph from '@/components/PromotionAdmin/Home/Graph/RequestsGraph';
 import StatisticsGraph from '@/components/PromotionAdmin/Home/Graph/StatisticsGraph';
 import RequestSummary from '@/components/PromotionAdmin/Home/RequestSummary/RequestSummary';

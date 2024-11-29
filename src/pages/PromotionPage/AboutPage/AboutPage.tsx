@@ -1,123 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { getCEOData, getPartnersData } from '../../../apis/PromotionAdmin/dataEdit';
-import NetflixLogo from '@/assets/images/PP/Netflix-Logo.jpg';
-import CJLogo from '@/assets/images/PP/CJ_ENM_Logo.png';
-import LocomoLogo from '@/assets/images/Locomo.png';
-import defaultCEOLogo from '@/assets/images/PP/studioeye_ceo.png';
-import { CEO_DATA } from '@/constants/introdutionConstants';
-
 import IntroPage from './IntroPage';
 import WhatWeDoPage from './WhatWeDoPage';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
+import { useLoaderData } from 'react-router-dom';
+import { AboutPageLoaderData } from '@/types/PromotionPage/about';
 
 interface IContainerStyleProps {
   backgroundColor?: string;
 }
-interface ICEOInfoData {
-  id: number;
-  name: string;
-  introduction: string;
-  imageFileName: string;
-  imageUrl: string;
-}
-interface ICorpInfoData {
-  partnerInfo: {
-    id: number;
-    is_main: boolean;
-    link: string;
-  };
-  logoImg: string;
-}
 
 const AboutPage = () => {
-  const defaultCEOData: ICEOInfoData = {
-    id: 1,
-    name: CEO_DATA.CEO_Name,
-    introduction: CEO_DATA.CEO_Instruction,
-    imageFileName: defaultCEOLogo,
-    imageUrl: defaultCEOLogo,
-  };
-
-  const defaultCorpData: ICorpInfoData[] = [
-    {
-      partnerInfo: {
-        id: 1,
-        is_main: true,
-        link: 'https://www.netflix.com/browse',
-      },
-      logoImg: LocomoLogo,
-    },
-    // {
-    //   partnerInfo: {
-    //     id: 2,
-    //     is_main: true,
-    //     link: 'https://www.netflix.com/browse',
-    //   },
-    //   logoImg: CJLogo,
-    // },
-  ];
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
-  const [CEOData, setCEOData] = useState<ICEOInfoData>(defaultCEOData);
-  const [corpInfoData, setCorpInfoData] = useState<ICorpInfoData[]>(defaultCorpData);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [CEODataResponse, corpDataResponse] = await Promise.all([getCEOData(), getPartnersData()]);
-
-        // CEO 데이터 처리
-        if (CEODataResponse) {
-          const ceoInfo = CEODataResponse;
-          const object1 = {
-            id: ceoInfo.id || defaultCEOData.id,
-            name: ceoInfo.name || defaultCEOData.name,
-            introduction: ceoInfo.introduction || defaultCEOData.introduction,
-            imageFileName: ceoInfo.imageFileName || defaultCEOData.imageFileName,
-            imageUrl: ceoInfo.imageUrl || defaultCEOData.imageUrl,
-          };
-          setCEOData(object1);
-        }
-
-        // 기업 정보 데이터 처리
-        if (corpDataResponse) {
-          const objects2 = corpDataResponse
-            .filter((item: any) => item.partnerInfo.is_main === true)
-            .map((item: any) => ({
-              partnerInfo: item.partnerInfo,
-              logoImg: item.logoImg || defaultCorpData[0].logoImg,
-            }));
-          setCorpInfoData(objects2.length > 0 ? objects2 : defaultCorpData); // 데이터 없으면 디폴트 데이터 사용
-        }
-      } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
-        setCEOData(defaultCEOData);
-        setCorpInfoData(defaultCorpData); // 에러 시 디폴트 데이터
-      }
-    };
-    fetchData();
-  }, []);
+  const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData } =
+    useLoaderData() as AboutPageLoaderData;
 
   return (
     <ScrollContainer>
-      <IntroPage />
-      <WhatWeDoPage />
+      <IntroPage companyIntroData={companyIntroData} sloganImageUrl={sloganImageUrl} />
+      <WhatWeDoPage companyDetailData={companyDetailData} />
       <Section data-cy='about-section'>
-        {CEOData.id !== -1 ? (
+        {ceoData.id !== -1 ? (
           <RowContainer
             data-cy='ceo-info'
             backgroundColor='#1a1a1a'
             style={isMobile ? { flexDirection: 'column-reverse' } : {}}
           >
             <CeoInfoContainer data-cy='ceo-info-container'>
-              <CeoNameInfo data-cy='ceo-name'>CEO&nbsp;{CEOData.name}</CeoNameInfo>
+              <CeoNameInfo data-cy='ceo-name'>CEO&nbsp;{ceoData.name}</CeoNameInfo>
               <CeoInfo data-cy='ceo-introduction'>
-                {isMobile ? CEOData.introduction.replace(/\n/g, ' ') : CEOData.introduction}
+                {isMobile ? ceoData.introduction.replace(/\n/g, ' ') : ceoData.introduction}
               </CeoInfo>
             </CeoInfoContainer>
             <CeoImageContainer data-cy='ceo-image-container'>
-              <img data-cy='ceo-image' src={CEOData.imageUrl} alt='CEO Character' />
+              <img data-cy='ceo-image' src={ceoData.imageUrl} alt='CEO Character' />
             </CeoImageContainer>
           </RowContainer>
         ) : (
@@ -125,21 +43,17 @@ const AboutPage = () => {
         )}
       </Section>
       <Section data-cy='corp-section'>
-        {corpInfoData.length !== 0 ? (
+        {partnersData.length !== 0 ? (
           <CorpLogoContainer data-cy='corp-logo-container'>
             <CorpText data-cy='corp-title'>CORP</CorpText>
             <CorpLogoRowContainer data-cy='corp-logo-row'>
-              {corpInfoData.map((info) => (
+              {partnersData.map((info) => (
                 <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
                     src={info.logoImg}
                     alt='CORP Logo'
                     data-link={info.partnerInfo.link ? 'true' : 'false'}
-                    onClick={() => {
-                      if (info.partnerInfo.link) {
-                        window.open(info.partnerInfo.link, '_blank');
-                      }
-                    }}
+                    onClick={() => info.partnerInfo.link && window.open(info.partnerInfo.link, '_blank')}
                   />
                 </CorpLogoItem>
               ))}
@@ -160,17 +74,23 @@ const ScrollContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const Section = styled.div`
   width: 100%;
   display: flex;
   margin-top: 9.375rem;
   margin-bottom: 3.125rem;
   overflow-x: hidden;
+  @media ${theme.media.tablet} {
+    margin-top: 3rem;
+    margin-bottom: 0;
+  }
   @media ${theme.media.mobile} {
     margin-top: 5rem;
     margin-bottom: 0;
   }
 `;
+
 const RowContainer = styled.div<IContainerStyleProps>`
   width: 100%;
   display: flex;
@@ -198,6 +118,7 @@ const CeoInfoContainer = styled.div`
     text-align: center;
   }
 `;
+
 const CeoImageContainer = styled.div`
   img {
     width: 18vw;
@@ -245,6 +166,7 @@ const CeoInfo = styled.div`
     margin-bottom: 0.5rem;
   }
 `;
+
 const CorpLogoItem = styled.div`
   flex: 1 1 25%;
   display: flex;
@@ -273,6 +195,7 @@ const CorpLogoContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const CorpLogoRowContainer = styled.a`
   margin-bottom: 5rem;
   width: 70%;
@@ -288,6 +211,7 @@ const CorpLogoRowContainer = styled.a`
     padding: 0;
   }
 `;
+
 const CorpText = styled.div`
   margin-bottom: 1.875rem;
   font-family: ${theme.font.regular};

@@ -79,9 +79,9 @@ const RecruitmentPage = () => {
           </ImageWrapper>
         </IntroTitleWrapper>
       </IntroSection>
-      {/* 두 번째 섹션: 채용 게시판 */}
-      <JobBoardSection data-cy='recruitment-section'>
-        {recruitmentData && recruitmentData.content.length > 0 && (
+ {/* 두 번째 섹션: 채용 게시판 */}
+ <JobBoardSection data-cy="recruitment-section">
+        {recruitmentData && recruitmentData.content.length > 0 ? (
           <PostGrid>
             <Header>진행중인 채용공고</Header>
             <Content>
@@ -107,6 +107,8 @@ const RecruitmentPage = () => {
               ))}
             </Content>
           </PostGrid>
+        ) : (
+          <NoRecruitmentMessage>현재 올라온 채용공고가 없습니다.</NoRecruitmentMessage>
         )}
       </JobBoardSection>
       {/* 세 번째 섹션: 회사 복지 정보 */}
@@ -499,6 +501,23 @@ const BenefitContent = styled.p`
   white-space: normal;
   word-break: keep-all;
   overflow-wrap: break-word;
+`;
+
+const NoRecruitmentMessage = styled.div`
+  font-family: ${(props) => props.theme.font.medium}; // 더 두드러지는 폰트
+  color: ${(props) => props.theme.color.black.light};
+  font-size: clamp(1.5rem, 2vw, 2rem); // 더 큰 글씨
+  text-align: center;
+  margin: 3rem 0; // 상하 여백 증가
+  line-height: 1.8; // 여유로운 줄 간격
+  padding: 1.5rem 2rem; // 내부 여백 추가
+
+
+  @media ${(props) => props.theme.media.mobile} {
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem); // 모바일 환경에서 적절한 크기 조정
+    margin: 2rem 0;
+    padding: 1rem 1.5rem;
+  }
 `;
 
 export default RecruitmentPage;

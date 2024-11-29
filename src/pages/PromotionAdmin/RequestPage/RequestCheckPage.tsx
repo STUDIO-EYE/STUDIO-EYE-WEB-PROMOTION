@@ -12,7 +12,6 @@ import { ReactComponent as InfoIcon } from '@/assets/images/PA/infoIcon.svg';
 import Pagination from '@/components/Pagination/Pagination';
 import UserInfo from '@/components/PromotionAdmin/Request/UserInfo';
 import EmailListComponent from '@/components/PromotionAdmin/Request/EmailListComponent';
-import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 
 const MAX_TEXT_LENGTH = 255;
 

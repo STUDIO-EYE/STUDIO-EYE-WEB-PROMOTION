@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { getCompanyDetailData } from '@/apis/PromotionAdmin/dataEdit';
 import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
+import { WhatWeDoPageProps } from '@/types/PromotionPage/about';
 
 interface IWhatWeDoProps {
   isHighlighted: boolean;
@@ -15,33 +15,9 @@ interface IWhatWeDoInputProps {
 
 interface CombinedProps extends IWhatWeDoProps, IWhatWeDoInputProps {}
 
-const WhatWeDoPage = () => {
+const WhatWeDoPage = ({ companyDetailData }: WhatWeDoPageProps) => {
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
-  const [companyDetailDataTitle, setCompanyDetailDataTitle] = useState<string[]>([]);
-  const [companyDetailData, setCompanyDetailData] = useState<string[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchCompanyDetailData = async () => {
-      try {
-        const responseData = await getCompanyDetailData();
-        if (responseData) {
-          const details = Array.isArray(responseData) ? responseData : [responseData];
-
-          const dataKeys = details.map((detail) => detail.key);
-          const dataValues = details.map((detail) => detail.value);
-
-          setCompanyDetailDataTitle(dataKeys);
-          setCompanyDetailData(dataValues);
-        }
-      } catch (error) {
-        console.error('데이터 수신 오류:', error);
-      }
-    };
-
-    fetchCompanyDetailData();
-  }, []);
-
   const { scrollY } = useScroll(); // 스크롤 위치 감지
 
   useMotionValueEvent(scrollY, 'change', (scrollValue) => {
@@ -72,7 +48,7 @@ const WhatWeDoPage = () => {
           <WhatWeDo
             data-cy='whatwedo-item'
             key={index}
-            className='WhatWeDo'
+            className={`WhatWeDo ${highlighted === index ? 'highlighted' : ''}`}
             isHighlighted={highlighted === index}
             leftInput={index % 2 === 0}
             style={isMobile ? { left: '10%' } : { left: index % 2 === 0 ? '5%' : '95%' }}
@@ -81,12 +57,12 @@ const WhatWeDoPage = () => {
               <Circle />
             </WhatWeDoInput>
             <WhatWeDoTitleInput leftInput={index % 2 === 0} data-cy='whatwedo-title'>
-              {companyDetailDataTitle[index].length >= 20 ? `WHAT WE DO ${index + 1}` : companyDetailDataTitle[index]}
+              {info.key.length >= 20 ? `WHAT WE DO ${index + 1}` : info.key}
             </WhatWeDoTitleInput>
             <WhatWeDoContentInput
               data-cy='whatwedo-content'
               leftInput={index % 2 === 0}
-              dangerouslySetInnerHTML={{ __html: info.replace(/\n/g, '<br/>') }}
+              dangerouslySetInnerHTML={{ __html: info.value.replace(/\n/g, '<br/>') }}
             ></WhatWeDoContentInput>
           </WhatWeDo>
         ))}
@@ -101,6 +77,7 @@ const WhatWeDoPage = () => {
 
 export default WhatWeDoPage;
 
+// 스타일 정의
 const Container = styled.div`
   height: auto;
   width: 100%;
@@ -109,7 +86,6 @@ const Container = styled.div`
   align-items: center;
   margin-top: 6.25rem;
   margin-bottom: 9.375rem;
-
 `;
 
 const WhatWeDoContainer = styled.div`
@@ -135,6 +111,7 @@ const ScrollBar = styled.div`
     height: 100%;
   }
 `;
+
 const ScrollBarBox = styled(motion.div)`
   position: sticky;
   top: 50%;
@@ -191,6 +168,7 @@ const WhatWeDoInput = styled.div<IWhatWeDoInputProps>`
     padding: 0;
   }
 `;
+
 const WhatWeDoTitleInput = styled.div<IWhatWeDoInputProps>`
   margin-bottom: 1.875rem;
   font-family: ${theme.font.semiBold};
@@ -203,6 +181,7 @@ const WhatWeDoTitleInput = styled.div<IWhatWeDoInputProps>`
     text-align: left;
   }
 `;
+
 const WhatWeDoContentInput = styled.div<IWhatWeDoInputProps>`
   width: 85%;
   margin-bottom: 0.5rem;
@@ -220,6 +199,7 @@ const WhatWeDoContentInput = styled.div<IWhatWeDoInputProps>`
     white-space: normal;
   }
 `;
+
 const Circle = styled.div`
   background-color: #ffa900;
   border-radius: 50%;

@@ -1,6 +1,5 @@
 import { login } from '@/apis/PromotionAdmin/login';
 import { authState } from '@/recoil/atoms';
-import { loginType } from '@/types/PromotionAdmin/login';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
