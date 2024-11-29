@@ -98,7 +98,13 @@ const ArtworkCreating = () => {
   }
 
   const handleDetailImageChange = (newImages: File | File[]) => {
-    setDetailImages(Array.isArray(newImages) ? newImages : [newImages]);
+    const newImageList = Array.isArray(newImages) ? newImages : [newImages];
+    // 기존 이미지와 새로운 이미지를 합치고 최대 3개까지만 유지
+    const updatedImages = [...detailImages, ...newImageList].slice(0, 3);
+    if (updatedImages.length > 3) {
+      alert('최대 3개의 이미지만 업로드할 수 있습니다.');
+    }
+    setDetailImages(updatedImages);
   };
 
   const handleTitleChange = (newTitle: string) => {
