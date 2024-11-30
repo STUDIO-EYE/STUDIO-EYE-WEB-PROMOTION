@@ -185,7 +185,7 @@ const IntroTitleWrapper = styled.div`
     align-items:flex-start;
     margin-bottom:0;
   }
-`;
+`; 
 
 const IntroLine = styled.div`
   display: flex;
