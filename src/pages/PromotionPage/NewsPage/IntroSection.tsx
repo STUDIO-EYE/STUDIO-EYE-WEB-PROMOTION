@@ -3,35 +3,37 @@ import styled from 'styled-components';
 import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
 import { theme } from '@/styles/theme';
 
+interface IIntroTextProps {
+  text?: string;
+}
+
 const IntroSection: React.FC = () => {
   return (
     <Container>
       <IntroTitleWrapper>
         <IntroLine>
           <MobileWrapper>
-            <IntroNewsWhite>REA</IntroNewsWhite>
-            <IntroNewsMovingContainer>
-              <IntroNewsMovingDAnimated delay="0s">D</IntroNewsMovingDAnimated>
-              <IntroNewsMovingDAnimated delay="0.2s">D</IntroNewsMovingDAnimated>
-              <IntroNewsMovingDAnimated delay="0.4s">D</IntroNewsMovingDAnimated>
-              <StaticD>D</StaticD>
-            </IntroNewsMovingContainer>
+            <IntroText>REA</IntroText>
+            <AnimatedD>
+              <span>D</span>
+              <span>D</span>D
+            </AnimatedD>
+            <IntroText>&nbsp;</IntroText>
+            <IntroText>THE NEWS</IntroText>
           </MobileWrapper>
-          <IntroNewsWhite>THE NEWS</IntroNewsWhite>
         </IntroLine>
-
         <IntroLine>
           <MobileWrapper>
-            <IntroNewsYellow>AB</IntroNewsYellow>
-            <IntroNewsMovingContainer>
-              <IntroNewsMovingOAnimated delay="0s">O</IntroNewsMovingOAnimated>
-              <IntroNewsMovingOAnimated delay="0.2s">O</IntroNewsMovingOAnimated>
-              <IntroNewsMovingOAnimated delay="0.4s">O</IntroNewsMovingOAnimated>
-              <StaticO>O</StaticO>
-            </IntroNewsMovingContainer>
-            <IntroNewsYellowNoMargin>UT</IntroNewsYellowNoMargin>
+            <IntroText>AB</IntroText>
+            <AnimatedO>
+              <span>O</span>
+              <span>O</span>O
+            </AnimatedO>
+            <IntroText>UT</IntroText>
           </MobileWrapper>
-          <IntroNewsYellowMargin>STUDIOEYE!</IntroNewsYellowMargin>
+          <IntroText>&nbsp;</IntroText>
+          <IntroText text="highlight">STUDIOEYE</IntroText>
+          <IntroText>!</IntroText>
         </IntroLine>
       </IntroTitleWrapper>
       <BackgroundYellowCircle> </BackgroundYellowCircle>
@@ -40,6 +42,118 @@ const IntroSection: React.FC = () => {
 };
 
 export default IntroSection;
+
+const IntroText = styled.span<IIntroTextProps>`
+  font-family: ${theme.font.bold};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: ${(props) => (props.text === 'highlight' ? '#ffa900' : 'white')};
+`;
+
+const AnimatedD = styled.span`
+  position: relative;
+  font-family: ${theme.font.light};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: #ffa900;
+
+  span {
+    position: absolute;
+    opacity: 0.8;
+
+    &:nth-child(1) {
+      animation: moveLeftD 2s infinite ease-in-out;
+    }
+    &:nth-child(2) {
+      animation: moveRightD 2s infinite ease-in-out;
+    }
+  }
+
+  @keyframes moveLeftD {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(-1vw, -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes moveRightD {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(1vw, 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @media ${theme.media.mobile} {
+    font-family: 'pretendard-light';
+  }
+`;
+
+const AnimatedO = styled.span`
+  position: relative;
+  font-family: ${theme.font.light};
+  font-size: clamp(1.8rem, 5vw, 6.25rem);
+  color: #ffa900;
+
+  span {
+    position: absolute;
+    opacity: 0.8;
+
+    &:nth-child(1) {
+      animation: moveLeftO 2s infinite ease-in-out;
+    }
+    &:nth-child(2) {
+      animation: moveRightO 2s infinite ease-in-out;
+    }
+  }
+
+  @keyframes moveLeftO {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(1vw, -1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes moveRightO {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(-1vw, 1vw);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @media ${theme.media.mobile} {
+    font-family: 'pretendard-light';
+  }
+`;
 
 const Container = styled.div`
   min-height: 100vh;
@@ -78,178 +192,10 @@ const IntroLine = styled.div`
   justify-content: center;
 
   @media ${theme.media.tablet}{
-    flex-direction:column;
     margin-left: 1rem;
+    word-break: keep-all;
   }
 
-`;
-
-const IntroNewsWhite = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 96px;
-  color: white;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-bold';
-    font-size: 6rem;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-  }
-`;
-
-const IntroNewsYellow = styled.span`
-  margin-left: 30px;
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 96px;
-  color: #ffa900;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-bold';
-    font-size: 6rem;
-    margin-left:0px;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-  }
-`;
-
-const IntroNewsYellowNoMargin = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 96px;
-  color: #ffa900;
-  margin-left: -4rem;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-bold';
-    font-size: 6rem;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-  }
-`;
-
-const IntroNewsYellowMargin = styled.span`
-  font-family: Pretendard;
-  font-weight: 700;
-  font-size: 96px;
-  color: #ffa900;
-  margin-left:25px;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-bold';
-    font-size: 6rem;
-    margin-left: 0;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-    margin-left: 0;
-  }
-`;
-
-const IntroNewsMovingContainer = styled.span`
-  position: relative;
-  display: inline-block;
-  margin-right: 70px;
-`;
-
-const StaticD = styled.span`
-  font-family: Pretendard;
-  font-weight: 50;
-  font-size: 96px;
-  color: #ffa900;
-  position: relative;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-light';
-    font-size: 6rem;
-    margin-left:0px;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-  }
-`;
-
-const StaticO = styled.span`
-  font-family: Pretendard;
-  font-weight: 50;
-  font-size: 96px;
-  color: #ffffff;
-  position: relative;
-
-  @media ${theme.media.tablet}{
-    font-family: 'pretendard-light';
-    font-size: 6rem;
-    margin-left:0px;
-  }
-  @media ${theme.media.mobile}{
-    font-size: 3rem;
-  }
-`;
-
-interface IntroNewsMovingProps {
-  delay: string;
-}
-
-const IntroNewsMovingDAnimated = styled.span<IntroNewsMovingProps>`
-  font-family: Pretendard;
-  font-weight: 50;
-  font-size: 96px;
-  color: #ffa900;
-  position: absolute;
-  animation: move-diagonal 0.7s ease-in-out infinite alternate;
-  animation-delay: ${(props) => props.delay};
-
-  @keyframes move-diagonal {
-    0% {
-      transform: translate(-2px, -2px);
-    }
-    100% {
-      transform: translate(2px, 2px);
-    }
-  }
-
-  @media ${theme.media.tablet} {
-    font-family: 'pretendard-light';
-    font-size: 6rem;
-    margin-left: 0px;
-  }
-
-  @media ${theme.media.mobile} {
-    font-size: 3rem;
-  }
-`;
-
-const IntroNewsMovingOAnimated = styled.span<IntroNewsMovingProps>`
-  font-family: Pretendard;
-  font-weight: 50;
-  font-size: 96px;
-  color: #ffffff;
-  position: absolute;
-  animation: move-horizontal 0.7s ease-in-out infinite alternate;
-  animation-delay: ${(props) => props.delay};
-
-  @keyframes move-horizontal {
-    0% {
-      transform: translateX(-2px);
-    }
-    100% {
-      transform: translateX(4px);
-    }
-  }
-
-  @media ${theme.media.tablet} {
-    font-family: 'pretendard-light';
-    font-size: 6rem;
-    margin-left: 0.2rem;
-  }
-
-  @media ${theme.media.mobile} {
-    font-size: 3rem;
-  }
 `;
 
 const MobileWrapper = styled.div`
