@@ -30,6 +30,7 @@ export interface IArtworkData {
 // 아래는 수정된 버전이고, 에러가 날 수도 있을 것 같아서 따로 작성해 놓았습니다.
 // 추후 하나로 합쳐주세요!
 interface MIArtwork {
+  responsiveMainImg: string;
   id: number;
   department: string;
   category: string;
