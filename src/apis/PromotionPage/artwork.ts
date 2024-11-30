@@ -1,5 +1,5 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const getArtworkData = async () => {
   try {
