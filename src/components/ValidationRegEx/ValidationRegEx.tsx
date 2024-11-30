@@ -15,7 +15,7 @@ export const phoneFaxCheck = (phoneFax: string) => {
 };
 
 export const linkCheck = (url: string) => {
-  const urlRegex = /^(https?|ftp):\/\/(-\.)?([^\s\/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+  const urlRegex = /^(https?|ftp):\/\/([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}(\/[^\s]*)?$/i;
   if (!urlRegex.test(url.trim())) {
     return false;
   }
