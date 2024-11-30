@@ -9,19 +9,20 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import styled from 'styled-components';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 import { theme } from '@/styles/theme';
-import Footer from '@/components/PromotionPage/Footer/Footer';
+import ArtworkSlider from '@/components/PromotionPage/Main/ArtworkSlider';
 
 const Top = lazy(() => import('@/components/PromotionPage/Main/Top'));
 const Intro = lazy(() => import('@/components/PromotionPage/Main/Intro'));
 const ArtworkList = lazy(() => import('@/components/PromotionPage/Main/ArtworkList'));
 const Outro = lazy(() => import('@/components/PromotionPage/Main/Outro'));
+const Footer = lazy(() => import('@/components/PromotionPage/Footer/Footer'));
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
   const [activeIndex, setActiveIndex] = useState(0);
   const { data, isLoading } = useQuery<MIArtworksData>(['artwork', 'id'], getArtworkMainData, {
     staleTime: 1000 * 60 * 10, // 10분
-  }); 
+  });
   const sectionsRef = useRef<HTMLElement[]>([]);
   const filteredMainData = data?.data ? data.data.filter((i) => i.projectType === 'main') : [];
   const filteredTopData = data?.data ? data.data.filter((i) => i.projectType === 'top') : [];
@@ -61,6 +62,12 @@ const MainPage = () => {
       <style>{`
         body, html {
           overflow: hidden;
+
+          div {
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
         }
 
         @media (max-width: 1500px) {
@@ -88,26 +95,43 @@ const MainPage = () => {
               <Box
                 w="100%"
                 h="100vh"
-                scrollSnapType='y mandatory'
-                overflowY='scroll'
+                scrollSnapType="y mandatory"
+                overflowY="scroll"
                 sx={{
                   '&::-webkit-scrollbar': {
                     display: 'none',
                   },
                 }}
                 css={`
-                @supports (-webkit-touch-callout: none) {
-                  height: 100dvh;
-                } 
+                  @supports (-webkit-touch-callout: none) {
+                    height: 100dvh;
+                  }
 
-                @media ${theme.media.mobile} {
-                  overflow: hidden;
-                  scroll-snap-type: y mandatory;
-                }
-              `}
+                  @media ${theme.media.mobile} {
+                    overflow: hidden;
+                    scroll-snap-type: y mandatory;
+                  }
+                `}
               >
                 {isLoading ? (
                   <div>데이터 로딩 중...</div>
+                ) : height <= 780 ? (
+                  <ArtworkSlider
+                    artworks={filteredMainData.map((item) => ({
+                      id: item.id,
+                      department: item.department || '',
+                      category: item.category || '',
+                      name: item.name || '',
+                      link: item.link || '',
+                      client: item.client || '',
+                      date: item.date || '',
+                      mainImg: item.mainImg || defaultMainImg,
+                      responsiveMainImg: item.responsiveMainImg || defaultMainImg,
+                      overView: item.overView || '',
+                      isPosted: item.isPosted ?? true,
+                      projectImages: item.projectImages || [],
+                    }))}
+                  />
                 ) : filteredMainData && filteredMainData.length > 0 ? (
                   filteredMainData.map((item, index) => (
                     <ArtworkList
@@ -146,8 +170,11 @@ const MainPage = () => {
             </ArtworkSection>
             <OutroSection>
               <Outro />
-              <Footer />
+
             </OutroSection>
+            <FooterkSection>
+                <Footer />
+              </FooterkSection>
           </Suspense>
         </ChakraProvider>
       </div>
@@ -159,20 +186,28 @@ export default MainPage;
 
 const TopSection = styled.section`
   scroll-snap-align: start;
+  min-height: 100dvh;
 `;
 
 const IntroSection = styled.section`
   scroll-snap-align: start;
+  min-height: 100dvh;
 `;
 
 const ArtworkSection = styled.section`
   scroll-snap-align: start;
+  min-height: 100dvh;
 `;
 
 const OutroSection = styled.section`
   scroll-snap-align: start;
+  margin-bottom: 0%;
+`;
+
+const FooterkSection = styled.section`
+  scroll-snap-align: start;
   @supports (-webkit-touch-callout: none) {
-    margin-bottom: 7rem;
+    margin-bottom: 5rem;
     overflow: hidden;
   }
 `;

@@ -27,8 +27,6 @@ const NewsBoardPage: React.FC = () => {
       try {
         setLoading(true);
         const data = await getAllNewsData();
-        console.log(data.length);
-
         const formattedData: INewsCardProps[] = data.data.map((news: any) => ({
           id: news.id,
           title: news.title,
@@ -38,7 +36,6 @@ const NewsBoardPage: React.FC = () => {
         }));
         setNewsData(formattedData);
       } catch (error) {
-        console.error('news' + error);
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
