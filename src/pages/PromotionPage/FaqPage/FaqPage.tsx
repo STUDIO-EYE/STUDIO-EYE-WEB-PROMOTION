@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
+import { theme } from '@/styles/theme';
 import { getFaqData } from '@/apis/PromotionPage/faq';
 
 interface FaqData {
@@ -25,16 +26,13 @@ const FaqPage = () => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const faqData = await getFaqData();
-            const filteredData = faqData.filter((item: any) => item.visibility === true);
-            const objects = filteredData.map((item: any) => ({
-                id: item.id,
-                question: item.question,
-                answer: item.answer,
-                visibility: item.visibility,
-            }));
-            setData(objects);
-            initiate(objects);
+          const faqData: FaqData[] = await getFaqData();
+          let filteredData: FaqData[] = [];
+          if (faqData) {
+            filteredData = faqData.filter((item: FaqData) => item.visibility === true);
+            setData(filteredData);
+            initiate(filteredData);
+          }
         } catch (error) {
             console.error(error);
         }
@@ -42,30 +40,28 @@ const FaqPage = () => {
     fetchData();
   }, []);
 
-  const initiate = (data: any) => {
+  const initiate = (data: FaqData[]) => {
     if (data.length === 0) {
       setSearchData([]);
       setSearchResult('none');
       return;
     }
-    const initData = data.map((item: any, index: number) => ({
+    const initData = data.map((item: FaqData, index: number) => ({
+      ...item,
       index,
-      question: item.question,
-      answer: item.answer,
-      visibility: item.visibility,
     }));
     setSearchData(initData);
     setSearchResult('success');
   };
 
-  const handleTextAreaDataChange = (e: any) => {
+  const handleTextAreaDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFaqQuestion(e.target.value);
     searchQuestion(e.target.value, data);
   };
 
-  const searchQuestion = (searchTerm: string, data: any) => {
+  const searchQuestion = (searchTerm: string, data: FaqData[]) => {
     const searchTermLower = searchTerm.toLowerCase();
-    const searchResults = data.filter((item: any) =>
+    const searchResults = data.filter((item: FaqData) =>
       item.question.toLowerCase().includes(searchTermLower)
     );
     setSearchData(searchResults.length > 0 ? searchResults : []);
@@ -138,7 +134,6 @@ const FaqPage = () => {
   );
 };
 
-// Styled-components with responsive media queries
 const Container = styled.div`
   font-family: 'Pretendard';
   min-height: 100vh;
@@ -229,7 +224,7 @@ const AnimatedSpan = styled.span<{ delay?: number }>`
 `;
 
 const SubContent = styled.p`
-  font-family: 'Pretendard-medium'; 
+  font-family: ${theme.font.medium}; 
   font-size: 1.2rem;
   margin-top: 2rem;
   color: white;
