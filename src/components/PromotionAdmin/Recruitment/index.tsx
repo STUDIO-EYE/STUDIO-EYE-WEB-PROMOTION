@@ -1,6 +1,7 @@
 import { PA_ROUTES } from '@/constants/routerConstants';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
+import { useLocation } from 'react-router-dom';
 
 const linksData = [
   {
@@ -14,12 +15,22 @@ const linksData = [
 ];
 
 function DetailNavigator() {
+  const location = useLocation();
+
   return (
     <Wrapper>
       <SideBar>
-        {linksData.map((link, index) => (
-          <NavBtn key={index} path={link.path} pathName={link.pathName} />
-        ))}
+        {linksData.map((link, index) => {
+          const isActive = location.pathname.includes(link.path);
+          return (
+            <NavBtn
+              key={index}
+              path={link.path}
+              pathName={link.pathName}
+              isActive={isActive} // 활성화 상태를 NavBtn으로 전달
+            />
+          );
+        })}
       </SideBar>
     </Wrapper>
   );
