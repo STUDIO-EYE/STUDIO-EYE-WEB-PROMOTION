@@ -182,7 +182,8 @@ const Title = styled.h1`
   font-weight: 600;
   color: white;
   text-align: center;
-  line-height: 1.5; 
+  line-height: 1.5;
+  margin-top: 2rem; /* 기본 margin-top 추가 */
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 3rem;
@@ -193,12 +194,18 @@ const Title = styled.h1`
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
+    font-family: 'Pretendard-bold';
     font-size: 2rem;
+    margin-top: 3rem !important; /* 여백 적용 */
   }
+
   @media (max-width: 374px) {
     font-size: 2rem;
+    margin-top: 2rem !important; /* 추가 */
   }
 `;
+
+
 
 const LineWrapper = styled.div`
   display: inline;
