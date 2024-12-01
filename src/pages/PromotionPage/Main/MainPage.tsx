@@ -9,20 +9,21 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import styled from 'styled-components';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 import { theme } from '@/styles/theme';
-import ArtworkSlider from '@/components/PromotionPage/Main/ArtworkSlider';
 
 const Top = lazy(() => import('@/components/PromotionPage/Main/Top'));
 const Intro = lazy(() => import('@/components/PromotionPage/Main/Intro'));
 const ArtworkList = lazy(() => import('@/components/PromotionPage/Main/ArtworkList'));
 const Outro = lazy(() => import('@/components/PromotionPage/Main/Outro'));
 const Footer = lazy(() => import('@/components/PromotionPage/Footer/Footer'));
+const ArtworkSlider = lazy(() => import('@/components/PromotionPage/Main/ArtworkSlider'));
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
   const [activeIndex, setActiveIndex] = useState(0);
-  const { data, isLoading } = useQuery<MIArtworksData>(['artwork', 'id'], getArtworkMainData, {
+  const { data, isLoading, error } = useQuery<MIArtworksData, Error>(['artwork', 'id'], getArtworkMainData, {
     staleTime: 1000 * 60 * 10, // 10분
   });
+
   const sectionsRef = useRef<HTMLElement[]>([]);
   const filteredMainData = data?.data ? data.data.filter((i) => i.projectType === 'main') : [];
   const filteredTopData = data?.data ? data.data.filter((i) => i.projectType === 'top') : [];
@@ -57,6 +58,8 @@ const MainPage = () => {
     }
   }, [height]);
 
+  if (isLoading) return <>Artowrk is Loading...</>;
+  if (error) return <>Artwork Error: {error.message}</>;
   return (
     <>
       <style>{`
@@ -170,7 +173,6 @@ const MainPage = () => {
             </ArtworkSection>
             <OutroSection>
               <Outro />
-
             </OutroSection>
             <FooterkSection>
                 <Footer />

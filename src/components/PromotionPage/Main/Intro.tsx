@@ -1,11 +1,17 @@
 import { motion, useInView } from 'framer-motion';
-import React, { lazy, useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
+import { useQuery } from 'react-query';
+
+interface ICompanyData {
+  mainOverview: string;
+  commitment: string;
+}
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -16,34 +22,22 @@ const Intro = () => {
   const desInView = useInView(desRef);
   const circleInView = useInView(circleRef);
 
-  const [companyMainOverview, setCompanyMainOverview] = useState<string>('');
-  const [companyCommitment, setCompanyCommitment] = useState<string>('');
+  const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getCompanyData();
-        setCompanyMainOverview(data.mainOverview);
-        setCompanyCommitment(data.commitment);
-      } catch (error) {
-        // console.error('Error fetching company data: ', error);
-      }
-    };
+  const companyMainOverview = data?.mainOverview || INTRO_DATA.MAIN_OVERVIEW;
+  const companyCommitment = data?.commitment || INTRO_DATA.COMMITMENT;
 
-    fetchData();
-  }, []);
-
-  const isMobile = window.innerWidth < 768;
-
+  if (isLoading) return <>is Loading...</>;
+  if (error) return <>Intro Error: {error.message}</>;
   return (
     <Container data-cy="intro-section">
-      <IntroWrapper data-cy="intro_mainOverview" ref={introRef} >
+      <IntroWrapper data-cy="intro_mainOverview" ref={introRef}>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
           dangerouslySetInnerHTML={{
-            __html: companyMainOverview || INTRO_DATA.MAIN_OVERVIEW
+            __html: companyMainOverview,
           }}
         ></motion.div>
       </IntroWrapper>
@@ -52,7 +46,9 @@ const Intro = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
-          dangerouslySetInnerHTML={{ __html: companyCommitment || INTRO_DATA.COMMITMENT }}
+          dangerouslySetInnerHTML={{
+            __html: companyCommitment,
+          }}
         ></motion.div>
       </DesWrapper>
       <CircleWrapper ref={circleRef}>
@@ -61,15 +57,15 @@ const Intro = () => {
           animate={{ opacity: circleInView ? 1 : 0, y: circleInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <Link to='/about'>
-            <Circle label='ABOUT STUDIO EYE' />
+          <Link to="/about">
+            <Circle label="ABOUT STUDIO EYE" />
           </Link>
         </motion.div>
       </CircleWrapper>
-      {/* {isMobile && <BackgroundYellowCircle> </BackgroundYellowCircle>} */}
     </Container>
   );
 };
+
 export default Intro;
 
 const Container = styled.div`
