@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Box, BoxProps } from '@chakra-ui/react';
 import { motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
@@ -76,7 +76,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
         </motion.div>
       </Suspense>
 
-      {/* {data.link && (
+      {data.link && (
         <a data-cy='artwork_link'
           href={data.link}
           target="_blank"
@@ -92,7 +92,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
             zIndex: '1'
           }}
         />
-      )} */}
+      )}
     </MotionBox>
   );
 });
