@@ -319,18 +319,23 @@ const JobBoardSection = styled.div`
   background-color: #fff;
   padding: 20px;
   margin-top: 10rem;
+  width: 100%; // 폭 강제 고정
+  box-sizing: border-box; // 패딩 포함 폭 계산
   @media ${theme.media.large_tablet} {
     margin-top: 5rem;
   }
   @media ${theme.media.mobile} {
     margin-top: 2rem;
+    padding: 1rem; // 모바일에서 패딩 조정
   }
 `;
 
 const PostGrid = styled.div`
-  width: 100%;
+   width: 100%;
   max-width: 75rem;
   padding: 1rem;
+  box-sizing: border-box; // 패딩 포함 폭 계산
+  overflow-x: hidden; // 가로 스크롤 제거
 `;
 
 const Header = styled.h3`
@@ -425,6 +430,7 @@ const BenefitsSection = styled.div`
   background-color: ${(props) => props.theme.color.white.light};
   width: 100%;
   margin-top: 10rem;
+  margin-bottom: 3rem; 
 `;
 
 const BenefitSectionTitle = styled.h1`
@@ -464,7 +470,7 @@ const BenefitItem = styled.div`
   background-color: ${(props) => props.theme.color.white.light};
   width: clamp(11rem, 15vw, 20rem);
   margin: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   cursor: default;
   height: auto;
   overflow: hidden;
