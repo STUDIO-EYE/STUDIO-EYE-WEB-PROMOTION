@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
 import { useQuery } from 'react-query';
+import SkeletonComponent from '../SkeletonComponent/SkeletonComponent';
 
 interface ICompanyData {
   mainOverview: string;
@@ -27,7 +28,7 @@ const Intro = () => {
   const companyMainOverview = data?.mainOverview || INTRO_DATA.MAIN_OVERVIEW;
   const companyCommitment = data?.commitment || INTRO_DATA.COMMITMENT;
 
-  if (isLoading) return <>is Loading...</>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <>Intro Error: {error.message}</>;
   return (
     <Container data-cy="intro-section">

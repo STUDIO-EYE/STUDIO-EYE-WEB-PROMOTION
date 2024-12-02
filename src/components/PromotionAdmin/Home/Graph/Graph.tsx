@@ -173,8 +173,3 @@ const FilterOption=styled.option`
 font-size: 0.9rem;
 font-family: pretendard;
 `
-
-const LoadingWrapper = styled.div`
-  font-family: 'pretendard-regular';
-  font-size: 17px;
-`;

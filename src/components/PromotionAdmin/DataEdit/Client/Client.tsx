@@ -16,6 +16,7 @@ import { ContentBlock } from '../Company/CompanyFormStyleComponents';
 import LogoListItem from '../StyleComponents/LogoListItem';
 import Pagination from '@/components/Pagination/Pagination';
 import { MSG } from '@/constants/messages';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const Client = () => {
   const navigator = useNavigate();
@@ -37,7 +38,7 @@ const Client = () => {
     }
   }, [data, currentPage, navigator]);
 
-  if (isLoading) return <>is Loading..</>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <div>Error: {error.message}</div>;
   return (
     <Wrapper>
