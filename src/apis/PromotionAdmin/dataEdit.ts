@@ -74,7 +74,7 @@ export const getCEOData = async () => {
 export const getPartnersData = async () => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/partners`);
-    console.log("CorpData : ",response.data.data )
+    console.log('CorpData : ', response.data.data);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);
@@ -144,7 +144,7 @@ export const getPartnersLogoData = async () => {
 
 export const deletePartner = async (id: number) => {
   try {
-    const response = await axios.put(`${PROMOTION_BASIC_PATH}/api/partners/${id}`);
+    const response = await axios.delete(`${PROMOTION_BASIC_PATH}/api/partners/${id}`);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error deleting partners data]', error);
