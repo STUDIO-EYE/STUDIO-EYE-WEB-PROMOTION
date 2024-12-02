@@ -3,18 +3,26 @@ import { IArtworksData } from '@/types/PromotionPage/artwork';
 import { useQuery } from 'react-query';
 import { getArtworkData } from '@/apis/PromotionPage/artwork';
 import styled from 'styled-components';
-import { Suspense, useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigation';
 import { theme } from '@/styles/theme';
 import React from 'react';
+import { AxiosError } from 'axios';
 const NullException=React.lazy(()=>import('@/components/PromotionPage/Artwork/NullException'))
 const SkeletonComponent=React.lazy(()=>import('@/components/PromotionPage/SkeletonComponent/SkeletonComponent'))
 const ArtworkCard=React.lazy(()=>import('@/components/PromotionPage/Artwork/ArtworkCard'))
 
+interface ErrorResponse {
+  error: string;
+  path: string;
+  status: number;
+  timestamp: string;
+}
+
 function ArtworkPage() {
   const location = useLocation();
   const categoryId = new URLSearchParams(location.search).get('category');
-  const { data, isLoading, error } = useQuery<IArtworksData, Error>(['artwork', 'id'], getArtworkData);
+  const { data, isLoading, error } = useQuery<IArtworksData, AxiosError>(['artwork', 'id'], getArtworkData);
   const category = artwork_categories.find((category) => category.key + '' === categoryId);
 
   //useMemo를 사용해 별도로 메모리화, 리렌더링 방지 => 동일한 데이터 연산을 반복하지 않을 수 있음
@@ -42,8 +50,19 @@ function ArtworkPage() {
     return null;
   }
 
-  // if (error) return <>{error.message}</>;
-  // 나중에 사용자 경험성을 향상한다고 판단되면 넣을 것
+  const errorData=error?.response?.data as ErrorResponse|undefined
+  const errorMessage=()=> {
+  if(errorData){
+    return errorData.status?errorData.status+": "+errorData.error:"Network Error"
+  } else{
+    // if(!error && data===undefined){
+    //   return "Network Error"
+    // }else{
+      return null
+    // }
+  }}
+
+  if(isLoading) return <>Loading...</>
 
   return (
     <>
@@ -53,7 +72,7 @@ function ArtworkPage() {
           <ArtworkWrapper data-cy='PP_artwork_list'>
             {postedData?.length === 0 || data === null ? (
               <Suspense fallback={<div>Loading...</div>}>
-              <NullException />
+              <NullException isError={errorMessage()}/>
               </Suspense>
             ) : (
               <>
@@ -83,7 +102,7 @@ function ArtworkPage() {
         ) : (
           <ArtworkWrapper>
             {filteredData?.length === 0 || data === null ? (
-              <NullException />
+              <NullException isError={errorMessage()}/>
             ) : (
               <>
                 <ScrollToTop />
@@ -141,5 +160,18 @@ const ArtworkWrapper = styled.div`
     margin: 0;
     justify-content: center;
     align-items: center;
+  }
+`;
+
+const Msg = styled.div`
+  color: ${(props) => props.theme.color.white.bold};
+  font-size: 20px;
+
+
+  @media ${theme.media.mobile} {
+    width: 85vw;
+    display: flex;
+    justify-content: center;
+    font-size: 1.3rem;
   }
 `;

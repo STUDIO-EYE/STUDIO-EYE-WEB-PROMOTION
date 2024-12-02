@@ -27,7 +27,8 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     mutationFn: (sequenceData: any[]) => putArtworkMainSequence(sequenceData),
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
-  const editSequence = useMutation((sequenceData: any[]) => putArtworkSequence(sequenceData), {
+  const editSequence = useMutation({
+    mutationFn: (sequenceData: any[]) => putArtworkSequence(sequenceData), 
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
   const [realData, setRealData] = useState<ArtworkData[]>([]);
@@ -43,7 +44,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     handleDataSort();
     setOnEdit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type,data]);
   useEffect(() => {
     onEdit ? setupdate(true) : setupdate(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
