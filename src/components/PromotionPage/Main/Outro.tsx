@@ -5,11 +5,12 @@ import { getClientLogoImgList } from '@/apis/PromotionPage/client';
 import ClientRowAnimation from '../Client/ClientRowAnimation';
 import WorkWithUs from '../WorkWithUs/WorkWithUs';
 import { theme } from '@/styles/theme';
+import SkeletonComponent from '../SkeletonComponent/SkeletonComponent';
 
 const Outro = () => {
   const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
 
-  if (isLoading) return <>is Loading...</>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <>Outro Error: {error.message}</>;
   return (
     <Container data-cy='outro-section'>

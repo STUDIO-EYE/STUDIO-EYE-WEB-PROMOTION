@@ -1,3 +1,4 @@
+import React from 'react';
 import { putArtworkMainSequence, putArtworkSequence } from '@/apis/PromotionAdmin/artwork';
 import { ArtworkData } from '@/types/PromotionAdmin/artwork';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ import { theme } from '@/styles/theme';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { MSG } from '@/constants/messages';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface ArtworkSequenceProps {
   type: string;
@@ -61,7 +63,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     }
   };
 
-  if (isLoading) return <LoadingWrapper>Loading...</LoadingWrapper>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <div>Error: {error.message}</div>;
 
   const handleSequence = () => {
@@ -201,11 +203,6 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
   );
 };
 export default ArtworkSequence;
-
-const LoadingWrapper = styled.div`
-  font-family: 'pretendard-regular';
-  font-size: 17px;
-`;
 
 const NoDataWrapper = styled.div`
   font-family: 'pretendard-medium';
