@@ -349,25 +349,23 @@ const Header = styled.h3`
     margin-bottom: 0.5rem;
   }
 `;
-
 const Content = styled.div`
   border-top: 1.5px solid black;
   border-bottom: 1.5px solid black;
+  
 `;
-
 const PostItem = styled.div<{ isOpen: boolean }>`
   width: 100%;
-  padding: 1.25rem 0;
+  padding: 2.5rem 1rem; 
   background-color: ${theme.color.white.light};
-  border-top: 1px solid #ccc;
+  border-top: 1.5px solid #ccc;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
-  height: auto;
-  min-height: 3.5rem;
-  transform: scale(1);
+  min-height: 4rem; 
+  box-sizing: border-box;
   cursor: ${(props) => (props.isOpen ? 'pointer' : 'default')};
 
   &:hover {
@@ -375,8 +373,13 @@ const PostItem = styled.div<{ isOpen: boolean }>`
     transform: ${(props) => (props.isOpen ? 'scale(1.02)' : 'scale(1)')};
   }
 
+  &:first-child {
+    border-top: none;
+  }
+
   @media ${theme.media.mobile} {
-    padding: 1.25rem 0.75rem;
+    padding: 1.5rem 1rem;
+    min-height: 3.5rem;
   }
 `;
 
