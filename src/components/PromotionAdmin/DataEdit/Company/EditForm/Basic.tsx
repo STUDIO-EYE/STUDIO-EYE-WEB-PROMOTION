@@ -20,7 +20,6 @@ import styled from 'styled-components';
 import { MSG } from '@/constants/messages';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IBasicFormData {
   address: string;
@@ -113,7 +112,7 @@ const Basic = ({ setEditBasic }: IBasicProps) => {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>

@@ -19,7 +19,6 @@ import { dataUpdateState } from '@/recoil/atoms';
 import { ReactComponent as AddedIcon } from '@/assets/images/PA/plusIcon.svg';
 import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function RecruitmentManagePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
@@ -210,7 +209,7 @@ function RecruitmentManagePage() {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>Loading...</>;
   if (error) return <>{error.message}</>;
 
   return (

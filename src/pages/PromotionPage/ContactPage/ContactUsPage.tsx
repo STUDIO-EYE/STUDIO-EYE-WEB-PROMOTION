@@ -687,6 +687,7 @@ const IntroSubtitle = styled.div`
   font-size: 1.25rem;
   color: #ffffff;
   @media ${theme.media.mobile} {
+    line-height: 1.25rem;
     width: 80%;
     font-family: ${theme.font.semiBold};
     text-align: center;
@@ -868,7 +869,7 @@ const RequestExplanationWrapper = styled.div`
   align-items: flex-start;
 
   @media ${theme.media.mobile} {
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-top: 3rem;
     display: flex;
     flex-direction: column;
@@ -897,7 +898,7 @@ const RequestExplanation = styled.div`
   width: 100%;
 
   @media ${theme.media.mobile} {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-family: ${theme.font.semiBold};
     color: ${(props) => (props.color ? theme.color.white.pale : theme.color.white.light)};
     text-align: left;
@@ -1000,9 +1001,11 @@ const RequestCategoryButton = styled.button<IButtonProps>`
   align-items: center;
   background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
   font-family: ${theme.font.medium};
-  font-size: clamp(0.875rem, 2vw, 2rem);
+  font-size: clamp(1rem, 1.5vw, 2rem);
   color: white;
   margin-bottom: 1.875rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 
   @media ${theme.media.large_tablet} {
     margin-bottom: 1.5rem;

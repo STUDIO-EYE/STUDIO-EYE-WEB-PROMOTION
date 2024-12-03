@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import Button from '../../StyleComponents/Button';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IBasicProps {
   setEditBasic: (editMode: boolean) => void;
@@ -18,7 +17,7 @@ interface IBasicProps {
 const Basic = ({ setEditBasic }: IBasicProps) => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>

@@ -45,7 +45,7 @@ const linksData = [
     svgComponent: <News width={20} height={20} />,
   },
   {
-    path: `${PA_ROUTES.RECRUITMENT}/manage`,
+    path: PA_ROUTES.RECRUITMENT,
     pathName: 'Recruitment',
     svgComponent: <Recruitment width={20} height={20} />,
   },

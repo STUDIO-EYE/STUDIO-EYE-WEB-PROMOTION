@@ -5,7 +5,6 @@ import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
 import groupImage from '@/assets/images/PP/group.png';
 import { theme } from '@/styles/theme';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const RecruitmentPage = () => {
   const currentPage = 1;
@@ -44,7 +43,7 @@ const RecruitmentPage = () => {
   };
 
   if (isRecruitmentLoading || isBenefitLoading) {
-    return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+    return <div>Loading...</div>;
   }
 
   if (recruitmentError || benefitError) {
