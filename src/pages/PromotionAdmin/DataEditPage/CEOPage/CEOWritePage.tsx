@@ -14,7 +14,6 @@ import {
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function CEOWritePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
@@ -149,7 +148,7 @@ function CEOWritePage() {
   const currentLength = putData.request.introduction?.length || 0;
   const maxLimit = 200; // 최대 글자 수
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <div>is Loading..</div>;
   return (
     <Wrapper>
       <form onSubmit={handleSubmit(handleSaveClick)}>

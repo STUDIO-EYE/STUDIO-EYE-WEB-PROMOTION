@@ -12,7 +12,6 @@ import { backdropState } from '@/recoil/atoms';
 import BackDrop from '@/components/Backdrop/Backdrop';
 import ArtworkCreating from '../ArtworkCreating/ArtworkCreating';
 import Pagination from '@/components/Pagination/Pagination';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const Artwork = () => {
   const { data, isLoading, error, refetch } = useQuery<ArtworkData[], Error>('artworks', getAllArtworks);
@@ -49,7 +48,7 @@ const Artwork = () => {
     navigate(PA_ROUTES.ARTWORK);
   }, [selectedCategory, selectedProjectType]);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <LoadingWrapper>Loading...</LoadingWrapper>;
   if (error) return <div>Error: {error.message}</div>;
 
   const indexOfLastPost = (currentPage + 1) * postsPerPage;
@@ -147,6 +146,11 @@ const ArtworkBoxWrapper = styled.div`
 
 const NoDataWrapper = styled.div`
   font-family: 'pretendard-medium';
+  font-size: 17px;
+`;
+
+const LoadingWrapper = styled.div`
+  font-family: 'pretendard-regular';
   font-size: 17px;
 `;
 

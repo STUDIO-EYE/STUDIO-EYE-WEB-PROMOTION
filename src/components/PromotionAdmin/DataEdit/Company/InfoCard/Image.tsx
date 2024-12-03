@@ -18,7 +18,6 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import Button from '../../StyleComponents/Button';
 import styled from 'styled-components';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IImageProps {
   setEditImage: (editMode: boolean) => void;
@@ -42,7 +41,7 @@ const Image = ({ setEditImage }: IImageProps) => {
     }
   }, [data]);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <>

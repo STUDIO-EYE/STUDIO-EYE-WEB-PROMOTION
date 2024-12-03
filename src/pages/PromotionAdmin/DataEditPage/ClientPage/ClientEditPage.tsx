@@ -9,7 +9,6 @@ import FileButton from '@/components/PromotionAdmin/DataEdit/StyleComponents/Fil
 import SubTitle from '@/components/PromotionAdmin/DataEdit/StyleComponents/SubTitle';
 import Title from '@/components/PromotionAdmin/DataEdit/StyleComponents/Title';
 import ToggleSwitch from '@/components/PromotionAdmin/DataEdit/StyleComponents/ToggleSwitch';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import { MSG } from '@/constants/messages';
 import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
@@ -185,7 +184,7 @@ function ClientEditPage() {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <>

@@ -10,7 +10,6 @@ import InnerHTML from '../../StyleComponents/InnerHTML';
 import Button from '../../StyleComponents/Button';
 import { MSG } from '@/constants/messages';
 import { aboutPageAttributes } from '@/constants/dataCyAttributes';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -19,7 +18,7 @@ interface IIntrodutionProps {
 const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>
