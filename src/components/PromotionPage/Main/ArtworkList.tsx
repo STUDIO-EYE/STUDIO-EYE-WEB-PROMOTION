@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Box, BoxProps } from '@chakra-ui/react';
 import { motion, Variants } from 'framer-motion';
 import styled from 'styled-components';

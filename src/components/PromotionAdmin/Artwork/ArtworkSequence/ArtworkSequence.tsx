@@ -1,3 +1,4 @@
+import React from 'react';
 import { putArtworkMainSequence, putArtworkSequence } from '@/apis/PromotionAdmin/artwork';
 import { ArtworkData } from '@/types/PromotionAdmin/artwork';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ import { theme } from '@/styles/theme';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { MSG } from '@/constants/messages';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface ArtworkSequenceProps {
   type: string;
@@ -25,7 +27,8 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     mutationFn: (sequenceData: any[]) => putArtworkMainSequence(sequenceData),
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
-  const editSequence = useMutation((sequenceData: any[]) => putArtworkSequence(sequenceData), {
+  const editSequence = useMutation({
+    mutationFn: (sequenceData: any[]) => putArtworkSequence(sequenceData), 
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
   const [realData, setRealData] = useState<ArtworkData[]>([]);
@@ -41,7 +44,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     handleDataSort();
     setOnEdit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type,data]);
   useEffect(() => {
     onEdit ? setupdate(true) : setupdate(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +64,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     }
   };
 
-  if (isLoading) return <LoadingWrapper>Loading...</LoadingWrapper>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <div>Error: {error.message}</div>;
 
   const handleSequence = () => {
@@ -201,11 +204,6 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
   );
 };
 export default ArtworkSequence;
-
-const LoadingWrapper = styled.div`
-  font-family: 'pretendard-regular';
-  font-size: 17px;
-`;
 
 const NoDataWrapper = styled.div`
   font-family: 'pretendard-medium';

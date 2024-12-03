@@ -6,6 +6,7 @@ import { fetchWaitingRequests } from '@/apis/PromotionAdmin/dashboard';
 import { WaitingRequestData } from '@/types/PromotionAdmin/statistics';
 import { ReactComponent as Sort } from '@/assets/images/sortImg.svg';
 import { useQuery } from 'react-query';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const WatingRequests = () => {
   const { data, isLoading } = useQuery<WaitingRequestData[]>(['waitingRequest'], fetchWaitingRequests);
@@ -42,7 +43,7 @@ const WatingRequests = () => {
       </HeaderWrapper>
       <BodyWrapper>
         {isLoading ? (
-          <LoadingWrapper>Loading...</LoadingWrapper>
+          <SkeletonComponent width={'100%'} height={'100%'}/>
         ) : sortedData && sortedData.length > 0 ? (
           sortedData.map((request) => (
             <WaitingRequestsList

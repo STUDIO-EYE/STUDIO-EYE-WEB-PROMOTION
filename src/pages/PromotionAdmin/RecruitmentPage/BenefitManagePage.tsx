@@ -22,6 +22,7 @@ import {
   DATAEDIT_NOTICE_COMPONENTS,
   DATAEDIT_TITLES_COMPONENTS,
 } from '../../../components/PromotionAdmin/DataEdit/Company/StyleComponents';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function BenefitManagePage() {
   const timeStamp = Date.now();
@@ -269,7 +270,7 @@ function BenefitManagePage() {
     }
   };
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
   if (error) return <>{error.message}</>;
 
   return (

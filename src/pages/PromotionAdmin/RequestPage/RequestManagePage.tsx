@@ -9,6 +9,7 @@ import WaitingRequestsList from '@/components/PromotionAdmin/Home/RequestSummary
 import { ContentBox } from '@/components/PromotionAdmin/Request/Components';
 import Pagination from '@/components/Pagination/Pagination';
 import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function RequestList() {
   const { data, isLoading, refetch } = useQuery<IRequest[]>('requests', getRequestsData, { refetchOnWindowFocus: false });
@@ -84,6 +85,7 @@ function RequestList() {
         <>
        <TableWrapper data-cy="request-list-table">
               {isLoading ? (
+                // <SkeletonComponent data-cy="loading-message" width={'100vw'} height={'100vh'}/>
                 <h1 data-cy="loading-message">Loading...</h1>
               ) : slicedRequests && slicedRequests.length > 0 ? (
                 slicedRequests.map((request) => (

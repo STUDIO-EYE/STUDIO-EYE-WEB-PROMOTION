@@ -2,19 +2,28 @@ import ArtworkComponent from '@/components/PromotionAdmin/Artwork/ArtworkDefault
 import ArtworkHeader from '@/components/PromotionAdmin/Artwork/ArtworkHeader';
 import ArtworkSequence from '@/components/PromotionAdmin/Artwork/ArtworkSequence/ArtworkSequence';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { ArtworkData } from '@/types/PromotionAdmin/artwork';
 import { getAllArtworks } from '@/apis/PromotionAdmin/artwork';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Artwork = () => {
-  const { data, isLoading, error, refetch } = useQuery<ArtworkData[], Error>('artworksequence', getAllArtworks);
-  const [isEditingSequence, setIsEditingSequence] = useState<number>(0); //ArtworkHeader navigate용
+  
+  // const [isEditingSequence, setIsEditingSequence] = useState<number>(0); //ArtworkHeader navigate용
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const queryParams = new URLSearchParams(location.search);
+  const editingSequenceFromURL = parseInt(queryParams.get('editing') || '0', 10); // URL에서 상태 읽기
+  const [isEditingSequence, setIsEditingSequence] = useState<number>(editingSequenceFromURL);
   const handleEditingSequence = (isEditing: number) => {
     setIsEditingSequence(isEditing);
+    navigate(`?editing=${isEditing}`);
   };
+
+  const { data, isLoading, error, refetch } = useQuery<ArtworkData[], Error>('artworksequence', getAllArtworks);
 
   return (
     <Container>

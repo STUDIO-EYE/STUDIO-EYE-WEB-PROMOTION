@@ -1,10 +1,9 @@
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const getArtworkData = async () => {
   try {
     const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/projects`);
-    // await new Promise((resolve) => setTimeout(resolve, 3000)); // 일부러 임시로 3초 지연
     return response.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);

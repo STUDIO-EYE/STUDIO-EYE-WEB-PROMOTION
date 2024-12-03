@@ -45,6 +45,7 @@ describe('Mainpage - Top 섹션을 확인한다.', () => {
     });
     cy.visit('/promotion-admin/artwork');
     cy.contains('Loading...').should('be.visible');
+
     const child = ['title', 'client', 'isOpen', 'category', 'overview', 'type'];
     cy.get('[data-cy="PA_artwork_list"]')
       .find('[data-cy="PA_artwork"]')
@@ -68,6 +69,17 @@ describe('Mainpage - Top 섹션을 확인한다.', () => {
     cy.visit('/promotion-admin/artwork');
     cy.contains('Loading...').should('be.visible');
     cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
+  });
+
+  it('필수 예외) 요청을 했으나 Status Code가 500인 경우.', () => {
+    cy.intercept('GET', '**/api/projects', {
+      statusCode: 500,
+      body: [],
+    });
+    cy.visit('/promotion-admin/artwork');
+    cy.contains('Loading...').should('be.visible');
+    cy.wait(5000);
+    cy.contains('Error').should('be.visible');
   });
 
   it('프로모션 페이지의 메인의 Top 섹션에서 Top 아트워크가 있는 것을 확인한다.', () => {
@@ -115,9 +127,105 @@ describe('Mainpage - Top 섹션을 확인한다.', () => {
       });
     });
   });
+
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/projects/main', {
+      statusCode: 500,
+      body: [],
+    });
+    cy.visit('/');
+    cy.wait(5000);
+    cy.contains('Artwork Error:').should('be.visible');
+  });
 });
 
 describe('MainPage - Intro 섹션을 확인한다.', () => {
+  beforeEach(() => {
+    login();
+  });
+
+  it('관리 페이지에서 로딩 확인 후 mainOverview, commitment가 있는 것을 확인한다.', () => {
+    cy.visit('/promotion-admin/dataEdit');
+    cy.get('[data-cy="nav-btn-company"]').click();
+    cy.contains('Loading...').should('be.visible');
+    cy.wait(3000);
+    cy.intercept('GET', '**/api/company/information', {
+      statusCode: 200,
+      body: [
+        {
+          code: 200,
+          status: 'OK',
+          message: '전체 회사 정보를 성공적으로 조회하였습니다.',
+          data: {
+            id: 1,
+            mainOverview: '<p>스튜디오 아이와 함께 영상물 퀄리티 UP&nbsp;</p>',
+            commitment: '<p>최고의 경험을 선사하는 스튜디오 아이의 작업과 함께하세요.</p>',
+            address: '서울시 성동구 광나루로 162 BS성수타워 5층',
+            addressEnglish: '5F 162, Gwangnaru-ro, Seongdong-gu, Seoul, Republic of Korea',
+            lightLogoImageFileName: 'LightLogo.png',
+            lightLogoImageUrl: '',
+            darkLogoImageFileName: 'DarkLogo.png',
+            darkLogoImageUrl: '',
+            phone: '02-2038-2663',
+            fax: '02-2038-2663',
+            introduction:
+              '<p>2010년에 설립된 <span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">클라이언트 맞춤형 콘텐츠 제작</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">과</span><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">&nbsp;운영 대책 서비스</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">를 제공하고 있으며,</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);"><span class="ql-cursor">﻿</span>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</span></p>',
+            sloganImageFileName: 'Slogan.png',
+            sloganImageUrl: '',
+            detailInformation: [],
+          },
+        },
+      ],
+    });
+
+    cy.scrollTo(1000, 0);
+    const child = ['MainOverview', 'commitment'];
+    cy.get('[data-cy="introduction_list"]').within(() => {
+      child.forEach((child) => {
+        cy.scrollTo('right', { duration: 1000 }); // 수평으로 스크롤
+        cy.get(`[data-cy="intro_${child}"]`).should('exist');
+      });
+    });
+  });
+
+  it('프로모션 페이지의 메인의 Intro 섹션에서 Company Information 데이터가 있는 것을 확인한다.', () => {
+    cy.intercept('GET', '**/api/company/information', {
+      statusCode: 200,
+      body: [
+        {
+          code: 200,
+          status: 'OK',
+          message: '전체 회사 정보를 성공적으로 조회하였습니다.',
+          data: {
+            id: 1,
+            mainOverview: '<p>스튜디오 아이와 함께 영상물 퀄리티 UP&nbsp;</p>',
+            commitment: '<p>최고의 경험을 선사하는 스튜디오 아이의 작업과 함께하세요.</p>',
+            address: '서울시 성동구 광나루로 162 BS성수타워 5층',
+            addressEnglish: '5F 162, Gwangnaru-ro, Seongdong-gu, Seoul, Republic of Korea',
+            lightLogoImageFileName: 'LightLogo.png',
+            lightLogoImageUrl: 'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/LightLogo.png',
+            darkLogoImageFileName: 'DarkLogo.png',
+            darkLogoImageUrl: 'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/DarkLogo.png',
+            phone: '02-2038-2663',
+            fax: '02-2038-2663',
+            introduction:
+              '<p>2010년에 설립된 <span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">클라이언트 맞춤형 콘텐츠 제작</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">과</span><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">&nbsp;운영 대책 서비스</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">를 제공하고 있으며,</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);"><span class="ql-cursor">﻿</span>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</span></p>',
+            sloganImageFileName: 'Slogan.png',
+            sloganImageUrl: 'https://studio-eye-gold-bucket.s3.ap-northeast-2.amazonaws.com/Slogan.png',
+            detailInformation: [],
+          },
+        },
+      ],
+    });
+    cy.visit('/');
+    const child = ['mainOverview', 'commitment'];
+    cy.get('[data-cy="intro-section"]').within(() => {
+      child.forEach((child) => {
+        cy.get(`[data-cy="intro_${child}"]`).should('exist');
+      });
+    });
+  });
+
   it('필수 예외) 데이터가 없을 경우.', () => {
     cy.intercept('GET', '**/api/company/information', {
       statusCode: 200,
@@ -130,6 +238,16 @@ describe('MainPage - Intro 섹션을 확인한다.', () => {
         cy.get(`[data-cy="intro_${child}"]`).should('exist');
       });
     });
+  });
+
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/company/information', {
+      statusCode: 500,
+      body: [],
+    });
+    cy.visit('/');
+    cy.wait(5000);
+    cy.contains('Intro Error:').should('be.visible');
   });
 });
 
@@ -202,6 +320,17 @@ describe('MainPage - ArtworkList 섹션을 확인한다.', () => {
     cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
   });
 
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/projects', {
+      statusCode: 500,
+      body: [],
+    });
+    cy.visit('/promotion-admin/artwork');
+    cy.contains('Loading...').should('be.visible');
+    cy.wait(5000);
+    cy.contains('Error').should('be.visible');
+  });
+
   it('프로모션 페이지의 메인의 ArtworkList 섹션에서 Main 아트워크가 있는 것을 확인한다.', () => {
     cy.intercept('GET', '**/api/projects/main', {
       statusCode: 200,
@@ -240,28 +369,33 @@ describe('MainPage - ArtworkList 섹션을 확인한다.', () => {
       },
     });
     cy.visit('/');
-    const child = ['name', 'overview', 'client'];
-    cy.get('[data-cy="artwork-section"]').within(() => {
-      child.forEach((child) => {
-        cy.get(`[data-cy="artwork_${child}"]`).should('exist');
-      });
-    });
+    cy.get('[data-cy="artwork_client"]').should('exist');
+    cy.get('[data-cy="artwork_name"]').should('exist');
+    cy.get('[data-cy="artwork_overview"]').should('exist');
   });
 
   it('필수 예외) 프로모션 페이지에서 아트워크가 없을 경우.', () => {
     cy.intercept('GET', '**/api/projects/main', {
-      statusCode: 200,
+      code: 200,
+      status: 'OK',
+      message: '프로젝트가 존재하지 않습니다.',
+      data: null,
+    });
+    cy.visit('/');
+    cy.contains('표시할 아트워크가 없습니다.').should('be.visible');
+  });
+
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/projects/main', {
+      statusCode: 500,
       body: [],
     });
     cy.visit('/');
-    // 디폴트 데이터 확인
-    cy.get('[data-cy="artwork-section"]').within(() => {
-      cy.get('[data-cy="artwork_name"]').should('contain', ARTWORKLIST_DATA.TITLE);
-      cy.get('[data-cy="artwork_client"]').should('contain', ARTWORKLIST_DATA.CLIENT);
-      cy.get('[data-cy="artwork_overview"]').should('contain', ARTWORKLIST_DATA.OVERVIEW);
-    });
+    cy.wait(5000);
+    cy.contains('Artwork Error:').should('be.visible');
   });
 });
+
 describe('MainPage - Outro 섹션을 확인한다.', () => {
   beforeEach(() => {
     login();
@@ -301,7 +435,6 @@ describe('MainPage - Outro 섹션을 확인한다.', () => {
 
     cy.visit('/promotion-admin/dataEdit');
     cy.get('[data-cy="nav-btn-client"]').click();
-
     const child = ['name', 'img'];
     cy.get('[data-cy="PA_client_list"]').within(() => {
       child.forEach((child) => {
@@ -343,6 +476,37 @@ describe('MainPage - Outro 섹션을 확인한다.', () => {
     });
   });
 
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/client/page?page=0&size=6', {
+      statusCode: 500,
+      body: {
+        content: [],
+        pageable: {
+          pageNumber: 0,
+          pageSize: 6,
+          sort: [],
+          offset: 0,
+          paged: true,
+          unpaged: false,
+        },
+        totalPages: 0,
+        totalElements: 0,
+        last: true,
+        size: 6,
+        number: 0,
+        sort: [],
+        numberOfElements: 0,
+        first: true,
+        empty: true,
+      },
+    });
+
+    cy.visit('/promotion-admin/dataEdit');
+    cy.get('[data-cy="nav-btn-client"]').click();
+    cy.wait(5000);
+    cy.contains('Error').should('be.visible');
+  });
+
   it('프로모션 페이지의 메인의 Outro 섹션에서 클라이언트가 있는 것을 확인한다.', () => {
     cy.intercept('GET', '**/api/client/logoImgList', {
       statusCode: 200,
@@ -364,7 +528,7 @@ describe('MainPage - Outro 섹션을 확인한다.', () => {
   });
 
   it('필수 예외) Client 리스트가 존재하지 않을 경우.', () => {
-    cy.intercept('GET', '**/api/client', {
+    cy.intercept('GET', '**/api/client/logoImgList', {
       statusCode: 200,
       body: {
         code: 200,
@@ -380,5 +544,15 @@ describe('MainPage - Outro 섹션을 확인한다.', () => {
         cy.get(`img[src="${image}"]`).should('not.exist'); // 이미지가 존재하지 않는지 확인
       });
     });
+  });
+
+  it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
+    cy.intercept('GET', '**/api/client/logoImgList', {
+      statusCode: 500,
+      body: [],
+    });
+    cy.visit('/');
+    cy.wait(5000);
+    cy.contains('Outro Error:').should('be.visible');
   });
 });

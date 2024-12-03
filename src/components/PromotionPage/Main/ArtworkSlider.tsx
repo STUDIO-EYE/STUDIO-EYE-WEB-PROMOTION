@@ -30,7 +30,7 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
   }, [artworks]);
 
   if (!artworks || artworks.length === 0) {
-    return <div>표시할 아트워크가 없습니다.</div>;
+    return <>표시할 아트워크가 없습니다.</>;
   }
 
   return (

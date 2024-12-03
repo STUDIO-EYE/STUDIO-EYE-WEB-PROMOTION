@@ -9,20 +9,22 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import styled from 'styled-components';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 import { theme } from '@/styles/theme';
-import ArtworkSlider from '@/components/PromotionPage/Main/ArtworkSlider';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const Top = lazy(() => import('@/components/PromotionPage/Main/Top'));
 const Intro = lazy(() => import('@/components/PromotionPage/Main/Intro'));
 const ArtworkList = lazy(() => import('@/components/PromotionPage/Main/ArtworkList'));
 const Outro = lazy(() => import('@/components/PromotionPage/Main/Outro'));
 const Footer = lazy(() => import('@/components/PromotionPage/Footer/Footer'));
+const ArtworkSlider = lazy(() => import('@/components/PromotionPage/Main/ArtworkSlider'));
 
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
   const [activeIndex, setActiveIndex] = useState(0);
-  const { data, isLoading } = useQuery<MIArtworksData>(['artwork', 'id'], getArtworkMainData, {
+  const { data, isLoading, error } = useQuery<MIArtworksData, Error>(['artwork', 'id'], getArtworkMainData, {
     staleTime: 1000 * 60 * 10, // 10분
   });
+
   const sectionsRef = useRef<HTMLElement[]>([]);
   const filteredMainData = data?.data ? data.data.filter((i) => i.projectType === 'main') : [];
   const filteredTopData = data?.data ? data.data.filter((i) => i.projectType === 'top') : [];
@@ -57,6 +59,9 @@ const MainPage = () => {
     }
   }, [height]);
 
+  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  // if (isLoading) return <>Artowrk is Loading...</>;
+  if (error) return <>Artwork Error: {error.message}</>;
   return (
     <>
       <style>{`
@@ -80,29 +85,28 @@ const MainPage = () => {
       `}</style>
       <div style={{ overflowY: 'scroll', height: '100vh', scrollSnapType: 'y mandatory' }}>
         <ChakraProvider>
-          <Suspense>
-            <TopSection>
-              {filteredTopData && filteredTopData.length > 0 ? (
-                filteredTopData.map((i, index) => <Top key={index} backgroundImg={i.mainImg} />)
-              ) : (
-                <Top backgroundImg={defaultTopImg} />
-              )}
-            </TopSection>
-            <IntroSection>
-              <Intro />
-            </IntroSection>
-            <ArtworkSection>
-              <Box
-                w="100%"
-                h="100vh"
-                scrollSnapType="y mandatory"
-                overflowY="scroll"
-                sx={{
-                  '&::-webkit-scrollbar': {
-                    display: 'none',
-                  },
-                }}
-                css={`
+          <TopSection>
+            {filteredTopData && filteredTopData.length > 0 ? (
+              filteredTopData.map((i, index) => <Top key={index} backgroundImg={i.mainImg} />)
+            ) : (
+              <Top backgroundImg={defaultTopImg} />
+            )}
+          </TopSection>
+          <IntroSection>
+            <Intro />
+          </IntroSection>
+          <ArtworkSection>
+            <Box
+              w="100%"
+              h="100vh"
+              scrollSnapType="y mandatory"
+              overflowY="scroll"
+              sx={{
+                '&::-webkit-scrollbar': {
+                  display: 'none',
+                },
+              }}
+              css={`
                   @supports (-webkit-touch-callout: none) {
                     height: 100dvh;
                   }
@@ -112,70 +116,68 @@ const MainPage = () => {
                     scroll-snap-type: y mandatory;
                   }
                 `}
-              >
-                {isLoading ? (
-                  <div>데이터 로딩 중...</div>
-                ) : height <= 780 ? (
-                  <ArtworkSlider
-                    artworks={filteredMainData.map((item) => ({
-                      id: item.id,
-                      department: item.department || '',
-                      category: item.category || '',
-                      name: item.name || '',
-                      link: item.link || '',
-                      client: item.client || '',
-                      date: item.date || '',
-                      mainImg: item.mainImg || defaultMainImg,
-                      responsiveMainImg: item.responsiveMainImg || defaultMainImg,
-                      overView: item.overView || '',
-                      isPosted: item.isPosted ?? true,
-                      projectImages: item.projectImages || [],
-                    }))}
-                  />
-                ) : filteredMainData && filteredMainData.length > 0 ? (
-                  filteredMainData.map((item, index) => (
-                    <ArtworkList
-                      key={item.id}
-                      data={{
-                        backgroundImg: item.mainImg ? item.mainImg : '',
-                        title: item.name ? item.name : '',
-                        client: item.client ? item.client : '',
-                        overview: item.overView,
-                        link: item.link,
-                      }}
-                      count={filteredMainData.length}
-                      scrollToSection={scrollToSection}
-                      elementHeight={elementHeight}
-                      index={index}
-                      ref={(element) => (sectionsRef.current[index] = element as HTMLElement)}
-                    />
-                  ))
-                ) : (
+            >
+              {isLoading ? (
+                <div>데이터 로딩 중...</div>
+              ) : height <= 780 ? (
+                <ArtworkSlider
+                  artworks={filteredMainData.map((item) => ({
+                    id: item.id,
+                    department: item.department || '',
+                    category: item.category || '',
+                    name: item.name || ARTWORKLIST_DATA.TITLE,
+                    link: item.link || '',
+                    client: item.client || ARTWORKLIST_DATA.CLIENT,
+                    date: item.date || '',
+                    mainImg: item.mainImg || defaultMainImg,
+                    responsiveMainImg: item.responsiveMainImg || defaultMainImg,
+                    overView: item.overView || ARTWORKLIST_DATA.OVERVIEW,
+                    isPosted: item.isPosted ?? true,
+                    projectImages: item.projectImages || [],
+                  }))}
+                />
+              ) : filteredMainData && filteredMainData.length > 0 ? (
+                filteredMainData.map((item, index) => (
                   <ArtworkList
-                    key={'default'}
+                    key={item.id}
                     data={{
-                      backgroundImg: defaultMainImg,
-                      title: ARTWORKLIST_DATA.TITLE,
-                      client: ARTWORKLIST_DATA.CLIENT,
-                      overview: ARTWORKLIST_DATA.OVERVIEW,
+                      backgroundImg: item.mainImg ? item.mainImg : defaultMainImg,
+                      title: item.name ? item.name : ARTWORKLIST_DATA.TITLE,
+                      client: item.client ? item.client : ARTWORKLIST_DATA.CLIENT,
+                      overview: item.overView ? item.overView : ARTWORKLIST_DATA.OVERVIEW,
+                      link: item.link,
                     }}
                     count={filteredMainData.length}
                     scrollToSection={scrollToSection}
                     elementHeight={elementHeight}
-                    index={0}
-                    ref={(element) => (sectionsRef.current[0] = element as HTMLElement)}
+                    index={index}
+                    ref={(element) => (sectionsRef.current[index] = element as HTMLElement)}
                   />
-                )}
-              </Box>
-            </ArtworkSection>
-            <OutroSection>
-              <Outro />
-
-            </OutroSection>
-            <FooterkSection>
-                <Footer />
-              </FooterkSection>
-          </Suspense>
+                ))
+              ) : (
+                <ArtworkList
+                  key={'default'}
+                  data={{
+                    backgroundImg: defaultMainImg,
+                    title: ARTWORKLIST_DATA.TITLE,
+                    client: ARTWORKLIST_DATA.CLIENT,
+                    overview: ARTWORKLIST_DATA.OVERVIEW,
+                  }}
+                  count={filteredMainData.length}
+                  scrollToSection={scrollToSection}
+                  elementHeight={elementHeight}
+                  index={0}
+                  ref={(element) => (sectionsRef.current[0] = element as HTMLElement)}
+                />
+              )}
+            </Box>
+          </ArtworkSection>
+          <OutroSection>
+            <Outro />
+          </OutroSection>
+          <FooterkSection>
+            <Footer />
+          </FooterkSection>
         </ChakraProvider>
       </div>
     </>

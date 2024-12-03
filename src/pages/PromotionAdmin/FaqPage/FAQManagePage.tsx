@@ -17,6 +17,7 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../../../components/PromotionAdmin/D
 import { ReactComponent as PublicIcon } from '@/assets/images/PA/public.svg';
 import { ReactComponent as PrivateIcon } from '@/assets/images/PA/private.svg';
 import { MSG } from '@/constants/messages';
+import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function FAQManagePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
@@ -196,7 +197,7 @@ function FAQManagePage() {
             </Button>
           </TitleWrapper>
           {isLoading ? (
-            <p>is Loading...</p>
+            <SkeletonComponent width={'40vw'} height={'800px'}/>
           ) : error ? (
             <p>{error.message}</p>
           ) : data === null || data?.length === 0 ? (
