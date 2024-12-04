@@ -3,11 +3,12 @@ import { theme } from '@/styles/theme';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-function NullException() {
+function NullException({isError}:{isError:string|null}) {
   const navigator = useNavigate();
+  console.log(isError)
   return (
     <Wrapper>
-      <Msg>아직 프로젝트가 없습니다.</Msg>
+      {isError?<Msg>{isError}</Msg>:<Msg>아직 프로젝트가 없습니다.</Msg>}
 
       <Title data-cy='PP_artwork_nullComment' width='963' height='185' viewBox='0 0 963 185' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path

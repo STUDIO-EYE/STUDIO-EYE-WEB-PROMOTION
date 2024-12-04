@@ -87,7 +87,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
     }
   };
 
-  if (isLoading) return <>is Loading...</>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>

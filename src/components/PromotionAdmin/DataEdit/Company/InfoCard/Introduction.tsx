@@ -18,23 +18,23 @@ interface IIntrodutionProps {
 const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
 
-  if (isLoading) return <>is Loading...</>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>
       {data && (
-        <ContentBlock>
+        <ContentBlock data-cy="introduction_list">
           <TitleWrapper data-cy='MODIFY_INTRO_TITLE'>
             {DATAEDIT_TITLES_COMPONENTS.Introduction}
             <Button description={MSG.BUTTON_MSG.MODIFY} onClick={() => setEditIntroduction(true)} width={100} />
           </TitleWrapper>
           <InputWrapper>
             <InputTitle>Main Overview</InputTitle>
-            <Content>
+            <Content data-cy='intro_MainOverview'>
               <InnerHTML description={data.mainOverview} />
             </Content>
             <InputTitle>Commitment</InputTitle>
-            <Content>
+            <Content data-cy='intro_commitment'>
               <InnerHTML description={data.commitment} />
             </Content>
             <InputTitle>Introduction</InputTitle>

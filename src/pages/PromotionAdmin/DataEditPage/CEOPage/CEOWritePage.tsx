@@ -148,7 +148,7 @@ function CEOWritePage() {
   const currentLength = putData.request.introduction?.length || 0;
   const maxLimit = 200; // 최대 글자 수
 
-  if (isLoading) return <div>is Loading...</div>;
+  if (isLoading) return <div>is Loading..</div>;
   return (
     <Wrapper>
       <form onSubmit={handleSubmit(handleSaveClick)}>

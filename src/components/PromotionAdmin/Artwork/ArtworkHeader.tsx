@@ -12,6 +12,7 @@ const ArtworkHeader = ({ initialCheck, control }
   const setupdate = useSetRecoilState(dataUpdateState);
   useEffect(() => {
     //초기값 변경될 때 상태 업데이트
+    console.log(initialCheck)
     setIsChecked(initialCheck);
   }, [initialCheck]);
 

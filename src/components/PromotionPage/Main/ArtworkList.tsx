@@ -76,7 +76,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
         </motion.div>
       </Suspense>
 
-      {/* {data.link && (
+      {data.link && (
         <a data-cy='artwork_link'
           href={data.link}
           target="_blank"
@@ -92,7 +92,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
             zIndex: '1'
           }}
         />
-      )} */}
+      )}
     </MotionBox>
   );
 });

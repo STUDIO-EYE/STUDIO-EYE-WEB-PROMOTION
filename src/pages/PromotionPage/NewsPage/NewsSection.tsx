@@ -4,13 +4,13 @@ import { GoArrowRight } from "react-icons/go";
 import { theme } from '@/styles/theme';
 
 interface INewsCardProps {
-    id: number;
-    title: string;
-    source: string;
-    url: string;
-    pubDate: string;
-    onClick?: () => void;
-  }
+  id: number;
+  title: string;
+  source: string;
+  url: string;
+  pubDate: string;
+  onClick?: () => void;
+}
 
 interface NewsSectionProps {
   currentNewsData: INewsCardProps[];
@@ -44,7 +44,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
     };
   }, []);
 
-  const handleNewsClick = (newsUrl:string, newsId:number) => {
+  const handleNewsClick = (newsUrl: string, newsId: number) => {
     if (isMobile) {
       if (isClicked === newsId) {// 클릭된 상태면 링크로 이동
         onNewsClick(newsUrl);
@@ -85,7 +85,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
         ))
       )}
     </Container>
-  );  
+  );
 }
 export default NewsSection;
 

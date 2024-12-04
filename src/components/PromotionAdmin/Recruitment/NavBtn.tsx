@@ -8,14 +8,15 @@ import { MSG } from '@/constants/messages';
 type Props = {
   path: string;
   pathName: string;
+  isActive: boolean;  // 여기서 isActive 타입을 추가
 };
 
-const NavBtn = ({ path, pathName }: Props) => {
-  const navigator = useNavigate();
+const NavBtn = ({ path, pathName, isActive }: Props) => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const isActive = location.pathname.includes(path);
   const [isEditing, setIsEditing] = useRecoilState(dataUpdateState);
 
+  // 클릭 핸들러 함수
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
 
@@ -23,16 +24,19 @@ const NavBtn = ({ path, pathName }: Props) => {
       // 현재 경로와 이동할 경로가 같으면 confirm을 띄우지 않음
       return;
     }
+
+    // 편집 중일 경우, 확인 메시지 출력
     if (isEditing) {
       const confirmNavigation = window.confirm(MSG.CONFIRM_MSG.EXIT);
       if (confirmNavigation) {
-        navigator(path);
+        navigate(path);
         setIsEditing(false);
       }
     } else {
-      navigator(path);
+      navigate(path);
     }
   };
+
   return (
     <LinkStyle onClick={handleClick} isActive={isActive}>
       <Name>{pathName}</Name>
@@ -42,6 +46,7 @@ const NavBtn = ({ path, pathName }: Props) => {
 
 export default NavBtn;
 
+// 스타일 컴포넌트 정의
 const LinkStyle = styled.div<{ isActive: boolean }>`
   cursor: pointer;
   width: 127px;
@@ -52,6 +57,7 @@ const LinkStyle = styled.div<{ isActive: boolean }>`
   justify-content: center;
   color: #595959;
   text-decoration: none;
+
   &:hover {
     color: ${(props) => props.theme.color.symbol};
   }
@@ -61,7 +67,15 @@ const LinkStyle = styled.div<{ isActive: boolean }>`
     `
     border-bottom: 2.5px solid ${props.theme.color.symbol};
   `}
+
+  /* 강제로 border-bottom 스타일 적용 */
+  ${(props) =>
+    !props.isActive &&
+    `
+    border-bottom: none;
+  `}
 `;
+
 
 const Name = styled.div`
   margin-top: 5px;
