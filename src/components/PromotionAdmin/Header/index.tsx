@@ -40,7 +40,7 @@ const Index = () => {
     },
     {
       enabled: !!auth.userId,
-      refetchInterval: 5000,
+      refetchInterval: 60000, // 1분마다 새로고침
       onSuccess: (data) => {
         if (data.length === 0) {
           setIconStatus(false);
