@@ -23,12 +23,7 @@ export const deleteMenuData = async (menuId: number) => {
 
 export const postMenuData = async (menuData: { title: string; visibility: boolean }) => {
   try {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.post(`${PROMOTION_BASIC_PATH}/api/menu`, menuData, config);
+    const response = await axios.post(`${PROMOTION_BASIC_PATH}/api/menu`, menuData);
     return response.data;
   } catch (error) {
     console.error('[❌ Error creating menu]', error);
@@ -58,5 +53,3 @@ export const putMenuData = async (menuItems: IMenuData[]) => {
     throw error;
   }
 };
-
-

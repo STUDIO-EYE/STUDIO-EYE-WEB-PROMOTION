@@ -1,5 +1,5 @@
 import { getAllNewsData } from "@/apis/PromotionPage/news";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
