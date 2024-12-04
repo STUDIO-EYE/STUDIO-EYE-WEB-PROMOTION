@@ -1,13 +1,13 @@
 import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
-  media:{
+  media: {
     large_tablet: 'only screen and (max-width: 1280px)',
     tablet: 'only screen and (max-width:1024px)',
     mobile: 'only screen and (max-width: 767px)',
     small_mobile: 'only screen and (max-width: 320px)',
   },
-  mediaSize:{
+  mediaSize: {
     large_tablet: 1280,
     tablet: 1024,
     mobile: 767,
@@ -21,6 +21,11 @@ export const theme: DefaultTheme = {
       bold: '#141414',
       light: '#8A8A8A',
       pale: '#C4C4C4',
+    },
+    gray: {
+      light: '#d3d3d3',
+      lighter: '#f0f0f0',
+      dark: '#a9a9a9',
     },
     white: {
       bold: '#FBFBFB',

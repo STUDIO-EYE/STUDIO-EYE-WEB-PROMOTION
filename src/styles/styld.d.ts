@@ -2,18 +2,17 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
-    media:{
+    media: {
       large_tablet: string;
       tablet: string;
       mobile: string;
       small_mobile: string;
     };
-    mediaSize:{
+    mediaSize: {
       large_tablet: number;
       tablet: number;
       mobile: number;
       small_mobile: number;
-      
     };
     color: {
       symbol: string;
@@ -22,6 +21,11 @@ declare module 'styled-components' {
         bold: string;
         light: string;
         pale: string;
+      };
+      gray: {
+        light: string;
+        lighter: string;
+        dark: string;
       };
       white: {
         bold: string;
