@@ -6,13 +6,12 @@ import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button'
 import styled from 'styled-components';
 import CEOWritePage from './CEOWritePage';
 import { DATAEDIT_TITLES_COMPONENTS } from '../../../../components/PromotionAdmin/DataEdit/Company/StyleComponents';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 function CEOPage() {
   const { data, isLoading } = useQuery<ICEOData>(['ceo', 'id'], getCEOData);
   const navigator = useNavigate();
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <div>is Loading..</div>;
   if (data === null) return <CEOWritePage />;
 
   return (

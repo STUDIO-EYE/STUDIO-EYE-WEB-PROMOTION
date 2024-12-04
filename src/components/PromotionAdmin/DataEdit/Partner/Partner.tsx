@@ -16,7 +16,6 @@ import Pagination from '@/components/Pagination/Pagination';
 import { MSG } from '@/constants/messages';
 import { dataUpdateState } from '@/recoil/atoms';
 import { useRecoilState } from 'recoil';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const Partner = () => {
   const navigator = useNavigate();
@@ -38,7 +37,7 @@ const Partner = () => {
     }
   }, [data, currentPage, navigator]);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <div>Error: {error.message}</div>;
   return (
     <Wrapper>

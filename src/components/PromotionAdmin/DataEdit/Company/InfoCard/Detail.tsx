@@ -7,7 +7,6 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import Button from '../../StyleComponents/Button';
 import { ContentBlock } from '../CompanyFormStyleComponents';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IDetailProps {
   setEditDetail: (editMode: boolean) => void;
@@ -22,7 +21,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
     value: item.value,
   }));
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
 
   return (

@@ -11,10 +11,9 @@ type Props = {
   isActive: boolean;  // 여기서 isActive 타입을 추가
 };
 
-const NavBtn = ({ path, pathName }: Props) => {
+const NavBtn = ({ path, pathName, isActive }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = location.pathname.includes(path); // 현재 경로에 따라 활성화 상태 확인
   const [isEditing, setIsEditing] = useRecoilState(dataUpdateState);
 
   // 클릭 핸들러 함수

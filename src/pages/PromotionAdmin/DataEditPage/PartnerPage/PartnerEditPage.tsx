@@ -20,7 +20,6 @@ import {
 import { MSG } from '@/constants/messages';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IFormData {
   is_main: boolean;
@@ -194,7 +193,7 @@ function PartnerEditPage() {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <>

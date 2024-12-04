@@ -9,7 +9,6 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import styled from 'styled-components';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 import { theme } from '@/styles/theme';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const Top = lazy(() => import('@/components/PromotionPage/Main/Top'));
 const Intro = lazy(() => import('@/components/PromotionPage/Main/Intro'));
@@ -59,8 +58,7 @@ const MainPage = () => {
     }
   }, [height]);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
-  // if (isLoading) return <>Artowrk is Loading...</>;
+  if (isLoading) return <>Artowrk is Loading...</>;
   if (error) return <>Artwork Error: {error.message}</>;
   return (
     <>

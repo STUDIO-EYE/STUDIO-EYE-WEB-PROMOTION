@@ -23,7 +23,6 @@ import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 import { useNavigate } from 'react-router-dom';
 import { aboutPageAttributes } from '@/constants/dataCyAttributes';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IDetailFormData {
   [x: string]: any;
@@ -85,7 +84,7 @@ const Detail = ({ setEditDetail }: IDetailProps) => {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
 
   return (
