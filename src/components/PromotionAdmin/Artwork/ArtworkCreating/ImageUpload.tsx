@@ -25,12 +25,12 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files);
-      const maxFiles = type === 'main'||'responsiveMain' ? 1 : 3;
+      const maxFiles = type === 'main'||type==='responsiveMain' ? 1 : 3;
       const newFiles = selectedFiles.slice(0, maxFiles);
 
       const newPreviewURLs = newFiles.map((file) => URL.createObjectURL(file));
 
-      if (type === 'main'||'responsiveMain') {
+      if (type === 'main'||type==='responsiveMain') {
         setImages(newFiles);
         setPreviewURLs(newPreviewURLs);
         onChange(newFiles[0]);
@@ -75,7 +75,7 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
       <ImagesPreviewContainer>
         {previewURLs.map((url, index) => (
           <ImagePreviewWrapper key={index}>
-            <ImagePreview src={url} alt={`${type === 'main' ? 'Main' : 'Detail'} Image ${index + 1}`} />
+            <ImagePreview src={url} alt={`${type === 'main' ? 'Main' : type==='responsiveMain'? 'ResponsiveMain' : 'Detail'} Image ${index + 1}`} />
             <DeleteButton onClick={() => handleDeleteImage(index)}>삭제하기</DeleteButton>
           </ImagePreviewWrapper>
         ))}

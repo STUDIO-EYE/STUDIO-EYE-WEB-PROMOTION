@@ -147,12 +147,12 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         </SendButton>
       )}
 
-      {data?.length === 0 ? (
+      {realData?.length === 0 ? (
         <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
       ) : onEdit ? (
         <DragDropContext onDragEnd={onDragEnd}>
           {type === 'main' //main sequence면 top 고정
-            ? data
+            ? realData
                 ?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>
@@ -184,7 +184,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         <div>
           {/*edit 모드 아니면 일반 리스트*/}
           {type === 'main' //main sequence면 top 고정
-            ? data
+            ? realData
                 ?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>
