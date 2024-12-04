@@ -20,15 +20,18 @@ const ToggleSwitch = (props: ToggleSwitchType) => {
   }, [props.selected]);
 
   const handleToggle = (visibility: boolean) => {
-    props.onToggle && props.onToggle(visibility);
-    setIsEditing(true);
+    if (isPublic !== visibility) {
+      setIsPublic(visibility);
+      props.onToggle?.(visibility);
+      setIsEditing(true);
+    }
   };
 
   return (
     <ToggleSwitchStyle>
       <label htmlFor='switch' className={`switch_label ${isPublic ? 'public' : 'private'}`}>
         <CheckBox
-          data-cy="toggle-public"
+          data-cy='checkbox-public'
           onClick={() => {
             setIsPublic(true);
             handleToggle(true);
@@ -39,7 +42,7 @@ const ToggleSwitch = (props: ToggleSwitchType) => {
           {props.option1}
         </CheckBox>
         <CheckBox
-         data-cy="toggle-private"
+          data-cy='checkbox-private'
           onClick={() => {
             setIsPublic(false);
             handleToggle(false);
