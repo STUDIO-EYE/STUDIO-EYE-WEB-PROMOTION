@@ -302,7 +302,9 @@ const IsTopMainArtworkContainer = styled.div`
   }
 `;
 
-const Ispostedcontainer = styled.div<{ isopened: string }>`
+const Ispostedcontainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isopened',
+})<{ isopened: string }>`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -343,7 +345,9 @@ const Ispostedcontainer = styled.div<{ isopened: string }>`
     }
   }
 `;
-const TypeContainer = styled.div<{ projectType: projectType }>`
+const TypeContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: projectType }>`
   display: flex;
   align-items: center;
   cursor: pointer;

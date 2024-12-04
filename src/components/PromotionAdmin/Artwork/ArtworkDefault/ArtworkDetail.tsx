@@ -95,7 +95,6 @@ const ArtworkDetail = () => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
-      console.log(blob);
       return new File([blob], fileName);
     } catch (error) {
       console.error('Error URL to file:', error);
@@ -140,7 +139,6 @@ const ArtworkDetail = () => {
         try {
           const mainImgFile = await urlToFile(data.mainImg + '?t=' + Date.now(), `${data.mainimg}.png`);
           setMainImage(mainImgFile);
-          console.log(mainImgFile, 'main ImgFile Blob');
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
@@ -153,7 +151,6 @@ const ArtworkDetail = () => {
         try {
           const responsiveMainImgFile = await urlToFile(data.responsiveMainImg + '?t=' + Date.now(), `${data.responsiveMainImg}.png`);
           setResponsiveMainImage(responsiveMainImgFile);
-          console.log(responsiveMainImgFile, 'main ImgFile Blob');
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
@@ -166,12 +163,10 @@ const ArtworkDetail = () => {
           const detailImageFiles = await Promise.all(
             data.projectImages.map(async (image: { imageUrlList: string }) => {
               const detailImgFile = await urlToFile(image.imageUrlList, `${image.imageUrlList}.png`);
-              console.log(detailImgFile);
               return detailImgFile;
             }),
           );
           setDetailImages(detailImageFiles);
-          console.log(detailImageFiles, 'detailImageFiles  Blob');
           setPutData((prevState) => ({
             ...prevState,
             files: detailImageFiles,

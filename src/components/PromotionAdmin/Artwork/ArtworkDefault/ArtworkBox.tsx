@@ -53,6 +53,7 @@ const Container = styled.div`
   background-color: #afafaf13;
   padding: 20px;
   box-sizing: border-box;
+  margin-bottom: 10px;
 
   &:hover {
     cursor: pointer;
@@ -113,7 +114,9 @@ const RightAlignWrapper = styled.div`
   }
 `;
 
-const TypeWrapper = styled.div<{ projectType: 'others' | 'top' | 'main' }>`
+const TypeWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: 'others' | 'top' | 'main' }>`
   width: fit-content;
   height: fit-content;
   padding: 5px 10px;

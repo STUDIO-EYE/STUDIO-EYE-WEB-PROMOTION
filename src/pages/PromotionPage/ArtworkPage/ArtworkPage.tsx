@@ -53,7 +53,7 @@ function ArtworkPage() {
   const errorData=error?.response?.data as ErrorResponse|undefined
   const errorMessage=()=> {
   if(errorData){
-    return errorData.status?errorData.status+": "+errorData.error:"Network Error"
+    return errorData.status?errorData.status+": "+errorData.error:"네트워크 에러가 발생했어요! 네트워크 환경을 확인해주세요."
   } else{
     // if(!error && data===undefined){
     //   return "Network Error"
