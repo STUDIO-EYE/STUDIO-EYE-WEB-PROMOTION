@@ -5,7 +5,7 @@ import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
 import { theme } from "@/styles/theme";
-import NullException from '@/components/PromotionPage/Artwork/NullException';
+import { useQuery } from "react-query";
 
 interface INewsCardProps {
   id: number;
@@ -16,85 +16,63 @@ interface INewsCardProps {
 }
 
 const NewsBoardPage: React.FC = () => {
-  const [newsData, setNewsData] = useState<INewsCardProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(6);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await getAllNewsData();
-        const formattedData: INewsCardProps[] = data.data.map((news: any) => ({
-          id: news.id,
-          title: news.title,
-          source: news.source,
-          pubDate: news.pubDate,
-          url: news.url,
-        }));
-        setNewsData(formattedData);
-      } catch (error) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
+  const { data: newsData, isLoading, error } = useQuery<INewsCardProps[], Error>(
+    'newsData',
+    async () => {
+      const response = await getAllNewsData();
+      if (!response || !response.data) {
+        throw new Error('데이터가 없습니다.');
       }
-    };
-
-    fetchData();
-  }, []);
+      return response.data.map((news: any) => ({
+        id: news.id,
+        title: news.title,
+        source: news.source,
+        pubDate: news.pubDate,
+        url: news.url,
+      }));
+    }
+  );
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentNewsData = newsData.slice(indexOfFirstPost, indexOfLastPost);
+  const currentNewsData = newsData?.slice(indexOfFirstPost, indexOfLastPost) || [];
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
-  const autoScrollRef = useRef<HTMLDivElement | null>(null);
-  const handleScroll = () => {
-    if (autoScrollRef.current) {
-      const elementPosition = autoScrollRef.current.getBoundingClientRect().top; //요소 위치
-      const offsetPosition = window.scrollY + elementPosition; //현재 스크롤 위치
-      const headerOffset = 100; //헤더 높이
-
-      // 스크롤 이동 (헤더 높이만큼 더 위로 스크롤)
-      window.scrollTo({
-        top: offsetPosition - headerOffset,
-        behavior: 'smooth', // 부드러운 스크롤
-      });
-    }
-  }
-
   return (
     <Container>
       <IntroSection />
-      {error ? (
-        <EmptyState>{error}</EmptyState>
-      ) : newsData.length === 0 ? (
-        <EmptyState>데이터가 없습니다.</EmptyState>
+      {isLoading ? (
+        <><LoadingModal>
+          <LoadingIcon />
+        </LoadingModal><EmptyState>로딩 중...</EmptyState></>
+      ) : error ? (
+        <EmptyState>{error.message}</EmptyState>
       ) : (
-        <Suspense fallback={<EmptyState>로딩 중...</EmptyState>}>
+        <>
           <NewsSection
             currentNewsData={currentNewsData}
             onNewsClick={(url) => window.open(url)}
           />
           <NewsPagination
             postsPerPage={postsPerPage}
-            totalPosts={newsData.length}
+            totalPosts={newsData?.length || 0}
             paginate={paginate}
             data-cy="news-pagination"
           />
-        </Suspense>
+        </>
       )}
     </Container>
   );
 };
 
 export default NewsBoardPage;
-
 
 const EmptyState = styled.div`
   display: flex;
@@ -125,5 +103,37 @@ const Container = styled.div`
     width:95%;
     padding: 0;
     margin: auto;
+  }
+`;
+
+const LoadingModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.036);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const LoadingIcon = styled.div`
+  border: 8px solid rgba(255, 255, 255, 0.3);
+  border-top: 8px solid ${theme.color.white.bold};
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `;
