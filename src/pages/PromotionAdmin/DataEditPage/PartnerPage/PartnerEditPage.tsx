@@ -1,4 +1,9 @@
-import { deletePartner, getPartnersData, putPartnersInfoData, putPartnersLogoData } from '@/apis/PromotionAdmin/dataEdit';
+import {
+  deletePartner,
+  getPartnersData,
+  putPartnersInfoData,
+  putPartnersLogoData,
+} from '@/apis/PromotionAdmin/dataEdit';
 import { ContentBlock } from '@/components/PromotionAdmin/DataEdit/Company/CompanyFormStyleComponents';
 import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
 import FileButton from '@/components/PromotionAdmin/DataEdit/StyleComponents/FileButton';
@@ -142,17 +147,15 @@ function PartnerEditPage() {
           console.error('로고 이미지 가져오기 실패');
         }
 
-        putPartnersLogoData(formData)
-        .then(()=>{
+        putPartnersLogoData(formData).then(() => {
           alert(MSG.ALERT_MSG.SAVE);
           setIsEditing(false);
-        })
+        });
       } else {
-        putPartnersInfoData(formData)
-        .then(() => {
-            alert(MSG.ALERT_MSG.SAVE);
-            setIsEditing(false);
-          })
+        putPartnersInfoData(formData).then(() => {
+          alert(MSG.ALERT_MSG.SAVE);
+          setIsEditing(false);
+        });
       }
     }
   };
@@ -177,10 +180,9 @@ function PartnerEditPage() {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
-      console.log(blob);
+
       return new File([blob], fileName);
     } catch (error) {
-      console.error('Error URL to file:', error);
       throw error;
     }
   }
@@ -220,6 +222,7 @@ function PartnerEditPage() {
               <InputWrapper>
                 <div style={{ display: 'flex' }}>
                   <input
+                    data-cy='partner-link'
                     style={{ paddingLeft: '10px' }}
                     {...register('link', {
                       required: MSG.PLACEHOLDER_MSG.LINK,
@@ -238,6 +241,7 @@ function PartnerEditPage() {
                 <SubTitle description='Name' />
                 <div style={{ display: 'flex' }}>
                   <input
+                    data-cy='partner-name'
                     style={{ paddingLeft: '10px' }}
                     {...register('name', {
                       required: MSG.PLACEHOLDER_MSG.NAME,
@@ -254,12 +258,19 @@ function PartnerEditPage() {
               </InputWrapper>
               <VisibilityWrapper>
                 공개여부
-                <input type='checkbox' id='switch' defaultChecked {...register('is_main')} />
                 <ToggleSwitch
                   option1='공개'
                   option2='비공개'
-                  selected={clickedPartner.partnerInfo.is_main}
-                  onToggle={setIsVisibility}
+                  selected={!!isVisibility} // undefined를 명시적으로 boolean으로 변환
+                  onToggle={(visibility) => {
+                    setIsVisibility(visibility); // 로컬 상태 업데이트
+                    setPutData((prevData) => ({
+                      ...prevData,
+                      partnerInfo: { ...prevData.partnerInfo, is_main: visibility }, // 데이터 업데이트
+                    }));
+                    setValue('is_main', visibility, { shouldValidate: true }); // useForm과 동기화
+                    setIsEditing(true); // 변경 상태 활성화
+                  }}
                 />
               </VisibilityWrapper>
             </RightContainer>

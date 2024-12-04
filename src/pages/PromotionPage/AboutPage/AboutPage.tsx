@@ -17,7 +17,9 @@ const AboutPage = () => {
   const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData } =
     useLoaderData() as AboutPageLoaderData;
 
-  const mainPartnersData = partnersData.filter((info) => info.partnerInfo.is_main);
+  const mainPartnersData = partnersData.filter((info) => {
+    return info.partnerInfo.is_main;
+  });
 
   return (
     <ScrollContainer>
@@ -52,6 +54,7 @@ const AboutPage = () => {
               {mainPartnersData.map((info) => (
                 <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
+                    data-cy='partner-image'
                     src={info.logoImg}
                     alt='CORP Logo'
                     data-link={info.partnerInfo.link ? 'true' : 'false'}

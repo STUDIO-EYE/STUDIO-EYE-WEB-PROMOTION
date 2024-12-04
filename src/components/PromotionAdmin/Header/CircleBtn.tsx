@@ -13,31 +13,25 @@ type Props = {
 const CircleBtn = ({ id, defaultIcon, isNewIcon, iconStatus }: Props) => {
   const [isNotiOpened, setIsNotiOpened] = useRecoilState(notiState);
 
-  const handleNotiButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleNotiButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setIsNotiOpened(!isNotiOpened);
   };
 
   return (
-    <Container iconStatus={iconStatus}>
-      {id === 'notification' ? (
-        <NotiButton onClick={handleNotiButtonClick}>
-          <img src={iconStatus ? isNewIcon : defaultIcon} alt='noti icon' />
-        </NotiButton>
-      ) : (
-        <img src={defaultIcon} alt='user icon' />
-      )}
+    <Container $iconStatus={iconStatus} onClick={handleNotiButtonClick}>
+      <img src={iconStatus ? isNewIcon : defaultIcon} alt='noti icon' />
     </Container>
   );
 };
 
 export default CircleBtn;
 
-const Container = styled.div<{ iconStatus: boolean }>`
+const Container = styled.div<{ $iconStatus: boolean }>`
   width: 53px;
   height: 53px;
   border-radius: 50%;
-  background-color: ${(props) => (props.iconStatus ? '#ffefcf' : '#e2e2e2')};
+  background-color: ${(props) => (props.$iconStatus ? '#ffefcf' : '#e2e2e2')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,9 +47,4 @@ const Container = styled.div<{ iconStatus: boolean }>`
     background-color: #fde6b8;
   }
   transition: all ease-in-out 300ms;
-`;
-
-const NotiButton = styled.button`
-  border: none;
-  background-color: inherit;
 `;
