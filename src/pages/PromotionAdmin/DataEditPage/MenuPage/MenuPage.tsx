@@ -1,14 +1,15 @@
-
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {
   getAllMenuData,
-  postMenuData,  // Added postMenuData import
+  postMenuData,
   putMenuData,
 } from '@/apis/PromotionAdmin/menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { theme } from '@/styles/theme';
 import { DATAEDIT_TITLES_COMPONENTS } from '@/components/PromotionAdmin/DataEdit/Company/StyleComponents';
+
+const defaultMenuData = ['ABOUT', 'ARTWORK', 'CONTACT', 'FAQ', 'RECRUITMENT', 'NEWS'];
 
 interface IMenuData {
   id: number;
@@ -17,13 +18,13 @@ interface IMenuData {
   sequence: number;
 }
 
-const defaultMenuData = ['ABOUT', 'ARTWORK', 'CONTACT', 'FAQ', 'RECRUITMENT', 'NEWS'];
-
 function MenuPage() {
   const [menuList, setMenuList] = useState<IMenuData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 관리
 
   const fetchMenuData = async () => {
     try {
+      setIsLoading(true); // 데이터를 가져오는 동안 로딩 시작
       const data = await getAllMenuData();
   
       if (data && Array.isArray(data.data) && data.data.length > 0) {
@@ -42,25 +43,24 @@ function MenuPage() {
       }
     } catch (error) {
       setMenuList([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const postDefaultMenuData = async () => {
     try {
-      for (const menuTitle of defaultMenuData) {
-        const menuData = {
-          title: menuTitle,
-          visibility: true,
-        };
+      const menusToPost = defaultMenuData.map((menuTitle) => ({
+        menuTitle,
+        visibility: true,
+      }));
   
-        await postMenuData(menuData);
-      }
-      
-      fetchMenuData(); 
+      await postMenuData(menusToPost);
+      fetchMenuData();
     } catch (error) {
+      console.error("Error posting default menu data:", error);
     }
   };
-  
 
   const handleOnDragEnd = async (result: any) => {
     if (!result.destination) return;
@@ -78,6 +78,7 @@ function MenuPage() {
       setMenuList(updatedMenuList);
       await putMenuData(updatedMenuList);
     } catch (error) {
+      console.error("Error updating menu", error);
     }
   };
 
@@ -95,6 +96,7 @@ function MenuPage() {
         fetchMenuData();
       }
     } catch (error) {
+      console.error("Error updating visibility", error);
     }
   };
 
@@ -102,10 +104,18 @@ function MenuPage() {
     fetchMenuData();
   }, []);
 
+  if (isLoading) {
+    return (
+      <Overlay visible={true}>
+        <Spinner />
+      </Overlay>
+    );
+  }
+
   return (
     <Wrapper>
       <ContentBlock>
-        <MenuWrapper>
+        <MenuWrapper>  
           <MenuListSection>
             <TitleWrapper>
               {DATAEDIT_TITLES_COMPONENTS.MENU}
@@ -253,4 +263,34 @@ const MenuItem = styled.li`
     background-color: #afafaf13;
     transition: 0.2s;
   }
+`;
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: ${spin} 1s linear infinite;
+`;
+
+export const Overlay = styled.div<{ visible: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;

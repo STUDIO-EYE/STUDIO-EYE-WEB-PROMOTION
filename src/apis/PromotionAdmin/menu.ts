@@ -21,7 +21,7 @@ export const deleteMenuData = async (menuId: number) => {
   }
 };
 
-export const postMenuData = async (menuData: { title: string; visibility: boolean }) => {
+export const postMenuData = async (menuData: { menuTitle: string; visibility: boolean }[]) => {
   try {
     const response = await axios.post(`${PROMOTION_BASIC_PATH}/api/menu`, menuData);
     return response.data;

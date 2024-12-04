@@ -4,7 +4,7 @@ import { IRequest } from '@/types/PromotionAdmin/request';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import WaitingRequestsList from '@/components/PromotionAdmin/Home/RequestSummary/WaitingRequestsList';
 import { ContentBox } from '@/components/PromotionAdmin/Request/Components';
 import Pagination from '@/components/Pagination/Pagination';
@@ -12,23 +12,27 @@ import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
 
 function RequestList() {
   const { data, isLoading, refetch } = useQuery<IRequest[]>('requests', getRequestsData, { refetchOnWindowFocus: false });
-
-  // pagination 구현에 사용되는 변수
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage, setPostsPerPage] = useState<number>(10);
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
-  // 페이지 변경 시 데이터 다시 불러오기
   useEffect(() => {
-    refetch();
-  }, [currentPage, postsPerPage]);
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page');
 
-  //
+    if (!page) {
+      navigate('?page=1', { replace: true });
+    } else {
+      setCurrentPage(parseInt(page, 10));
+    }
+  }, [location, navigate]);
 
   const [filterState, setFilterState] = useState<string>('ALL');
 
@@ -41,8 +45,6 @@ function RequestList() {
 
   const filteredRequests = filterRequests(data || [], filterState) || [];
   const slicedRequests = filteredRequests?.slice(indexOfFirst, indexOfLast) || [];
-
-  const [deletingRequestId, setDeletingRequestId] = useState<string | null>(null);
 
   const handleDeleteRequest = async (id: number) => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
@@ -58,31 +60,31 @@ function RequestList() {
 
   return (
     <Wrapper data-cy="request-list-wrapper">
-    <TitleWrapper data-cy="request-list-title">
-      <Title>
-        Request 관리
-        <Info data-cy="request-list-total-count">총 {filteredRequests.length}건</Info>
-      </Title>
-      <DropDown
-        onChange={(e) => {
-          setFilterState(e.target.value);
-          setCurrentPage(1);
-        }}
-        data-cy="filter-dropdown" // 필터 드롭다운
-      >
-        <option value="ALL">전체 문의</option>
-        <option value="WAITING">대기 중인 문의</option>
-        <option value="APPROVED">승인된 문의</option>
-        <option value="REJECTED">거절된 문의</option>
-        <option value="DISCUSSING">논의 중인 문의</option>
-      </DropDown>
-    </TitleWrapper>
-    <ContentBox data-cy="request-list-content">
-      {!data || data.length === 0 ? (
-        <p data-cy="no-requests-message">😊 문의 데이터가 존재하지 않습니다.</p>
-      ) : (
-        <>
-       <TableWrapper data-cy="request-list-table">
+      <TitleWrapper data-cy="request-list-title">
+        <Title>
+          Request 관리
+          <Info data-cy="request-list-total-count">총 {filteredRequests.length}건</Info>
+        </Title>
+        <DropDown
+          onChange={(e) => {
+            setFilterState(e.target.value);
+            setCurrentPage(1);
+          }}
+          data-cy="filter-dropdown" // 필터 드롭다운
+        >
+          <option value="ALL">전체 문의</option>
+          <option value="WAITING">대기 중인 문의</option>
+          <option value="APPROVED">승인된 문의</option>
+          <option value="REJECTED">거절된 문의</option>
+          <option value="DISCUSSING">논의 중인 문의</option>
+        </DropDown>
+      </TitleWrapper>
+      <ContentBox data-cy="request-list-content">
+        {!data || data.length === 0 ? (
+          <p data-cy="no-requests-message">😊 문의 데이터가 존재하지 않습니다.</p>
+        ) : (
+          <>
+            <TableWrapper data-cy="request-list-table">
               {isLoading ? (
                 <h1 data-cy="loading-message">Loading...</h1>
               ) : slicedRequests && slicedRequests.length > 0 ? (
@@ -99,10 +101,10 @@ function RequestList() {
                         {request.state === 'DISCUSSING'
                           ? '논의'
                           : request.state === 'APPROVED'
-                          ? '승인'
-                          : request.state === 'REJECTED'
-                          ? '거절'
-                          : '대기'}
+                            ? '승인'
+                            : request.state === 'REJECTED'
+                              ? '거절'
+                              : '대기'}
                       </StateText>
                       <WaitingRequestsList
                         organization={request.organization}
@@ -122,19 +124,19 @@ function RequestList() {
                 <h1 data-cy="no-waiting-requests">대기 중인 문의가 없습니다.</h1>
               )}
             </TableWrapper>
-          <PaginationWrapper data-cy="pagination-wrapper">
-            <Pagination
-              postsPerPage={postsPerPage}
-              totalPosts={filteredRequests.length}
-              paginate={paginate}
-              data-cy="pagination-button" // 페이지네이션 버튼
-            />
-          </PaginationWrapper>
-        </>
-      )}
-    </ContentBox>
-    <Outlet />
-  </Wrapper>
+            <PaginationWrapper data-cy="pagination-wrapper">
+              <Pagination
+                postsPerPage={postsPerPage}
+                totalPosts={filteredRequests.length}
+                paginate={paginate}
+                data-cy="pagination-button" // 페이지네이션 버튼
+              />
+            </PaginationWrapper>
+          </>
+        )}
+      </ContentBox>
+      <Outlet />
+    </Wrapper>
   );
 }
 
@@ -197,6 +199,7 @@ const StateText = styled.div<{ requestState: string }>`
     props.requestState === 'WAITING' ? 'gray' : 'gray'};
   font-weight: bold;
   padding: 1rem;
+  white-space: nowrap;
 `;
 
 const RequestWrapper = styled.div`
