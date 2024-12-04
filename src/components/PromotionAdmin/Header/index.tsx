@@ -102,18 +102,25 @@ const Index = () => {
         (notification) => notification.notification.id !== notificationId
       );
       setSortedNotifications(updatedNotifications);
-
-      const updatedRequests = { ...requests };
-      updatedNotifications.forEach(
-        (notification) => delete updatedRequests[notification.notification.requestId]
-      );
-      setRequests(updatedRequests);
-
+  
+      // 삭제되지 않은 알림들의 requestId만 유지
+      const remainingRequests = updatedNotifications.reduce((acc, notification) => {
+        const requestId = notification.notification.requestId;
+        if (requests[requestId]) {
+          acc[requestId] = requests[requestId];
+        }
+        return acc;
+      }, {} as Record<number, Request>);
+      
+      setRequests(remainingRequests);
+  
+      // 모든 알림이 삭제된 경우 상태 리셋
       if (updatedNotifications.length === 0) setIconStatus(false);
     } catch (error) {
       console.error('[❌Error deleting notification]', error);
     }
   };
+  
 
   return (
     <>
