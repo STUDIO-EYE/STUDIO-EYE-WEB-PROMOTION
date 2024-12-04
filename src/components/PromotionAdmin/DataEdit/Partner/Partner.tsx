@@ -75,6 +75,7 @@ const Partner = () => {
               data.content.map((partner, index) => (
                 <React.Fragment key={`${partner.id}-${index}`}>
                   <LogoItemList
+                    data-cy={`partner-item-${index}`}
                     logo={partner.logoImageUrl}
                     name={partner.name}
                     link={partner.link}
@@ -115,7 +116,6 @@ const TitleWrapper = styled.div`
 `;
 
 const NoDataWrapper = styled.div`
-  font-family: 'pretendard-medium';
   font-size: 17px;
 `;
 const ListWrapper = styled.div`

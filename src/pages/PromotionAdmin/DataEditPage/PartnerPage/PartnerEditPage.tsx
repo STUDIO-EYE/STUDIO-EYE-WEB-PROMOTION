@@ -222,6 +222,7 @@ function PartnerEditPage() {
               <InputWrapper>
                 <div style={{ display: 'flex' }}>
                   <input
+                    data-cy='partner-link'
                     style={{ paddingLeft: '10px' }}
                     {...register('link', {
                       required: MSG.PLACEHOLDER_MSG.LINK,
@@ -240,6 +241,7 @@ function PartnerEditPage() {
                 <SubTitle description='Name' />
                 <div style={{ display: 'flex' }}>
                   <input
+                    data-cy='partner-name'
                     style={{ paddingLeft: '10px' }}
                     {...register('name', {
                       required: MSG.PLACEHOLDER_MSG.NAME,

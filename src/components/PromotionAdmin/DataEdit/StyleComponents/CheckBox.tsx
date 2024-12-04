@@ -11,13 +11,13 @@ type CheckBoxType = {
   children: React.ReactNode;
   svgComponent?: React.ReactNode;
   as?: keyof JSX.IntrinsicElements | React.ComponentType<any>;
-  'data-cy'?: string; 
+  'data-cy'?: string;
 };
 
 const CheckBox = (props: CheckBoxType) => {
   return (
     <CheckBoxStyle
-    data-cy={props['data-cy']} 
+      data-cy={props['data-cy']}
       selected={props.selected}
       onClick={props.onClick}
       className={`${props.className} ${props.selected ? 'selected' : ''}`}
