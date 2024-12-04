@@ -135,7 +135,9 @@ min-width: 130px;
 align-item: center;
 `;
 
-const TypeWrapper = styled.div<{ projectType: 'others' | 'top' | 'main' }>`
+const TypeWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: 'others' | 'top' | 'main' }>`
   width: fit-content;
   height: fit-content;
   padding: 3px 6px;

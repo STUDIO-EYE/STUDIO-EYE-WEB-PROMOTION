@@ -58,7 +58,6 @@ const MainPage = () => {
     }
   }, [height]);
 
-  if (isLoading) return <>Artowrk is Loading...</>;
   if (error) return <>Artwork Error: {error.message}</>;
   return (
     <>

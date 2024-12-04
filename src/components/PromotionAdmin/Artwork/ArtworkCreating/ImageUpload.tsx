@@ -19,7 +19,6 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
         setPreviewURLs(files.map((file) => URL.createObjectURL(file)));
       }
     }
-    console.log(previewURLs);
   }, [value]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {

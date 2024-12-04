@@ -43,7 +43,7 @@ const Wrapper = styled.div`
   width: 90%;
   text-align: center;
   border-radius: 5px;
-  z-index: 90;
+  z-index: 15;
   background-color: #dadada9f;
   padding: 8px;
   &:hover {

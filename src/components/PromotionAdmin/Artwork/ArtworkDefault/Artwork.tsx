@@ -91,7 +91,7 @@ const Artwork = () => {
           {filteredAndSortedArtworks.length === 0 ? (
             <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
           ) : (
-            <div data-cy='PA_artwork_list'>
+            <div data-cy='PA_artwork_list' style={{height:'1260px'}}>
               {currentArtworks.map((artwork) => (
                 <LinkStyle to={`${PA_ROUTES.ARTWORK}/${artwork.id}?page=${currentPage + 1}`} key={artwork.id}>
                   <ArtworkBox
@@ -215,7 +215,9 @@ const ArtworkProducingWrapper = styled.div`
   }
 `;
 
-const TypeContainer = styled.div<{ projectType: projectType | 'all' }>`
+const TypeContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: projectType | 'all' }>`
   display: flex;
   align-items: center;
   cursor: pointer;
