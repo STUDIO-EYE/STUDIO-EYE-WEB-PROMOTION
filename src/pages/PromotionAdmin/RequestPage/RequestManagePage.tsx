@@ -261,4 +261,5 @@ const ContentWrapper = styled.div`
 
 const PaginationWrapper = styled.div`
   margin: 1rem 0;
+  align-items: center;
 `
