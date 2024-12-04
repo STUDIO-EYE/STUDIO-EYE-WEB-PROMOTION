@@ -1,3 +1,4 @@
+import React from 'react';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
@@ -6,10 +7,12 @@ import { useLocation } from 'react-router-dom';
 const linksData = [
   {
     path: `${PA_ROUTES.RECRUITMENT}/manage`,
+    relatedPaths: `${PA_ROUTES.RECRUITMENT}/write`,
     pathName: 'Recruitment',
   },
   {
     path: `${PA_ROUTES.RECRUITMENT}/benefit/manage`,
+    relatedPaths: `${PA_ROUTES.RECRUITMENT}/benefit/write`,
     pathName: 'Benefit',
   },
 ];
@@ -21,13 +24,15 @@ function DetailNavigator() {
     <Wrapper>
       <SideBar>
         {linksData.map((link, index) => {
-          const isActive = location.pathname.includes(link.path);
+          const isActive =
+          location.pathname === link.path || location.pathname === link.relatedPaths;
+
           return (
             <NavBtn
               key={index}
               path={link.path}
               pathName={link.pathName}
-              isActive={isActive} // 활성화 상태를 NavBtn으로 전달
+              isActive={isActive}
             />
           );
         })}

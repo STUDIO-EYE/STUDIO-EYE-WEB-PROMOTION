@@ -247,8 +247,9 @@ export const getArtworkDefaultValue = (
         isGetMode && getModeDetailImgs ? (
           getModeDetailImgs.map((i, index) => (
             <IsGetModeImg
+            key={`detail-image-${index}`}
               src={i}
-              alt='메인 이미지'
+              alt={`서브 이미지 ${index + 1}`}
               style={{ width: '100%', height: 'auto', objectFit: 'contain', marginBottom: '30px' }}
             />
           ))

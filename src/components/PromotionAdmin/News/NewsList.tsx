@@ -5,7 +5,6 @@ import { useQuery } from 'react-query';
 import { getNews } from '@/apis/PromotionAdmin/news';
 import Pagination from '@/components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const NewsList = ({handler}:{handler:(id:number)=>void}) => {
   const { data, isLoading, error, refetch } = useQuery<INEWS[], Error>('newsList', getNews);
@@ -28,7 +27,7 @@ const NewsList = ({handler}:{handler:(id:number)=>void}) => {
 
   return (
     <div style={{flexDirection:'column'}}>
-      {isLoading?<SkeletonComponent width={'100vw'} height={'100vh'}/>:
+      {isLoading?<h1>Loading...</h1>:
         data?
         <>
           {currentArtworks.map((i)=>(

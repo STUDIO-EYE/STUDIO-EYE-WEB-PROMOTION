@@ -14,7 +14,6 @@ import ImageEdit from './EditForm/Image';
 import IntroductionInfo from './InfoCard/Introduction';
 import IntroductionEdit from './EditForm/Introduction';
 import { MSG } from '@/constants/messages';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 const CompanyInfo = () => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['client', 'id'], getCompanyData);
@@ -63,7 +62,7 @@ const CompanyInfo = () => {
     }
   }, [editBasic, editImage, editIntroduction, editDetail, setIsEditing]);
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading...</>;
   if (error) return <>{error.message}</>;
   return (
     <>

@@ -1,7 +1,6 @@
 import { getFAQData, IFAQ } from '@/apis/PromotionAdmin/faq';
 import InnerHTML from '@/components/PromotionAdmin/DataEdit/StyleComponents/InnerHTML';
 import { ContentBox } from '@/components/PromotionAdmin/FAQ/Components';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { useQuery } from 'react-query';
 import { useLocation, useMatch, useNavigate } from 'react-router-dom';
@@ -16,7 +15,7 @@ export default function FAQCheckPage() {
 
   const currentPage = new URLSearchParams(useLocation().search).get('page');
 
-  if (isLoading) return <SkeletonComponent width={'40vw'} height={'800px'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <>

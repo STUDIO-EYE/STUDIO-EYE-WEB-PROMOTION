@@ -12,7 +12,6 @@ import { MSG } from '@/constants/messages';
 import TextColorEditor from '@/components/TextEditor/TextColorEditor';
 import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
-import SkeletonComponent from '@/components/PromotionPage/SkeletonComponent/SkeletonComponent';
 
 interface IIntrodutionProps {
   setEditIntroduction: (editMode: boolean) => void;
@@ -88,7 +87,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
     }
   };
 
-  if (isLoading) return <SkeletonComponent width={'100vw'} height={'100vh'}/>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>
