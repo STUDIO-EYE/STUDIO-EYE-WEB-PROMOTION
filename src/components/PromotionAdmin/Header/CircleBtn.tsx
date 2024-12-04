@@ -19,7 +19,7 @@ const CircleBtn = ({ id, defaultIcon, isNewIcon, iconStatus }: Props) => {
   };
 
   return (
-    <Container iconStatus={iconStatus}>
+    <Container $iconStatus={iconStatus}>
       {id === 'notification' ? (
         <NotiButton onClick={handleNotiButtonClick}>
           <img src={iconStatus ? isNewIcon : defaultIcon} alt='noti icon' />
@@ -33,11 +33,11 @@ const CircleBtn = ({ id, defaultIcon, isNewIcon, iconStatus }: Props) => {
 
 export default CircleBtn;
 
-const Container = styled.div<{ iconStatus: boolean }>`
+const Container = styled.div<{ $iconStatus: boolean }>`
   width: 53px;
   height: 53px;
   border-radius: 50%;
-  background-color: ${(props) => (props.iconStatus ? '#ffefcf' : '#e2e2e2')};
+  background-color: ${(props) => (props.$iconStatus ? '#ffefcf' : '#e2e2e2')};
   display: flex;
   flex-direction: column;
   align-items: center;
