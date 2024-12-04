@@ -2,9 +2,4 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Pretendard-Regular', sans-serif;
-}
-
-code {
-  font-family: 'Pretendard-Regular';
 }

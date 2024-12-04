@@ -34,7 +34,11 @@
 }
 
 * {
-  font-family: 'Pretendard-Regular', sans-serif; /* 모든 요소에 Regular 적용 */
+  font-family: 'Pretendard-Regular', 'Arial', 'Helvetica', sans-serif;
+}
+
+body {
+  font-family: 'Pretendard-Regular', sans-serif !important;
 }
 
 ::-webkit-scrollbar {
