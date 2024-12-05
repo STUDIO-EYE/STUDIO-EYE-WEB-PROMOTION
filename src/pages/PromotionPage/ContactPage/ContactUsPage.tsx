@@ -340,11 +340,11 @@ const ContactUsPage = () => {
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
-          alert('서버 또는 인터넷 연결에 문제가 발생하였습니다. 문제가 지속 될 경우 문의해주시기 바랍니다.');
+          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n문제가 지속 될 경우 문의해주시기 바랍니다.');
           console.error('요청 취소: ', error.message);
         } else {
           clearTimeout(timeoutId);
-          alert('서버 또는 인터넷 연결에 문제로 문의 등록에 실패하였습니다. 다시 한번 시도하여 주시기 바랍니다.');
+          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n다시 한번 시도하여 주시기 바랍니다.');
           console.error('에러 발생', error);
         }
       })
