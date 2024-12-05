@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled, { ExecutionProps } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {
   getAllMenuData,
+  postMenuData,
   putMenuData,
 } from '@/apis/PromotionAdmin/menu';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { FastOmit, Substitute } from 'styled-components/dist/types';
 import { theme } from '@/styles/theme';
 import { DATAEDIT_TITLES_COMPONENTS } from '@/components/PromotionAdmin/DataEdit/Company/StyleComponents';
+
+const defaultMenuData = ['ABOUT', 'ARTWORK', 'CONTACT', 'FAQ', 'RECRUITMENT', 'NEWS'];
 
 interface IMenuData {
   id: number;
@@ -18,13 +20,14 @@ interface IMenuData {
 
 function MenuPage() {
   const [menuList, setMenuList] = useState<IMenuData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 관리
 
   const fetchMenuData = async () => {
     try {
+      setIsLoading(true); // 데이터를 가져오는 동안 로딩 시작
       const data = await getAllMenuData();
-      console.log(data);
   
-      if (data && Array.isArray(data.data)) {
+      if (data && Array.isArray(data.data) && data.data.length > 0) {
         const updatedData = data.data
           .map((item: { id: number; menuTitle: string; visibility: boolean; sequence: number; }) => ({
             id: item.id,
@@ -36,34 +39,48 @@ function MenuPage() {
   
         setMenuList(updatedData);
       } else {
-        setMenuList([]);
+        await postDefaultMenuData();
       }
     } catch (error) {
-      console.error('error: ', error);
       setMenuList([]);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const postDefaultMenuData = async () => {
+    try {
+      const menusToPost = defaultMenuData.map((menuTitle) => ({
+        menuTitle,
+        visibility: true,
+      }));
   
+      await postMenuData(menusToPost);
+      fetchMenuData();
+    } catch (error) {
+      console.error("Error posting default menu data:", error);
+    }
+  };
+
   const handleOnDragEnd = async (result: any) => {
     if (!result.destination) return;
-  
+
     const items = Array.from(menuList);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-  
+
     const updatedMenuList: IMenuData[] = items.map((menu, index) => ({
       ...menu,
       sequence: index,
     }));
-  
+
     try {
       setMenuList(updatedMenuList);
       await putMenuData(updatedMenuList);
     } catch (error) {
-      console.error('handleOnDragEnd error:', error);
+      console.error("Error updating menu", error);
     }
   };
-  
 
   const handleVisibilityChange = async (menuId: number, visibility: boolean) => {
     try {
@@ -79,24 +96,26 @@ function MenuPage() {
         fetchMenuData();
       }
     } catch (error) {
-      console.error('에러:', error);
+      console.error("Error updating visibility", error);
     }
   };
-
 
   useEffect(() => {
     fetchMenuData();
   }, []);
 
-  useEffect(() => {
-    console.log('업데이트된 목록:', menuList);
-  }, [menuList]);
-
+  if (isLoading) {
+    return (
+      <Overlay visible={true}>
+        <Spinner />
+      </Overlay>
+    );
+  }
 
   return (
     <Wrapper>
       <ContentBlock>
-        <MenuWrapper>
+        <MenuWrapper>  
           <MenuListSection>
             <TitleWrapper>
               {DATAEDIT_TITLES_COMPONENTS.MENU}
@@ -104,12 +123,12 @@ function MenuPage() {
             </TitleWrapper>
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="menuList">
-                {(provided: { droppableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; innerRef: React.LegacyRef<HTMLUListElement> | undefined; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+                {(provided: any) => (
                   <MenuList {...provided.droppableProps} ref={provided.innerRef}>
                     {menuList.length > 0 ? (
                       menuList.map((menu, index) => (
                         <Draggable key={menu.id} draggableId={menu.id.toString()} index={index}>
-                          {(provided: { innerRef: React.LegacyRef<HTMLLIElement> | undefined; draggableProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; dragHandleProps: React.JSX.IntrinsicAttributes & FastOmit<Substitute<FastOmit<React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, never>, FastOmit<{}, never>>, keyof ExecutionProps> & FastOmit<ExecutionProps, "as" | "forwardedAs"> & { as?: void | undefined; forwardedAs?: void | undefined; }; }) => (
+                          {(provided: any) => (
                             <MenuItem
                               ref={provided.innerRef}
                               {...provided.draggableProps}
@@ -136,7 +155,6 @@ function MenuPage() {
                     )}
                     {provided.placeholder}
                   </MenuList>
-
                 )}
               </Droppable>
             </DragDropContext>
@@ -148,6 +166,7 @@ function MenuPage() {
 }
 
 export default MenuPage;
+
 
 const Wrapper = styled.div`
   font-family: 'pretendard-regular';
@@ -238,9 +257,40 @@ const MenuItem = styled.li`
   background-color: ${theme.color.white};
   box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 4px;
   border-radius: 8px;
+  color: black;
 
   &:hover {
     background-color: #afafaf13;
     transition: 0.2s;
   }
+`;
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: ${spin} 1s linear infinite;
+`;
+
+export const Overlay = styled.div<{ visible: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;
