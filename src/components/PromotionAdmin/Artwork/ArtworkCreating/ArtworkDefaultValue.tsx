@@ -3,6 +3,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import styled from 'styled-components';
 import CategoryDropDown from '../CategoryDropDown';
 import ImageUpload from './ImageUpload';
@@ -29,7 +30,7 @@ export const getArtworkDefaultValue = (
   mainImage: File | undefined | null,
   handleMainImageChange: (newImage: File | File[]) => void,
   responsiveMain: File | undefined | null,
-  handleResponsiveMainImageChange: (newImage: File|File[])=>void,
+  handleResponsiveMainImageChange: (newImage: File | File[]) => void,
   detailImage: File[],
   handleDetailImageChange: (newImages: File | File[]) => void,
   title: string,
@@ -39,8 +40,10 @@ export const getArtworkDefaultValue = (
   overview: string,
   handleOverviewChange: (newOverview: string) => void,
   isTopMainArtwork: boolean,
+  handleImageClick?: (src: string) => void,
+  closeModal?: () => void,
   getModeMainImg?: string,
-  getModeResponsiveMainImg? : string,
+  getModeResponsiveMainImg?: string,
   getModeDetailImgs?: string[],
   isGetMode?: boolean,
 ) => {
@@ -110,7 +113,7 @@ export const getArtworkDefaultValue = (
             onChange={(newValue) => handleDateChange(newValue ? newValue.toDate() : null)}
             slotProps={{
               textField: {
-                inputProps:{'data-cy':'create_artwork_date'},
+                inputProps: { 'data-cy': 'create_artwork_date' },
                 sx: {
                   backgroundColor: '#dadada9f',
                   '.MuiOutlinedInput-root': {
@@ -139,13 +142,17 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{selectedCategory}</GetInputWrapper>
       ) : (
-        <CategoryDropDown data-cy="create_artwork_category" putCategory={selectedCategory.toString()} setSelectedCategory={setSelectedCategory} />
+        <CategoryDropDown
+          data-cy='create_artwork_category'
+          putCategory={selectedCategory.toString()}
+          setSelectedCategory={setSelectedCategory}
+        />
       ),
     },
     {
       name: 'link',
       title: '아트워크 외부 연결 미디어 링크',
-      description: '',
+      description: '아트워크 외부 연결 링크는 최대 512자까지 입력 가능합니다.',
       content: isGetMode ? (
         <GetHrefContainer>
           <GetHrefWrapper href={link} target='_blank'>
@@ -158,6 +165,7 @@ export const getArtworkDefaultValue = (
           required
           type='text'
           value={link}
+          maxLength={512}
           placeholder='링크를 입력하세요'
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLinkChange(e.target.value)}
         />
@@ -166,12 +174,12 @@ export const getArtworkDefaultValue = (
     {
       name: 'artworkType',
       title: '아트워크 타입',
-      description: `① Top\n 메인 페이지에서 가장 먼저 보이는 아트워크이며, 1개만 지정할 수 있습니다. \n\n ③ Main\n 메인 페이지에서 슬라이드로 보이는 아트워크이며, 최대 5개까지 지정할 수 있습니다. \n\n ② Others\n 그 외의 아트워크 유형으로, 아트워크 페이지에서 보여집니다.`,
+      description: `① 대표\n 메인 페이지에서 가장 먼저 보이는 아트워크이며, 1개만 지정할 수 있습니다. \n\n ③ 메인\n 메인 페이지에서 슬라이드로 보이는 아트워크이며, 최대 5개까지 지정할 수 있습니다. \n\n ② 기본\n 그 외의 아트워크 유형으로, 아트워크 페이지에서 보여집니다.`,
       content: (
         <TypeContainer data-cy='create_artwork_artworkType' projectType={projectType}>
-          <div onClick={() => !isGetMode && projectType !== 'top' && setProjectType('top')}>Top</div>
-          <div onClick={() => !isGetMode && projectType !== 'main' && setProjectType('main')}>Main</div>
-          <div onClick={() => !isGetMode && projectType !== 'others' && setProjectType('others')}>Others</div>
+          <div onClick={() => !isGetMode && projectType !== 'top' && setProjectType('top')}>대표</div>
+          <div onClick={() => !isGetMode && projectType !== 'main' && setProjectType('main')}>메인</div>
+          <div onClick={() => !isGetMode && projectType !== 'others' && setProjectType('others')}>기본</div>
         </TypeContainer>
       ),
     },
@@ -181,16 +189,36 @@ export const getArtworkDefaultValue = (
       description: '비공개로 설정할 시, 프로모션의 아트워크 페이지에서 숨겨집니다.',
       content: isTopMainArtwork ? (
         <>
-          <IsTopMainArtworkText>⚠ Top, Main 선택 시 항상 프로모션 페이지에 공개됩니다.</IsTopMainArtworkText>
+          <IsTopMainArtworkText>⚠ 대표, 메인 선택 시 항상 프로모션 페이지에 공개됩니다.</IsTopMainArtworkText>
           <IsTopMainArtworkContainer data-cy='create_artwork_isOpened'>
-            <div data-cy='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
-            <div data-cy='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
+            <div
+              data-cy='create_artwork_isOpened_open'
+              onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}
+            >
+              공개
+            </div>
+            <div
+              data-cy='create_artwork_isOpened_hide'
+              onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}
+            >
+              비공개
+            </div>
           </IsTopMainArtworkContainer>
         </>
       ) : (
         <Ispostedcontainer data-cy='create_artwork_isOpened' isopened={isprojectopened ? 'true' : 'false'}>
-          <div data-cy='create_artwork_isOpened_open' onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}>공개</div>
-          <div data-cy='create_artwork_isOpened_hide' onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}>비공개</div>
+          <div
+            data-cy='create_artwork_isOpened_open'
+            onClick={() => !isGetMode && !isprojectopened && handleTogglePosted()}
+          >
+            공개
+          </div>
+          <div
+            data-cy='create_artwork_isOpened_hide'
+            onClick={() => !isGetMode && isprojectopened && handleTogglePosted()}
+          >
+            비공개
+          </div>
         </Ispostedcontainer>
       ),
     },
@@ -201,11 +229,14 @@ export const getArtworkDefaultValue = (
       description: '썸네일 이미지는 최대 한 개만 설정 가능합니다.',
       content:
         isGetMode && getModeMainImg ? (
-          <IsGetModeImg
-            src={getModeMainImg}
-            alt='메인 이미지'
-            style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
-          />
+          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeMainImg)}>
+            <IsGetModeImg
+              src={getModeMainImg}
+              alt='메인 이미지'
+              style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
+            />
+            <HoverText>클릭하여 상세보기</HoverText>
+          </HoverContainer>
         ) : (
           <>
             <ImageUpload
@@ -217,48 +248,48 @@ export const getArtworkDefaultValue = (
         ),
     },
     {
-      name: 'responsiveMainImage',
-      title: '아트워크 반응형 썸네일 이미지 설정',
-      description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
-      content:
-      isGetMode && getModeResponsiveMainImg ? (
-        <IsGetModeImg
-          src={getModeResponsiveMainImg}
-          alt='메인 반응형 이미지'
-          style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
-        />
-      ) : (
-        <>
-          <ImageUpload
-            type='responsiveMain'
-            value={responsiveMain}
-            onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
-          />
-        </>
-      ),
-    },
-    {
       name: 'detailImages',
       title: '아트워크 서브 이미지',
       description:
         '아트워크 서브 이미지는 해당 아트워크 페이지 안에서 보이며, 최소 1개에서 최대 3개까지 지정 가능합니다.',
-
       content:
         isGetMode && getModeDetailImgs ? (
           getModeDetailImgs.map((i, index) => (
-            <IsGetModeImg
-            key={`detail-image-${index}`}
-              src={i}
-              alt={`서브 이미지 ${index + 1}`}
-              style={{ width: '100%', height: 'auto', objectFit: 'contain', marginBottom: '30px' }}
-            />
+            <HoverContainer key={`detail-image-${index}`} onClick={() => handleImageClick && handleImageClick(i)}>
+              <IsGetModeImg
+                src={i}
+                alt={`서브 이미지 ${index + 1}`}
+                style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
+              />
+              <HoverText>클릭하여 상세보기</HoverText>
+            </HoverContainer>
           ))
         ) : (
-          <ImageUpload
-            type='detail'
-            value={detailImage}
-            onChange={(newImages: File | File[]) => handleDetailImageChange(newImages)}
-          />
+          <ImageUpload type='detail' value={detailImage} onChange={handleDetailImageChange} />
+        ),
+    },
+    {
+      name: 'responsiveMainImage',
+      title: '아트워크 반응형 썸네일 이미지 설정',
+      description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
+      content:
+        isGetMode && getModeResponsiveMainImg ? (
+          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeResponsiveMainImg)}>
+            <IsGetModeImg
+              src={getModeResponsiveMainImg}
+              alt='메인 반응형 이미지'
+              style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
+            />
+            <HoverText>클릭하여 상세보기</HoverText>
+          </HoverContainer>
+        ) : (
+          <>
+            <ImageUpload
+              type='responsiveMain'
+              value={responsiveMain}
+              onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
+            />
+          </>
         ),
     },
   ];
@@ -269,6 +300,11 @@ export default getArtworkDefaultValue;
 
 const IsGetModeImg = styled.img`
   border-radius: 10px;
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.7; /* 마우스 호버 시 옅어짐 */
+  }
 `;
 
 const IsTopMainArtworkText = styled.h1`
@@ -284,13 +320,11 @@ const IsTopMainArtworkContainer = styled.div`
   cursor: pointer;
   font-family: 'pretendard-semibold';
   background-color: #cacaca88;
-  height: 40px;
-  border-radius: 20px;
+  height: 2rem;
+  border-radius: 10px;
   position: relative;
-  width: 150px;
-
-  h1 {
-  }
+  width: 8rem;
+  font-size: 0.9rem;
 
   div {
     z-index: 1;
@@ -310,20 +344,21 @@ const Ispostedcontainer = styled.div.withConfig({
   cursor: pointer;
   font-family: 'pretendard-semibold';
   background-color: #a3a3a360;
-  height: 40px;
-  border-radius: 20px;
+  height: 2rem;
+  border-radius: 10px;
   position: relative;
-  width: 150px;
+  width: 8rem;
+  font-size: 0.9rem;
 
   &::before {
     content: '';
     position: absolute;
-    width: 75px;
+    width: 4rem;
     height: 100%;
     background-color: #fcfcfce2;
-    border-radius: 20px;
+    border-radius: 10px;
     transition: transform 0.3s ease-in-out;
-    transform: ${(props) => (props.isopened === 'true' ? 'translateX(0)' : 'translateX(75px)')};
+    transform: ${(props) => (props.isopened === 'true' ? 'translateX(0)' : 'translateX(4rem)')};
   }
 
   div {
@@ -352,28 +387,29 @@ const TypeContainer = styled.div.withConfig({
   align-items: center;
   cursor: pointer;
   font-family: 'pretendard-semibold';
+  font-size: 0.9rem;
   background-color: #a3a3a360;
-  height: 40px;
-  border-radius: 20px;
+  height: 2rem;
+  border-radius: 10px;
   position: relative;
-  width: 225px;
+  width: 12rem;
 
   &::before {
     content: '';
     position: absolute;
-    width: 75px;
+    width: 4rem;
     height: 100%;
     background-color: #fcfcfce2;
-    border-radius: 20px;
+    border-radius: 10px;
     transition: transform 0.3s ease-in-out;
     transform: ${(props) => {
       switch (props.projectType) {
         case 'top':
           return 'translateX(0)';
         case 'main':
-          return 'translateX(75px)';
+          return 'translateX(4rem)';
         case 'others':
-          return 'translateX(150px)';
+          return 'translateX(8rem)';
         default:
           return 'translateX(0)';
       }
@@ -432,26 +468,31 @@ const StyledInput = styled.input`
   }
 `;
 const GetInputWrapper = styled.div`
-  width: 80%;
+  width: 90%;
   padding: 8px;
   border: none;
   border-bottom: 1px solid #ccc;
-  font-size: 15px;
+  font-size: 0.9rem;
   line-height: 140%;
   font-family: 'pretendard-regular';
 `;
 
 const GetHrefContainer = styled.div`
-  width: 100%;
+  width: 90%;
+
   border-bottom: 1px solid #ccc;
   padding: 8px;
 `;
 const GetHrefWrapper = styled.a`
   text-decoration: none;
   border: none;
-  font-size: 17px;
+  font-size: 0.9rem;
   line-height: 140%;
   font-family: 'pretendard-regular';
+  word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+  overflow-wrap: break-word; /* 긴 단어를 줄바꿈 */
+  display: inline-block;
+  max-width: 90%; /* 부모 요소 크기에 맞춤 */
 `;
 const OverviewInput = styled.input`
   width: 90%;
@@ -478,4 +519,38 @@ const OverviewInput = styled.input`
   ::placeholder {
     color: #7a7a7a;
   }
+`;
+
+const HoverContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 9rem;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: #0000002b;
+  margin-bottom: 0.5rem;
+
+  &:hover img {
+    opacity: 0.7; /* 이미지 호버 시 흐릿하게 */
+  }
+
+  &:hover div {
+    opacity: 1; /* 텍스트 호버 시 보이기 */
+  }
+`;
+
+const HoverText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'pretendard-semibold';
+  font-size: 14px;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 `;
