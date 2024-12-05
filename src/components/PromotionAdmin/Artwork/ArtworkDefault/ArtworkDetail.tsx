@@ -12,6 +12,7 @@ import { useUnsavedChangesWarning } from '@/hooks/useUnsavedChangesWarning';
 import { MSG } from '@/constants/messages';
 import BackDrop from '@/components/Backdrop/Backdrop';
 import ArtworkImgView from './ArtworkImgView';
+import { urlToFile } from '@/utils/urlToFile';
 
 const ArtworkDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,20 +97,6 @@ const ArtworkDetail = () => {
     }
   }, [projectType]);
 
-  async function urlToFile(url: string, fileName: string): Promise<File> {
-    try {
-      const response = await fetch(url, { mode: 'cors' });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const blob = await response.blob();
-      return new File([blob], fileName);
-    } catch (error) {
-      console.error('Error URL to file:', error);
-      throw error;
-    }
-  }
-
   // fetchArtworkDetails 함수 내에서 ArtworkData를 받아와서 state에 설정하는 부분
   const fetchArtworkDetails = async () => {
     try {
@@ -145,7 +132,7 @@ const ArtworkDetail = () => {
       if (data.mainImg) {
         setGetModeMainImg(data.mainImg);
         try {
-          const mainImgFile = await urlToFile(data.mainImg + '?t=' + Date.now(), `${data.mainimg}.png`);
+          const mainImgFile = await urlToFile(data.mainImg, `${data.mainimg}.png`);
           setMainImage(mainImgFile);
         } catch (error) {
           console.error('Error fetching artwork details:', error);
@@ -157,10 +144,7 @@ const ArtworkDetail = () => {
       if (data.responsiveMainImg) {
         setGetModeResponsiveMainImg(data.responsiveMainImg);
         try {
-          const responsiveMainImgFile = await urlToFile(
-            data.responsiveMainImg + '?t=' + Date.now(),
-            `${data.responsiveMainImg}.png`,
-          );
+          const responsiveMainImgFile = await urlToFile(data.responsiveMainImg, `${data.responsiveMainImg}.png`);
           setResponsiveMainImage(responsiveMainImgFile);
         } catch (error) {
           console.error('Error fetching artwork details:', error);
@@ -174,10 +158,12 @@ const ArtworkDetail = () => {
           const detailImageFiles = await Promise.all(
             data.projectImages.map(async (image: { imageUrlList: string }) => {
               const detailImgFile = await urlToFile(image.imageUrlList, `${image.imageUrlList}.png`);
+              console.log(detailImgFile);
               return detailImgFile;
             }),
           );
           setDetailImages(detailImageFiles);
+          console.log(detailImageFiles, 'detailImageFiles  Blob');
           setPutData((prevState) => ({
             ...prevState,
             files: detailImageFiles,
@@ -186,9 +172,6 @@ const ArtworkDetail = () => {
           console.error('Error fetching artwork details:', error);
         }
         setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
-      } else {
-        setGetModeDetailImgs([]);
-        setDetailImages([]);
       }
       setCustomer(data.client);
       setOverview(data.overView);
