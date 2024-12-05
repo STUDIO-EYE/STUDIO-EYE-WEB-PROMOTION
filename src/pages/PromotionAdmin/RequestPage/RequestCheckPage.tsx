@@ -261,7 +261,6 @@ export default RequestDetailPage;
 
 const PageWrapper = styled.div`
   display: flex;
-  margin-left: 100px;
   width: 80vw;
   font-family: 'pretendard';
 `;

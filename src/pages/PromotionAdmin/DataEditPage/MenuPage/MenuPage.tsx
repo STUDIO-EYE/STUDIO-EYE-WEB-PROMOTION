@@ -26,7 +26,7 @@ function MenuPage() {
     try {
       setIsLoading(true); // 데이터를 가져오는 동안 로딩 시작
       const data = await getAllMenuData();
-  
+
       if (data && Array.isArray(data.data) && data.data.length > 0) {
         const updatedData = data.data
           .map((item: { id: number; menuTitle: string; visibility: boolean; sequence: number; }) => ({
@@ -36,7 +36,7 @@ function MenuPage() {
             sequence: item.sequence,
           }))
           .sort((a: { sequence: number; }, b: { sequence: number; }) => a.sequence - b.sequence); // 오름차순 정렬
-  
+
         setMenuList(updatedData);
       } else {
         await postDefaultMenuData();
@@ -54,11 +54,10 @@ function MenuPage() {
         menuTitle,
         visibility: true,
       }));
-  
+
       await postMenuData(menusToPost);
       fetchMenuData();
     } catch (error) {
-      console.error("Error posting default menu data:", error);
     }
   };
 
@@ -78,7 +77,6 @@ function MenuPage() {
       setMenuList(updatedMenuList);
       await putMenuData(updatedMenuList);
     } catch (error) {
-      console.error("Error updating menu", error);
     }
   };
 
@@ -96,7 +94,6 @@ function MenuPage() {
         fetchMenuData();
       }
     } catch (error) {
-      console.error("Error updating visibility", error);
     }
   };
 
@@ -104,18 +101,10 @@ function MenuPage() {
     fetchMenuData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <Overlay visible={true}>
-        <Spinner />
-      </Overlay>
-    );
-  }
-
   return (
     <Wrapper>
       <ContentBlock>
-        <MenuWrapper>  
+        <MenuWrapper>
           <MenuListSection>
             <TitleWrapper>
               {DATAEDIT_TITLES_COMPONENTS.MENU}
@@ -125,7 +114,9 @@ function MenuPage() {
               <Droppable droppableId="menuList">
                 {(provided: any) => (
                   <MenuList {...provided.droppableProps} ref={provided.innerRef}>
-                    {menuList.length > 0 ? (
+                    {isLoading ? (
+                      <p>데이터를 불러오는 중...</p>
+                    ) : menuList.length > 0 ? (
                       menuList.map((menu, index) => (
                         <Draggable key={menu.id} draggableId={menu.id.toString()} index={index}>
                           {(provided: any) => (
@@ -166,7 +157,6 @@ function MenuPage() {
 }
 
 export default MenuPage;
-
 
 const Wrapper = styled.div`
   font-family: 'pretendard-regular';
@@ -263,34 +253,4 @@ const MenuItem = styled.li`
     background-color: #afafaf13;
     transition: 0.2s;
   }
-`;
-
-const spin = keyframes`
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-`;
-
-const Spinner = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: ${spin} 1s linear infinite;
-`;
-
-export const Overlay = styled.div<{ visible: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: ${(props) => (props.visible ? 'flex' : 'none')};
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
 `;
