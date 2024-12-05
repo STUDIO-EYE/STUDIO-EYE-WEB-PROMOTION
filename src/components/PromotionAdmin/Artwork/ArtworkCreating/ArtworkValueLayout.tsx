@@ -26,7 +26,9 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   margin-bottom: 15px;
-  width: 330px;
+  width: 19rem;
+  height: 15rem;
+
   white-space: pre-line;
 `;
 
@@ -34,48 +36,23 @@ const ContentWrapper = styled.div`
   width: 100%;
   height: fit-content;
 `;
+
 const Title = styled.div`
+  background-color: #525252a2;
+  padding: 0.8rem;
+  border-radius: 5px;
+
   font-family: 'pretendard-bold';
-  font-size: 17px;
+  font-size: 1rem;
   margin-bottom: 10px;
-  color: #282828;
+  color: #ffffff;
 `;
 const Description = styled.div`
   font-family: 'pretendard-regular';
   width: 100%;
-  font-size: 13px;
+  font-size: 0.7rem;
   color: #595959;
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem;
   line-height: 120%;
 `;
 const Content = styled.div``;
-
-const TextInputWrapper = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-  height: fit-content;
-  align-items: center;
-
-  textarea {
-    font-family: 'pretendard-regular';
-    font-size: 18px;
-    height: fit-content;
-    background: inherit;
-    border-radius: 5px;
-    border-style: none;
-    background-color: #f7f7f7f2;
-    resize: none; /* 크기 조절 비활성화 */
-    display: flex;
-    align-items: center;
-    width: 90%;
-    padding: 10px;
-    overflow-y: hidden;
-    &:hover {
-      background-color: #7e7e7e2c;
-      transition: all 300ms ease-in-out;
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-`;

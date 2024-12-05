@@ -39,13 +39,13 @@ export default CategoryDropDown;
 
 const Wrapper = styled.div`
   position: relative;
-  height: 30px;
   width: 90%;
+  padding: 0.7rem;
   text-align: center;
   border-radius: 5px;
   z-index: 15;
   background-color: #dadada9f;
-  padding: 8px;
+
   &:hover {
     cursor: pointer;
     background-color: #ffffff73;
@@ -83,7 +83,7 @@ const Dropdown = styled.div`
   width: 100%;
   border-top: none;
   border-radius: 0 0 5px 5px;
-  background-color: #ffffffa6;
+  background-color: #ffffff75;
   backdrop-filter: blur(5px);
 `;
 
