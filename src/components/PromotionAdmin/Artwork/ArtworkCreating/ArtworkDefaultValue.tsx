@@ -41,7 +41,6 @@ export const getArtworkDefaultValue = (
   handleOverviewChange: (newOverview: string) => void,
   isTopMainArtwork: boolean,
   handleImageClick?: (src: string) => void,
-  closeModal?: () => void,
   getModeMainImg?: string,
   getModeResponsiveMainImg?: string,
   getModeDetailImgs?: string[],
@@ -55,14 +54,16 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{title}</GetInputWrapper>
       ) : (
-        <StyledInput
-          data-cy='create_artwork_title'
-          required
-          value={title}
-          type='text'
-          maxLength={30}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e.target.value)}
-        />
+        <StyleInputContainer>
+          <StyledInput
+            data-cy='create_artwork_title'
+            required
+            value={title}
+            maxLength={30}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleTitleChange(e.target.value)}
+          />
+          <CharacterCount>{title.length} / 30</CharacterCount>
+        </StyleInputContainer>
       ),
     },
     {
@@ -72,14 +73,16 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{overview}</GetInputWrapper>
       ) : (
-        <OverviewInput
-          data-cy='create_artwork_overview'
-          required
-          type='text'
-          value={overview}
-          maxLength={120}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOverviewChange(e.target.value)}
-        />
+        <StyleInputContainer>
+          <OverviewInput
+            data-cy='create_artwork_overview'
+            required
+            value={overview}
+            maxLength={120}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleOverviewChange(e.target.value)}
+          />
+          <CharacterCount>{overview.length} / 120</CharacterCount>
+        </StyleInputContainer>
       ),
     },
     {
@@ -89,14 +92,16 @@ export const getArtworkDefaultValue = (
       content: isGetMode ? (
         <GetInputWrapper>{customer}</GetInputWrapper>
       ) : (
-        <StyledInput
-          data-cy='create_artwork_customer'
-          required
-          type='text'
-          value={customer}
-          maxLength={30}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleCustomerChange(e.target.value)}
-        />
+        <StyleInputContainer>
+          <StyledInput
+            data-cy='create_artwork_customer'
+            required
+            value={customer}
+            maxLength={30}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleCustomerChange(e.target.value)}
+          />
+          <CharacterCount>{customer.length} / 30</CharacterCount>
+        </StyleInputContainer>
       ),
     },
     {
@@ -115,6 +120,9 @@ export const getArtworkDefaultValue = (
               textField: {
                 inputProps: { 'data-cy': 'create_artwork_date' },
                 sx: {
+                  width: '100%',
+                  borderRadius: '5px',
+                  fontSize: '0.8rem',
                   backgroundColor: '#dadada9f',
                   '.MuiOutlinedInput-root': {
                     border: 'none',
@@ -152,7 +160,7 @@ export const getArtworkDefaultValue = (
     {
       name: 'link',
       title: '아트워크 외부 연결 미디어 링크',
-      description: '아트워크 외부 연결 링크는 최대 512자까지 입력 가능합니다.',
+      description: '아트워크 외부 연결 링크는 최대 200자까지 입력 가능합니다.',
       content: isGetMode ? (
         <GetHrefContainer>
           <GetHrefWrapper href={link} target='_blank'>
@@ -160,15 +168,17 @@ export const getArtworkDefaultValue = (
           </GetHrefWrapper>
         </GetHrefContainer>
       ) : (
-        <StyledInput
-          data-cy='create_artwork_link'
-          required
-          type='text'
-          value={link}
-          maxLength={512}
-          placeholder='링크를 입력하세요'
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLinkChange(e.target.value)}
-        />
+        <StyleInputContainer>
+          <StyledInput
+            data-cy='create_artwork_link'
+            required
+            value={link}
+            maxLength={300}
+            placeholder='링크를 입력하세요'
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleLinkChange(e.target.value)}
+          />
+          <CharacterCount>{link.length} / 200</CharacterCount>
+        </StyleInputContainer>
       ),
     },
     {
@@ -230,11 +240,7 @@ export const getArtworkDefaultValue = (
       content:
         isGetMode && getModeMainImg ? (
           <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeMainImg)}>
-            <IsGetModeImg
-              src={getModeMainImg}
-              alt='메인 이미지'
-              style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
-            />
+            <IsGetModeImg src={getModeMainImg} alt='메인 이미지' />
             <HoverText>클릭하여 상세보기</HoverText>
           </HoverContainer>
         ) : (
@@ -243,6 +249,27 @@ export const getArtworkDefaultValue = (
               type='main'
               value={mainImage}
               onChange={(newImage: File | File[]) => handleMainImageChange(newImage)}
+            />
+          </>
+        ),
+    },
+
+    {
+      name: 'responsiveMainImage',
+      title: '아트워크 반응형 썸네일 이미지 설정',
+      description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
+      content:
+        isGetMode && getModeResponsiveMainImg ? (
+          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeResponsiveMainImg)}>
+            <IsGetModeImg src={getModeResponsiveMainImg} alt='메인 반응형 이미지' />
+            <HoverText>클릭하여 상세보기</HoverText>
+          </HoverContainer>
+        ) : (
+          <>
+            <ImageUpload
+              type='responsiveMain'
+              value={responsiveMain}
+              onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
             />
           </>
         ),
@@ -256,40 +283,16 @@ export const getArtworkDefaultValue = (
         isGetMode && getModeDetailImgs ? (
           getModeDetailImgs.map((i, index) => (
             <HoverContainer key={`detail-image-${index}`} onClick={() => handleImageClick && handleImageClick(i)}>
-              <IsGetModeImg
-                src={i}
-                alt={`서브 이미지 ${index + 1}`}
-                style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
-              />
+              <IsGetModeImg src={i} alt={`서브 이미지 ${index + 1}`} />
               <HoverText>클릭하여 상세보기</HoverText>
             </HoverContainer>
           ))
         ) : (
-          <ImageUpload type='detail' value={detailImage} onChange={handleDetailImageChange} />
-        ),
-    },
-    {
-      name: 'responsiveMainImage',
-      title: '아트워크 반응형 썸네일 이미지 설정',
-      description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
-      content:
-        isGetMode && getModeResponsiveMainImg ? (
-          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeResponsiveMainImg)}>
-            <IsGetModeImg
-              src={getModeResponsiveMainImg}
-              alt='메인 반응형 이미지'
-              style={{ width: '100%', height: '9rem', objectFit: 'cover' }}
-            />
-            <HoverText>클릭하여 상세보기</HoverText>
-          </HoverContainer>
-        ) : (
-          <>
-            <ImageUpload
-              type='responsiveMain'
-              value={responsiveMain}
-              onChange={(newImage: File | File[]) => handleResponsiveMainImageChange(newImage)}
-            />
-          </>
+          <ImageUpload
+            onChange={(newImage: File | File[]) => handleDetailImageChange(newImage)}
+            type='detail'
+            value={detailImage}
+          />
         ),
     },
   ];
@@ -299,9 +302,13 @@ export const getArtworkDefaultValue = (
 export default getArtworkDefaultValue;
 
 const IsGetModeImg = styled.img`
-  border-radius: 10px;
+  width: 100%; /* 부모 너비에 맞게 설정 */
+  height: 100%; /* 부모 높이에 맞게 설정 */
+  object-fit: cover; /* 이미지 비율을 유지하며 꽉 채우기 */
+  border-radius: 5px;
   transition: opacity 0.3s ease-in-out;
   cursor: pointer;
+
   &:hover {
     opacity: 0.7; /* 마우스 호버 시 옅어짐 */
   }
@@ -334,6 +341,126 @@ const IsTopMainArtworkContainer = styled.div`
     font-weight: normal;
     color: grey;
   }
+`;
+
+const StyledInput = styled.textarea`
+  width: 100%;
+  padding: 8px;
+  height: 8rem;
+  box-sizing: border-box;
+  font-family: 'pretendard-medium';
+  outline-style: none;
+  border-radius: 5px;
+  font-size: 15px;
+  border: none;
+  color: black;
+  margin-bottom: 20px;
+  background-color: #dadada9f;
+  resize: none; /* 크기 조정 비활성화 */
+  &:hover {
+    cursor: pointer;
+    background-color: #ffffff73;
+    transition: all 300ms ease-in-out;
+  }
+  &:focus {
+    background-color: white;
+    transition: all 300ms ease-in-out;
+  }
+  ::placeholder {
+    color: #7a7a7a;
+  }
+`;
+
+const GetInputWrapper = styled.div`
+  padding: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 0.9rem;
+  line-height: 140%;
+  font-family: 'pretendard-regular';
+`;
+
+const GetHrefContainer = styled.div`
+  width: 100%;
+
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+`;
+const GetHrefWrapper = styled.a`
+  text-decoration: none;
+  border: none;
+  font-size: 0.9rem;
+  line-height: 140%;
+  font-family: 'pretendard-regular';
+  word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+  overflow-wrap: break-word; /* 긴 단어를 줄바꿈 */
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+`;
+const OverviewInput = styled.textarea`
+  width: 100%;
+  height: 'fit-content';
+  padding: 8px;
+  height: 8rem;
+  font-family: 'pretendard-medium';
+  outline-style: none;
+  box-sizing: border-box;
+  resize: none; /* 크기 조정 비활성화 */
+  border-radius: 5px;
+  font-size: 15px;
+  border: none;
+  background-color: #d1d1d1a0;
+  color: black;
+  margin-bottom: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: #ffffff73;
+    transition: all 300ms ease-in-out;
+  }
+  &:focus {
+    background-color: white;
+    transition: all 300ms ease-in-out;
+  }
+  ::placeholder {
+    color: #7a7a7a;
+  }
+`;
+
+const HoverContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 9rem;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: #0000002b;
+  margin-bottom: 0.5rem;
+
+  &:hover img {
+    opacity: 0.7; /* 이미지 호버 시 흐릿하게 */
+  }
+
+  &:hover div {
+    opacity: 1; /* 텍스트 호버 시 보이기 */
+  }
+`;
+
+const HoverText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'pretendard-semibold';
+  font-size: 14px;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const Ispostedcontainer = styled.div.withConfig({
@@ -440,117 +567,19 @@ const TypeContainer = styled.div.withConfig({
     }
   }
 `;
-
-const StyledInput = styled.input`
-  width: 90%;
-  height: 'fit-content';
-  padding: 8px;
-  height: 30px;
-  font-family: 'pretendard-medium';
-  outline-style: none;
-  border-radius: 5px;
-  font-size: 15px;
-  border: none;
-  color: black;
-  margin-bottom: 20px;
-  background-color: #dadada9f;
-  &:hover {
-    cursor: pointer;
-    background-color: #ffffff73;
-    transition: all 300ms ease-in-out;
-  }
-  &:focus {
-    background-color: white;
-    transition: all 300ms ease-in-out;
-  }
-  ::placeholder {
-    color: #7a7a7a;
-  }
-`;
-const GetInputWrapper = styled.div`
-  width: 90%;
-  padding: 8px;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  font-size: 0.9rem;
-  line-height: 140%;
+const CharacterCount = styled.div`
+  font-size: 0.6rem;
   font-family: 'pretendard-regular';
-`;
-
-const GetHrefContainer = styled.div`
-  width: 90%;
-
-  border-bottom: 1px solid #ccc;
-  padding: 8px;
-`;
-const GetHrefWrapper = styled.a`
-  text-decoration: none;
-  border: none;
-  font-size: 0.9rem;
-  line-height: 140%;
-  font-family: 'pretendard-regular';
-  word-wrap: break-word; /* 긴 단어를 줄바꿈 */
-  overflow-wrap: break-word; /* 긴 단어를 줄바꿈 */
-  display: inline-block;
-  max-width: 90%; /* 부모 요소 크기에 맞춤 */
-`;
-const OverviewInput = styled.input`
-  width: 90%;
-  height: 'fit-content';
-  padding: 8px;
-  height: 30px;
-  font-family: 'pretendard-medium';
-  outline-style: none;
-  border-radius: 5px;
-  font-size: 15px;
-  border: none;
-  background-color: #d1d1d1a0;
-  color: black;
-  margin-bottom: 20px;
-  &:hover {
-    cursor: pointer;
-    background-color: #ffffff73;
-    transition: all 300ms ease-in-out;
-  }
-  &:focus {
-    background-color: white;
-    transition: all 300ms ease-in-out;
-  }
-  ::placeholder {
-    color: #7a7a7a;
-  }
-`;
-
-const HoverContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 9rem;
-  overflow: hidden;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: #0000002b;
-  margin-bottom: 0.5rem;
-
-  &:hover img {
-    opacity: 0.7; /* 이미지 호버 시 흐릿하게 */
-  }
-
-  &:hover div {
-    opacity: 1; /* 텍스트 호버 시 보이기 */
-  }
-`;
-
-const HoverText = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'pretendard-semibold';
-  font-size: 14px;
-  color: white;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 8px 12px;
+  bottom: 2rem;
+  right: 0.8rem;
+  color: #424242;
+  text-align: right;
+  background-color: #dadada;
   border-radius: 5px;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  padding: 0.4rem;
+`;
+
+const StyleInputContainer = styled.div`
+  position: relative;
 `;
