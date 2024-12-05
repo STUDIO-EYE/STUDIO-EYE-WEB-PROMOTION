@@ -6,6 +6,8 @@ import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
 import { theme } from "@/styles/theme";
 import NullException from '@/components/PromotionPage/Artwork/NullException';
+import { AxiosError } from "axios";
+import ErrorComponent from "@/components/Error/ErrorComponent";
 
 interface INewsCardProps {
   id: number;
@@ -18,7 +20,7 @@ interface INewsCardProps {
 const NewsBoardPage: React.FC = () => {
   const [newsData, setNewsData] = useState<INewsCardProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AxiosError|null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(6);
 
@@ -27,16 +29,18 @@ const NewsBoardPage: React.FC = () => {
       try {
         setLoading(true);
         const data = await getAllNewsData();
-        const formattedData: INewsCardProps[] = data.data.map((news: any) => ({
-          id: news.id,
-          title: news.title,
-          source: news.source,
-          pubDate: news.pubDate,
-          url: news.url,
-        }));
-        setNewsData(formattedData);
+        if(data.data!==null){
+          const formattedData: INewsCardProps[] = data.data.map((news: any) => ({
+            id: news.id,
+            title: news.title,
+            source: news.source,
+            pubDate: news.pubDate,
+            url: news.url,
+          }));
+          setNewsData(formattedData);
+        }
       } catch (error) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
+        setError(error as AxiosError);
       } finally {
         setLoading(false);
       }
@@ -44,6 +48,17 @@ const NewsBoardPage: React.FC = () => {
 
     fetchData();
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -72,7 +87,7 @@ const NewsBoardPage: React.FC = () => {
     <Container>
       <IntroSection />
       {error ? (
-        <EmptyState>{error}</EmptyState>
+        isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>
       ) : newsData.length === 0 ? (
         <EmptyState>데이터가 없습니다.</EmptyState>
       ) : (
