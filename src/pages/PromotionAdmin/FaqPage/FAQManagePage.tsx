@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IFAQ, getFAQData } from '../../../apis/PromotionAdmin/faq';
@@ -22,6 +22,7 @@ function FAQManagePage() {
   const setIsEditing = useSetRecoilState(dataUpdateState);
   const isEditing = useRecoilValue(dataUpdateState);
   const navigator = useNavigate();
+  const location = useLocation();
   const { data, isLoading, refetch, error } = useQuery<IFAQ[], Error>(['faq', 'id'], getFAQData);
   const [slicedFAQ, setSlicedFAQ] = useState<IFAQ[]>([]);
   const [currentFAQ, setCurrentFAQ] = useState<IFAQ | null>(null);
@@ -44,6 +45,9 @@ function FAQManagePage() {
       const sliced = data.slice(indexOfFirst, indexOfLast);
       setSlicedFAQ(sliced);
 
+      const queryParams = new URLSearchParams(location.search);
+      const page = queryParams.get('page');
+
       if (sliced.length === 0 && currentPage > 1) {
         setCurrentPage((prevPage) => prevPage - 1);
         navigator(`?page=${currentPage - 1}`);
@@ -53,6 +57,17 @@ function FAQManagePage() {
     }
   }, [data, currentPage, FAQsPerPage, navigator]);
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page');
+
+    if (!page) {
+      navigator('?page=1', { replace: true });
+    } else {
+      setCurrentPage(parseInt(page, 10));
+    }
+  }, [location, navigator]);
+  
   const {
     register,
     handleSubmit,
@@ -244,7 +259,7 @@ function FAQManagePage() {
         </ContentBox>
       </LeftContentWrapper>
 
-      {currentFAQ && ( // currentFAQ가 선택된 경우에만 우측 콘텐츠를 보여줌
+      {currentFAQ && (
         <RightContentWrapper>
           <form onSubmit={handleSubmit(onValid)} data-cy="faq-edit-form">
             <ContentBox>
@@ -341,6 +356,7 @@ export default FAQManagePage;
 
 const Wrapper = styled.div`
   display: flex;
+  height: auto;
 `;
 
 const LeftContentWrapper = styled.div``;
@@ -397,6 +413,7 @@ const Button = styled.button`
 
 const ListWrapper = styled.div`
   margin-top: 20px;
+  height: 650px;
 `;
 
 const FAQList = styled.div`
@@ -438,7 +455,7 @@ const FAQQuestion = styled.div`
   text-overflow: ellipsis;
 `;
 const PaginationWrapper = styled.div`
-  margin-top: 30px;
+  bottom: 10px;
 `;
 
 const InputWrapper = styled.div`

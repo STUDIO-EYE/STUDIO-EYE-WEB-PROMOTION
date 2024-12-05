@@ -202,19 +202,6 @@ const StateText = styled.div<{ requestState: string }>`
   white-space: nowrap;
 `;
 
-const RequestWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* 아이템 간 공간을 균등 분배 */
-  width: 95%;
-  border-bottom: 0.1px solid rgba(0, 0, 0, 0.05);
-  &:hover {
-    cursor: pointer;
-    background-color: #afafaf1d;
-    transition: all ease-in-out 200ms;
-  }
-`;
-
 const DeleteWrapper = styled.div`
   display: flex;
   align-items: center;
