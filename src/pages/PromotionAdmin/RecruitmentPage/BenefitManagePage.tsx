@@ -262,16 +262,23 @@ function BenefitManagePage() {
     if (isEditing) {
       if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.RECRUITMENT}/benefit/write`);
+      } else {
+        return;
       }
-    } else {
-      navigator(`${PA_ROUTES.RECRUITMENT}/benefit/write`);
     }
+    if ((data?.length || 0) >= 20) {
+      alert('최대 등록 가능한 사내 복지는 20개입니다.');
+      return;
+    }
+  
+    navigator(`${PA_ROUTES.RECRUITMENT}/benefit/write`);
   };
+  
 
   if (isLoading) return <>Loading...</>;
   if (error) return <>{error.message}</>;
 
+  
   return (
     <Wrapper>
       <LeftContentWrapper>
