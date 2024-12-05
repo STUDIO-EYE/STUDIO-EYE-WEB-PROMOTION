@@ -10,8 +10,12 @@ import { PA_ROUTES } from '@/constants/routerConstants';
 import { linkCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 import { useUnsavedChangesWarning } from '@/hooks/useUnsavedChangesWarning';
 import { MSG } from '@/constants/messages';
+import BackDrop from '@/components/Backdrop/Backdrop';
+import ArtworkImgView from './ArtworkImgView';
 
 const ArtworkDetail = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImgSrc, setModalImgSrc] = useState<string>('');
   const [getModeMainImg, setGetModeMainImg] = useState('');
   const [getModeResponsiveMainImg, setGetModeResponsiveMainImg] = useState('');
   const [getModeDetailImgs, setGetModeDetailImgs] = useState<string[]>([]);
@@ -20,8 +24,8 @@ const ArtworkDetail = () => {
   const [isProjectOpened, setIsProjectOpened] = useState<boolean>(false);
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
-  const [mainImage, setMainImage] = useState<File|null>(null);
-  const [responsiveMainImage, setResponsiveMainImage]=useState<File|null>(null);
+  const [mainImage, setMainImage] = useState<File | null>(null);
+  const [responsiveMainImage, setResponsiveMainImage] = useState<File | null>(null);
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -55,16 +59,16 @@ const ArtworkDetail = () => {
   useEffect(() => {
     setSubmitButtonDisabled(
       !selectedDate ||
-      selectedCategory === '' ||
-      projectType === null ||
-      link === '' ||
-      !mainImage ||
-      !responsiveMainImage ||
-      !detailImages ||
-      detailImages.length === 0 ||
-      title === '' ||
-      customer === '' ||
-      overview === '',
+        selectedCategory === '' ||
+        projectType === null ||
+        link === '' ||
+        !mainImage ||
+        !responsiveMainImage ||
+        !detailImages ||
+        detailImages.length === 0 ||
+        title === '' ||
+        customer === '' ||
+        overview === '',
     );
   }, [
     selectedDate,
@@ -91,9 +95,13 @@ const ArtworkDetail = () => {
       setIsTopMainArtwork(false);
     }
   }, [projectType]);
+
   async function urlToFile(url: string, fileName: string): Promise<File> {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { mode: 'cors' });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const blob = await response.blob();
       return new File([blob], fileName);
     } catch (error) {
@@ -142,19 +150,22 @@ const ArtworkDetail = () => {
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
-      }else{
+      } else {
         setGetModeMainImg('');
         setMainImage(null);
       }
-      if(data.responsiveMainImg){
+      if (data.responsiveMainImg) {
         setGetModeResponsiveMainImg(data.responsiveMainImg);
         try {
-          const responsiveMainImgFile = await urlToFile(data.responsiveMainImg + '?t=' + Date.now(), `${data.responsiveMainImg}.png`);
+          const responsiveMainImgFile = await urlToFile(
+            data.responsiveMainImg + '?t=' + Date.now(),
+            `${data.responsiveMainImg}.png`,
+          );
           setResponsiveMainImage(responsiveMainImgFile);
         } catch (error) {
           console.error('Error fetching artwork details:', error);
         }
-      }else{
+      } else {
         setGetModeResponsiveMainImg('');
         setResponsiveMainImage(null);
       }
@@ -175,7 +186,7 @@ const ArtworkDetail = () => {
           console.error('Error fetching artwork details:', error);
         }
         setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
-      }else{
+      } else {
         setGetModeDetailImgs([]);
         setDetailImages([]);
       }
@@ -213,16 +224,25 @@ const ArtworkDetail = () => {
     }
   };
 
+  // 아트워크 썸네일 상태
   const handleMainImageChange = (newImage: File | File[]) => {
-    setMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
+    setMainImage(Array.isArray(newImage) ? newImage[0] : newImage); // 1개만 저장
   };
 
-  const handleResponsiveMainImageChange=(newImage:File|File[])=>{
-    setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
+  // 반응형 썸네일 상태
+  const handleResponsiveMainImageChange = (newImage: File | File[]) => {
+    setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage); // 1개만 저장
   };
 
+  // 상세 이미지 상태 (1~3개)
   const handleDetailImageChange = (newImages: File | File[]) => {
-    setDetailImages(Array.isArray(newImages) ? newImages : [newImages]);
+    const updatedImages = Array.isArray(newImages) ? newImages : [newImages];
+
+    // 최대 3개 제한
+    if (updatedImages.length > 3) {
+      updatedImages.splice(3);
+    }
+    setDetailImages(updatedImages);
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -252,8 +272,8 @@ const ArtworkDetail = () => {
     if (mainImage) {
       formData.append('file', mainImage);
     }
-    if (responsiveMainImage){
-      formData.append('responsiveFile',responsiveMainImage);
+    if (responsiveMainImage) {
+      formData.append('responsiveFile', responsiveMainImage);
     }
     if (detailImages) {
       detailImages.forEach((file, index) => {
@@ -293,6 +313,17 @@ const ArtworkDetail = () => {
       }
     }
   };
+
+  const handleImageClick = (src: string) => {
+    setModalImgSrc(src);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalImgSrc('');
+  };
+
   const defaultValue = getArtworkDefaultValue(
     selectedDate,
     handleDateChange,
@@ -317,6 +348,8 @@ const ArtworkDetail = () => {
     overview,
     handleOverviewChange,
     isTopMainArtwork,
+    handleImageClick,
+    closeModal,
     getModeMainImg,
     getModeResponsiveMainImg,
     getModeDetailImgs,
@@ -324,27 +357,25 @@ const ArtworkDetail = () => {
   );
 
   return (
-    <Container>
-      <ScrollToTop />
-      <ValueWrapper data-cy='PP_artwork_detail'>
-        {defaultValue.map((item: DefaultValueItem, index: number) => (
-          item.name==='responsiveMainImage'?null:
-          item.name === 'mainImage' && defaultValue[index + 1]?.name === 'responsiveMainImage'?
-              <div key={index}>
-                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
-                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content}/>
-                <ArtworkValueLayout valueTitle={defaultValue[index + 1].title} description={defaultValue[index + 1].description} content={defaultValue[index + 1].content}/>
-              </div>
-          :
-          <div key={index}>
-            {errorMessage && !isGetMode && item.name === 'artworkType' && (
-              <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
-            )}{' '}
-            {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
-            <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
-          </div>
-        ))}
-        <div />
+    <>
+      {isModalOpen && (
+        <BackDrop children={<ArtworkImgView src={modalImgSrc} closeModal={closeModal} />} isOpen={isModalOpen} />
+      )}
+      <Container>
+        <ScrollToTop />
+        <ValueWrapper data-cy='PP_artwork_detail'>
+          {defaultValue.map((item: DefaultValueItem, index: number) => (
+            <div key={index}>
+              {errorMessage && !isGetMode && item.name === 'artworkType' && (
+                <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
+              )}
+              {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
+              <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+            </div>
+          ))}
+        </ValueWrapper>
+      </Container>
+      <ButtonContainer>
         {!isGetMode && (
           <SubmitBtn
             data-cy='modify_artwork_finish'
@@ -355,10 +386,14 @@ const ArtworkDetail = () => {
             저장하기
           </SubmitBtn>
         )}
-        {isGetMode && <SubmitBtn data-cy='modify_artwork_submit' onClick={handleEditClick}>수정하기</SubmitBtn>}
-      </ValueWrapper>{' '}
-      <DeleteWrapper onClick={handleArtworkDelete}>삭제하기</DeleteWrapper>
-    </Container>
+        {isGetMode && (
+          <SubmitBtn data-cy='modify_artwork_submit' onClick={handleEditClick}>
+            수정하기
+          </SubmitBtn>
+        )}{' '}
+        <DeleteWrapper onClick={handleArtworkDelete}>삭제하기</DeleteWrapper>
+      </ButtonContainer>{' '}
+    </>
   );
 };
 
@@ -367,7 +402,8 @@ export default ArtworkDetail;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 44rem;
+
   position: relative;
 `;
 
@@ -377,17 +413,19 @@ const ValueWrapper = styled.div`
   backdrop-filter: blur(7px);
   box-sizing: border-box;
   width: 100%;
-  padding: 55px 55px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  padding: 2rem;
+  display: flex;
+  flex-wrap: wrap; /* 줄바꿈 허용 */
+  gap: 0.5rem; /* 박스 간 간격 */
+  justify-content: space-between; /* 박스 간 간격 균등 */
+  width: 100%;
 `;
 
 const SubmitBtn = styled.button`
   border: none;
   outline-style: none;
   font-family: 'pretendard-semibold';
-  font-size: 17px;
+  font-size: 1rem;
   background-color: #6c757d;
   width: 150px;
   text-align: center;
@@ -395,7 +433,7 @@ const SubmitBtn = styled.button`
   border-radius: 5px;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 0.7rem;
   margin-left: auto;
   margin-top: 20px;
   &:disabled {
@@ -421,23 +459,34 @@ const ErrorMessage = styled.div`
   margin-bottom: 15px;
 `;
 
-const DeleteWrapper = styled.div`
+const DeleteWrapper = styled.button`
+  border: none;
+  outline-style: none;
   font-family: 'pretendard-semibold';
-  font-size: 17px;
-  background-color: #c0c0c0;
-  text-align: center;
+  font-size: 1rem;
+  background-color: #6c757d;
   width: 150px;
   text-align: center;
   color: white;
   border-radius: 5px;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 0.7rem;
   margin-left: auto;
-  margin-right: 20px;
   margin-top: 20px;
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    &:hover {
+      background-color: #6c757d;
+    }
+  }
 
   &:hover {
     background-color: #ca0505c5;
   }
+`;
+
+const ButtonContainer = styled.div`
+  text-align: right;
 `;
