@@ -253,7 +253,7 @@ const NotiContainer = styled.div`
   h1 {
     color: #595959;
     font-family: 'pretendard-semibold';
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin-bottom: 15px;
   }
 `;
@@ -265,5 +265,6 @@ const TextContainer = styled.div`
   font-family: 'pretendard-regular';
   font-size: 1rem;
   color: #aaa;
+  margin-bottom: 1rem;
   text-align: left;
 `;
