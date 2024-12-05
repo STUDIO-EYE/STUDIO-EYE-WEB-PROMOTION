@@ -18,7 +18,7 @@ const ArtworkCreating = () => {
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
   const [mainImage, setMainImage] = useState<File>();
-  const [responsiveMainImage, setResponsiveMainImage]=useState<File>();
+  const [responsiveMainImage, setResponsiveMainImage] = useState<File>();
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -93,9 +93,9 @@ const ArtworkCreating = () => {
     setMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
   };
 
-  const handleResponsiveMainImageChange=(newImage:File|File[])=>{
+  const handleResponsiveMainImageChange = (newImage: File | File[]) => {
     setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
-  }
+  };
 
   const handleDetailImageChange = (newImages: File | File[]) => {
     const newImageList = Array.isArray(newImages) ? newImages : [newImages];
@@ -133,8 +133,8 @@ const ArtworkCreating = () => {
     if (mainImage) {
       formData.append('file', mainImage);
     }
-    if (responsiveMainImage){
-      formData.append('responsiveFile',responsiveMainImage);
+    if (responsiveMainImage) {
+      formData.append('responsiveFile', responsiveMainImage);
     }
     if (detailImages) {
       detailImages.forEach((file, index) => {
@@ -187,7 +187,7 @@ const ArtworkCreating = () => {
     <Container>
       <CloseContainer onClick={() => setProducingIsOpened(false)}>x</CloseContainer>
       <ValueWrapper data-cy='PA_artwork_createBox'>
-        {defaultValue.map((item: DefaultValueItem, index: number) => (
+        {/* {defaultValue.map((item: DefaultValueItem, index: number) => (
           item.name==='responsiveMainImage'?null:
           item.name === 'mainImage' && defaultValue[index + 1]?.name === 'responsiveMainImage'?
               <div key={index}>
@@ -196,6 +196,13 @@ const ArtworkCreating = () => {
                 <ArtworkValueLayout valueTitle={defaultValue[index + 1].title} description={defaultValue[index + 1].description} content={defaultValue[index + 1].content}/>
               </div>
           :
+          <div key={index}>
+            {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+            {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
+            <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+          </div>
+        ))} */}
+        {defaultValue.map((item: DefaultValueItem, index: number) => (
           <div key={index}>
             {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
             {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
