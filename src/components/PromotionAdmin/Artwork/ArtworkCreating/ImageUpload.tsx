@@ -18,42 +18,47 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
         setImages(files);
         setPreviewURLs(files.map((file) => URL.createObjectURL(file)));
       }
+    } else {
+      setImages([]);
+      setPreviewURLs([]);
     }
   }, [value]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files);
-      const maxFiles = type === 'main'||type==='responsiveMain' ? 1 : 3;
-      const newFiles = selectedFiles.slice(0, maxFiles);
 
-      const newPreviewURLs = newFiles.map((file) => URL.createObjectURL(file));
+      // 각 타입에 따라 최대 파일 개수 설정
+      const maxFiles = type === 'main' || type === 'responsiveMain' ? 1 : 3;
+      const newFiles = selectedFiles.slice(0, maxFiles - images.length);
 
-      if (type === 'main'||type==='responsiveMain') {
-        setImages(newFiles);
-        setPreviewURLs(newPreviewURLs);
-        onChange(newFiles[0]);
-      } else {
-        const updatedFiles = [...images, ...newFiles];
-        const updatedPreviewURLs = [...previewURLs, ...newPreviewURLs];
+      // 중복 추가 방지
+      const uniqueFiles = newFiles.filter(
+        (newFile) =>
+          !images.some((existingFile) => existingFile.name === newFile.name && existingFile.size === newFile.size),
+      );
 
-        while (updatedFiles.length > maxFiles) {
-          updatedFiles.shift();
-          updatedPreviewURLs.shift();
-        }
+      const newPreviewURLs = uniqueFiles.map((file) => URL.createObjectURL(file));
 
-        setImages(updatedFiles);
-        setPreviewURLs(updatedPreviewURLs);
-        onChange(updatedFiles);
-      }
+      const updatedImages = [...images, ...uniqueFiles];
+      setImages(updatedImages);
+      setPreviewURLs((prev) => [...prev, ...newPreviewURLs]);
+
+      onChange(updatedImages);
     }
   };
 
   const handleDeleteImage = (index: number) => {
     const updatedImages = images.filter((_, i) => i !== index);
     const updatedPreviewURLs = previewURLs.filter((_, i) => i !== index);
+
+    // URL 객체 해제
+    URL.revokeObjectURL(previewURLs[index]);
+
     setImages(updatedImages);
     setPreviewURLs(updatedPreviewURLs);
+
+    // 부모 컴포넌트로 상태 전달
     onChange(updatedImages);
   };
 
@@ -74,7 +79,10 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
       <ImagesPreviewContainer>
         {previewURLs.map((url, index) => (
           <ImagePreviewWrapper key={index}>
-            <ImagePreview src={url} alt={`${type === 'main' ? 'Main' : type==='responsiveMain'? 'ResponsiveMain' : 'Detail'} Image ${index + 1}`} />
+            <ImagePreview
+              src={url}
+              alt={`${type === 'main' ? 'Main' : type === 'responsiveMain' ? 'ResponsiveMain' : 'Detail'} Image ${index + 1}`}
+            />
             <DeleteButton onClick={() => handleDeleteImage(index)}>삭제하기</DeleteButton>
           </ImagePreviewWrapper>
         ))}
@@ -103,7 +111,7 @@ const UploadLabel = styled.label`
     background-color: #5a6268;
   }
 
-  &[aria-disabled="true"] {
+  &[aria-disabled='true'] {
     opacity: 0.5;
     cursor: default;
     &:hover {
