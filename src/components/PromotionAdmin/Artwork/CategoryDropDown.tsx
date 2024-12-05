@@ -39,7 +39,8 @@ export default CategoryDropDown;
 
 const Wrapper = styled.div`
   position: relative;
-  width: 90%;
+  box-sizing: border-box;
+  width: 100%;
   padding: 0.7rem;
   text-align: center;
   border-radius: 5px;

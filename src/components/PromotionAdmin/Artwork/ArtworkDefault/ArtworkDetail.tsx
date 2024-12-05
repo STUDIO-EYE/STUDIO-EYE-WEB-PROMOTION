@@ -263,6 +263,10 @@ const ArtworkDetail = () => {
         formData.append('files', file);
       });
     }
+    const formDataEntries = Array.from(formData.entries());
+    formDataEntries.forEach(([key, value]) => {
+      console.log(`${key}:`, value);
+    });
 
     try {
       const response = await putArtwork(formData);
@@ -277,7 +281,7 @@ const ArtworkDetail = () => {
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
-      console.log('Error creating artwork:', error);
+      console.log('[artwork updating error]', error);
     }
   };
 
@@ -291,7 +295,7 @@ const ArtworkDetail = () => {
         navigate(`${PA_ROUTES.ARTWORK}`);
       } catch (error) {
         alert(MSG.CONFIRM_MSG.FAILED);
-        console.error('Error deleting artwork:', error);
+        console.error('Error deleting requestData:', detailImages);
         // 삭제 실패 시 처리
       }
     }
@@ -332,7 +336,6 @@ const ArtworkDetail = () => {
     handleOverviewChange,
     isTopMainArtwork,
     handleImageClick,
-    closeModal,
     getModeMainImg,
     getModeResponsiveMainImg,
     getModeDetailImgs,
@@ -347,15 +350,28 @@ const ArtworkDetail = () => {
       <Container>
         <ScrollToTop />
         <ValueWrapper data-cy='PP_artwork_detail'>
-          {defaultValue.map((item: DefaultValueItem, index: number) => (
-            <div key={index}>
-              {errorMessage && !isGetMode && item.name === 'artworkType' && (
-                <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
-              )}
-              {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
-              <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
-            </div>
-          ))}
+          {defaultValue.map((item: DefaultValueItem, index: number) =>
+            item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
+              defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
+              <div key={index}>
+                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+                <ArtworkValueLayout
+                  valueTitle={defaultValue[index + 1].title}
+                  description={defaultValue[index + 1].description}
+                  content={defaultValue[index + 1].content}
+                />
+              </div>
+            ) : (
+              <div key={index}>
+                {errorMessage && !isGetMode && item.name === 'artworkType' && (
+                  <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
+                )}
+                {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
+                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+              </div>
+            ),
+          )}
         </ValueWrapper>
       </Container>
       <ButtonContainer>
@@ -386,22 +402,19 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 44rem;
-
   position: relative;
 `;
 
 const ValueWrapper = styled.div`
-  background-color: rgba(255, 255, 255, 0.336);
+  background-color: #00000009;
   border-radius: 10px;
   backdrop-filter: blur(7px);
   box-sizing: border-box;
   width: 100%;
   padding: 2rem;
-  display: flex;
-  flex-wrap: wrap; /* 줄바꿈 허용 */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem; /* 박스 간 간격 */
-  justify-content: space-between; /* 박스 간 간격 균등 */
-  width: 100%;
 `;
 
 const SubmitBtn = styled.button`
@@ -428,6 +441,8 @@ const SubmitBtn = styled.button`
   }
   &:hover {
     background-color: #5a6268;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
   }
 `;
 
@@ -466,6 +481,8 @@ const DeleteWrapper = styled.button`
   }
 
   &:hover {
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
     background-color: #ca0505c5;
   }
 `;

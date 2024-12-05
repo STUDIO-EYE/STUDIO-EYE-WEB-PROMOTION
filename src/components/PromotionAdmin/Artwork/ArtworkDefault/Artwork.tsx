@@ -213,6 +213,8 @@ const ArtworkProducingWrapper = styled.div`
   border-radius: 5px;
 
   &:hover {
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
     background-color: #5a6268;
   }
 `;

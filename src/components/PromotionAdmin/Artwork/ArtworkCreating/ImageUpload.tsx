@@ -100,13 +100,14 @@ const ImageUploadContainer = styled.div`
 
 const UploadLabel = styled.label`
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 0.5rem;
+  margin-left: auto;
   background-color: #6c757d;
   color: white;
   border-radius: 5px;
   margin-bottom: 10px;
   transition: all 0.3s ease-in-out;
-
+  font-size: 0.7rem;
   &:hover {
     background-color: #5a6268;
   }
@@ -124,14 +125,21 @@ const ImagesPreviewContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 10px;
+  width: 100%;
+  min-height: 9rem;
+  height: 100%;
+  box-sizing: border-box;
+
+  background-color: #0000000f;
+  padding: 0.8rem;
+  border-radius: 5px;
 `;
 
 const ImagePreviewWrapper = styled.div`
   position: relative;
   display: inline-block;
-  max-width: 100%;
-  max-height: 200px;
+  width: 100%;
+  height: 100%;
 
   &:hover button {
     display: block;
@@ -139,10 +147,11 @@ const ImagePreviewWrapper = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  max-width: 100%;
-  max-height: 200px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+
   border-radius: 5px;
-  margin-top: 5px;
 `;
 
 const DeleteButton = styled.button`
@@ -151,6 +160,7 @@ const DeleteButton = styled.button`
   top: 10px;
   right: 10px;
   padding: 5px 10px;
+
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
