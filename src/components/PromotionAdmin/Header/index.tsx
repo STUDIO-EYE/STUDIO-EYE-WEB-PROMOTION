@@ -40,7 +40,6 @@ const Index = () => {
     },
     {
       enabled: !!auth.userId,
-      refetchInterval: 60000, // 1분마다 새로고침
       onSuccess: (data) => {
         if (data.length === 0) {
           setIconStatus(false);
@@ -51,7 +50,6 @@ const Index = () => {
         const unreadNotificationsExist = data.some((notification) => !notification.isRead);
         setIconStatus(unreadNotificationsExist);
 
-        // 알림 정렬
         const sorted = data.sort((a, b) => Number(b.isRead) - Number(a.isRead));
         setSortedNotifications(sorted);
 
