@@ -60,9 +60,13 @@ const NewsBoardPage: React.FC = () => {
   return (
     <Container>
       <IntroSection />
-      {error ? (
+      {isLoading ? (
+        <><LoadingModal>
+          <LoadingIcon />
+        </LoadingModal><EmptyState>로딩 중...</EmptyState></>
+      ):error ? (
         isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>
-      ) : newsData?.length === 0 ? (
+      ) : !newsData? (
         <EmptyState>데이터가 없습니다.</EmptyState>
       ) : (
         <>
