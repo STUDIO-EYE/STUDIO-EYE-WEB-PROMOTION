@@ -39,24 +39,6 @@ const ArtworkDetail = () => {
   const [linkRegexMessage, setLinkRegexMessage] = useState('');
   const [isTopMainArtwork, setIsTopMainArtwork] = useState(false);
   useUnsavedChangesWarning(MSG.CONFIRM_MSG.EXIT, !isGetMode);
-  const [putData, setPutData] = useState<UpdateArtwork>({
-    request: {
-      projectId: 0,
-      department: '',
-      category: '',
-      name: '',
-      client: '',
-      date: '',
-      link: '',
-      overView: '',
-      projectType: 'others',
-      isPosted: false,
-      deletedImageId: [],
-    },
-    file: '',
-    responsiveFile: '',
-    files: [],
-  });
 
   useEffect(() => {
     setSubmitButtonDisabled(
@@ -110,66 +92,52 @@ const ArtworkDetail = () => {
       setIsProjectOpened(data.isPosted);
       setProjectType(data.projectType);
       setLink(data.link);
-      setPutData({
-        request: {
-          projectId: data.id,
-          department: '',
-          category: data.category,
-          name: data.name,
-          client: data.client,
-          date: data.date,
-          link: data.link,
-          projectType: data.projectType,
-          isPosted: data.isPosted,
-          overView: data.overView,
-          deletedImageId: [],
-        },
-        file: data.mainImg,
-        responsiveFile: data.responsiveMainImg,
-        files: [],
-      });
+      setCustomer(data.client);
+      setOverview(data.overView);
+
       if (data.projectType === 'top' || data.projectType === 'main') {
         setIsTopMainArtwork(true);
       } else {
         setIsTopMainArtwork(false);
       }
+
       if (data.mainImg) {
-        const mainImgFile = await urlToFile(data.mainImg);
-        setMainImage(mainImgFile);
-        setGetModeMainImg(data.mainImg);
-      } else {
-        setMainImage(null);
-        setGetModeMainImg('');
+        try {
+          const mainImgFile = await urlToFile(data.mainImg);
+          setMainImage(mainImgFile);
+          setGetModeMainImg(data.mainImg);
+        } catch (error) {
+          console.error('[ArtworkDetail Failed to load main image]', error);
+          setMainImage(null);
+          setGetModeMainImg('');
+        }
       }
 
       if (data.responsiveMainImg) {
-        const responsiveImgFile = await urlToFile(data.responsiveMainImg);
-        setResponsiveMainImage(responsiveImgFile);
-        setGetModeResponsiveMainImg(data.responsiveMainImg);
-      } else {
-        setResponsiveMainImage(null);
-        setGetModeResponsiveMainImg('');
+        try {
+          const responsiveImgFile = await urlToFile(data.responsiveMainImg);
+          setResponsiveMainImage(responsiveImgFile);
+          setGetModeResponsiveMainImg(data.responsiveMainImg);
+        } catch (error) {
+          console.error('[ArtworkDetail Failed to load responsive main image]', error);
+          setResponsiveMainImage(null);
+          setGetModeResponsiveMainImg('');
+        }
       }
 
       if (data.projectImages && data.projectImages.length > 0) {
-        const detailImageFiles = await Promise.all(
-          data.projectImages.map(async (image: { imageUrlList: string }) => urlToFile(image.imageUrlList)),
-        );
-
-        setDetailImages(detailImageFiles);
-        setPutData((prevState) => ({
-          ...prevState,
-          files: detailImageFiles,
-        }));
-
-        setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
-      } else {
-        setDetailImages([]);
-        setGetModeDetailImgs([]);
+        try {
+          const detailImageFiles = await Promise.all(
+            data.projectImages.map(async (image: { imageUrlList: string }) => urlToFile(image.imageUrlList)),
+          );
+          setDetailImages(detailImageFiles);
+          setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
+        } catch (error) {
+          console.error('[ArtworkDetail Failed to load detail images]', error);
+          setDetailImages([]);
+          setGetModeDetailImgs([]);
+        }
       }
-
-      setCustomer(data.client);
-      setOverview(data.overView);
     } catch (error) {
       console.error('[Error fetching artwork details]', error);
     }

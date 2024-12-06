@@ -41,7 +41,10 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
       return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' });
     }
 
-    const response = await fetch(url, {
+    // 캐시 무효화를 위해 URL에 타임스탬프 추가
+    const cacheBusterUrl = `${url}?t=${Date.now()}`;
+
+    const response = await fetch(cacheBusterUrl, {
       method: 'GET',
       mode: 'cors', // CORS 모드 활성화
       headers: {
@@ -50,7 +53,7 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
     });
 
     if (!response.ok) {
-      console.error(`[Fetch failed] Status: ${response.status}, URL: ${url}`);
+      console.error(`[Fetch failed] Status: ${response.status}, URL: ${cacheBusterUrl}`);
       throw new Error(`[Failed to fetch resource] ${response.status} ${response.statusText}`);
     }
 
