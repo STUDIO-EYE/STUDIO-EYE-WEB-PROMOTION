@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 
 export const getArtworkData = async () => {
   try {
-    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/projectsqw`);
+    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/projects`);
     return response.data;
   } catch (error) {
     console.log('[❌ Error fetching all artworks]', error);
