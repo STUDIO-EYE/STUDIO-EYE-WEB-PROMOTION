@@ -136,49 +136,40 @@ const ArtworkDetail = () => {
         setIsTopMainArtwork(false);
       }
       if (data.mainImg) {
+        const mainImgFile = await urlToFile(data.mainImg);
+        setMainImage(mainImgFile);
         setGetModeMainImg(data.mainImg);
-        try {
-          const mainImgFile = await urlToFile(data.mainImg, `${data.mainimg}.png`);
-          setMainImage(mainImgFile);
-        } catch (error) {
-          console.error('Error fetching artwork details:', error);
-        }
       } else {
-        setGetModeMainImg('');
         setMainImage(null);
+        setGetModeMainImg('');
       }
+
       if (data.responsiveMainImg) {
+        const responsiveImgFile = await urlToFile(data.responsiveMainImg);
+        setResponsiveMainImage(responsiveImgFile);
         setGetModeResponsiveMainImg(data.responsiveMainImg);
-        try {
-          const responsiveMainImgFile = await urlToFile(data.responsiveMainImg, `${data.responsiveMainImg}.png`);
-          setResponsiveMainImage(responsiveMainImgFile);
-        } catch (error) {
-          console.error('Error fetching artwork details:', error);
-        }
       } else {
-        setGetModeResponsiveMainImg('');
         setResponsiveMainImage(null);
+        setGetModeResponsiveMainImg('');
       }
+
       if (data.projectImages && data.projectImages.length > 0) {
-        try {
-          const detailImageFiles = await Promise.all(
-            data.projectImages.map(async (image: { imageUrlList: string }) => {
-              const detailImgFile = await urlToFile(image.imageUrlList, `${image.imageUrlList}.png`);
-              console.log(detailImgFile);
-              return detailImgFile;
-            }),
-          );
-          setDetailImages(detailImageFiles);
-          console.log(detailImageFiles, 'detailImageFiles  Blob');
-          setPutData((prevState) => ({
-            ...prevState,
-            files: detailImageFiles,
-          }));
-        } catch (error) {
-          console.error('Error fetching artwork details:', error);
-        }
+        const detailImageFiles = await Promise.all(
+          data.projectImages.map(async (image: { imageUrlList: string }) => urlToFile(image.imageUrlList)),
+        );
+
+        setDetailImages(detailImageFiles);
+        setPutData((prevState) => ({
+          ...prevState,
+          files: detailImageFiles,
+        }));
+
         setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
+      } else {
+        setDetailImages([]);
+        setGetModeDetailImgs([]);
       }
+
       setCustomer(data.client);
       setOverview(data.overView);
     } catch (error) {
