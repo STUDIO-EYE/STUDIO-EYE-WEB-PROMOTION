@@ -202,25 +202,23 @@ const ArtworkDetail = () => {
     }
   };
 
-  // 아트워크 썸네일 상태
+  // 메인 이미지 상태 변경
   const handleMainImageChange = (newImage: File | File[]) => {
-    setMainImage(Array.isArray(newImage) ? newImage[0] : newImage); // 1개만 저장
+    const updatedImage = Array.isArray(newImage) ? newImage[0] : newImage;
+    setMainImage(updatedImage); // 새 이미지로 상태 교체
   };
 
-  // 반응형 썸네일 상태
+  // 반응형 메인 이미지 상태 변경
   const handleResponsiveMainImageChange = (newImage: File | File[]) => {
-    setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage); // 1개만 저장
+    const updatedImage = Array.isArray(newImage) ? newImage[0] : newImage;
+    setResponsiveMainImage(updatedImage); // 새 이미지로 상태 교체
   };
 
-  // 상세 이미지 상태 (1~3개)
+  // 상세 이미지 상태 변경
   const handleDetailImageChange = (newImages: File | File[]) => {
     const updatedImages = Array.isArray(newImages) ? newImages : [newImages];
-
-    // 최대 3개 제한
-    if (updatedImages.length > 3) {
-      updatedImages.splice(3);
-    }
-    setDetailImages(updatedImages);
+    const truncatedImages = updatedImages.slice(0, 3); // 최대 3개 제한
+    setDetailImages(truncatedImages); // 새 이미지로 상태 교체
   };
 
   const handleTitleChange = (newTitle: string) => {
