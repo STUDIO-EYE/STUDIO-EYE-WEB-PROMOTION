@@ -59,11 +59,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
   return (
     <Container ref={containerRef}>
       <NewsSectionIntro>스튜디오아이 관련 뉴스 보기</NewsSectionIntro>
-      {currentNewsData.length === 0 ? (
-        <div>
-          데이터가 없습니다.
-        </div>
-      ) : (
+      {
         currentNewsData.map((news) => (
           <NewsCard
             key={news.id}
@@ -83,7 +79,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
             </ArrowIcon>
           </NewsCard>
         ))
-      )}
+      }
     </Container>
   );
 }

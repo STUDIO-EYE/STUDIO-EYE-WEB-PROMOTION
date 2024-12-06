@@ -527,20 +527,33 @@ const BenefitContent = styled.p`
 `;
 
 const NoRecruitmentMessage = styled.div`
-  font-family: ${(props) => props.theme.font.medium}; 
+  font-family: ${(props) => props.theme.font.medium};
   color: ${(props) => props.theme.color.black.light};
-  font-size: clamp(1.5rem, 2vw, 2rem); 
+  font-size: clamp(1.5rem, 3vw, 2.2rem); 
   text-align: center;
-  margin: 3rem 0; 
-  line-height: 1.8; 
-  padding: 1.5rem 2rem; 
+  margin: 3rem 0;
+  line-height: 1.8;
+  padding: 1.5rem 2rem;
 
+  @media ${(props) => props.theme.media.large_tablet} {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem); 
+    margin: 2.5rem 0;
+    padding: 1.2rem 1.8rem;
+  }
 
-  @media ${(props) => props.theme.media.mobile} {
-    font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
+  @media ${(props) => props.theme.media.tablet} {
+    font-size: clamp(1rem, 2vw, 1.4rem); 
     margin: 2rem 0;
     padding: 1rem 1.5rem;
   }
+
+  @media ${(props) => props.theme.media.mobile} {
+    font-size: clamp(0.9rem, 2vw, 1.3rem); 
+    margin: 1.5rem 0;
+    padding: 0.8rem 1.2rem;
+  }
 `;
+
+
 
 export default RecruitmentPage;

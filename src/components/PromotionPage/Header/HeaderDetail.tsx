@@ -7,7 +7,6 @@ import { getAllMenuData } from '@/apis/PromotionPage/menu';
 const HeaderDetail = () => {
   const defaultMenuData = ['ABOUT', 'ARTWORK', 'CONTACT', 'FAQ', 'RECRUITMENT', 'NEWS'];
   const [menuData, setMenuData] = useState<string[]>(defaultMenuData);
-  // const [menuData, setMenuData] = useState<string[]>([]);
 
   const getPathForTitle = (title: string) => {
     return title ? `/${title.toLowerCase()}` : '/';
@@ -49,7 +48,7 @@ const HeaderDetail = () => {
             </motion.li>
           ))
         ) : (
-          <p>메뉴를 불러오는 중입니다...</p>
+          <p>메뉴를 불러오는 중입니다.</p>
         )}
       </NavWrapper>
     </div>

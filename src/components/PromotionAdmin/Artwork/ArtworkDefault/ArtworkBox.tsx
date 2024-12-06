@@ -19,12 +19,12 @@ const ArtworkBox = ({
   projectImages,
   sequence,
 }: ArtworkData) => {
-  const slicedName = name.length > 25 ? `${name.slice(0, 25)}...` : name;
-  const slicedOverview = overView.length > 120 ? `${overView.slice(0, 120)}...` : overView;
-  const slicedClient = client.length > 30 ? `${client.slice(0, 30)}...` : client;
+  const slicedName = name.length > 15 ? `${name.slice(0, 15)}...` : name;
+  const slicedOverview = overView.length > 80 ? `${overView.slice(0, 80)}...` : overView;
+  const slicedClient = client.length > 20 ? `${client.slice(0, 20)}...` : client;
   return (
     <Container>
-      {mainImg ? <img src={mainImg} alt='mainImg' /> : <NoMainImageWrapper>No Image</NoMainImageWrapper>}
+      <img src={mainImg} alt='mainImg' />
       <DescriptionWrapper data-cy='PA_artwork'>
         <Wrapper>
           <div>
@@ -32,11 +32,17 @@ const ArtworkBox = ({
             <h1 data-cy='PA_artwork_title'>{slicedName}</h1>
           </div>
           <RightAlignWrapper>
-            {isPosted ? <IsPosted data-cy='PA_artwork_isOpen' /> : <IsNotPosted data-cy='PA_artwork_isClose'/>}
+            {isPosted ? <IsPosted data-cy='PA_artwork_isOpen' /> : <IsNotPosted data-cy='PA_artwork_isClose' />}
             <h2 data-cy='PA_artwork_category'>{category}</h2>
           </RightAlignWrapper>
         </Wrapper>
-        <h3 data-cy='PA_artwork_overview'>{slicedOverview}</h3> <TypeWrapper data-cy='PA_artwork_type' projectType={projectType}>{projectType}</TypeWrapper>
+        <OverviewWrapper>
+          <h3 data-cy='PA_artwork_overview'>{slicedOverview}</h3>
+        </OverviewWrapper>
+
+        <TypeWrapper data-cy='PA_artwork_type' projectType={projectType}>
+          {projectType === 'others' ? '기본 아트워크' : projectType === 'top' ? '대표 아트워크' : '메인 아트워크'}
+        </TypeWrapper>
       </DescriptionWrapper>
     </Container>
   );
@@ -48,38 +54,38 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 35rem;
   border-radius: 10px;
-  background-color: #afafaf13;
-  padding: 20px;
+  background-color: #00000009;
+  padding: 1rem;
   box-sizing: border-box;
   margin-bottom: 10px;
 
   &:hover {
     cursor: pointer;
-    opacity: 0.8;
+    opacity: 0.7;
     transition: all ease-in-out 300ms;
   }
   img {
-    width: 130px;
-    height: 130px;
+    width: 9.4rem;
+    height: 9.4rem;
     object-fit: cover;
     border-radius: 5px;
   }
   h1 {
     font-family: 'pretendard-semibold';
-    font-size: 18px;
+    font-size: 1.1rem;
     color: black;
     margin-top: 3px;
   }
   h2 {
     font-family: 'pretendard-medium';
-    font-size: 15px;
+    font-size: 0.8rem;
     color: #707070;
   }
   h3 {
     font-family: 'pretendard-medium';
-    font-size: 15px;
+    font-size: 0.9rem;
     color: #4b4b4b;
     line-height: 18px;
   }
@@ -89,22 +95,15 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 23px;
-`;
-
-const NoMainImageWrapper = styled.div`
-  width: 180px;
-  height: 180px;
-  font-family: 'pretendard-medium';
-  font-size: 15px;
-  color: #ffffff;
+  margin-bottom: 0.8rem;
 `;
 
 const DescriptionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 500px;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
   margin-left: 23px;
 `;
 const RightAlignWrapper = styled.div`
@@ -112,6 +111,10 @@ const RightAlignWrapper = styled.div`
   h2 {
     margin-top: 10px;
   }
+`;
+
+const OverviewWrapper = styled.div`
+  height: 5rem;
 `;
 
 const TypeWrapper = styled.div.withConfig({
@@ -123,10 +126,10 @@ const TypeWrapper = styled.div.withConfig({
   border-radius: 10px;
   background-color: ${({ projectType }) =>
     projectType === 'main' ? '#ffaa007d' : projectType === 'top' ? '#d3002384' : '#33333321'};
-  margin-bottom: 5px;
+
   margin-left: auto;
-  margin-top: 15px;
+
   font-family: 'pretendard-medium';
-  font-size: 15px;
+  font-size: 0.8rem;
   color: ${({ projectType }) => (projectType === 'main' || projectType === 'top' ? 'white' : 'black')};
 `;
