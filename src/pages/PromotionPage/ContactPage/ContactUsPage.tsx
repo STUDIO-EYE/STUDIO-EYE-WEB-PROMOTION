@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useState, useEffect, useRef, Suspense } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { PROMOTION_BASIC_PATH } from '@/constants/basicPathConstants';
 import logo from '../../../assets/logo/Logo.png';
 import BackgroundYellowCircle from '@/components/BackgroundYellowCircle/BackgroundYellowCircle';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCompanyBasicData } from '../../../apis/PromotionAdmin/dataEdit';
 import { emailCheck, phoneFaxCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 import { theme } from '@/styles/theme';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 interface ICircleProps {
   filled: boolean;
@@ -36,6 +37,7 @@ type ICompanyBasic = {
 
 const ContactUsPage = () => {
   const navigator = useNavigate();
+  const [error, setError] = useState<AxiosError|null>(null);
   const [requestStep, setRequestStep] = useState(0);
   const [formData, setFormData] = useState<IFormData>({
     category: '',
@@ -70,10 +72,22 @@ const ContactUsPage = () => {
         }
       } catch (error) {
         console.error('Error fetching company data: ', error);
+        setError(error as AxiosError);
       }
     };
     fetchData();
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   // wheel event 관리
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -370,6 +384,7 @@ const ContactUsPage = () => {
 
   return (
     <Container ref={containerRef} data-cy="contact-page">
+      {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
       <IntroSection data-cy="intro-section">
         <IntroWrapper>
           <IntroTitleWrapper>

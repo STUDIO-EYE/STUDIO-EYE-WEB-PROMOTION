@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export interface IPartnerInfo {
   id: number;
   is_main: boolean;
@@ -27,4 +29,5 @@ export interface AboutPageLoaderData {
   companyIntroData: string; // 회사 소개 데이터
   sloganImageUrl: string; // 슬로건 이미지 URL
   companyDetailData: { key: string; value: string }[]; // 회사 세부 데이터
+  errors: AxiosError[];
 }
