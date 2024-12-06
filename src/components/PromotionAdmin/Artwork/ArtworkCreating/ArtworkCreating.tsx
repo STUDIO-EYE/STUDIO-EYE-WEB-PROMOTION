@@ -26,7 +26,6 @@ const ArtworkCreating = () => {
   const [overview, setOverview] = useState('');
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [linkRegexMessage, setLinkRegexMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [isTopMainArtwork, setIsTopMainArtwork] = useState(false);
 
   const navigate = useNavigate();
@@ -58,7 +57,6 @@ const ArtworkCreating = () => {
   ]);
 
   useEffect(() => {
-    setErrorMessage('');
     if (projectType === 'top' || projectType === 'main') {
       setIsTopMainArtwork(true);
     } else {
@@ -146,7 +144,6 @@ const ArtworkCreating = () => {
     try {
       const response = await postArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
-        setErrorMessage(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
@@ -212,7 +209,7 @@ const ArtworkCreating = () => {
         <SubmitBtn
           data-cy='create_artwork_submit'
           title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
-          disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
+          disabled={submitButtonDisabled || linkRegexMessage !== ''}
           onClick={() => handleSubmit()}
         >
           저장하기

@@ -32,7 +32,6 @@ const ArtworkDetail = () => {
   const [customer, setCustomer] = useState('');
   const [overview, setOverview] = useState('');
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
   const { artworkId } = useParams();
   const [artworkData, setArtworkData] = useState<ArtworkData>();
   const [isGetMode, setIsGetMode] = useState<boolean>(true);
@@ -93,7 +92,6 @@ const ArtworkDetail = () => {
   }, [artworkId]);
 
   useEffect(() => {
-    setErrorMessage('');
     if (projectType === 'top' || projectType === 'main') {
       setIsTopMainArtwork(true);
     } else {
@@ -260,17 +258,19 @@ const ArtworkDetail = () => {
         formData.append('files', file);
       });
     }
+    const formDataEntries = Array.from(formData.entries());
+    formDataEntries.forEach(([key, value]) => {
+      console.log(`${key}:`, value);
+    });
 
     try {
       const response = await putArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
-        setErrorMessage(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
       await fetchArtworkDetails();
       setIsGetMode(true);
-      setErrorMessage('');
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
@@ -288,8 +288,7 @@ const ArtworkDetail = () => {
         navigate(`${PA_ROUTES.ARTWORK}`);
       } catch (error) {
         alert(MSG.CONFIRM_MSG.FAILED);
-        console.error('[Error deleting requestData]', detailImages);
-        alert(MSG.CONFIRM_MSG.FAILED);
+        console.error('Error deleting requestData:', detailImages);
       }
     }
   };
@@ -347,7 +346,6 @@ const ArtworkDetail = () => {
             item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
               defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
               <div key={index}>
-                {/* {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
                 <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
                 <ArtworkValueLayout
                   valueTitle={defaultValue[index + 1].title}
@@ -357,9 +355,6 @@ const ArtworkDetail = () => {
               </div>
             ) : (
               <div key={index}>
-                {/* {errorMessage && !isGetMode && item.name === 'artworkType' && (
-                  <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
-                )} */}
                 {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
                 <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
               </div>
@@ -371,8 +366,8 @@ const ArtworkDetail = () => {
         {!isGetMode && (
           <SubmitBtn
             data-cy='modify_artwork_finish'
-            title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
-            disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
+            title={submitButtonDisabled ? `모든 항목을 다 입력해주세요!` : ''}
+            disabled={submitButtonDisabled || linkRegexMessage !== ''}
             onClick={() => handleSubmit()}
           >
             저장하기
