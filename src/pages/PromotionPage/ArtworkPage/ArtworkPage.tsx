@@ -58,7 +58,7 @@ function ArtworkPage() {
     return null;
   }
 
-  if(isLoading) return <>Loading...</>
+  if(isLoading) return <div style={{minHeight: '52.6vh'}}>Loading...</div>
 
   return (
     <>
