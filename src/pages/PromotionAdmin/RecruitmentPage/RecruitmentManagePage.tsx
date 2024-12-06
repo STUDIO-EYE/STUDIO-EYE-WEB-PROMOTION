@@ -261,7 +261,7 @@ function RecruitmentManagePage() {
       </RecruimentList>
     ))
   ) : (
-    <NoDataMessage>등록된 채용 공고가 없습니다.</NoDataMessage>
+    <NoDataMessage>😊 채용공고 데이터가 존재하지 않습니다.</NoDataMessage>
   )}
 </ListWrapper>
 
@@ -642,9 +642,8 @@ const ErrorMessage = styled.div`
 `;
 
 const NoDataMessage = styled.div`
-  text-align: center;
   padding: 20px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.color.gray};
 `;
 
