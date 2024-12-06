@@ -89,7 +89,6 @@ function RecruitmentManagePage() {
       try {
         const response = await deleteRecruitmentData(id);
         alert('채용공고가 삭제되었습니다.');
-        console.log(response);
         await refetch();
 
         const updatedTotalPosts = totalPosts - 1;
@@ -100,7 +99,6 @@ function RecruitmentManagePage() {
 
         setCurrentRecruitment(null);
       } catch (error) {
-        console.log(error);
         alert('채용공고 삭제 중 오류가 발생했습니다.');
       }
     }
@@ -147,11 +145,9 @@ function RecruitmentManagePage() {
       try {
         const response = await updateRecruitmentData(formData);
         alert('채용공고가 수정되었습니다.');
-        console.log(response);
         setIsEditing(false);
         refetch();
       } catch (error) {
-        console.log(error);
         alert('채용공고 수정 중 오류가 발생했습니다.');
       }
     }
