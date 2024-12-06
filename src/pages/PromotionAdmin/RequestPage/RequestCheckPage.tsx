@@ -12,6 +12,7 @@ import { ReactComponent as InfoIcon } from '@/assets/images/PA/infoIcon.svg';
 import Pagination from '@/components/Pagination/Pagination';
 import UserInfo from '@/components/PromotionAdmin/Request/UserInfo';
 import EmailListComponent from '@/components/PromotionAdmin/Request/EmailListComponent';
+import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
 
 const MAX_TEXT_LENGTH = 255;
 
@@ -230,13 +231,11 @@ const RequestDetailPage = () => {
               </Wrapper>
               <ButtonWrapper>
                 <Button
-                  data-cy='send-reply-button'
+                  description={'답변 보내기'}
                   onClick={() => {
                     clickedRequest && replyRequest(replyState);
                   }}
-                >
-                  답변 보내기
-                </Button>
+                />
               </ButtonWrapper>
             </Box>
           </LeftContainer>
@@ -263,7 +262,6 @@ export default RequestDetailPage;
 
 const PageWrapper = styled.div`
   display: flex;
-  margin-left: 100px;
   width: 80vw;
   font-family: 'pretendard';
 `;
@@ -347,22 +345,7 @@ const Answer = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  justify-content: space-between;
   padding: 1rem 0;
-  align-items: center;
-`;
-
-const Button = styled.div`
-  cursor: pointer;
-  border: none;
-  background-color: ${(props) => props.theme.color.white.bold};
-  box-shadow: 1px 1px 4px 0.1px #c6c6c6;
-  padding: 0.5rem 1.4rem;
-  border-radius: 0.2rem;
-  font-size: 0.9rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
 `;
 
 const StyledTextArea = styled.textarea`
