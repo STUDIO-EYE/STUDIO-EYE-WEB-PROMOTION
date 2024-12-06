@@ -50,6 +50,8 @@ const ArtworkDetail = () => {
       date: '',
       link: '',
       overView: '',
+      projectType: 'others',
+      isPosted: false,
       deletedImageId: [],
     },
     file: '',
@@ -84,10 +86,12 @@ const ArtworkDetail = () => {
     customer,
     overview,
   ]);
+
   useEffect(() => {
     fetchArtworkDetails();
     setIsGetMode(true);
   }, [artworkId]);
+
   useEffect(() => {
     setErrorMessage('');
     if (projectType === 'top' || projectType === 'main') {
@@ -117,6 +121,8 @@ const ArtworkDetail = () => {
           client: data.client,
           date: data.date,
           link: data.link,
+          projectType: data.projectType,
+          isPosted: data.isPosted,
           overView: data.overView,
           deletedImageId: [],
         },
