@@ -11,7 +11,7 @@ function CEOPage() {
   const { data, isLoading } = useQuery<ICEOData>(['ceo', 'id'], getCEOData);
   const navigator = useNavigate();
 
-  if (isLoading) return <div>is Loading...</div>;
+  if (isLoading) return <div>is Loading..</div>;
   if (data === null) return <CEOWritePage />;
 
   return (

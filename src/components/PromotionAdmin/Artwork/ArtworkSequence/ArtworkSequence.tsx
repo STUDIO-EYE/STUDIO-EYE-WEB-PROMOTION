@@ -1,3 +1,4 @@
+import React from 'react';
 import { putArtworkMainSequence, putArtworkSequence } from '@/apis/PromotionAdmin/artwork';
 import { ArtworkData } from '@/types/PromotionAdmin/artwork';
 import styled from 'styled-components';
@@ -25,7 +26,8 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     mutationFn: (sequenceData: any[]) => putArtworkMainSequence(sequenceData),
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
-  const editSequence = useMutation((sequenceData: any[]) => putArtworkSequence(sequenceData), {
+  const editSequence = useMutation({
+    mutationFn: (sequenceData: any[]) => putArtworkSequence(sequenceData), 
     onSuccess: () => queryClient.invalidateQueries(['artworksequence']),
   });
   const [realData, setRealData] = useState<ArtworkData[]>([]);
@@ -41,7 +43,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
     handleDataSort();
     setOnEdit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type,data]);
   useEffect(() => {
     onEdit ? setupdate(true) : setupdate(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,12 +146,12 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         </SendButton>
       )}
 
-      {data?.length === 0 ? (
+      {realData?.length === 0 ? (
         <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
       ) : onEdit ? (
         <DragDropContext onDragEnd={onDragEnd}>
           {type === 'main' //main sequence면 top 고정
-            ? data
+            ? realData
                 ?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>
@@ -162,17 +164,17 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
             {(provided: DropProvied) => (
               <div ref={provided.innerRef} {...provided.droppableProps} data-cy='PA_droppable_container'>
                 {realData.map((data, index) => (
-                  <div style={{ marginBottom: '3px' }}>
+                  <div style={{ marginBottom: '3px' }} key={data.id}>
                     <Draggable key={data.id} draggableId={data.id.toString()} index={index}>
                       {(provided: DragProvied) => (
-                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} data-cy={`PA_draggable_item_${index}`}>
-                          <ArtworkSequenceBox type={type === 'main' ? 'main' : 'other'} artworkData={data} />
+                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps} data-cy={`PA_draggable_item_${index}`} key={data.id}>
+                          <ArtworkSequenceBox type={type === 'main' ? 'main' : 'other'} artworkData={data} key={data.id}/>
                         </div>
                       )}
                     </Draggable>
-                    {provided.placehodler}
                   </div>
                 ))}
+                {provided.placehodler}
               </div>
             )}
           </Droppable>
@@ -181,7 +183,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         <div>
           {/*edit 모드 아니면 일반 리스트*/}
           {type === 'main' //main sequence면 top 고정
-            ? data
+            ? realData
                 ?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>

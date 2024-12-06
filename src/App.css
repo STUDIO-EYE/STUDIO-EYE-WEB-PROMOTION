@@ -34,7 +34,11 @@
 }
 
 * {
-  font-family: 'Pretendard-Bold', 'Pretendard-Light', 'Pretendard-Medium', 'Pretendard-Regular', 'Pretendard-SemiBold';
+  font-family: 'Pretendard-Regular', 'Arial', 'Helvetica', sans-serif;
+}
+
+body {
+  font-family: 'Pretendard-Regular', sans-serif !important;
 }
 
 ::-webkit-scrollbar {

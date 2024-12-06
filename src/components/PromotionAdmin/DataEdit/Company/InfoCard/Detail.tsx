@@ -7,6 +7,7 @@ import { DATAEDIT_TITLES_COMPONENTS } from '../StyleComponents';
 import Button from '../../StyleComponents/Button';
 import { ContentBlock } from '../CompanyFormStyleComponents';
 import { MSG } from '@/constants/messages';
+
 interface IDetailProps {
   setEditDetail: (editMode: boolean) => void;
 }

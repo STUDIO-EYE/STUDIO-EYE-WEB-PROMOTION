@@ -247,8 +247,9 @@ export const getArtworkDefaultValue = (
         isGetMode && getModeDetailImgs ? (
           getModeDetailImgs.map((i, index) => (
             <IsGetModeImg
+            key={`detail-image-${index}`}
               src={i}
-              alt='메인 이미지'
+              alt={`서브 이미지 ${index + 1}`}
               style={{ width: '100%', height: 'auto', objectFit: 'contain', marginBottom: '30px' }}
             />
           ))
@@ -301,7 +302,9 @@ const IsTopMainArtworkContainer = styled.div`
   }
 `;
 
-const Ispostedcontainer = styled.div<{ isopened: string }>`
+const Ispostedcontainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isopened',
+})<{ isopened: string }>`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -342,7 +345,9 @@ const Ispostedcontainer = styled.div<{ isopened: string }>`
     }
   }
 `;
-const TypeContainer = styled.div<{ projectType: projectType }>`
+const TypeContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: projectType }>`
   display: flex;
   align-items: center;
   cursor: pointer;

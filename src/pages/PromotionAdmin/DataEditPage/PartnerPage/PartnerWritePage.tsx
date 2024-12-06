@@ -129,7 +129,6 @@ function PartnerWritePage() {
       axios
         .post(`${PROMOTION_BASIC_PATH}/api/partners`, formData)
         .then((response) => {
-          console.log('Partenr posted:', response);
           alert(MSG.ALERT_MSG.POST);
           setIsEditing(false);
           navigate(`${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_PARTNER}`);
@@ -157,7 +156,6 @@ function PartnerWritePage() {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
-      // console.log(blob);
       return new File([blob], fileName);
     } catch (error) {
       console.error('Error URL to file:', error);
@@ -189,6 +187,7 @@ function PartnerWritePage() {
           <InputWrapper>
             <div style={{ display: 'flex' }}>
               <input
+                data-cy='partner-link'
                 style={{ paddingLeft: '10px' }}
                 {...register('link', {
                   required: MSG.PLACEHOLDER_MSG.LINK,
@@ -202,11 +201,12 @@ function PartnerWritePage() {
                 {INPUT_MAX_LENGTH.PARTNER_LINK}자
               </CharCountWrapper>
             </div>
-            {errors.link && <p>{errors.link.message}</p>}
+            {errors.link && <p data-cy='partner-link-error'>{errors.link.message}</p>}
 
             <SubTitle description='Name' />
             <div style={{ display: 'flex' }}>
               <input
+                data-cy='partner-name'
                 style={{ paddingLeft: '10px' }}
                 {...register('name', {
                   required: MSG.PLACEHOLDER_MSG.NAME,
@@ -219,12 +219,22 @@ function PartnerWritePage() {
                 {watchPartnerFields[partnerInputIndex.name]?.length}/{INPUT_MAX_LENGTH.PARTNER_NAME}자
               </CharCountWrapper>
             </div>
-            {errors.name && <p>{errors.name.message}</p>}
+            {errors.name && <p data-cy='partner-name-error'>{errors.name.message}</p>}
           </InputWrapper>
           <VisibilityWrapper>
             공개여부
-            <input type='checkbox' id='switch' defaultChecked {...register('is_main')} />
-            <ToggleSwitch option1='공개' option2='비공개' selected={true} />
+            <ToggleSwitch
+              option1='공개'
+              option2='비공개'
+              selected={postData.partnerInfo.is_main}
+              onToggle={(visibility) => {
+                setPostData((prevData) => ({
+                  ...prevData,
+                  partnerInfo: { ...prevData.partnerInfo, is_main: visibility },
+                }));
+                setValue('is_main', visibility, { shouldValidate: true }); // useForm과 동기화
+              }}
+            />
           </VisibilityWrapper>
         </RightContainer>
       </FormContainer>

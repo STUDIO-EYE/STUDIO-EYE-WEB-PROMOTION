@@ -18,7 +18,7 @@ interface IIntrodutionProps {
 const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
   const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
 
-  if (isLoading) return <>is Loading...</>;
+  if (isLoading) return <>is Loading..</>;
   if (error) return <>{error.message}</>;
   return (
     <Wrapper>

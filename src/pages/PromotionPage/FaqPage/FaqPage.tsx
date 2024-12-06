@@ -17,25 +17,28 @@ interface FaqDetailButtonProps {
 }
 
 const FaqPage = () => {
-  const [data, setData] = useState<FaqData[]>([]);
-  const [faqQuestion, setFaqQuestion] = useState('');
-  const [searchResult, setSearchResult] = useState('');
-  const [searchData, setSearchData] = useState<FaqData[]>([]);
-  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+  const [data, setData] = useState<FaqData[]>([]); // FAQ 데이터
+  const [faqQuestion, setFaqQuestion] = useState(''); // 검색어
+  const [searchResult, setSearchResult] = useState('none'); // 검색 결과 상태 초기화
+  const [searchData, setSearchData] = useState<FaqData[]>([]); // 검색된 FAQ 데이터
+  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set()); // 펼쳐진 FAQ 항목
+  const [errorMessage, setErrorMessage] = useState(''); // 에러 메시지 상태 추가
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
-        try {
-          const faqData: FaqData[] = await getFaqData();
-          let filteredData: FaqData[] = [];
-          if (faqData) {
-            filteredData = faqData.filter((item: FaqData) => item.visibility === true);
-            setData(filteredData);
-            initiate(filteredData);
-          }
-        } catch (error) {
-            console.error(error);
+      try {
+        const faqData: FaqData[] = await getFaqData();
+        let filteredData: FaqData[] = [];
+        if (faqData) {
+          filteredData = faqData.filter((item: FaqData) => item.visibility === true);
+          setData(filteredData);
+          initiate(filteredData); // 데이터를 가져온 후 initiate 함수 호출
         }
+      } catch (error) {
+        console.error(error);
+        setErrorMessage('전송이 실패했습니다.'); // 실패 시 에러 메시지 설정
+        setSearchResult('none'); // 검색 결과가 없을 때 상태 설정
+      }
     };
     fetchData();
   }, []);
@@ -98,31 +101,38 @@ const FaqPage = () => {
         <Content>
           <InputWrapper>
             <SearchFaqQuestion
-              data-cy='faq-search-input' // 검색 입력에 data-cy 추가
-              placeholder='컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요.'
-              autoComplete='off'
+              data-cy="faq-search-input"
+              placeholder="컨텐츠 문의, 회사 위치 등의 검색어를 입력해 주세요."
+              autoComplete="off"
               value={faqQuestion}
               onChange={handleTextAreaDataChange}
             />
           </InputWrapper>
+          {errorMessage && (
+            <NoResults data-cy="error-message">{errorMessage}</NoResults> // 에러 메시지가 있을 경우 표시
+          )}
           {searchResult === 'fail' ? (
-            <NoResults data-cy='no-results-message'>검색 결과가 없습니다.</NoResults> // 결과 없음 메시지에 data-cy 추가
+            <NoResults data-cy="no-results-message">검색 결과가 없습니다.</NoResults>
+          ) : searchResult === 'none' ? (
+            <NoResults data-cy="no-results-message">FAQ 데이터가 없습니다.</NoResults>
           ) : (
             searchData.map((item, i) => (
               <FaqDetailButton
                 key={item.id}
                 isExpanded={expandedItems.has(i)}
                 onClick={() => toggleItem(i)}
-                data-cy={`faq-item-${item.id}`} // 각 FAQ 항목에 data-cy 추가
+                data-cy={`faq-item-${item.id}`}
               >
                 <FaqBrief>
                   <FaqBriefQuestion>
-                    {item.question.length >= 100 ? item.question.substring(0, 70) + '...' : item.question}
+                    {item.question.length >= 100
+                      ? item.question.substring(0, 70) + '...'
+                      : item.question}
                   </FaqBriefQuestion>
                 </FaqBrief>
                 <FaqDetailBox isExpanded={expandedItems.has(i)}>
                   {expandedItems.has(i) && (
-                    <FaqDetailAnswer data-cy={`faq-answer-${item.id}`}>{item.answer}</FaqDetailAnswer> // 답변에 data-cy 추가
+                    <FaqDetailAnswer data-cy={`faq-answer-${item.id}`}>{item.answer}</FaqDetailAnswer>
                   )}
                 </FaqDetailBox>
               </FaqDetailButton>
@@ -134,6 +144,7 @@ const FaqPage = () => {
   );
 };
 
+
 const Container = styled.div`
   font-family: 'Pretendard';
   min-height: 100vh;
@@ -144,22 +155,27 @@ const Container = styled.div`
   background-color: black;
   color: white;
   padding: 2rem 1rem;
+  padding-bottom: 12rem; /* 하단 여백 추가 */
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 80%;
+    padding-bottom: 5rem; 
   }
 
   @media (max-width: 1024px) and (min-width: 540px) {
     font-size: 70%;
+    padding-bottom: 5rem;
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
     font-family: 'Pretendard-bold';
     font-size: 130%;
+    padding-bottom: 4rem; 
   }
 
   @media (max-width: 374px) {
     font-size: 110%;
+    padding-bottom: 3rem;
   }
 `;
 
@@ -182,7 +198,8 @@ const Title = styled.h1`
   font-weight: 600;
   color: white;
   text-align: center;
-  line-height: 1.5; 
+  line-height: 1.5;
+  margin-top: 2rem; 
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 3rem;
@@ -193,12 +210,18 @@ const Title = styled.h1`
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
+    font-family: 'Pretendard-bold';
     font-size: 2rem;
+    margin-top: 3rem !important; 
   }
+
   @media (max-width: 374px) {
     font-size: 2rem;
+    margin-top: 2rem !important; 
   }
 `;
+
+
 
 const LineWrapper = styled.div`
   display: inline;
@@ -241,7 +264,7 @@ const SubContent = styled.p`
 
 const Content = styled.div`
   padding-top: 5rem;
-  padding-bottom: 20px;
+  padding-bottom: 5rem; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,17 +273,33 @@ const Content = styled.div`
 
   @media (max-width: 1366px) and (min-width: 768px) {
     padding-top: 4rem;
+    padding-bottom: 4rem; 
   }
 
   @media (max-width: 540px) and (min-width: 375px) {
     padding-top: 3rem;
+    padding-bottom: 3rem; 
   }
 `;
 
+// const EmptyState = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   min-height: 100vh;
+//   font-family: 'pretendard-bold';
+//   font-size: 2rem;
+//   color: gray;
+//   text-align: center;
+//   padding: 0.75rem;
+//   word-break: keep-all;
+// `;
+
 const NoResults = styled.p`
-  color: white;
-  font-family: 'Pretendard'; 
-  font-size: 1.2rem; 
+  color: gray;
+  font-family: 'pretendard-bold';
+  font-size: 2rem;
+  text-align: center;
 
   @media (max-width: 1366px) and (min-width: 768px) {
     font-size: 1.1rem;

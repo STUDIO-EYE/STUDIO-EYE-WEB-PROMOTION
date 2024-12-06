@@ -17,6 +17,10 @@ const AboutPage = () => {
   const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData } =
     useLoaderData() as AboutPageLoaderData;
 
+  const mainPartnersData = partnersData.filter((info) => {
+    return info.partnerInfo.is_main;
+  });
+
   return (
     <ScrollContainer>
       <IntroPage companyIntroData={companyIntroData} sloganImageUrl={sloganImageUrl} />
@@ -43,13 +47,14 @@ const AboutPage = () => {
         )}
       </Section>
       <Section data-cy='corp-section'>
-        {partnersData.length !== 0 ? (
+        {mainPartnersData.length !== 0 ? (
           <CorpLogoContainer data-cy='corp-logo-container'>
             <CorpText data-cy='corp-title'>CORP</CorpText>
             <CorpLogoRowContainer data-cy='corp-logo-row'>
-              {partnersData.map((info) => (
+              {mainPartnersData.map((info) => (
                 <CorpLogoItem data-cy='company-image' key={info.partnerInfo.id}>
                   <img
+                    data-cy='partner-image'
                     src={info.logoImg}
                     alt='CORP Logo'
                     data-link={info.partnerInfo.link ? 'true' : 'false'}

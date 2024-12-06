@@ -45,7 +45,7 @@ const linksData = [
     svgComponent: <News width={20} height={20} />,
   },
   {
-    path: `${PA_ROUTES.RECRUITMENT}/manage`,
+    path: PA_ROUTES.RECRUITMENT,
     pathName: 'Recruitment',
     svgComponent: <Recruitment width={20} height={20} />,
   },
@@ -57,8 +57,8 @@ const index = () => {
       <LogoImg src={PALogo} alt='pa-logo' />
       <NavWrapper>
         {linksData.map((link, index) => (
-          <div>
-            <NavBtn key={index} path={link.path} pathName={link.pathName} svgComponent={link.svgComponent} />
+          <div key={index}>
+            <NavBtn path={link.path} pathName={link.pathName} svgComponent={link.svgComponent} />
           </div>
         ))}
       </NavWrapper>

@@ -80,37 +80,38 @@ const RecruitmentPage = () => {
         </IntroTitleWrapper>
       </IntroSection>
  {/* 두 번째 섹션: 채용 게시판 */}
- <JobBoardSection data-cy="recruitment-section">
-        {recruitmentData && recruitmentData.content.length > 0 ? (
-          <PostGrid>
-            <Header>진행중인 채용공고</Header>
-            <Content>
-              {recruitmentData.content.map((recruitment) => (
-                <PostItem
-                  key={recruitment.id}
-                  isOpen={recruitment.status === 'OPEN'}
-                  {...(recruitment.status === 'OPEN' ? { 'data-cy': `post-item-${recruitment.id}` } : {})}
-                  onClick={() => handleClickPost(recruitment.id, recruitment.status)}
-                >
-                  <StatusButtonWrapper>
-                    <StatusButton
-                      isDeadline={recruitment.status === 'CLOSE'}
-                      isPreparing={recruitment.status === 'PREPARING'}
-                    >
-                      {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-                    </StatusButton>
-                  </StatusButtonWrapper>
-                  <TextWrapper>
-                    <PostTitle>{recruitment.title}</PostTitle>
-                  </TextWrapper>
-                </PostItem>
-              ))}
-            </Content>
-          </PostGrid>
-        ) : (
-          <NoRecruitmentMessage>현재 올라온 채용공고가 없습니다.</NoRecruitmentMessage>
-        )}
-      </JobBoardSection>
+<JobBoardSection data-cy="recruitment-section">
+  <PostGrid>
+    <Header>진행중인 채용공고</Header>
+    <Content>
+      {recruitmentData && recruitmentData.content.length > 0 ? (
+        recruitmentData.content.map((recruitment) => (
+          <PostItem
+            key={recruitment.id}
+            isOpen={recruitment.status === 'OPEN'}
+            {...(recruitment.status === 'OPEN' ? { 'data-cy': `post-item-${recruitment.id}` } : {})}
+            onClick={() => handleClickPost(recruitment.id, recruitment.status)}
+          >
+            <StatusButtonWrapper>
+              <StatusButton
+                isDeadline={recruitment.status === 'CLOSE'}
+                isPreparing={recruitment.status === 'PREPARING'}
+              >
+                {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
+              </StatusButton>
+            </StatusButtonWrapper>
+            <TextWrapper>
+              <PostTitle>{recruitment.title}</PostTitle>
+            </TextWrapper>
+          </PostItem>
+        ))
+      ) : (
+        <NoRecruitmentMessage>현재 올라온 채용공고가 없습니다.</NoRecruitmentMessage>
+      )}
+    </Content>
+  </PostGrid>
+</JobBoardSection>
+
       {/* 세 번째 섹션: 회사 복지 정보 */}
       <BenefitsSection data-cy='benefit-section'>
         {benefitData && benefitData.length > 0 && (
@@ -147,7 +148,7 @@ const IntroSection = styled.div`
   background-color: ${theme.color.white.light};
   display: flex;
   justify-content: center;
-  margin-top: 12rem;
+  margin-top: 7rem;
 
   @media ${theme.media.tablet} {
     margin-top: 8rem; // 태블릿에서 여백 조정
@@ -318,18 +319,23 @@ const JobBoardSection = styled.div`
   background-color: #fff;
   padding: 20px;
   margin-top: 10rem;
+  width: 100%; // 폭 강제 고정
+  box-sizing: border-box; // 패딩 포함 폭 계산
   @media ${theme.media.large_tablet} {
     margin-top: 5rem;
   }
   @media ${theme.media.mobile} {
     margin-top: 2rem;
+    padding: 1rem; // 모바일에서 패딩 조정
   }
 `;
 
 const PostGrid = styled.div`
-  width: 100%;
+   width: 100%;
   max-width: 75rem;
   padding: 1rem;
+  box-sizing: border-box; // 패딩 포함 폭 계산
+  overflow-x: hidden; // 가로 스크롤 제거
 `;
 
 const Header = styled.h3`
@@ -343,25 +349,23 @@ const Header = styled.h3`
     margin-bottom: 0.5rem;
   }
 `;
-
 const Content = styled.div`
   border-top: 1.5px solid black;
   border-bottom: 1.5px solid black;
+  
 `;
-
 const PostItem = styled.div<{ isOpen: boolean }>`
   width: 100%;
-  padding: 1.25rem 0;
+  padding: 2.5rem 1rem; 
   background-color: ${theme.color.white.light};
-  border-top: 1px solid #ccc;
+  border-top: 1.5px solid #ccc;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
-  height: auto;
-  min-height: 3.5rem;
-  transform: scale(1);
+  min-height: 4rem; 
+  box-sizing: border-box;
   cursor: ${(props) => (props.isOpen ? 'pointer' : 'default')};
 
   &:hover {
@@ -369,8 +373,13 @@ const PostItem = styled.div<{ isOpen: boolean }>`
     transform: ${(props) => (props.isOpen ? 'scale(1.02)' : 'scale(1)')};
   }
 
+  &:first-child {
+    border-top: none;
+  }
+
   @media ${theme.media.mobile} {
-    padding: 1.25rem 0.75rem;
+    padding: 1.5rem 1rem;
+    min-height: 3.5rem;
   }
 `;
 
@@ -424,6 +433,7 @@ const BenefitsSection = styled.div`
   background-color: ${(props) => props.theme.color.white.light};
   width: 100%;
   margin-top: 10rem;
+  margin-bottom: 3rem; 
 `;
 
 const BenefitSectionTitle = styled.h1`
@@ -463,7 +473,7 @@ const BenefitItem = styled.div`
   background-color: ${(props) => props.theme.color.white.light};
   width: clamp(11rem, 15vw, 20rem);
   margin: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   cursor: default;
   height: auto;
   overflow: hidden;
@@ -504,17 +514,17 @@ const BenefitContent = styled.p`
 `;
 
 const NoRecruitmentMessage = styled.div`
-  font-family: ${(props) => props.theme.font.medium}; // 더 두드러지는 폰트
+  font-family: ${(props) => props.theme.font.medium}; 
   color: ${(props) => props.theme.color.black.light};
-  font-size: clamp(1.5rem, 2vw, 2rem); // 더 큰 글씨
+  font-size: clamp(1.5rem, 2vw, 2rem); 
   text-align: center;
-  margin: 3rem 0; // 상하 여백 증가
-  line-height: 1.8; // 여유로운 줄 간격
-  padding: 1.5rem 2rem; // 내부 여백 추가
+  margin: 3rem 0; 
+  line-height: 1.8; 
+  padding: 1.5rem 2rem; 
 
 
   @media ${(props) => props.theme.media.mobile} {
-    font-size: clamp(1.2rem, 1.8vw, 1.6rem); // 모바일 환경에서 적절한 크기 조정
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
     margin: 2rem 0;
     padding: 1rem 1.5rem;
   }

@@ -277,21 +277,25 @@ const ContactUsPage = () => {
 
   const FileTextRef = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<File[]>([]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {
-      setFileList([...fileList, ...Array.from(selectedFiles)]);
-      if (selectedFiles.length > 0) {
-        const fileNames = Array.from(selectedFiles)
-          .map((file) => file.name)
-          .join(', ');
-        if (FileTextRef.current) {
-          FileTextRef.current.value = fileNames;
-        }
-      } else {
-        if (FileTextRef.current) {
-          FileTextRef.current.value = '';
-        }
+      const newFiles = Array.from(selectedFiles);
+
+      const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0);
+
+      const maxSize = 20 * 1024 * 1024;
+      if (totalSize > maxSize) {
+        alert(`20MB 미만으로 파일을 첨부해주세요. (현재: ${(totalSize / (1024 * 1024)).toFixed(1)} MB)`);
+        return;
+      }
+
+      setFileList(newFiles);
+
+      const fileNames = newFiles.map((file) => file.name).join(', ');
+      if (FileTextRef.current) {
+        FileTextRef.current.value = fileNames;
       }
     }
   };
@@ -311,15 +315,13 @@ const ContactUsPage = () => {
 
     const timeoutId = setTimeout(() => {
       source.cancel('요청이 10초 안에 완료되지 않아 취소되었습니다. 다시 시도해주세요.');
-      alert('서버 또는 인터넷 연결에 문제가 발생하였습니다. 문제가 지속 될 경우 문의해주시기 바랍니다.');
     }, 10000);
 
     axios
       .post(`${PROMOTION_BASIC_PATH}/api/requests`, requestData, {
-        // cancelToken: source.token,
+        cancelToken: source.token,
       })
       .then((response) => {
-        console.log(formData);
         clearTimeout(timeoutId);
         console.log('response.data : ', response.data);
 
@@ -337,13 +339,12 @@ const ContactUsPage = () => {
         setRequestStep(requestStep + 1);
       })
       .catch((error) => {
-        console.log(requestData);
         if (axios.isCancel(error)) {
-          console.log(formData);
+          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n문제가 지속 될 경우 문의해주시기 바랍니다.');
           console.error('요청 취소: ', error.message);
         } else {
-          console.log(requestData);
-          alert('예기치 못한 에러가 발생했습니다.');
+          clearTimeout(timeoutId);
+          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n다시 한번 시도하여 주시기 바랍니다.');
           console.error('에러 발생', error);
         }
       })
@@ -369,20 +370,24 @@ const ContactUsPage = () => {
   };
 
   return (
-    <Container ref={containerRef} data-cy="contact-page">
-      <IntroSection data-cy="intro-section">
+    <Container ref={containerRef} data-cy='contact-page'>
+      <IntroSection data-cy='intro-section'>
         <IntroWrapper>
           <IntroTitleWrapper>
-            <IntroTitleCONTACT data-cy="intro-title-contact">CONTACT</IntroTitleCONTACT>
-            <IntroTitleUS data-cy="intro-title-us">US</IntroTitleUS>
+            <IntroTitleCONTACT data-cy='intro-title-contact'>CONTACT</IntroTitleCONTACT>
+            <IntroTitleUS data-cy='intro-title-us'>US</IntroTitleUS>
           </IntroTitleWrapper>
           <IntroSubTitleWrapper>
-            <IntroSubtitle data-cy="intro-subtitle">대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!</IntroSubtitle>
+            <IntroSubtitle data-cy='intro-subtitle'>
+              대한민국 No.1 뉴미디어 전문 제작사 스튜디오 아이와 함께 해보세요!
+            </IntroSubtitle>
           </IntroSubTitleWrapper>
-          <IntroAboutWrapper data-cy="intro-about-wrapper">
+          <IntroAboutWrapper data-cy='intro-about-wrapper'>
             <div style={{ width: '100%' }}>
               {(!addressInvalid || !addressEnglishInvalid) && (
-                <IntroAdress data-cy="intro-address-label" style={{ color: '#8a8a8a' }}>Address</IntroAdress>
+                <IntroAdress data-cy='intro-address-label' style={{ color: '#8a8a8a' }}>
+                  Address
+                </IntroAdress>
               )}
 
               {addressInvalid && !addressEnglishInvalid && <IntroAdress>{companyBasicData.addressEnglish}</IntroAdress>}
@@ -436,7 +441,7 @@ const ContactUsPage = () => {
               ) : (
                 <>
                   <RequestExplanationWrapper>
-                    <RequestExplanationSmall data-cy="project-request-title" >Project Request</RequestExplanationSmall>
+                    <RequestExplanationSmall data-cy='project-request-title'>Project Request</RequestExplanationSmall>
                     {requestStep === 0 ? (
                       <>
                         <RequestExplanation>문의할 프로젝트 항목을 선택해주세요. *</RequestExplanation>
@@ -472,7 +477,7 @@ const ContactUsPage = () => {
                           key={category.value}
                           checked={selectedCategory === category.value}
                           onClick={() => handleButtonClick(category.value)}
-                          data-cy="category-button"
+                          data-cy='category-button'
                         >
                           {category.label}
                         </RequestCategoryButton>
@@ -480,7 +485,7 @@ const ContactUsPage = () => {
                     </RequestCategoryButtonWrapper>
                   </RequestInputWrapper>
                 ) : requestStep === 1 ? (
-                  <RequestInputWrapper data-cy="request-input-personal">
+                  <RequestInputWrapper data-cy='request-input-personal'>
                     <RequestInfoInput
                       autoComplete='off'
                       type='text'
@@ -489,7 +494,7 @@ const ContactUsPage = () => {
                       name='clientName'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
-                      data-cy="input-client-name" 
+                      data-cy='input-client-name'
                     ></RequestInfoInput>
                     <RequestInfoInput
                       autoComplete='off'
@@ -499,7 +504,7 @@ const ContactUsPage = () => {
                       name='organization'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
-                      data-cy="input-organization"
+                      data-cy='input-organization'
                     ></RequestInfoInput>
                     <RequestInfoInput
                       autoComplete='off'
@@ -509,7 +514,7 @@ const ContactUsPage = () => {
                       name='contact'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
-                      data-cy="input-contact"
+                      data-cy='input-contact'
                     ></RequestInfoInput>{' '}
                     {errors.contact && <ErrorMessage>{errors.contact}</ErrorMessage>}
                     <RequestInfoInput
@@ -520,7 +525,7 @@ const ContactUsPage = () => {
                       name='email'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
-                      data-cy="input-email"
+                      data-cy='input-email'
                     ></RequestInfoInput>
                     {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
                     <RequestInfoInput
@@ -531,7 +536,7 @@ const ContactUsPage = () => {
                       name='position'
                       onChange={handleDataChange}
                       aria-autocomplete='none'
-                      data-cy="input-position"
+                      data-cy='input-position'
                     ></RequestInfoInput>
                   </RequestInputWrapper>
                 ) : (
@@ -543,17 +548,23 @@ const ContactUsPage = () => {
                       value={formData.projectName}
                       name='projectName'
                       onChange={handleDataChange}
-                      data-cy="input-project-name"
+                      data-cy='input-project-name'
                     ></RequestInfoInput>
-                    <RowWrapper data-cy="file-upload-wrapper">
-                      <RequestFileText ref={FileTextRef} type='text' readOnly data-cy="file-text"></RequestFileText>
+                    <RowWrapper data-cy='file-upload-wrapper'>
+                      <RequestFileText
+                        ref={FileTextRef}
+                        type='text'
+                        placeholder='선택된 파일 이름이 여기에 표시됩니다'
+                        readOnly
+                        data-cy='file-text'
+                      ></RequestFileText>
                       <RequestFileUploadInput
                         id='uploadfile'
                         type='file'
                         accept='*/*'
                         multiple
                         onChange={handleFileChange}
-                        data-cy="file-upload-input"
+                        data-cy='file-upload-input'
                       />
                       <RequestUploadLabel htmlFor='uploadfile'>파일 선택</RequestUploadLabel>
                     </RowWrapper>
@@ -564,23 +575,15 @@ const ContactUsPage = () => {
                       value={formData.description}
                       name='description'
                       onChange={handleDataChange}
-                      data-cy="input-project-details"
+                      data-cy='input-project-details'
                     ></RequestInfoTextarea>
                   </RequestInputWrapper>
                 )}
                 <RequestStepButtonWrapper>
-                  <RequestStepButton 
-                  onClick={handlePrev} 
-                  disabled={requestStep === 0}
-                  data-cy="prev-step-button"
-                  >
+                  <RequestStepButton onClick={handlePrev} disabled={requestStep === 0} data-cy='prev-step-button'>
                     이전
                   </RequestStepButton>
-                  <RequestStepButton 
-                  onClick={handleNext}     
-                  disabled={requestStep >= 3}
-                  data-cy="next-step-button"
-                  >
+                  <RequestStepButton onClick={handleNext} disabled={requestStep >= 3} data-cy='next-step-button'>
                     {requestStep === 2 ? '문의 접수' : '다음'}
                   </RequestStepButton>
                 </RequestStepButtonWrapper>
@@ -590,7 +593,9 @@ const ContactUsPage = () => {
           {requestStep === 3 ? (
             <>
               <RequestCompleteContentWrapper>
-                <RequestExplanationBig data-cy="success-message">문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.</RequestExplanationBig>
+                <RequestExplanationBig data-cy='success-message'>
+                  문의가 정상적으로 접수되었습니다. 이메일을 확인해주세요.
+                </RequestExplanationBig>
                 <RequestExplanationSmall style={{ textAlign: 'center' }}>
                   담당자 배정 후 연락 드리겠습니다. 감사합니다.
                 </RequestExplanationSmall>
@@ -687,6 +692,7 @@ const IntroSubtitle = styled.div`
   font-size: 1.25rem;
   color: #ffffff;
   @media ${theme.media.mobile} {
+    line-height: 1.25rem;
     width: 80%;
     font-family: ${theme.font.semiBold};
     text-align: center;
@@ -868,7 +874,7 @@ const RequestExplanationWrapper = styled.div`
   align-items: flex-start;
 
   @media ${theme.media.mobile} {
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-top: 3rem;
     display: flex;
     flex-direction: column;
@@ -897,7 +903,7 @@ const RequestExplanation = styled.div`
   width: 100%;
 
   @media ${theme.media.mobile} {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-family: ${theme.font.semiBold};
     color: ${(props) => (props.color ? theme.color.white.pale : theme.color.white.light)};
     text-align: left;
@@ -1000,9 +1006,11 @@ const RequestCategoryButton = styled.button<IButtonProps>`
   align-items: center;
   background-color: ${(props) => (props.checked ? '#ffa900' : 'black')};
   font-family: ${theme.font.medium};
-  font-size: clamp(0.875rem, 2vw, 2rem);
+  font-size: clamp(1rem, 1.5vw, 2rem);
   color: white;
   margin-bottom: 1.875rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 
   @media ${theme.media.large_tablet} {
     margin-bottom: 1.5rem;
@@ -1166,8 +1174,8 @@ const LoadingModal = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(3px);
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1175,8 +1183,8 @@ const LoadingModal = styled.div`
 `;
 
 const LoadingIcon = styled.div`
-  border: 8px solid rgba(255, 255, 255, 0.3);
-  border-top: 8px solid ${theme.color.white.bold};
+  border: 6px solid #6e6e6e;
+  border-top: 6px solid #ffa42e;
   border-radius: 50%;
   width: 50px;
   height: 50px;

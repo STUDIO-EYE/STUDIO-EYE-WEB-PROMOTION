@@ -25,7 +25,7 @@ const FileButton = (props: FileButtonType) => {
           onClick={props.onClick}
           svgComponent={props.svgComponent}
         />
-        <input id={props.id} type='file' accept='image/*' onChange={props.onChange} />
+        <input data-cy='file-input' id={props.id} type='file' accept='image/*' onChange={props.onChange} />
       </label>
     </FileButtonStyle>
   );

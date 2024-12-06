@@ -15,13 +15,13 @@ const ArtworkSequenceBox = (
       {artworkData.mainImg ? <img src={artworkData.mainImg} alt='mainImg' /> : <NoMainImageWrapper>No Image</NoMainImageWrapper>}
       <DescriptionWrapper>
         <RightAlignWrapper>
-            <h2>{artworkData.category}</h2>
-            <TypeWrapper projectType={artworkData.projectType}>{artworkData.projectType}</TypeWrapper>
+            <h2 data-cy='PA_artworksequence_category'>{artworkData.category}</h2>
+            <TypeWrapper data-cy='PA_artworksequence_type' projectType={artworkData.projectType}>{artworkData.projectType}</TypeWrapper>
         </RightAlignWrapper>
         <Wrapper>
           <div style={{width:"80%",whiteSpace: "nowrap",textOverflow: "ellipsis",overflow : "hidden"}}>
-            <h2>{artworkData.client}</h2>
-            <h1>{artworkData.name}</h1>
+            <h2 data-cy='PA_artworksequence_client'>{artworkData.client}</h2>
+            <h1 data-cy='PA_artworksequence_title'>{artworkData.name}</h1>
           </div>
         </Wrapper>
       </DescriptionWrapper>
@@ -135,7 +135,9 @@ min-width: 130px;
 align-item: center;
 `;
 
-const TypeWrapper = styled.div<{ projectType: 'others' | 'top' | 'main' }>`
+const TypeWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'projectType',
+})<{ projectType: 'others' | 'top' | 'main' }>`
   width: fit-content;
   height: fit-content;
   padding: 3px 6px;
