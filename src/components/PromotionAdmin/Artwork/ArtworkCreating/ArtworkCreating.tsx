@@ -18,7 +18,7 @@ const ArtworkCreating = () => {
   const [projectType, setProjectType] = useState<projectType>('others');
   const [link, setLink] = useState('');
   const [mainImage, setMainImage] = useState<File>();
-  const [responsiveMainImage, setResponsiveMainImage]=useState<File>();
+  const [responsiveMainImage, setResponsiveMainImage] = useState<File>();
   const [detailImages, setDetailImages] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [customer, setCustomer] = useState('');
@@ -93,16 +93,17 @@ const ArtworkCreating = () => {
     setMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
   };
 
-  const handleResponsiveMainImageChange=(newImage:File|File[])=>{
+  const handleResponsiveMainImageChange = (newImage: File | File[]) => {
     setResponsiveMainImage(Array.isArray(newImage) ? newImage[0] : newImage);
-  }
+  };
 
+  // 상세 이미지 상태 (1~3개)
   const handleDetailImageChange = (newImages: File | File[]) => {
-    const newImageList = Array.isArray(newImages) ? newImages : [newImages];
-    // 기존 이미지와 새로운 이미지를 합치고 최대 3개까지만 유지
-    const updatedImages = [...detailImages, ...newImageList].slice(0, 3);
+    const updatedImages = Array.isArray(newImages) ? newImages : [newImages];
+
+    // 최대 3개 제한
     if (updatedImages.length > 3) {
-      alert('최대 3개의 이미지만 업로드할 수 있습니다.');
+      updatedImages.splice(3);
     }
     setDetailImages(updatedImages);
   };
@@ -133,8 +134,8 @@ const ArtworkCreating = () => {
     if (mainImage) {
       formData.append('file', mainImage);
     }
-    if (responsiveMainImage){
-      formData.append('responsiveFile',responsiveMainImage);
+    if (responsiveMainImage) {
+      formData.append('responsiveFile', responsiveMainImage);
     }
     if (detailImages) {
       detailImages.forEach((file, index) => {
@@ -187,21 +188,26 @@ const ArtworkCreating = () => {
     <Container>
       <CloseContainer onClick={() => setProducingIsOpened(false)}>x</CloseContainer>
       <ValueWrapper data-cy='PA_artwork_createBox'>
-        {defaultValue.map((item: DefaultValueItem, index: number) => (
-          item.name==='responsiveMainImage'?null:
-          item.name === 'mainImage' && defaultValue[index + 1]?.name === 'responsiveMainImage'?
-              <div key={index}>
-                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
-                <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content}/>
-                <ArtworkValueLayout valueTitle={defaultValue[index + 1].title} description={defaultValue[index + 1].description} content={defaultValue[index + 1].content}/>
-              </div>
-          :
-          <div key={index}>
-            {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
-            {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
-            <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
-          </div>
-        ))}
+        {defaultValue.map((item: DefaultValueItem, index: number) =>
+          item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
+            defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
+            <div key={index}>
+              {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+              <ArtworkValueLayout
+                valueTitle={defaultValue[index + 1].title}
+                description={defaultValue[index + 1].description}
+                content={defaultValue[index + 1].content}
+              />
+            </div>
+          ) : (
+            <div key={index}>
+              {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
+              <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
+            </div>
+          ),
+        )}
         <div />
         <SubmitBtn
           data-cy='create_artwork_submit'
@@ -230,12 +236,13 @@ const ValueWrapper = styled.div`
   backdrop-filter: blur(10px);
   box-sizing: border-box;
   width: fit-content;
-  height: 700px;
+  height: 32rem;
   overflow-y: scroll;
-  padding: 55px 55px;
+  width: 100%;
+  padding: 2.3rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  gap: 0.5rem; /* 박스 간 간격 */
 `;
 
 const CloseContainer = styled.div`
@@ -252,7 +259,7 @@ const SubmitBtn = styled.button`
   border: none;
   outline-style: none;
   font-family: 'pretendard-semibold';
-  font-size: 17px;
+  font-size: 1rem;
   background-color: #6c757d;
   width: 150px;
   text-align: center;
@@ -260,10 +267,9 @@ const SubmitBtn = styled.button`
   border-radius: 5px;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 0.7rem;
   margin-left: auto;
   margin-top: 20px;
-  grid-column: 1 / -1;
   &:disabled {
     opacity: 0.5;
     cursor: default;
@@ -273,6 +279,8 @@ const SubmitBtn = styled.button`
   }
   &:hover {
     background-color: #5a6268;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
   }
 `;
 

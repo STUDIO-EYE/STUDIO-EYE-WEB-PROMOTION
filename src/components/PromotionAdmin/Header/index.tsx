@@ -40,7 +40,6 @@ const Index = () => {
     },
     {
       enabled: !!auth.userId,
-      refetchInterval: 60000, // 1분마다 새로고침
       onSuccess: (data) => {
         if (data.length === 0) {
           setIconStatus(false);
@@ -51,7 +50,6 @@ const Index = () => {
         const unreadNotificationsExist = data.some((notification) => !notification.isRead);
         setIconStatus(unreadNotificationsExist);
 
-        // 알림 정렬
         const sorted = data.sort((a, b) => Number(b.isRead) - Number(a.isRead));
         setSortedNotifications(sorted);
 
@@ -255,7 +253,7 @@ const NotiContainer = styled.div`
   h1 {
     color: #595959;
     font-family: 'pretendard-semibold';
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin-bottom: 15px;
   }
 `;
@@ -267,5 +265,6 @@ const TextContainer = styled.div`
   font-family: 'pretendard-regular';
   font-size: 1rem;
   color: #aaa;
+  margin-bottom: 1rem;
   text-align: left;
 `;
