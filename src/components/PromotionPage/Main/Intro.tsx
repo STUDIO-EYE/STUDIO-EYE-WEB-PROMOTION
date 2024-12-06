@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Circle from '../Circle/Circle';
 import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
@@ -7,11 +7,7 @@ import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
 import { useQuery } from 'react-query';
-
-interface ICompanyData {
-  mainOverview: string;
-  commitment: string;
-}
+import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -22,13 +18,24 @@ const Intro = () => {
   const desInView = useInView(desRef);
   const circleInView = useInView(circleRef);
 
-  const { data, isLoading, error } = useQuery<ICompanyData, Error>(['company', 'id'], getCompanyData);
+  const [companyMainOverview, setCompanyMainOverview] = useState<string>('');
+  const [companyCommitment, setCompanyCommitment] = useState<string>('');
 
-  const companyMainOverview = data?.mainOverview || INTRO_DATA.MAIN_OVERVIEW;
-  const companyCommitment = data?.commitment || INTRO_DATA.COMMITMENT;
+  const { data, isLoading, error } = useQuery<ICompanyData, Error>(
+    ['company', 'id'],
+    getCompanyData
+  );
+
+  useEffect(() => {
+    if (data) {
+      setCompanyMainOverview(data.mainOverview);
+      setCompanyCommitment(data.commitment);
+    }
+  }, [data]);
 
   if (isLoading) return <>is Loading...</>;
   if (error) return <>Intro Error: {error.message}</>;
+
   return (
     <Container data-cy="intro-section">
       <IntroWrapper data-cy="intro_mainOverview" ref={introRef}>
@@ -37,7 +44,7 @@ const Intro = () => {
           animate={{ opacity: introInView ? 1 : 0, y: introInView ? 0 : 100 }}
           transition={{ duration: 1, delay: 0.2 }}
           dangerouslySetInnerHTML={{
-            __html: companyMainOverview,
+            __html: companyMainOverview || INTRO_DATA.MAIN_OVERVIEW,
           }}
         ></motion.div>
       </IntroWrapper>
@@ -47,7 +54,7 @@ const Intro = () => {
           animate={{ opacity: desInView ? 1 : 0, y: desInView ? 0 : 100 }}
           transition={{ duration: 2, delay: 0.6 }}
           dangerouslySetInnerHTML={{
-            __html: companyCommitment,
+            __html: companyCommitment || INTRO_DATA.COMMITMENT,
           }}
         ></motion.div>
       </DesWrapper>
@@ -68,6 +75,7 @@ const Intro = () => {
 
 export default Intro;
 
+
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -85,7 +93,7 @@ const Container = styled.div`
   }
 
   @supports (-webkit-touch-callout: none) {
-    .modal { /* 넘어가지 않는 요소에 사용 */
+    .modal {
         height: -webkit-fill-available;
     }
   }
