@@ -89,11 +89,9 @@ function RecruitmentWritePage() {
       try {
         const response = await postRecruitment(formData);
         alert('채용공고가 등록되었습니다.');
-        console.log(response);
         setIsEditing(false);
         navigator(`${PA_ROUTES.RECRUITMENT}/manage`, { replace: true });
       } catch (error) {
-        console.log(error);
         alert('채용공고 등록 중 오류가 발생했습니다.');
       }
     }

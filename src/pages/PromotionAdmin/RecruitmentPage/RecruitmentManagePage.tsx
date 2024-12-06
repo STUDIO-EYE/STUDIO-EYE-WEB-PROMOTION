@@ -45,7 +45,7 @@ function RecruitmentManagePage() {
 
   useEffect(() => {
     if (!isFetching && !isRefetching && data && data.content.length === 0) {
-      navigator(`${PA_ROUTES.RECRUITMENT}/write`);
+      navigator(`${PA_ROUTES.RECRUITMENT}/manage`);
     }
   }, [data, navigator, isFetching, isRefetching]);
 
@@ -89,7 +89,6 @@ function RecruitmentManagePage() {
       try {
         const response = await deleteRecruitmentData(id);
         alert('채용공고가 삭제되었습니다.');
-        console.log(response);
         await refetch();
 
         const updatedTotalPosts = totalPosts - 1;
@@ -100,7 +99,6 @@ function RecruitmentManagePage() {
 
         setCurrentRecruitment(null);
       } catch (error) {
-        console.log(error);
         alert('채용공고 삭제 중 오류가 발생했습니다.');
       }
     }
@@ -147,11 +145,9 @@ function RecruitmentManagePage() {
       try {
         const response = await updateRecruitmentData(formData);
         alert('채용공고가 수정되었습니다.');
-        console.log(response);
         setIsEditing(false);
         refetch();
       } catch (error) {
-        console.log(error);
         alert('채용공고 수정 중 오류가 발생했습니다.');
       }
     }
@@ -202,7 +198,7 @@ function RecruitmentManagePage() {
     if (isEditing) {
       if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.RECRUITMENT}/write`);
+        navigator(`${PA_ROUTES.RECRUITMENT}/manage`);
       }
     } else {
       navigator(`${PA_ROUTES.RECRUITMENT}/write`);
@@ -229,31 +225,43 @@ function RecruitmentManagePage() {
             </Button>
           </TitleWrapper>
           <ListWrapper>
-            {data?.content.map((recruitment) => (
-              <RecruimentList key={recruitment.id} data-cy='recruitment-list-item'>
-                <DeleteIcon
-                  data-cy='delete-button'
-                  width={15}
-                  height={15}
-                  onClick={() => handleDelete(recruitment.id, data.totalElements)}
-                />
-                <RecruimentItem
-                  isSelected={currentRecruitment?.id === recruitment.id && isSelected}
-                  onClick={() => {
-                    fetchRecruitmentData(recruitment.id);
-                  }}
-                >
-                  <RecruimentTitle data-cy='posted-recruitment-title'>{recruitment.title}</RecruimentTitle>
-                </RecruimentItem>
-                <RecruimentStatus
-                  isDeadline={recruitment.status === 'CLOSE'}
-                  isPreparing={recruitment.status === 'PREPARING'}
-                >
-                  {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-                </RecruimentStatus>
-              </RecruimentList>
-            ))}
-          </ListWrapper>
+  {data?.content && data.content.length > 0 ? (
+    data.content.map((recruitment) => (
+      <RecruimentList key={recruitment.id} data-cy="recruitment-list-item">
+        <DeleteIcon
+          data-cy="delete-button"
+          width={15}
+          height={15}
+          onClick={() => handleDelete(recruitment.id, data.totalElements)}
+        />
+        <RecruimentItem
+          isSelected={currentRecruitment?.id === recruitment.id && isSelected}
+          onClick={() => {
+            fetchRecruitmentData(recruitment.id);
+          }}
+        >
+          <RecruimentTitle data-cy="posted-recruitment-title">
+            {recruitment.title}
+          </RecruimentTitle>
+        </RecruimentItem>
+        <RecruimentStatus
+          isDeadline={recruitment.status === "CLOSE"}
+          isPreparing={recruitment.status === "PREPARING"}
+        >
+          {recruitment.status === "CLOSE"
+            ? "마감"
+            : recruitment.status === "OPEN"
+            ? "진행"
+            : "예정"}
+        </RecruimentStatus>
+      </RecruimentList>
+    ))
+  ) : (
+    <NoDataMessage>😊 채용공고 데이터가 존재하지 않습니다.</NoDataMessage>
+  )}
+</ListWrapper>
+
+
           {data && (
             <PaginationWrapper>
               <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalElements} paginate={paginate} />
@@ -628,3 +636,10 @@ const ErrorMessage = styled.div`
   font-size: 13px;
   height: 16px;
 `;
+
+const NoDataMessage = styled.div`
+  padding: 20px;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.color.gray};
+`;
+
