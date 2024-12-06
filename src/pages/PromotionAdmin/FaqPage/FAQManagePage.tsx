@@ -174,7 +174,7 @@ function FAQManagePage() {
         navigator(`${PA_ROUTES.FAQ}/manage`);
       }
     } else {
-      navigator(`${PA_ROUTES.FAQ}/manage`);
+      navigator(`${PA_ROUTES.FAQ}/write`);
     }
   };
 

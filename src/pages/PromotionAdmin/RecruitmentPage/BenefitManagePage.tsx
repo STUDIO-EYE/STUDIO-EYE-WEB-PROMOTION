@@ -83,18 +83,15 @@ function BenefitManagePage() {
       try {
         const response = await deleteBenefitData(id);
         alert('사내 복지가 삭제되었습니다.');
-        console.log(response);
         await refetch();
         setCurrentBenefit(null);
       } catch (error) {
-        console.log(error);
         alert('사내 복지 삭제 중 오류가 발생했습니다.');
       }
     }
   };
 
   const onValid = async (data: IBenefit) => {
-    console.log(currentBenefit);
     const formData = new FormData();
     formData.append(
       'request',
@@ -123,12 +120,10 @@ function BenefitManagePage() {
         try {
           const response = await updateBenefit(formData);
           alert('사내 복지가 수정되었습니다.');
-          console.log(response);
           await refetch();
           setIsEditing(false);
           setImgChange(false);
         } catch (error) {
-          console.log(error);
           alert('사내 복지 수정 중 오류가 발생했습니다.');
         }
       }
@@ -137,12 +132,10 @@ function BenefitManagePage() {
         try {
           const response = await updateBenefitText(formData);
           alert('사내 복지가 수정되었습니다.');
-          console.log(response);
           await refetch();
           setIsEditing(false);
           setImgChange(false);
         } catch (error) {
-          console.log(error);
           alert('사내 복지 수정 중 오류가 발생했습니다.');
         }
       }

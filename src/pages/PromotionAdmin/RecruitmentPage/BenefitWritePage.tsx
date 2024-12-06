@@ -112,11 +112,9 @@ function BenefitWritePage() {
       try {
         const response = await postBenefit(formData);
         alert('사내 복지가 등록되었습니다.');
-        console.log(response);
         setIsEditing(false);
         navigator(`${PA_ROUTES.RECRUITMENT}/benefit/manage`, { replace: true });
       } catch (error) {
-        console.log(error);
         alert('사내 복지 등록 중 오류가 발생했습니다.');
       }
     }
