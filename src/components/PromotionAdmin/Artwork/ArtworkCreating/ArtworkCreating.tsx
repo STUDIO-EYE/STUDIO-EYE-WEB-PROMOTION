@@ -26,7 +26,6 @@ const ArtworkCreating = () => {
   const [overview, setOverview] = useState('');
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [linkRegexMessage, setLinkRegexMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [isTopMainArtwork, setIsTopMainArtwork] = useState(false);
 
   const navigate = useNavigate();
@@ -58,7 +57,6 @@ const ArtworkCreating = () => {
   ]);
 
   useEffect(() => {
-    setErrorMessage('');
     if (projectType === 'top' || projectType === 'main') {
       setIsTopMainArtwork(true);
     } else {
@@ -146,7 +144,6 @@ const ArtworkCreating = () => {
     try {
       const response = await postArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
-        setErrorMessage(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
@@ -192,7 +189,7 @@ const ArtworkCreating = () => {
           item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
             defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
             <div key={index}>
-              {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              {/* {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
               <ArtworkValueLayout
                 valueTitle={defaultValue[index + 1].title}
@@ -202,7 +199,7 @@ const ArtworkCreating = () => {
             </div>
           ) : (
             <div key={index}>
-              {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              {/* {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
             </div>
@@ -212,7 +209,7 @@ const ArtworkCreating = () => {
         <SubmitBtn
           data-cy='create_artwork_submit'
           title={submitButtonDisabled ? '모든 항목을 다 입력해주세요!' : ''}
-          disabled={submitButtonDisabled || errorMessage !== '' || linkRegexMessage !== ''}
+          disabled={submitButtonDisabled || linkRegexMessage !== ''}
           onClick={() => handleSubmit()}
         >
           저장하기

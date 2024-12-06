@@ -1,61 +1,62 @@
-// 파일 이름을 URL에서 추출하는 함수
+// URL에서 파일 이름 추출
 export function extractFileNameFromUrl(url: string): string {
   try {
     if (!url || url.includes('undefined')) {
-      console.error('Invalid URL:', url);
-      return 'default.png'; // 기본값 반환
+      console.error('Invalid URL detected:', url);
+      // 고유 파일 이름 생성
+      const uniqueSuffix = Math.random().toString(36).slice(-6);
+      return `default_${uniqueSuffix}.jpg`;
     }
 
     const urlObject = new URL(url);
-    let fileName = decodeURIComponent(urlObject.pathname.split('/').pop() || 'default.png');
+    let fileName = decodeURIComponent(urlObject.pathname.split('/').pop() || '');
 
-    const maxFileNameLength = 50; // 파일 이름 길이 제한
-    const extensionMatch = fileName.match(/\.[^/.]+$/); // 확장자 추출
-    const extension = extensionMatch ? extensionMatch[0] : '.png'; // 확장자가 없으면 기본값 설정
-    const baseName = fileName.replace(/\.[^/.]+$/, ''); // 확장자 제거
-
-    // 파일 이름이 너무 길면 고유 식별자 추가
-    if (baseName.length > maxFileNameLength - extension.length) {
-      const truncatedName = baseName.slice(0, maxFileNameLength - extension.length - 5);
-      const uniqueSuffix = Math.random().toString(36).slice(-4); // 고유값 추가
-      fileName = `${truncatedName}_${uniqueSuffix}${extension}`;
+    // 파일 이름이 비정상적일 경우 기본값 반환
+    if (!fileName || fileName === 'undefined') {
+      const uniqueSuffix = Math.random().toString(36).slice(-6);
+      return `default_${uniqueSuffix}.jpg`;
     }
 
     return fileName;
   } catch (error) {
-    console.error('Error extracting file name from URL:', error);
-    return 'default.png'; // 에러 발생 시 기본값 반환
+    console.error('[Error extracting file name from URL]', error);
+    const uniqueSuffix = Math.random().toString(36).slice(-6);
+    return `default_${uniqueSuffix}.jpg`;
   }
 }
 
-// URL 유효성 검사 함수
+// URL 유효성 검사
 export const isValidUrl = (url: string): boolean => {
   try {
-    new URL(url); // URL이 유효하면 true 반환
-    return true;
+    new URL(url);
+    return true; // URL 유효
   } catch {
-    return false; // 유효하지 않으면 false 반환
+    return false; // URL 비유효
   }
 };
 
-// URL을 File 객체로 변환하는 함수
+// URL을 File 객체로 변환
 export async function urlToFile(url: string | null, fileName?: string): Promise<File> {
   try {
     if (!url || !isValidUrl(url)) {
-      console.error('Invalid URL detected:', url);
-      return new File([], fileName || 'default.png', { type: 'image/png' }); // 기본값 반환
+      console.error('[Invalid URL detected]', url);
+      const uniqueSuffix = Math.random().toString(36).slice(-6);
+      return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' });
     }
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+    });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch resource: ${response.status} ${response.statusText}`);
+      throw new Error(`[Failed to fetch resource] ${response.status} ${response.statusText}`);
     }
 
     const blob = await response.blob();
     const finalFileName = fileName ? extractFileNameFromUrl(fileName) : extractFileNameFromUrl(url);
 
-    // 중복된 확장자 처리 방지
+    // 확장자 중복 방지
     const sanitizedFileName = finalFileName.replace(/(\.[a-zA-Z0-9]+)+$/, (match) =>
       match.split('.').slice(0, 2).join('.'),
     );
@@ -63,6 +64,7 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
     return new File([blob], sanitizedFileName, { type: blob.type });
   } catch (error) {
     console.error('[Error converting URL to file]', { url, fileName, error });
-    return new File([], fileName || 'default.png', { type: 'image/png' }); // 기본값 반환
+    const uniqueSuffix = Math.random().toString(36).slice(-6);
+    return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' });
   }
 }
