@@ -3,7 +3,9 @@ export function extractFileNameFromUrl(url: string): string {
   try {
     if (!url || url.includes('undefined')) {
       console.error('Invalid URL:', url);
-      return 'default.png'; // 기본값 반환
+      // 고유 식별자를 추가해 중복 방지
+      const uniqueSuffix = Math.random().toString(36).slice(-6); // 랜덤 6자리 추가
+      return `default_${uniqueSuffix}.png`;
     }
 
     const urlObject = new URL(url);
@@ -17,14 +19,16 @@ export function extractFileNameFromUrl(url: string): string {
     // 파일 이름이 너무 길면 고유 식별자 추가
     if (baseName.length > maxFileNameLength - extension.length) {
       const truncatedName = baseName.slice(0, maxFileNameLength - extension.length - 5);
-      const uniqueSuffix = Math.random().toString(36).slice(-4); // 고유값 추가
+      const uniqueSuffix = Math.random().toString(36).slice(-6); // 고유값 추가
       fileName = `${truncatedName}_${uniqueSuffix}${extension}`;
     }
 
     return fileName;
   } catch (error) {
     console.error('Error extracting file name from URL:', error);
-    return 'default.png'; // 에러 발생 시 기본값 반환
+    // 고유 식별자를 추가한 기본 파일 이름 반환
+    const uniqueSuffix = Math.random().toString(36).slice(-6);
+    return `default_${uniqueSuffix}.png`;
   }
 }
 
@@ -43,7 +47,8 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
   try {
     if (!url || !isValidUrl(url)) {
       console.error('Invalid URL detected:', url);
-      return new File([], fileName || 'default.png', { type: 'image/png' }); // 기본값 반환
+      const uniqueSuffix = Math.random().toString(36).slice(-6); // 고유값 추가
+      return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' }); // 기본값 반환
     }
 
     const response = await fetch(url);
@@ -55,7 +60,7 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
     const blob = await response.blob();
     const finalFileName = fileName ? extractFileNameFromUrl(fileName) : extractFileNameFromUrl(url);
 
-    // 중복된 확장자 처리 방지
+    // 중복 확장자 제거 및 최종 파일 이름 처리
     const sanitizedFileName = finalFileName.replace(/(\.[a-zA-Z0-9]+)+$/, (match) =>
       match.split('.').slice(0, 2).join('.'),
     );
@@ -63,6 +68,7 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
     return new File([blob], sanitizedFileName, { type: blob.type });
   } catch (error) {
     console.error('[Error converting URL to file]', { url, fileName, error });
-    return new File([], fileName || 'default.png', { type: 'image/png' }); // 기본값 반환
+    const uniqueSuffix = Math.random().toString(36).slice(-6); // 고유값 추가
+    return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' }); // 기본값 반환
   }
 }
