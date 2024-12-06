@@ -8,9 +8,10 @@ interface ImageUploadProps {
 }
 
 const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
-  const [images, setImages] = useState<File[]>([]);
-  const [previewURLs, setPreviewURLs] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]); // 현재 이미지 파일 상태
+  const [previewURLs, setPreviewURLs] = useState<string[]>([]); // 프리뷰 URL 상태
 
+  // value prop 변화에 따라 상태 업데이트
   useEffect(() => {
     if (value) {
       const files = Array.isArray(value) ? value : [value];
@@ -30,21 +31,19 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
 
       // 각 타입에 따라 최대 파일 개수 설정
       const maxFiles = type === 'main' || type === 'responsiveMain' ? 1 : 3;
-      const newFiles = selectedFiles.slice(0, maxFiles - images.length);
+      const newFiles = selectedFiles.slice(0, maxFiles);
 
-      // 중복 추가 방지
-      const uniqueFiles = newFiles.filter(
-        (newFile) =>
-          !images.some((existingFile) => existingFile.name === newFile.name && existingFile.size === newFile.size),
-      );
+      // 기존 URL 객체 해제
+      previewURLs.forEach((url) => URL.revokeObjectURL(url));
 
+      const uniqueFiles = newFiles; // 새 이미지로만 상태 교체
       const newPreviewURLs = uniqueFiles.map((file) => URL.createObjectURL(file));
 
-      const updatedImages = [...images, ...uniqueFiles];
-      setImages(updatedImages);
-      setPreviewURLs((prev) => [...prev, ...newPreviewURLs]);
+      setImages(uniqueFiles);
+      setPreviewURLs(newPreviewURLs);
 
-      onChange(updatedImages);
+      // 부모 컴포넌트로 변경된 상태 전달
+      onChange(uniqueFiles.length > 1 ? uniqueFiles : uniqueFiles[0]);
     }
   };
 
@@ -59,7 +58,7 @@ const ImageUpload = ({ type, value, onChange }: ImageUploadProps) => {
     setPreviewURLs(updatedPreviewURLs);
 
     // 부모 컴포넌트로 상태 전달
-    onChange(updatedImages);
+    onChange(updatedImages.length > 1 ? updatedImages : updatedImages[0] || null);
   };
 
   return (
