@@ -173,7 +173,7 @@ const ArtworkDetail = () => {
       setCustomer(data.client);
       setOverview(data.overView);
     } catch (error) {
-      console.error('Error fetching artwork details', error);
+      console.error('[Error fetching artwork details]', error);
     }
   };
 
@@ -260,10 +260,6 @@ const ArtworkDetail = () => {
         formData.append('files', file);
       });
     }
-    const formDataEntries = Array.from(formData.entries());
-    formDataEntries.forEach(([key, value]) => {
-      console.log(`${key}:`, value);
-    });
 
     try {
       const response = await putArtwork(formData);
@@ -292,8 +288,8 @@ const ArtworkDetail = () => {
         navigate(`${PA_ROUTES.ARTWORK}`);
       } catch (error) {
         alert(MSG.CONFIRM_MSG.FAILED);
-        console.error('Error deleting requestData:', detailImages);
-        // 삭제 실패 시 처리
+        console.error('[Error deleting requestData]', detailImages);
+        alert(MSG.CONFIRM_MSG.FAILED);
       }
     }
   };
@@ -351,7 +347,7 @@ const ArtworkDetail = () => {
             item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
               defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
               <div key={index}>
-                {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+                {/* {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
                 <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
                 <ArtworkValueLayout
                   valueTitle={defaultValue[index + 1].title}
@@ -361,9 +357,9 @@ const ArtworkDetail = () => {
               </div>
             ) : (
               <div key={index}>
-                {errorMessage && !isGetMode && item.name === 'artworkType' && (
+                {/* {errorMessage && !isGetMode && item.name === 'artworkType' && (
                   <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>
-                )}
+                )} */}
                 {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
                 <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
               </div>

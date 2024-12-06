@@ -192,7 +192,7 @@ const ArtworkCreating = () => {
           item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
             defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
             <div key={index}>
-              {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              {/* {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
               <ArtworkValueLayout
                 valueTitle={defaultValue[index + 1].title}
@@ -202,7 +202,7 @@ const ArtworkCreating = () => {
             </div>
           ) : (
             <div key={index}>
-              {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>}
+              {/* {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
             </div>
