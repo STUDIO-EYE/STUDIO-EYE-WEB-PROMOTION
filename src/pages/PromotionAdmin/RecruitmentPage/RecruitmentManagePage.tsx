@@ -45,7 +45,7 @@ function RecruitmentManagePage() {
 
   useEffect(() => {
     if (!isFetching && !isRefetching && data && data.content.length === 0) {
-      navigator(`${PA_ROUTES.RECRUITMENT}/write`);
+      navigator(`${PA_ROUTES.RECRUITMENT}/manage`);
     }
   }, [data, navigator, isFetching, isRefetching]);
 
@@ -202,7 +202,7 @@ function RecruitmentManagePage() {
     if (isEditing) {
       if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.RECRUITMENT}/write`);
+        navigator(`${PA_ROUTES.RECRUITMENT}/manage`);
       }
     } else {
       navigator(`${PA_ROUTES.RECRUITMENT}/write`);
@@ -229,31 +229,43 @@ function RecruitmentManagePage() {
             </Button>
           </TitleWrapper>
           <ListWrapper>
-            {data?.content.map((recruitment) => (
-              <RecruimentList key={recruitment.id} data-cy='recruitment-list-item'>
-                <DeleteIcon
-                  data-cy='delete-button'
-                  width={15}
-                  height={15}
-                  onClick={() => handleDelete(recruitment.id, data.totalElements)}
-                />
-                <RecruimentItem
-                  isSelected={currentRecruitment?.id === recruitment.id && isSelected}
-                  onClick={() => {
-                    fetchRecruitmentData(recruitment.id);
-                  }}
-                >
-                  <RecruimentTitle data-cy='posted-recruitment-title'>{recruitment.title}</RecruimentTitle>
-                </RecruimentItem>
-                <RecruimentStatus
-                  isDeadline={recruitment.status === 'CLOSE'}
-                  isPreparing={recruitment.status === 'PREPARING'}
-                >
-                  {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-                </RecruimentStatus>
-              </RecruimentList>
-            ))}
-          </ListWrapper>
+  {data?.content && data.content.length > 0 ? (
+    data.content.map((recruitment) => (
+      <RecruimentList key={recruitment.id} data-cy="recruitment-list-item">
+        <DeleteIcon
+          data-cy="delete-button"
+          width={15}
+          height={15}
+          onClick={() => handleDelete(recruitment.id, data.totalElements)}
+        />
+        <RecruimentItem
+          isSelected={currentRecruitment?.id === recruitment.id && isSelected}
+          onClick={() => {
+            fetchRecruitmentData(recruitment.id);
+          }}
+        >
+          <RecruimentTitle data-cy="posted-recruitment-title">
+            {recruitment.title}
+          </RecruimentTitle>
+        </RecruimentItem>
+        <RecruimentStatus
+          isDeadline={recruitment.status === "CLOSE"}
+          isPreparing={recruitment.status === "PREPARING"}
+        >
+          {recruitment.status === "CLOSE"
+            ? "마감"
+            : recruitment.status === "OPEN"
+            ? "진행"
+            : "예정"}
+        </RecruimentStatus>
+      </RecruimentList>
+    ))
+  ) : (
+    <NoDataMessage>등록된 채용 공고가 없습니다.</NoDataMessage>
+  )}
+</ListWrapper>
+
+
           {data && (
             <PaginationWrapper>
               <Pagination postsPerPage={RecruitmentsPerPage} totalPosts={data.totalElements} paginate={paginate} />
@@ -628,3 +640,11 @@ const ErrorMessage = styled.div`
   font-size: 13px;
   height: 16px;
 `;
+
+const NoDataMessage = styled.div`
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+  color: ${({ theme }) => theme.color.gray};
+`;
+
