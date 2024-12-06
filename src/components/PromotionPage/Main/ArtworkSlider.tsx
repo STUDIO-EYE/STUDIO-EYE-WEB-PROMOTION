@@ -34,7 +34,7 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
   }
 
   return (
-    <div
+    <div data-cy="artworkslider-section"
       style={{
         position: 'relative',
         overflow: 'hidden',

@@ -34,7 +34,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
   };
 
   return (
-    <MotionBox data-cy="artwork-section"
+    <MotionBox data-cy="artworklist-section"
       w="100%"
       h="100vh"
       scrollSnapType='y mandatory'
