@@ -1,98 +1,11 @@
 import { login } from "cypress/support/hooks";
 
-// describe('Artwork-PA 아트워크를 확인한다.',()=>{
-//   beforeEach(()=>{
-//     login()
-//   });
-
-//   it('관리 페이지에서 로딩 확인 후 아트워크가 있는 것을 확인한다.',()=>{
-//     cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
-//       statusCode: 200,
-//       body: {
-//         code: 200,
-//         status: "OK",
-//         message: "프로젝트 목록을 성공적으로 조회했습니다.",
-//         data: [{
-//           "id": 1,
-//           "department": "",
-//           "category": "Entertainment",
-//           "name": "이준호와 임윤아의 킹더랜드 인터뷰",
-//           "client": "NETFLIX Korea Youtube",
-//           "date": "2021-11-30T15:00:00.000Z",
-//           "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
-//           "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
-//           "projectType": "others",
-//           "isPosted": true,
-//           "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
-//           "mainImgFileName": "킹더랜드-main.png",
-//           "responsiveMainImg": null,
-//           "responsiveMainImgFileName": null,
-//           "sequence": 1,
-//           "mainSequence": 999,
-//           "projectImages": [
-//             {
-//                 "id": 2,
-//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
-//                 "fileName": "킹더랜드-detail1.png"
-//             },
-//             {
-//                 "id": 3,
-//                 "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
-//                 "fileName": "킹더랜드-detail2.png"
-//             }
-//           ]
-//           }]
-//         }
-//     })
-//     cy.visit('/promotion-admin/artwork')
-//     cy.contains('Loading...').should('be.visible')
-//     const child=['title','client','isOpen','category','overview','type']
-//     cy.get('[data-cy="PA_artwork_list"]').find('[data-cy="PA_artwork"]').within((body)=>{
-//       child.forEach((child)=>{
-//         if (child === 'isOpen' || child === 'isClose') {
-//           const exists = body.find(`[data-cy="PA_artwork_${child}"]`).length > 0;
-//           cy.get(`[data-cy="PA_artwork_${child}"]`).should(exists ? 'exist' : 'not.exist');
-//         }else{
-//           cy.get(`[data-cy="PA_artwork_${child}"]`).should('exist')
-//         }
-//       })
-//     })
-//   });
-
-//   it('필수 예외) 관리 페이지에서 api 요청 결과가 200인데 데이터가 null인 경우',()=>{
-//     cy.intercept('GET', '**/api/projects', {
-//         statusCode: 200,
-//         body: []
-//       })
-//     cy.visit('/promotion-admin/artwork')
-//     cy.contains('Loading...').should('be.visible')
-//     cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
-//   });
-
-//   it('필수 예외) 관리 페이지에서 api 요청 결과가 500인 경우.',()=>{
-//     cy.intercept('GET','**/api/projects',{
-//       statusCode:500,
-//       body: { message: 'Internal Server Error' }
-//     })
-//     cy.visit('/promotion-admin/artwork')
-//     cy.wait(10000)
-//     cy.contains('500').should('be.visible')
-//   });
-
-//   it('권장 예외) 네트워크 연결이 안 되는 경우.',()=>{
-//     cy.intercept('GET','**/api/projects',{ forceNetworkError: true })
-//     cy.visit('/promotion-admin/artwork')
-//     cy.wait(10000)
-//     cy.contains('Network Error').should('be.visible')
-//   })
-// });
-
-describe('Artwork-PA 아트워크 순서 변경을 확인한다.',()=>{
+describe('Artwork-PA 아트워크를 확인한다.',()=>{
   beforeEach(()=>{
     login()
   });
-  
-  it('관리 페이지에서 메인 순서 관리를 누르고 아트워크가 있는 것을 확인한다.',()=>{
+
+  it('관리 페이지에서 로딩 확인 후 아트워크가 있는 것을 확인한다.',()=>{
     cy.intercept('GET', '**/api/projects', { // '**/api/projects/**'은 안 됨
       statusCode: 200,
       body: {
@@ -132,12 +45,98 @@ describe('Artwork-PA 아트워크 순서 변경을 확인한다.',()=>{
         }
     })
     cy.visit('/promotion-admin/artwork')
-    cy.contains('메인 순서 관리').click()
-    const child=['title','client','category','type']
+    cy.contains('Loading...').should('be.visible')
+    const child=['title','client','isOpen','category','overview','type']
     cy.get('[data-cy="PA_artwork_list"]').find('[data-cy="PA_artwork"]').within((body)=>{
       child.forEach((child)=>{
-        cy.get(`[data-cy="PA_artwork_${child}"]`).should('exist')
+        if (child === 'isOpen' || child === 'isClose') {
+          const exists = body.find(`[data-cy="PA_artwork_${child}"]`).length > 0;
+          cy.get(`[data-cy="PA_artwork_${child}"]`).should(exists ? 'exist' : 'not.exist');
+        }else{
+          cy.get(`[data-cy="PA_artwork_${child}"]`).should('exist')
+        }
       })
+    })
+  });
+
+  it('필수 예외) 관리 페이지에서 api 요청 결과가 200인데 데이터가 null인 경우',()=>{
+    cy.intercept('GET', '**/api/projects', {
+        statusCode: 200,
+        body: []
+      })
+    cy.visit('/promotion-admin/artwork')
+    cy.contains('Loading...').should('be.visible')
+    cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
+  });
+
+  it('필수 예외) 관리 페이지에서 api 요청 결과가 500인 경우.',()=>{
+    cy.intercept('GET','**/api/projects',{
+      statusCode:500,
+      body: { message: 'Internal Server Error' }
+    })
+    cy.visit('/promotion-admin/artwork')
+    cy.wait(10000)
+    cy.contains('500').should('be.visible')
+  });
+
+  it('권장 예외) 네트워크 연결이 안 되는 경우.',()=>{
+    cy.intercept('GET','**/api/projects',{ forceNetworkError: true })
+    cy.visit('/promotion-admin/artwork')
+    cy.wait(10000)
+    cy.contains('Network Error').should('be.visible')
+  })
+});
+
+describe('Artwork-PA 아트워크 순서 변경을 확인한다.',()=>{
+  beforeEach(()=>{
+    login()
+  });
+  
+  it('관리 페이지에서 메인 순서 관리를 누르고 아트워크가 있는 것을 확인한다.',()=>{
+    cy.intercept('GET', '**/api/projects', { 
+      statusCode: 200,
+      body: {
+        code: 200,
+        status: "OK",
+        message: "프로젝트 목록을 성공적으로 조회했습니다.",
+        data: [{
+          "id": 1,
+          "department": "",
+          "category": "Entertainment",
+          "name": "이준호와 임윤아의 킹더랜드 인터뷰",
+          "client": "NETFLIX Korea Youtube",
+          "date": "2021-11-30T15:00:00.000Z",
+          "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
+          "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
+          "projectType": "main",
+          "isPosted": true,
+          "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
+          "mainImgFileName": "킹더랜드-main.png",
+          "responsiveMainImg": null,
+          "responsiveMainImgFileName": null,
+          "sequence": 1,
+          "mainSequence": 999,
+          "projectImages": [
+            {
+                "id": 2,
+                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
+                "fileName": "킹더랜드-detail1.png"
+            },
+            {
+                "id": 3,
+                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
+                "fileName": "킹더랜드-detail2.png"
+            }
+          ]
+          }]
+        }
+    })
+    cy.visit('/promotion-admin/artwork')
+    cy.wait(2000)
+    cy.contains('메인 순서 관리').click()
+    const child=['title','client','category','type']
+    child.forEach((child)=>{
+      cy.get(`[data-cy="PA_artworksequence_${child}"]`).should('exist')
     })
   });
 
@@ -148,7 +147,6 @@ describe('Artwork-PA 아트워크 순서 변경을 확인한다.',()=>{
       })
       cy.visit('/promotion-admin/artwork')
       cy.contains('메인 순서 관리').click()
-    cy.contains('Loading...').should('be.visible')
     cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
   });
 
@@ -160,12 +158,77 @@ describe('Artwork-PA 아트워크 순서 변경을 확인한다.',()=>{
     cy.visit('/promotion-admin/artwork')
     cy.contains('메인 순서 관리').click()
     cy.wait(10000)
-    cy.contains('Network Error').should('be.visible')
+    cy.contains('500').should('be.visible')
   });
 
-  it('관리 페이지에서 전체 순서 관리를 누르고 아트워크가 있는 것을 확인한다.')
-  it('필수 예외) 전체 순서 관리에서 api 요청 결과가 200인데 데이터가 null인 경우')
-  it('필수 예외) 전체 순서 관리에서 api 요청 결과가 500인 경우')
+  it('관리 페이지에서 전체 순서 관리를 누르고 아트워크가 있는 것을 확인한다.',()=>{
+    cy.intercept('GET', '**/api/projects', { 
+      statusCode: 200,
+      body: {
+        code: 200,
+        status: "OK",
+        message: "프로젝트 목록을 성공적으로 조회했습니다.",
+        data: [{
+          "id": 1,
+          "department": "",
+          "category": "Entertainment",
+          "name": "이준호와 임윤아의 킹더랜드 인터뷰",
+          "client": "NETFLIX Korea Youtube",
+          "date": "2021-11-30T15:00:00.000Z",
+          "link": "https://www.youtube.com/watch?v=fJZV0jzTD3M",
+          "overView": "쉿!!\uD83E\uDD2B 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.",
+          "projectType": "main",
+          "isPosted": true,
+          "mainImg": "cypress/fixtures/Artwork/킹더랜드-main.png",
+          "mainImgFileName": "킹더랜드-main.png",
+          "responsiveMainImg": null,
+          "responsiveMainImgFileName": null,
+          "sequence": 1,
+          "mainSequence": 1,
+          "projectImages": [
+            {
+                "id": 2,
+                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail1.png",
+                "fileName": "킹더랜드-detail1.png"
+            },
+            {
+                "id": 3,
+                "imageUrlList": "cypress/fixtures/Artwork/킹더랜드-detail2.png",
+                "fileName": "킹더랜드-detail2.png"
+            }
+          ]
+          }]
+        }
+    })
+    cy.visit('/promotion-admin/artwork')
+    cy.wait(2000)
+    cy.contains('전체 순서 관리').click()
+    const child=['title','client','category','type']
+    child.forEach((child)=>{
+      cy.get(`[data-cy="PA_artworksequence_${child}"]`).should('exist')
+    })
+  });
+
+  it('필수 예외) 전체 순서 관리에서 api 요청 결과가 200인데 데이터가 null인 경우',()=>{
+    cy.intercept('GET', '**/api/projects', {
+      statusCode: 200,
+      body: []
+    })
+    cy.visit('/promotion-admin/artwork')
+    cy.contains('전체 순서 관리').click()
+    cy.contains('😊 아트워크 데이터가 존재하지 않습니다.');
+  });
+
+  it('필수 예외) 전체 순서 관리에서 api 요청 결과가 500인 경우',()=>{
+    cy.intercept('GET','**/api/projects',{
+      statusCode:500,
+      body: {}
+    })
+    cy.visit('/promotion-admin/artwork')
+    cy.contains('전체 순서 관리').click()
+    cy.wait(10000)
+    cy.contains('500').should('be.visible')
+  });
 });
 
 describe('Artwork-PP 아트워크를 확인한다',()=>{
@@ -256,7 +319,7 @@ describe('Artwork-PP 아트워크를 확인한다',()=>{
     })
     cy.visit('/artwork')
     cy.wait(10000)
-    cy.contains('Internal Server Error').should('be.visible')
+    cy.contains('서버에서 문제가 발생했습니다! 잠시 후 다시 시도해주세요.').should('be.visible')
     cy.get('[data-cy="PP_artwork_nullComment"]').should('be.visible')
     cy.get('[data-cy="PP_artwork_nullContact"]').should('be.visible')
   });
