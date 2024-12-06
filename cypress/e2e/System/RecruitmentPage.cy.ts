@@ -1,9 +1,7 @@
-import { IContent, IRecruitment, IBenefit, RecruitmentData, BenefitData } from 'cypress/support/recruitmentTypes';
+import { RecruitmentData, BenefitData } from 'cypress/support/recruitmentTypes';
 import { login } from 'cypress/support/hooks';
 
 let testRecruitmentData: RecruitmentData;
-let contentData: IContent[];
-let recruitmentData: IRecruitment;
 
 // ------------------------------- 채용 공고 e2e 테스트 ------------------------------- //
 
@@ -35,51 +33,24 @@ describe('PA 페이지에서 새로운 채용 공고를 등록하고 PP 화면�
 
   it('PP 페이지에서 새롭게 등록된 채용 공고가 정상적으로 표시되는지 확인하고 공고를 클릭하여 새 창에서 원하는 페이지가 표시되는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/recruitment?page=*').as('getRecruitmentList');
 
-    cy.wait('@getRecruitmentList').then((interception) => {
-      contentData = interception.response?.body?.data?.content || [];
+    cy.get('[data-cy="recruitment-title"]').should('contain', testRecruitmentData.title);
+    cy.get('[data-cy="recruitment-status"]').should('contain', '진행');
 
-      cy.wrap(contentData).as('recruitmentListData');
-      cy.log(JSON.stringify(contentData, null, 1));
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen');
     });
 
-    cy.get('@recruitmentListData').then((recruitmentListData) => {
-      // Cypress 데이터가 배열인지 확인하고 변환
-      const recruitmentArray = Array.isArray(recruitmentListData) ? recruitmentListData : recruitmentListData.toArray(); // 배열로 변환
+    cy.get('[data-cy="recruitment-title"]')
+      .contains(testRecruitmentData.title)
+      .should('be.visible')
+      .parent()
+      .parent()
+      .then(($postItem) => {
+        cy.wrap($postItem).click();
 
-      recruitmentArray.forEach((item: IContent, index: number) => {
-        cy.log(`Recruitment item ${index}:`, JSON.stringify(item, null, 1));
+        cy.get('@windowOpen').should('be.calledOnce').and('be.calledWithExactly', testRecruitmentData.link, '_blank');
       });
-
-      // 배열에서 'OPEN' 상태를 가진 공고 찾기
-      const openRecruitment = recruitmentArray.find((item: IContent) => item.status === 'OPEN');
-
-      if (!openRecruitment) {
-        cy.log("현재 '진행'인 채용 공고가 없습니다.");
-        return; // `OPEN` 상태가 없으면 클릭 테스트를 건너뛰기
-      }
-
-      // `OPEN` 상태 데이터가 있을 경우 테스트 진행
-      cy.intercept('GET', `/api/recruitment/${openRecruitment.id}`).as('getRecruitmentData');
-      cy.window().then((win) => {
-        cy.stub(win, 'open').as('windowOpen');
-      });
-
-      // `OPEN` 상태의 채용 공고 클릭
-      cy.get(`[data-cy="post-item-${openRecruitment.id}"]`).click();
-
-      // API 요청이 성공적으로 호출되는지 확인
-      cy.wait('@getRecruitmentData').then((interception) => {
-        recruitmentData = interception.response?.body?.data;
-        expect(recruitmentData).toBeDefined();
-        expect(recruitmentData).toHaveProperty('link');
-
-        // `window.open` 호출 및 URL 확인
-        cy.get('@windowOpen').should('be.calledOnce');
-        cy.get('@windowOpen').should('be.calledWithExactly', recruitmentData.link, '_blank');
-      });
-    });
   });
 });
 
@@ -106,30 +77,23 @@ describe('PA 페이지에서 채용 공고를 수정하고 PP 화면에 정상�
 
   it('PP 페이지에서 수정된 채용 공고가 정상적으로 표시되는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/recruitment?page=*').as('getRecruitmentList');
-
-    cy.wait('@getRecruitmentList').then((interception) => {
-      const contentData = interception.response?.body?.data?.content || [];
-      cy.wrap(contentData).as('recruitmentListData');
-      cy.log(JSON.stringify(contentData, null, 1));
-    });
-
-    cy.get('@recruitmentListData').then((recruitmentListData) => {
-      const titleExists = recruitmentListData.some((item) => item.title === '그래픽디자이너 채용 (신입)');
-      expect(titleExists).to.be.true;
-    });
+    cy.get('[data-cy="recruitment-title"]').should('contain', testRecruitmentData.title);
+    cy.get('[data-cy="recruitment-status"]').should('contain', '마감');
   });
 });
 
 describe('PA 페이지에서 채용 공고를 삭제하고 PP 화면에 정상적으로 표시되는지 확인한다.', () => {
   before(() => {
     login();
+    cy.fixture<RecruitmentData>('Recruitment/recruitment_update_data.json').then((data) => {
+      testRecruitmentData = data;
+    });
   });
 
   it('채용 공고 관리 페이지에서 채용 공고를 삭제한다.', () => {
     cy.visit('/promotion-admin/recruitment/manage');
 
-    cy.contains('[data-cy="posted-recruitment-title"]', '그래픽디자이너 채용 (신입)')
+    cy.contains('[data-cy="posted-recruitment-title"]', testRecruitmentData.title)
       .closest('[data-cy="recruitment-list-item"]')
       .find('[data-cy="delete-button"]')
       .click();
@@ -138,19 +102,12 @@ describe('PA 페이지에서 채용 공고를 삭제하고 PP 화면에 정상�
 
   it('PP 페이지에서 채용 공고가 정상적으로 삭제되었는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/recruitment?page=*').as('getRecruitmentList');
-
-    cy.wait('@getRecruitmentList').then((interception) => {
-      const contentData = interception.response?.body?.data?.content || [];
-      cy.wrap(contentData).as('recruitmentListData');
-      cy.log(JSON.stringify(contentData, null, 1));
-    });
-
-    cy.get('@recruitmentListData').then((recruitmentListData) => {
-      const titleExists = recruitmentListData.some((item) => item.title === '그래픽디자이너 채용 (신입)');
-
-      // '그래픽디자이너 채용 (신입)' 공고가 없는지 확인
-      expect(titleExists).to.be.false;
+    cy.get('body').then(($body) => {
+      if ($body.find('[data-cy="recruitment-title"]').length > 0) {
+        cy.get('[data-cy="recruitment-title"]').contains(testRecruitmentData.title).should('not.exist');
+      } else {
+        cy.log('No recruitment title elements found.');
+      }
     });
   });
 });
@@ -160,7 +117,6 @@ describe('PA 페이지에서 채용 공고를 삭제하고 PP 화면에 정상�
 const testImage = 'cypress/fixtures/Recruitment/bonus.png';
 const testImage2 = 'cypress/fixtures/Recruitment/long_service.png';
 let testBenefitData: BenefitData;
-let benefitData: IBenefit[];
 
 describe('PA 페이지에서 새로운 사내 복지를 등록하고 PP 화면에 정상적으로 표시되는지 확인한다.', () => {
   before(() => {
@@ -190,18 +146,8 @@ describe('PA 페이지에서 새로운 사내 복지를 등록하고 PP 화면�
 
   it('PP 페이지에서 새롭게 등록된 사내 복지가 정상적으로 표시되는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/benefit').as('getBenefitsData');
-    cy.wait('@getBenefitsData').then((interception) => {
-      const benefitData = interception.response?.body?.data || [];
-
-      cy.wrap(benefitData).as('benefitsData');
-      cy.log(JSON.stringify(benefitData, null, 1));
-
-      cy.get('@benefitsData').then((data) => {
-        const hasIncentive = data.some((item) => item.title === '테스트 등록 제목');
-        expect(hasIncentive).to.be.true;
-      });
-    });
+    cy.get('[data-cy="benefit-title"]').should('contain', testBenefitData.title);
+    cy.get('[data-cy="benefit-content"]').should('contain', testBenefitData.content);
   });
 });
 
@@ -229,18 +175,8 @@ describe('PA 페이지에서 사내 복지를 수정하고 PP 화면에 정상�
 
   it('PP 페이지에서 수정된 사내 복지가 정상적으로 표시되는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/benefit').as('getBenefitsData');
-    cy.wait('@getBenefitsData').then((interception) => {
-      const benefitData = interception.response?.body?.data || [];
-
-      cy.wrap(benefitData).as('benefitsData');
-      cy.log(JSON.stringify(benefitData, null, 1));
-
-      cy.get('@benefitsData').then((data) => {
-        const hasIncentive = data.some((item) => item.title === '테스트 수정 제목');
-        expect(hasIncentive).to.be.true;
-      });
-    });
+    cy.get('[data-cy="benefit-title"]').should('contain', testBenefitData.title);
+    cy.get('[data-cy="benefit-content"]').should('contain', testBenefitData.content);
   });
 });
 
@@ -260,18 +196,12 @@ describe('PA 페이지에서 사내 복지를 삭제하고 PP 화면에 정상�
 
   it('PP 페이지에서  사내 복지가 정상적으로 삭제되었는지 확인한다.', () => {
     cy.visit('/recruitment');
-    cy.intercept('GET', '/api/benefit').as('getBenefitsData');
-    cy.wait('@getBenefitsData').then((interception) => {
-      const benefitData = interception.response?.body?.data || [];
-
-      cy.wrap(benefitData).as('benefitsData');
-      cy.log(JSON.stringify(benefitData, null, 1));
-    });
-
-    cy.get('@benefitsData').then((benefitsData) => {
-      const titleExists = benefitsData.some((item) => item.title === '테스트 수정 제목');
-
-      expect(titleExists).to.be.false;
+    cy.get('body').then(($body) => {
+      if ($body.find('[data-cy="benefit-title"]').length > 0) {
+        cy.get('[data-cy="benefit-title"]').contains(testRecruitmentData.title).should('not.exist');
+      } else {
+        cy.log('No benefit title elements found.');
+      }
     });
   });
 });
@@ -301,88 +231,5 @@ describe('PP recruitment 페이지가 정상적으로 표시되는지 확인한�
       'https://www.saramin.co.kr/zf_user/company-info/view/csn/cnIrYWJNNm1GRXdyd0dBckJuZXJUUT09/company_nm/(주)스튜디오아이?nomo=1',
     );
     cy.get('@windowOpen').should('be.calledWithExactly', expectedURL, '_blank');
-  });
-
-  it('사용자는 Recruitment Section에서 현재 "예정" 또는 "진행" 또는 "마감" 상태의 채용 공고를 확인할 수 있다.', () => {
-    cy.intercept('GET', '/api/recruitment?page=*').as('getRecruitmentList');
-    cy.wait('@getRecruitmentList').then((interception) => {
-      contentData = interception.response?.body?.data?.content || [];
-
-      cy.wrap(contentData).as('recruitmentListData');
-      cy.log(JSON.stringify(contentData, null, 1));
-
-      cy.get('@recruitmentListData').then((data) => {
-        const preparingCount = data.filter((item) => item.status === 'PREPARING').length;
-        const openCount = data.filter((item) => item.status === 'OPEN').length;
-        const closeCount = data.filter((item) => item.status === 'CLOSE').length;
-
-        cy.log(`진행 예정 (PREPARING): ${preparingCount}`);
-        cy.log(`진행중 (OPEN): ${openCount}`);
-        cy.log(`마감 (CLOSE): ${closeCount}`);
-
-        // 기대치 확인 예시 (테스트 검증용)
-        expect(preparingCount).to.be.a('number');
-        expect(openCount).to.be.a('number');
-        expect(closeCount).to.be.a('number');
-      });
-    });
-  });
-
-  it('사용자는 "진행" 상태의 채용 공고를 클릭하면 해당 공고 정보를 확인할 수 있는 페이지를 새 창에서 확인할 수 있다.', () => {
-    cy.intercept('GET', '/api/recruitment?page=*').as('getRecruitmentList');
-
-    cy.wait('@getRecruitmentList').then((interception) => {
-      contentData = interception.response?.body?.data?.content || [];
-
-      cy.wrap(contentData).as('recruitmentListData');
-      cy.log(JSON.stringify(contentData, null, 1));
-    });
-
-    cy.get('@recruitmentListData').then((recruitmentListData) => {
-      recruitmentListData.forEach((item, index) => {
-        cy.log(`Recruitment item ${index}:`, JSON.stringify(item, null, 1));
-      });
-
-      const openRecruitment = recruitmentListData.find((item) => item.status === 'OPEN');
-
-      if (!openRecruitment) {
-        cy.log("현재 '진행'인 채용 공고가 없습니다.");
-        return; // `OPEN` 상태가 없으면 클릭 테스트를 건너뛰기
-      }
-
-      // `OPEN` 상태 데이터가 있을 경우 테스트 진행
-      cy.intercept('GET', `/api/recruitment/${openRecruitment.id}`).as('getRecruitmentData');
-      cy.window().then((win) => {
-        cy.stub(win, 'open').as('windowOpen');
-      });
-
-      // `OPEN` 상태의 채용 공고 클릭
-      cy.get(`[data-cy="post-item-${openRecruitment.id}"]`).click();
-
-      // API 요청이 성공적으로 호출되는지 확인
-      cy.wait('@getRecruitmentData').then((interception) => {
-        recruitmentData = interception.response?.body?.data;
-        expect(recruitmentData).to.have.property('link');
-
-        // `window.open` 호출 및 URL 확인
-        cy.get('@windowOpen').should('be.calledOnce');
-        cy.get('@windowOpen').should('be.calledWithExactly', recruitmentData.link, '_blank');
-      });
-    });
-  });
-
-  it('사용자는 Benefit Section에서 사내 복지를 확인할 수 있다.', () => {
-    cy.intercept('GET', '/api/benefit').as('getBenefitsData');
-    cy.wait('@getBenefitsData').then((interception) => {
-      benefitData = interception.response?.body?.data || [];
-
-      cy.wrap(benefitData).as('benefitsData');
-      cy.log(JSON.stringify(benefitData, null, 1));
-      cy.get('@benefitsData').then((data) => {
-        cy.log(`총 사내 복지 수: ${data.length}`);
-
-        expect(data.length).to.be.a('number');
-      });
-    });
   });
 });

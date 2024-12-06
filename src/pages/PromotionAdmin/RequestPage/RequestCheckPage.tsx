@@ -94,32 +94,34 @@ const RequestDetailPage = () => {
     { id: number; subject: string; date: string; content: string; state: string }[]
   >(
     clickedRequest && clickedRequest.answers
-      ? clickedRequest.answers.map((answer: { createdAt: string; id: number; text: string; state: string; }) => {
-        const createdAtDate = new Date(answer.createdAt);
-        const formattedDate = `${createdAtDate.getFullYear()}-${String(createdAtDate.getMonth() + 1).padStart(
-          2,
-          '0'
-        )}-${String(createdAtDate.getDate()).padStart(2, '0')} ${String(createdAtDate.getHours()).padStart(
-          2,
-          '0'
-        )}:${String(createdAtDate.getMinutes()).padStart(2, '0')}`;
+      ? clickedRequest.answers.map((answer: { createdAt: string; id: number; text: string; state: string }) => {
+          const createdAtDate = new Date(answer.createdAt);
+          const formattedDate = `${createdAtDate.getFullYear()}-${String(createdAtDate.getMonth() + 1).padStart(
+            2,
+            '0',
+          )}-${String(createdAtDate.getDate()).padStart(2, '0')} ${String(createdAtDate.getHours()).padStart(
+            2,
+            '0',
+          )}:${String(createdAtDate.getMinutes()).padStart(2, '0')}`;
 
-        return {
-          id: answer.id,
-          subject: answer.text,
-          date: formattedDate,
-          content: answer.text,
-          state: answer.state,
-        };
-      })
-      : []
+          return {
+            id: answer.id,
+            subject: answer.text,
+            date: formattedDate,
+            content: answer.text,
+            state: answer.state,
+          };
+        })
+      : [],
   );
   const emailItemsSliced = emailItems.slice(indexOfFirst, indexOfLast);
 
   const replyRequest = async (state: string) => {
     if (!clickedRequest) return;
 
-    const answerText = draftToHtml(convertToRaw(editorState.getCurrentContent())).replace(/<[^>]*>/g, '').trim();
+    const answerText = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      .replace(/<[^>]*>/g, '')
+      .trim();
 
     if (state === 'WAITING' || !answerText) {
       alert(state === 'WAITING' ? '답변한 메일을 대기 중으로 둘 수 없습니다.' : '내용을 입력하세요.');
@@ -141,10 +143,10 @@ const RequestDetailPage = () => {
           subject: answerText,
           date: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(
             2,
-            '0'
+            '0',
           )}-${String(new Date().getDate()).padStart(2, '0')} ${String(new Date().getHours()).padStart(
             2,
-            '0'
+            '0',
           )}:${String(new Date().getMinutes()).padStart(2, '0')}`,
           content: answerText,
           state: state.toUpperCase(),
@@ -165,41 +167,41 @@ const RequestDetailPage = () => {
   };
 
   return (
-    <PageWrapper data-cy="request-detail-page">
+    <PageWrapper data-cy='request-detail-page'>
       {requestDetailMatch && clickedRequest && (
         <>
           <LeftContainer>
-            <Box data-cy="client-info-box">
+            <Box data-cy='client-info-box'>
               <Wrapper>
                 <TitleWrapper>
-                  <Title data-cy="client-name-title">
+                  <Title data-cy='client-name-title'>
                     {clickedRequest.clientName} 님의 {clickedRequest.category} 문의
                   </Title>
                 </TitleWrapper>
-                <UserInfoWrapper data-cy="client-info-wrapper">
+                <UserInfoWrapper data-cy='client-info-wrapper'>
                   <UserInfo clickedRequest={clickedRequest} />
                 </UserInfoWrapper>
                 <Answer
-                  className="article"
-                  data-cy="request-description"
+                  className='article'
+                  data-cy='request-description'
                   dangerouslySetInnerHTML={{ __html: clickedRequest.description }}
                 />
               </Wrapper>
             </Box>
 
-            <Box data-cy="reply-box">
+            <Box data-cy='reply-box'>
               <Wrapper>
                 {loading && (
                   <Overlay visible={loading}>
-                    <Spinner data-cy="loading-spinner" />
+                    <Spinner data-cy='loading-spinner' />
                   </Overlay>
                 )}
                 <Tooltip
-                  description="대기: 아직 답장을 하지 않은 상태 / 논의: 내부적으로 승인과 거절 논의 중인 상태 / 승인: 문의를 승인한 상태 / 거절: 문의를 거절한 상태"
+                  description='대기: 아직 답장을 하지 않은 상태 / 논의: 내부적으로 승인과 거절 논의 중인 상태 / 승인: 문의를 승인한 상태 / 거절: 문의를 거절한 상태'
                   svgComponent={<InfoIcon width={18} height={18} />}
                 />
                 <DropDown
-                  data-cy="status-dropdown"
+                  data-cy='status-dropdown'
                   onChange={(e) => {
                     const newState = e.target.value;
                     setReplyState(newState);
@@ -207,28 +209,28 @@ const RequestDetailPage = () => {
                     setTextValue(content);
                   }}
                 >
-                  <option value="WAITING" selected disabled hidden>
+                  <option value='WAITING' selected disabled hidden>
                     대기
                   </option>
-                  <option value="DISCUSSING">논의</option>
-                  <option value="APPROVED">승인</option>
-                  <option value="REJECTED">거절</option>
+                  <option value='DISCUSSING'>논의</option>
+                  <option value='APPROVED'>승인</option>
+                  <option value='REJECTED'>거절</option>
                 </DropDown>
                 <StyledTextArea
-                  data-cy="response-textarea"
+                  data-cy='response-textarea'
                   placeholder={createDefaultContent(replyState)}
                   value={textValue}
                   onChange={handleTextChange}
                   maxLength={MAX_TEXT_LENGTH}
                   style={{ whiteSpace: 'pre-wrap' }}
                 />
-                <TextCounter data-cy="text-counter">
+                <TextCounter data-cy='text-counter'>
                   {textLength}/{MAX_TEXT_LENGTH}자
                 </TextCounter>
               </Wrapper>
               <ButtonWrapper>
                 <Button
-                  data-cy="send-reply-button"
+                  data-cy='send-reply-button'
                   onClick={() => {
                     clickedRequest && replyRequest(replyState);
                   }}
@@ -238,12 +240,12 @@ const RequestDetailPage = () => {
               </ButtonWrapper>
             </Box>
           </LeftContainer>
-          <RightContainer data-cy="email-list-container">
+          <RightContainer data-cy='email-list-container'>
             <Box>
-              <EmailListComponent data-cy="email-list" emailItems={emailItemsSliced} />
+              <EmailListComponent data-cy='email-list' emailItems={emailItemsSliced} />
               <ButtonWrapper>
                 <Pagination
-                  data-cy="pagination-component"
+                  data-cy='pagination-component'
                   postsPerPage={postsPerPage}
                   totalPosts={emailItems.length}
                   paginate={paginate}
