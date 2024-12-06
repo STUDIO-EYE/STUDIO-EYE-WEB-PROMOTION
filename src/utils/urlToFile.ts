@@ -1,34 +1,26 @@
-// 파일 이름을 URL에서 추출하는 함수
 export function extractFileNameFromUrl(url: string): string {
   try {
     if (!url || url.includes('undefined')) {
-      console.error('Invalid URL:', url);
-      // 고유 식별자를 추가해 중복 방지
-      const uniqueSuffix = Math.random().toString(36).slice(-6); // 랜덤 6자리 추가
-      return `default_${uniqueSuffix}.png`;
+      console.error('Invalid URL detected:', url);
+      // 고유 파일 이름을 추가하여 충돌 방지
+      const uniqueSuffix = Math.random().toString(36).slice(-6);
+      return `default_${uniqueSuffix}.jpg`;
     }
 
     const urlObject = new URL(url);
-    let fileName = decodeURIComponent(urlObject.pathname.split('/').pop() || 'default.png');
+    let fileName = decodeURIComponent(urlObject.pathname.split('/').pop() || '');
 
-    const maxFileNameLength = 50; // 파일 이름 길이 제한
-    const extensionMatch = fileName.match(/\.[^/.]+$/); // 확장자 추출
-    const extension = extensionMatch ? extensionMatch[0] : '.png'; // 확장자가 없으면 기본값 설정
-    const baseName = fileName.replace(/\.[^/.]+$/, ''); // 확장자 제거
-
-    // 파일 이름이 너무 길면 고유 식별자 추가
-    if (baseName.length > maxFileNameLength - extension.length) {
-      const truncatedName = baseName.slice(0, maxFileNameLength - extension.length - 5);
-      const uniqueSuffix = Math.random().toString(36).slice(-6); // 고유값 추가
-      fileName = `${truncatedName}_${uniqueSuffix}${extension}`;
+    // 파일 이름이 유효하지 않으면 기본값 반환
+    if (!fileName || fileName === 'undefined') {
+      const uniqueSuffix = Math.random().toString(36).slice(-6);
+      return `default_${uniqueSuffix}.jpg`;
     }
 
     return fileName;
   } catch (error) {
     console.error('Error extracting file name from URL:', error);
-    // 고유 식별자를 추가한 기본 파일 이름 반환
     const uniqueSuffix = Math.random().toString(36).slice(-6);
-    return `default_${uniqueSuffix}.png`;
+    return `default_${uniqueSuffix}.jpg`;
   }
 }
 
