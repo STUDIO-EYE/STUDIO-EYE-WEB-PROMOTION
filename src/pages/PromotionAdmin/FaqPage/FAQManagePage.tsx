@@ -186,7 +186,7 @@ function FAQManagePage() {
     if (isEditing) {
       if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.FAQ}/write`);
+        navigator(`${PA_ROUTES.FAQ}/manage`);
       }
     } else {
       navigator(`${PA_ROUTES.FAQ}/write`);
