@@ -22,7 +22,7 @@ const WatingRequests = () => {
   const handleSort = () => {
     setSortByRecent((prev) => !prev);
   };
-  console.log(data);
+
   return (
     <Container>
       <HeaderWrapper>
