@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
 import { theme } from '@/styles/theme';
 import { getFaqData } from '@/apis/PromotionPage/faq';
+import { AxiosError } from 'axios';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 interface FaqData {
   id: number;
@@ -23,6 +25,7 @@ const FaqPage = () => {
   const [searchData, setSearchData] = useState<FaqData[]>([]); // 검색된 FAQ 데이터
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set()); // 펼쳐진 FAQ 항목
   const [errorMessage, setErrorMessage] = useState(''); // 에러 메시지 상태 추가
+  const [error, setError] = useState<AxiosError|null>(null);
 
  useEffect(() => {
     const fetchData = async () => {
@@ -36,12 +39,24 @@ const FaqPage = () => {
         }
       } catch (error) {
         console.error(error);
+        setError(error as AxiosError)
         setErrorMessage('전송이 실패했습니다.'); // 실패 시 에러 메시지 설정
         setSearchResult('none'); // 검색 결과가 없을 때 상태 설정
       }
     };
     fetchData();
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const initiate = (data: FaqData[]) => {
     if (data.length === 0) {
@@ -86,6 +101,7 @@ const FaqPage = () => {
   return (
     <BackgroundYellowCircle>
       <Container>
+        {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
         <Header>
           <Title>
             <LineWrapper>

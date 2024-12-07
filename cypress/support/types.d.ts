@@ -20,7 +20,8 @@ export interface ArtworkRequiredField {
   name: string;
   selector: string;
   value: string;
-  type?: 'type' | 'dropdown' | 'select';
+  type?: 'type' | 'dropdown' | 'select-type' | 'select-open';
+  maxLength?: number;
 }
 
 export interface IntroData {
