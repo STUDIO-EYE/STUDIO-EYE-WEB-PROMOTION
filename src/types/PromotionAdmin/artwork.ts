@@ -24,11 +24,13 @@ export type ArtworkData = {
 
 export type PostArtworkData = {
   request: PostArtworkDataRequestType;
-  file: string;
-  files: string[];
+  file: string | File;
+  responsiveFile: string | File;
+  files: (string | File)[]; // UpdateArtwork와 동일한 타입
 };
 
 export type PostArtworkDataRequestType = {
+  projectId?: number; // 선택적 속성으로 추가
   department: string;
   category: string;
   name: string;
@@ -38,13 +40,14 @@ export type PostArtworkDataRequestType = {
   overView: string;
   projectType: projectType;
   isPosted: boolean;
+  deletedImageId?: number[]; // 선택적 속성으로 추가
 };
 
 export type projectType = 'top' | 'main' | 'others';
 
 export type UpdateArtwork = {
   request: {
-    projectId: number;
+    projectId?: number; // 선택적 속성
     department: string;
     category: string;
     name: string;
@@ -52,11 +55,13 @@ export type UpdateArtwork = {
     date: string;
     link: string;
     overView: string;
-    deletedImageId: number[];
+    projectType: projectType;
+    isPosted: boolean;
+    deletedImageId: number[]; // 필수 속성 유지
   };
-  file: string;
-  responsiveFile: string;
-  files: string[];
+  file: string | File;
+  responsiveFile: string | File;
+  files: (string | File)[]; // 일관된 타입
 };
 
 type filesType = {

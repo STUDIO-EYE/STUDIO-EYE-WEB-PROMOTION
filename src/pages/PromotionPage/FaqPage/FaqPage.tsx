@@ -114,7 +114,7 @@ const FaqPage = () => {
           {searchResult === 'fail' ? (
             <NoResults data-cy="no-results-message">검색 결과가 없습니다.</NoResults>
           ) : searchResult === 'none' ? (
-            <NoResults data-cy="no-results-message">FAQ 데이터가 없습니다.</NoResults>
+            <NoResults data-cy="no-results-message">데이터가 없습니다.</NoResults>
           ) : (
             searchData.map((item, i) => (
               <FaqDetailButton
@@ -282,31 +282,20 @@ const Content = styled.div`
   }
 `;
 
-// const EmptyState = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   min-height: 100vh;
-//   font-family: 'pretendard-bold';
-//   font-size: 2rem;
-//   color: gray;
-//   text-align: center;
-//   padding: 0.75rem;
-//   word-break: keep-all;
-// `;
-
 const NoResults = styled.p`
   color: gray;
   font-family: 'pretendard-bold';
   font-size: 2rem;
   text-align: center;
 
-  @media (max-width: 1366px) and (min-width: 768px) {
-    font-size: 1.1rem;
+  @media ${theme.media.large_tablet} {
+    font-size: 1.4rem;
   }
-
-  @media (max-width: 540px) and (min-width: 375px) {
-    font-size: 1rem;
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
+  @media ${theme.media.mobile} {
+    font-size: 1.1rem;
   }
 `;
 

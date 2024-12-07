@@ -172,7 +172,7 @@ function FAQManagePage() {
     if (isEditing) {
       if (window.confirm(MSG.CONFIRM_MSG.EXIT)) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.FAQ}/write`);
+        navigator(`${PA_ROUTES.FAQ}/manage`);
       }
     } else {
       navigator(`${PA_ROUTES.FAQ}/write`);
