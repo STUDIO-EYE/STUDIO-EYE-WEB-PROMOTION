@@ -1,6 +1,4 @@
-import { login } from '@/apis/PromotionAdmin/login';
 import { MSG } from '@/constants/messages';
-import { PA_ROUTES } from '@/constants/routerConstants';
 
 describe('로그인 통합 테스트', () => {
   beforeEach(() => {
