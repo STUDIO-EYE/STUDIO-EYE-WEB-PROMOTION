@@ -48,7 +48,7 @@ const processChartData = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, data: an
             return acc + value;
           }, 0)
       : 0;
-    console.log(count);
+
     return {
       x: `${month.year}년 ${month.month}월`,
       y: count,

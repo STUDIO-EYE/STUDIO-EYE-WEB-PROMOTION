@@ -22,7 +22,6 @@ describe('3. WHAT WE DO를 관리한다', () => {
       .click({ force: true });
 
     // 수정하기 버튼 클릭 후 요청 대기
-
     cy.wait('@getDetailForEdit', { timeout: 10000 }).then((interception) => {
       const response = interception.response?.body;
       chai.expect(response).to.have.property('code', 200);
