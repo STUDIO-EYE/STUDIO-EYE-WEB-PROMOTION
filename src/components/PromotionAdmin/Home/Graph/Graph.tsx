@@ -82,8 +82,12 @@ const Graph = ({
           onChange={(e: { target: { value: string } }) => handleCategoryChange(e.target.value)}
         >
           {filter &&
-            filter.map((option) => {
-              return <FilterOption value={option.value}>{option.label}</FilterOption>;
+            filter.map((option, index) => {
+              return (
+                <FilterOption key={index} value={option.value}>
+                  {option.label}
+                </FilterOption>
+              );
             })}
         </FilterSelect>
         <FilterSelect

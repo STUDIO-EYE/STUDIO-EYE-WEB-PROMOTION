@@ -14,7 +14,16 @@ type Props = {
   hoverBackgroundColor: string;
 };
 
-const WaitingRequestsList = ({ requestId, organization, clientName, description, category, date, email, hoverBackgroundColor }: Props) => {
+const WaitingRequestsList = ({
+  requestId,
+  organization,
+  clientName,
+  description,
+  category,
+  date,
+  email,
+  hoverBackgroundColor,
+}: Props) => {
   const limitedOrganization = organization.length > 10 ? organization.slice(0, 10) + '...' : organization;
   const limitedDescription = description.length > 28 ? description.slice(0, 28) + '...' : description;
   const limitedName = clientName.length > 7 ? clientName.slice(0, 7) + '...' : clientName;
@@ -36,7 +45,9 @@ const WaitingRequestsList = ({ requestId, organization, clientName, description,
 
 export default WaitingRequestsList;
 
-const Container = styled(Link)<{ hoverBackgroundColor: string }>`
+const Container = styled(Link).withConfig({
+  shouldForwardProp: (prop) => prop !== 'hoverBackgroundColor',
+})<{ hoverBackgroundColor: string }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,6 +78,7 @@ const Container = styled(Link)<{ hoverBackgroundColor: string }>`
     width: 150px;
   }
 `;
+
 const OrganizationWrapper = styled.div`
   width: 150px;
   white-space: nowrap;

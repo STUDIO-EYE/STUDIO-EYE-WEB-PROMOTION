@@ -131,7 +131,9 @@ const LoadingWrapper = styled.div`
   font-size: 17px;
 `;
 
-const SortWrapper = styled.button<{ rotate: boolean }>`
+const SortWrapper = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'rotate',
+})<{ rotate: boolean }>`
   border-style: none;
   background: inherit;
   display: flex;
