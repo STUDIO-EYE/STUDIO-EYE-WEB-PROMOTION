@@ -22,5 +22,11 @@ function ScrollAnimatedComponent({ article }: string | any) {
 export default ScrollAnimatedComponent;
 
 const Article = styled.div`
+  justify-content: center;
+  text-align: left;
+  width: 90%;
+  margin: 0 auto;
   font-family: ${(props) => props.theme.font.semiBold};
+  // text-align: center;
+  word-break: keep-all;
 `;

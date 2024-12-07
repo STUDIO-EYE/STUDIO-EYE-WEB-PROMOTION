@@ -8,6 +8,7 @@ import { artwork_categories } from '@/components/PromotionPage/Artwork/Navigatio
 import { theme } from '@/styles/theme';
 import React from 'react';
 import { AxiosError } from 'axios';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 const NullException=React.lazy(()=>import('@/components/PromotionPage/Artwork/NullException'))
 const SkeletonComponent=React.lazy(()=>import('@/components/PromotionPage/SkeletonComponent/SkeletonComponent'))
 const ArtworkCard=React.lazy(()=>import('@/components/PromotionPage/Artwork/ArtworkCard'))
@@ -25,23 +26,30 @@ function ArtworkPage() {
   const { data, isLoading, error } = useQuery<IArtworksData, AxiosError>(['artwork', 'id'], getArtworkData);
   const category = artwork_categories.find((category) => category.key + '' === categoryId);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
+
   //useMemo를 사용해 별도로 메모리화, 리렌더링 방지 => 동일한 데이터 연산을 반복하지 않을 수 있음
-  // const postedData = data?.data?.filter((artwork) => artwork.isPosted === true) ?? [];
-  // const filteredData = category
-  //   ? postedData.filter((artwork) => artwork.category.toLowerCase() === category.label.toLocaleLowerCase())
-  //   : postedData;
-    const postedData = useMemo(() => 
-      data?.data?.filter((artwork) => artwork.isPosted) ?? [], 
-      [data]
-    );
-    const filteredData = useMemo(() => 
-    category 
-      ? postedData.filter((artwork) => 
-          artwork.category.toLowerCase() === category.label.toLowerCase()
-        )
-      : postedData, 
-      [category, postedData]
-    );
+  const postedData = useMemo(() => 
+    data?.data?.filter((artwork) => artwork.isPosted) ?? [], 
+    [data]
+  );
+  const filteredData = useMemo(() => 
+  category 
+    ? postedData.filter((artwork) => 
+        artwork.category.toLowerCase() === category.label.toLowerCase()
+      )
+    : postedData, 
+    [category, postedData]
+  );
 
   function ScrollToTop() {
     useEffect(() => {
@@ -50,19 +58,7 @@ function ArtworkPage() {
     return null;
   }
 
-  const errorData=error?.response?.data as ErrorResponse|undefined
-  const errorMessage=()=> {
-  if(errorData){
-    return errorData.status?errorData.status+": "+errorData.error:"네트워크 에러가 발생했어요! 네트워크 환경을 확인해주세요."
-  } else{
-    // if(!error && data===undefined){
-    //   return "Network Error"
-    // }else{
-      return null
-    // }
-  }}
-
-  if(isLoading) return <>Loading...</>
+  if(isLoading) return <div style={{minHeight: '52.6vh'}}>Loading...</div>
 
   return (
     <>
@@ -72,7 +68,10 @@ function ArtworkPage() {
           <ArtworkWrapper data-cy='PP_artwork_list'>
             {postedData?.length === 0 || data === null ? (
               <Suspense fallback={<div>Loading...</div>}>
-              <NullException isError={errorMessage()}/>
+              <div>
+              {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
+              <NullException/>
+              </div>
               </Suspense>
             ) : (
               <>
@@ -102,7 +101,10 @@ function ArtworkPage() {
         ) : (
           <ArtworkWrapper>
             {filteredData?.length === 0 || data === null ? (
-              <NullException isError={errorMessage()}/>
+              <div>
+              {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
+              <NullException/>
+              </div>
             ) : (
               <>
                 <ScrollToTop />

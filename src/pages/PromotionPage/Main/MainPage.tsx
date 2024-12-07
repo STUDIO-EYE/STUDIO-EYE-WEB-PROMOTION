@@ -9,6 +9,8 @@ import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 import styled from 'styled-components';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants'
 import { theme } from '@/styles/theme';
+import ErrorComponent from '@/components/Error/ErrorComponent';
+import { AxiosError } from 'axios';
 
 const Top = lazy(() => import('@/components/PromotionPage/Main/Top'));
 const Intro = lazy(() => import('@/components/PromotionPage/Main/Intro'));
@@ -20,7 +22,7 @@ const ArtworkSlider = lazy(() => import('@/components/PromotionPage/Main/Artwork
 const MainPage = () => {
   const [elementHeight, setElementHeight] = useState(window.innerHeight);
   const [activeIndex, setActiveIndex] = useState(0);
-  const { data, isLoading, error } = useQuery<MIArtworksData, Error>(['artwork', 'id'], getArtworkMainData, {
+  const { data, isLoading, error } = useQuery<MIArtworksData, AxiosError>(['artwork', 'id'], getArtworkMainData, {
     staleTime: 1000 * 60 * 10, // 10분
   });
 
@@ -58,9 +60,20 @@ const MainPage = () => {
     }
   }, [height]);
 
-  if (error) return <>Artwork Error: {error.message}</>;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
+  
   return (
     <>
+      {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
       <style>{`
         body, html {
           overflow: hidden;
@@ -116,7 +129,7 @@ const MainPage = () => {
             >
               {isLoading ? (
                 <div>데이터 로딩 중...</div>
-              ) : height <= 780 ? (
+              ) : height <= 915 ? (
                 <ArtworkSlider
                   artworks={filteredMainData.map((item) => ({
                     id: item.id,

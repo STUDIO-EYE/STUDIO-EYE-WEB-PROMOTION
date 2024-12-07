@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { IFAQ, getFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useState, useEffect } from 'react';
 import { theme } from '@/styles/theme';
-import { updateFAQData, deleteFAQData } from '../../../apis/PromotionAdmin/faq';
+import { deleteFAQData } from '../../../apis/PromotionAdmin/faq';
 import { useForm } from 'react-hook-form';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import Pagination from '@/components/Pagination/Pagination';
@@ -44,9 +44,6 @@ function FAQManagePage() {
       const indexOfFirst = indexOfLast - FAQsPerPage;
       const sliced = data.slice(indexOfFirst, indexOfLast);
       setSlicedFAQ(sliced);
-
-      const queryParams = new URLSearchParams(location.search);
-      const page = queryParams.get('page');
 
       if (sliced.length === 0 && currentPage > 1) {
         setCurrentPage((prevPage) => prevPage - 1);
@@ -90,13 +87,12 @@ function FAQManagePage() {
   }, [currentFAQ, setValue]);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('삭제하시겠습니까?')) {
+    if (window.confirm(MSG.CONFIRM_MSG.DELETE)) {
       try {
         await deleteFAQData(id);
-        alert('FAQ가 삭제되었습니다.');
+        alert(MSG.ALERT_MSG.DELETE);
         refetch();
       } catch (error) {
-        console.log(error);
         alert('FAQ 삭제 중 오류가 발생했습니다.');
       }
     }
@@ -108,21 +104,11 @@ function FAQManagePage() {
       return;
     }
 
-    const formData = {
-      id: currentFAQ.id,
-      question: data.question,
-      answer: data.answer,
-      visibility: currentFAQ.visibility,
-    };
-
-    if (!(data.question === '' || data.answer === '') && window.confirm('수정하시겠습니까?')) {
+    if (!(data.question === '' || data.answer === '') && window.confirm(MSG.CONFIRM_MSG.EDIT)) {
       try {
-        const response = await updateFAQData(formData);
-        alert('FAQ가 수정되었습니다.');
-        console.log(response);
+        alert(MSG.ALERT_MSG.EDIT);
         setIsEditing(false);
       } catch (error) {
-        console.log(error);
         alert('FAQ 수정 중 오류가 발생했습니다.');
       }
     }
@@ -171,7 +157,7 @@ function FAQManagePage() {
   };
 
   const handleConfirmNavigation = (faq: IFAQ) => {
-    if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
+    if (window.confirm(MSG.CONFIRM_MSG.EXIT)) {
       setIsEditing(false);
       setCurrentFAQ(faq);
       setIsSelected(true);
@@ -184,9 +170,9 @@ function FAQManagePage() {
 
   const handleAddNewFAQ = () => {
     if (isEditing) {
-      if (window.confirm('현재 페이지를 나가면 변경 사항이 저장되지 않습니다.\n나가시겠습니까?')) {
+      if (window.confirm(MSG.CONFIRM_MSG.EXIT)) {
         setIsEditing(false);
-        navigator(`${PA_ROUTES.FAQ}/write`);
+        navigator(`${PA_ROUTES.FAQ}/manage`);
       }
     } else {
       navigator(`${PA_ROUTES.FAQ}/write`);

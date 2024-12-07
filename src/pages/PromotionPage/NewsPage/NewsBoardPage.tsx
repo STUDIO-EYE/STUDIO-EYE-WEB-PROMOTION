@@ -1,10 +1,12 @@
 import { getAllNewsData } from "@/apis/PromotionPage/news";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
 import { theme } from "@/styles/theme";
+import { AxiosError } from "axios";
+import ErrorComponent from "@/components/Error/ErrorComponent";
 import { useQuery } from "react-query";
 
 interface INewsCardProps {
@@ -16,16 +18,15 @@ interface INewsCardProps {
 }
 
 const NewsBoardPage: React.FC = () => {
-
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(6);
 
-  const { data: newsData, isLoading, error } = useQuery<INewsCardProps[], Error>(
+  const { data: newsData, isLoading, error } = useQuery<INewsCardProps[], AxiosError>(
     'newsData',
     async () => {
       const response = await getAllNewsData();
       if (!response || !response.data) {
-        throw new Error('데이터가 없습니다.');
+        throw error;
       }
       return response.data.map((news: any) => ({
         id: news.id,
@@ -36,6 +37,17 @@ const NewsBoardPage: React.FC = () => {
       }));
     }
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -52,8 +64,10 @@ const NewsBoardPage: React.FC = () => {
         <><LoadingModal>
           <LoadingIcon />
         </LoadingModal><EmptyState>로딩 중...</EmptyState></>
-      ) : error ? (
-        <EmptyState>{error.message}</EmptyState>
+      ):error ? (
+        isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>
+      ) : !newsData? (
+        <EmptyState>데이터가 없습니다.</EmptyState>
       ) : (
         <>
           <NewsSection

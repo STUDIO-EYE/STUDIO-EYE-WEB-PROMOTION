@@ -80,8 +80,8 @@ const Artwork = () => {
           <SecondWrapper>
             <TypeContainer projectType={selectedProjectType}>
               <div onClick={() => setSelectedProjectType('all')}>전체</div>
-              <div onClick={() => setSelectedProjectType('top')}>Top</div>
-              <div onClick={() => setSelectedProjectType('main')}>Main</div>
+              <div onClick={() => setSelectedProjectType('top')}>대표</div>
+              <div onClick={() => setSelectedProjectType('main')}>메인</div>
             </TypeContainer>
             <ArtworkProducingWrapper onClick={() => setProducingIsOpened(!producingIsOpend)}>
               아트워크 생성하기
@@ -91,7 +91,7 @@ const Artwork = () => {
           {filteredAndSortedArtworks.length === 0 ? (
             <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
           ) : (
-            <div data-cy='PA_artwork_list' style={{height:'1260px'}}>
+            <div data-cy='PA_artwork_list' style={{ height: '1260px' }}>
               {currentArtworks.map((artwork) => (
                 <LinkStyle to={`${PA_ROUTES.ARTWORK}/${artwork.id}?page=${currentPage + 1}`} key={artwork.id}>
                   <ArtworkBox
@@ -135,8 +135,8 @@ const LinkStyle = styled(Link)`
 `;
 
 const ArtworkBoxWrapper = styled.div`
-  width: 500px;
-  min-width: 700px;
+  width: 35rem;
+
   height: fit-content;
   min-height: 100px;
   margin-right: 50px;
@@ -156,16 +156,14 @@ const LoadingWrapper = styled.div`
 
 const SearchWrapper = styled.div`
   input {
-    width: 300px;
-    padding: 15px 20px;
+    width: 13rem;
+    padding: 0.7rem;
     font-family: 'pretendard-medium';
     outline-style: none;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 0.8rem;
     border: none;
-
     color: black;
-    margin-bottom: 20px;
     background-color: #dadada9f;
 
     &:hover {
@@ -184,7 +182,8 @@ const SearchWrapper = styled.div`
 `;
 
 const CategoryWrapper = styled.div`
-  width: 200px;
+  height: fit-content;
+  width: 14rem;
 `;
 
 const SecondWrapper = styled.div`
@@ -198,10 +197,13 @@ const UtilWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+
   justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
 const ArtworkProducingWrapper = styled.div`
+  font-size: 0.8rem;
   cursor: pointer;
   width: fit-content;
   font-family: 'pretendard-semibold';
@@ -211,6 +213,8 @@ const ArtworkProducingWrapper = styled.div`
   border-radius: 5px;
 
   &:hover {
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
     background-color: #5a6268;
   }
 `;
@@ -219,31 +223,32 @@ const TypeContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'projectType',
 })<{ projectType: projectType | 'all' }>`
   display: flex;
+  font-size: 0.8rem;
   align-items: center;
   cursor: pointer;
   font-family: 'pretendard-semibold';
   background-color: #a3a3a360;
-  height: 40px;
-  border-radius: 20px;
+  height: 2rem;
+  border-radius: 10px;
   position: relative;
-  width: 225px;
+  width: 12rem;
 
   &::before {
     content: '';
     position: absolute;
-    width: 75px;
+    width: 4rem;
     height: 100%;
     background-color: #fcfcfce2;
-    border-radius: 20px;
+    border-radius: 10px;
     transition: transform 0.3s ease-in-out;
     transform: ${(props) => {
       switch (props.projectType) {
         case 'all':
           return 'translateX(0)';
         case 'top':
-          return 'translateX(75px)';
+          return 'translateX(4rem)';
         case 'main':
-          return 'translateX(150px)';
+          return 'translateX(8rem)';
         default:
           return 'translateX(0)';
       }

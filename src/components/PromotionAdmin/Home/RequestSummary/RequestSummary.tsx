@@ -22,7 +22,7 @@ const WatingRequests = () => {
   const handleSort = () => {
     setSortByRecent((prev) => !prev);
   };
-  console.log(data);
+
   return (
     <Container>
       <HeaderWrapper>
@@ -34,7 +34,7 @@ const WatingRequests = () => {
           <span>승인 대기 의뢰 총 {data && data.length > 0 ? data.length : 0}건</span>
         </TitleWrapper>
         <BtnWrapper>
-          <SortWrapper onClick={handleSort} rotate={!sortByRecent}>
+          <SortWrapper onClick={handleSort} rotate={sortByRecent ? false : true}>
             <SortNameWrapper>{sortByRecent ? '최신순' : '오래된 순'}</SortNameWrapper>
             <Sort width={20} height={20} />
           </SortWrapper>
@@ -131,7 +131,9 @@ const LoadingWrapper = styled.div`
   font-size: 17px;
 `;
 
-const SortWrapper = styled.button<{ rotate: boolean }>`
+const SortWrapper = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'rotate',
+})<{ rotate: boolean }>`
   border-style: none;
   background: inherit;
   display: flex;

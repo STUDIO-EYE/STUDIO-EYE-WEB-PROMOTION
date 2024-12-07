@@ -16,6 +16,7 @@ const BUTTON_MSG = {
 
 const CONFIRM_MSG = {
   SAVE: '저장하시겠습니까?',
+  EDIT: '수정하시겠습니까?',
   DELETE: '삭제하시겠습니까?',
   POST: '등록하시겠습니까?',
   CANCLE: '취소하시겠습니까?',
@@ -31,8 +32,10 @@ const CONFIRM_MSG = {
 
 const ALERT_MSG = {
   SAVE: '저장되었습니다.',
+  EDIT: '수정되었습니다.',
   DELETE: '삭제되었습니다.',
   POST: '등록되었습니다.',
+  COMPLETE: '완료되었습니다.',
 };
 
 const PLACEHOLDER_MSG = {
@@ -74,8 +77,6 @@ const ERROR_MSG = {
   SERVER_ERROR:
     '현재 서버 또는 인터넷 연결 문제로 인해 문의 등록이 완료되지 않았습니다. 불편을 드려 죄송합니다. 문제가 지속될 경우, 문의해 주시면 신속히 도와드리겠습니다.',
 };
-
-const INFO_MSG = {};
 
 export const MSG = {
   BUTTON_MSG,

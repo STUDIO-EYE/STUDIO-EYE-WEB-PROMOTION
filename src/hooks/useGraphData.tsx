@@ -3,15 +3,21 @@ import { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 
 // 해당 기간의 데이터를 가져오는 함수
-const fetchDataByRange = async (category: string, state: string, startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, fetchFunction: Function) => {
+const fetchDataByRange = async (
+  category: string,
+  state: string,
+  startDate: dayjs.Dayjs,
+  endDate: dayjs.Dayjs,
+  fetchFunction: Function,
+) => {
   if (!startDate || !endDate) return [];
   const startYear = startDate.year();
   const startMonth = startDate.month() + 1;
   const endYear = endDate.year();
   const endMonth = endDate.month() + 1;
-  console.log(category+" "+state)
+
   try {
-    return await fetchFunction(startYear,startMonth,endYear,endMonth,category,state);
+    return await fetchFunction(startYear, startMonth, endYear, endMonth, category, state);
   } catch (error) {
     console.error(`[❌Error ${fetchFunction.name}]`, error);
     return [];
@@ -35,10 +41,14 @@ const processChartData = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, data: an
     const foundData = data.find(
       (item: { year: number; month: number }) => item.year === month.year && item.month === month.month,
     );
-    const count = foundData ? (division === 'statistics' ? foundData.views 
-      : (Object.values(foundData.RequestCount)as number[])
-        .reduce((acc: number, value: number)=>{return acc+value},0)) : 0;
-      console.log(count)
+    const count = foundData
+      ? division === 'statistics'
+        ? foundData.views
+        : (Object.values(foundData.RequestCount) as number[]).reduce((acc: number, value: number) => {
+            return acc + value;
+          }, 0)
+      : 0;
+
     return {
       x: `${month.year}년 ${month.month}월`,
       y: count,
@@ -53,8 +63,8 @@ const useGraphData = (
   defaultEndDate: dayjs.Dayjs,
   division: 'statistics' | 'request',
 ) => {
-  const [category, setCategory] = useState(division==='request'?'all':'ALL'); // 카테고리 상태 추가
-  const [state, setState] = useState(division==='request'?'all':'ALL'); // 카테고리 상태 추가
+  const [category, setCategory] = useState(division === 'request' ? 'all' : 'ALL'); // 카테고리 상태 추가
+  const [state, setState] = useState(division === 'request' ? 'all' : 'ALL'); // 카테고리 상태 추가
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(defaultStartDate);
   const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(defaultEndDate);
   const [data, setData] = useState<any[]>([]);
@@ -63,7 +73,13 @@ const useGraphData = (
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const fetchedData = await fetchDataByRange(category, state, startDate || dayjs(), endDate || dayjs(), fetchFunction);
+    const fetchedData = await fetchDataByRange(
+      category,
+      state,
+      startDate || dayjs(),
+      endDate || dayjs(),
+      fetchFunction,
+    );
     setData(fetchedData);
     setProcessedData(processChartData(startDate || dayjs(), endDate || dayjs(), fetchedData, division));
     setLoading(false);
@@ -74,14 +90,14 @@ const useGraphData = (
   }, [category, state, startDate, endDate, division, fetchData]);
 
   //카테고리 변경 핸들러
-  const handleCategoryChange=(category:string)=>{
+  const handleCategoryChange = (category: string) => {
     setCategory(category);
-    setState(division==='request'?'all':'ALL');
-  }
+    setState(division === 'request' ? 'all' : 'ALL');
+  };
   //상태 변경 핸들러
-  const handleStateChange=(state:string)=>{
+  const handleStateChange = (state: string) => {
     setState(state);
-  }
+  };
 
   // 시작일 변경 핸들러
   const handleStartDateChange = (newStartDate: dayjs.Dayjs | null) => {
@@ -94,8 +110,20 @@ const useGraphData = (
   };
 
   // 상태와 핸들러를 반환
-  return { category, state, startDate, endDate, data, processedData, loading, 
-    handleCategoryChange,handleStateChange,handleStartDateChange, handleEndDateChange, division };
+  return {
+    category,
+    state,
+    startDate,
+    endDate,
+    data,
+    processedData,
+    loading,
+    handleCategoryChange,
+    handleStateChange,
+    handleStartDateChange,
+    handleEndDateChange,
+    division,
+  };
 };
 
 export default useGraphData;

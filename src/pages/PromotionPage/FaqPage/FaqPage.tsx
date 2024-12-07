@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import BackgroundYellowCircle from '@/components/PromotionPage/BackgroundYellowCircle/BackgroundYellowCircle';
 import { theme } from '@/styles/theme';
 import { getFaqData } from '@/apis/PromotionPage/faq';
+import { AxiosError } from 'axios';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 interface FaqData {
   id: number;
@@ -23,6 +25,7 @@ const FaqPage = () => {
   const [searchData, setSearchData] = useState<FaqData[]>([]); // 검색된 FAQ 데이터
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set()); // 펼쳐진 FAQ 항목
   const [errorMessage, setErrorMessage] = useState(''); // 에러 메시지 상태 추가
+  const [error, setError] = useState<AxiosError|null>(null);
 
  useEffect(() => {
     const fetchData = async () => {
@@ -36,12 +39,24 @@ const FaqPage = () => {
         }
       } catch (error) {
         console.error(error);
+        setError(error as AxiosError)
         setErrorMessage('전송이 실패했습니다.'); // 실패 시 에러 메시지 설정
         setSearchResult('none'); // 검색 결과가 없을 때 상태 설정
       }
     };
     fetchData();
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const initiate = (data: FaqData[]) => {
     if (data.length === 0) {
@@ -86,6 +101,7 @@ const FaqPage = () => {
   return (
     <BackgroundYellowCircle>
       <Container>
+        {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
         <Header>
           <Title>
             <LineWrapper>
@@ -114,7 +130,7 @@ const FaqPage = () => {
           {searchResult === 'fail' ? (
             <NoResults data-cy="no-results-message">검색 결과가 없습니다.</NoResults>
           ) : searchResult === 'none' ? (
-            <NoResults data-cy="no-results-message">FAQ 데이터가 없습니다.</NoResults>
+            <NoResults data-cy="no-results-message">데이터가 없습니다.</NoResults>
           ) : (
             searchData.map((item, i) => (
               <FaqDetailButton
@@ -282,31 +298,20 @@ const Content = styled.div`
   }
 `;
 
-// const EmptyState = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   min-height: 100vh;
-//   font-family: 'pretendard-bold';
-//   font-size: 2rem;
-//   color: gray;
-//   text-align: center;
-//   padding: 0.75rem;
-//   word-break: keep-all;
-// `;
-
 const NoResults = styled.p`
   color: gray;
   font-family: 'pretendard-bold';
   font-size: 2rem;
   text-align: center;
 
-  @media (max-width: 1366px) and (min-width: 768px) {
-    font-size: 1.1rem;
+  @media ${theme.media.large_tablet} {
+    font-size: 1.4rem;
   }
-
-  @media (max-width: 540px) and (min-width: 375px) {
-    font-size: 1rem;
+  @media ${theme.media.tablet} {
+    font-size: 1.2rem;
+  }
+  @media ${theme.media.mobile} {
+    font-size: 1.1rem;
   }
 `;
 

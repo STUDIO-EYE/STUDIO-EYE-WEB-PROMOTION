@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import styled from 'styled-components';
 import NavBtn from './NavBtn';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const linksData = [
   {
@@ -19,13 +19,21 @@ const linksData = [
 
 function DetailNavigator() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 페이지가 리로드되었을 때, location.pathname에 따라 조건을 설정
+    if (location.pathname === `${PA_ROUTES.RECRUITMENT}/benefit/manage`) {
+      navigate(`${PA_ROUTES.RECRUITMENT}/benefit/manage`);
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <Wrapper>
       <SideBar>
         {linksData.map((link, index) => {
           const isActive =
-          location.pathname === link.path || location.pathname === link.relatedPaths;
+            location.pathname === link.path || location.pathname === link.relatedPaths;
 
           return (
             <NavBtn

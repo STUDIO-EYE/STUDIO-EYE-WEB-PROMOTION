@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
 import groupImage from '@/assets/images/PP/group.png';
 import { theme } from '@/styles/theme';
+import { AxiosError } from 'axios';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 const RecruitmentPage = () => {
   const currentPage = 1;
@@ -14,7 +16,7 @@ const RecruitmentPage = () => {
     data: recruitmentData,
     isLoading: isRecruitmentLoading,
     error: recruitmentError,
-  } = useQuery<IRecruitmentList, Error>(
+  } = useQuery<IRecruitmentList, AxiosError>(
     ['recruitmentList'],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
@@ -24,7 +26,7 @@ const RecruitmentPage = () => {
     data: benefitData,
     isLoading: isBenefitLoading,
     error: benefitError,
-  } = useQuery<IBenefit[], Error>(['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 });
+  } = useQuery<IBenefit[], AxiosError>(['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 });
 
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
@@ -42,16 +44,27 @@ const RecruitmentPage = () => {
     );
   };
 
-  if (isRecruitmentLoading || isBenefitLoading) {
-    return <div>Loading...</div>;
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (recruitmentError !== null || benefitError !== null) {
+      setIsModalOpen(true);
+    }
+  }, [recruitmentError, benefitError]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
-  if (recruitmentError || benefitError) {
-    return <div>Error occurred!</div>;
-  }
+  // if (isRecruitmentLoading || isBenefitLoading) {
+  //   return <div style={{height:'100%'}}>Loading...</div>;
+  // }
+  // if (recruitmentError || benefitError) {
+  //   return <div>Error occurred!</div>;
+  // }
 
   return (
     <Container>
+      {isModalOpen && <ErrorComponent error={recruitmentError || benefitError} onClose={closeModal} />}
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
       <IntroSection data-cy='intro-section'>
         <IntroTitleWrapper>
@@ -516,16 +529,28 @@ const BenefitContent = styled.p`
 const NoRecruitmentMessage = styled.div`
   font-family: ${(props) => props.theme.font.medium};
   color: ${(props) => props.theme.color.black.light};
-  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
   text-align: center;
   margin: 3rem 0;
   line-height: 1.8;
   padding: 1.5rem 2rem;
 
-  @media ${(props) => props.theme.media.mobile} {
-    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  @media ${(props) => props.theme.media.large_tablet} {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    margin: 2.5rem 0;
+    padding: 1.2rem 1.8rem;
+  }
+
+  @media ${(props) => props.theme.media.tablet} {
+    font-size: clamp(1rem, 2vw, 1.4rem);
     margin: 2rem 0;
     padding: 1rem 1.5rem;
+  }
+
+  @media ${(props) => props.theme.media.mobile} {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    margin: 1.5rem 0;
+    padding: 0.8rem 1.2rem;
   }
 `;
 

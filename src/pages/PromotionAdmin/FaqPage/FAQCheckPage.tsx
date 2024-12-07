@@ -51,7 +51,6 @@ export default function FAQCheckPage() {
   );
 }
 
-// Styled components
 const Wrapper = styled.div``;
 const TitleWrapper = styled.div`
   display: flex;
