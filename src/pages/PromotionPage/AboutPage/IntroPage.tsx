@@ -38,10 +38,18 @@ const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
   const missionInView = useInView(missionRef);
 
   const removeParagraphTags = (htmlString: string) => {
-    return htmlString
-      .replace(/<\/?p\s*\/?>/gi, '') // <p> 태그를 제거
-      .replace(/<\/?br\s*\/?>/gi, ' '); // <br> 태그를 공백으로 대체
+    if (!htmlString || htmlString.trim() === '') {
+      return INTRO_DATA.COMPANY_INTRO;
+    }
+
+    const cleanedString = htmlString
+      .replace(/<\/?p\s*\/?>/gi, '')
+      .replace(/<\/?br\s*\/?>/gi, ' ')
+      .trim();
+
+    return cleanedString === '' ? INTRO_DATA.COMPANY_INTRO : cleanedString;
   };
+
 
   return (
     <Container data-cy='intro-container'>
@@ -86,11 +94,9 @@ const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
           >
             <BackgroundText data-cy='about-title'>ABOUT</BackgroundText>
             <AboutText
-              data-cy='about-content'
+              data-cy="about-content"
               dangerouslySetInnerHTML={{
-                __html: isMobile
-                  ? removeParagraphTags(companyIntroData || INTRO_DATA.COMPANY_INTRO)
-                  : companyIntroData || INTRO_DATA.COMPANY_INTRO,
+                __html: removeParagraphTags(companyIntroData || INTRO_DATA.COMPANY_INTRO),
               }}
             />
           </motion.div>
@@ -163,7 +169,7 @@ const InitTitleWrapper = styled.div`
     gap: 0.5rem;
   }
 `;
-const InitTitle = styled(motion.div)<IFontStyleProps>`
+const InitTitle = styled(motion.div) <IFontStyleProps>`
   font-family: ${theme.font.bold};
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};
