@@ -10,6 +10,7 @@ import { getCompanyBasicData } from '../../../apis/PromotionAdmin/dataEdit';
 import { emailCheck, phoneFaxCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 import { theme } from '@/styles/theme';
 import ErrorComponent from '@/components/Error/ErrorComponent';
+import { MSG } from '@/constants/messages';
 
 interface ICircleProps {
   filled: boolean;
@@ -37,7 +38,7 @@ type ICompanyBasic = {
 
 const ContactUsPage = () => {
   const navigator = useNavigate();
-  const [error, setError] = useState<AxiosError|null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
   const [requestStep, setRequestStep] = useState(0);
   const [formData, setFormData] = useState<IFormData>({
     category: '',
@@ -80,7 +81,7 @@ const ContactUsPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
-    if (error!==null) {
+    if (error !== null) {
       setIsModalOpen(true);
     }
   }, [error]);
@@ -328,7 +329,7 @@ const ContactUsPage = () => {
     const source = axios.CancelToken.source();
 
     const timeoutId = setTimeout(() => {
-      source.cancel('요청이 10초 안에 완료되지 않아 취소되었습니다. 다시 시도해주세요.');
+      source.cancel('요청 시간이 오래 소요되어 취소되었습니다. 다시 시도해주세요.');
     }, 10000);
 
     axios
@@ -354,11 +355,11 @@ const ContactUsPage = () => {
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
-          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n문제가 지속 될 경우 문의해주시기 바랍니다.');
+          alert(MSG.ERROR_MSG.SERVER_ERROR);
           console.error('요청 취소: ', error.message);
         } else {
           clearTimeout(timeoutId);
-          alert('서버 또는 인터넷 연결 문제로 문의 등록에 실패하였습니다.\n다시 한번 시도하여 주시기 바랍니다.');
+          alert(MSG.ERROR_MSG.SERVER_ERROR);
           console.error('에러 발생', error);
         }
       })
@@ -384,9 +385,9 @@ const ContactUsPage = () => {
   };
 
   return (
-    <Container ref={containerRef} data-cy="contact-page">
-      {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
-      <IntroSection data-cy="intro-section">
+    <Container ref={containerRef} data-cy='contact-page'>
+      {isModalOpen && <ErrorComponent error={error} onClose={closeModal} />}
+      <IntroSection data-cy='intro-section'>
         <IntroWrapper>
           <IntroTitleWrapper>
             <IntroTitleCONTACT data-cy='intro-title-contact'>CONTACT</IntroTitleCONTACT>
