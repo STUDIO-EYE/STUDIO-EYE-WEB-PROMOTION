@@ -23,3 +23,17 @@ export const confirmAndCheckCompletion = (confirmMessage: string, alertMessage: 
     return true; // 알림 확인
   });
 };
+
+// HTML 태그 제거 및 HTML 엔티티 디코딩 함수
+export const normalizeHtml = (html: string) => {
+  // HTML 엔티티 디코딩
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = html;
+  const decodedHtml = textarea.value;
+
+  // 태그 제거 및 텍스트 정리
+  return decodedHtml
+    .replace(/<[^>]*>/g, '') // HTML 태그 제거
+    .replace(/\s+/g, ' ') // 공백 정리
+    .trim(); // 앞뒤 공백 제거
+};
