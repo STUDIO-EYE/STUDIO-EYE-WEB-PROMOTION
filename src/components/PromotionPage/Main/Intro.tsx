@@ -6,8 +6,6 @@ import { getCompanyData } from '../../../apis/PromotionAdmin/dataEdit';
 import { Link } from 'react-router-dom';
 import { theme } from '@/styles/theme';
 import { INTRO_DATA } from '@/constants/introdutionConstants';
-import { useQuery } from 'react-query';
-import { ICompanyData } from '@/types/PromotionAdmin/dataEdit';
 
 const Intro = () => {
   const introRef = useRef(null);
@@ -20,21 +18,25 @@ const Intro = () => {
 
   const [companyMainOverview, setCompanyMainOverview] = useState<string>('');
   const [companyCommitment, setCompanyCommitment] = useState<string>('');
-
-  const { data, isLoading, error } = useQuery<ICompanyData, Error>(
-    ['company', 'id'],
-    getCompanyData
-  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (data) {
-      setCompanyMainOverview(data.mainOverview);
-      setCompanyCommitment(data.commitment);
-    }
-  }, [data]);
+    const fetchData = async () => {
+      try {
+        const data = await getCompanyData();
+        setCompanyMainOverview(data.mainOverview);
+        setCompanyCommitment(data.commitment);
+      } catch (error) {
+        setErrorMessage('Intro Error: ' + (error instanceof Error ? error.message : '에러가 발생했습니다. 관리자에게 문의하세요.'));
+      }
+    };
 
-  if (isLoading) return <>is Loading...</>;
-  if (error) return <>Intro Error: {error.message}</>;
+    fetchData();
+  }, []);
+
+  if (errorMessage) {
+    return <div>{errorMessage}</div>;
+  }
 
   return (
     <Container data-cy="intro-section">
@@ -74,7 +76,6 @@ const Intro = () => {
 };
 
 export default Intro;
-
 
 const Container = styled.div`
   width: 100%;
