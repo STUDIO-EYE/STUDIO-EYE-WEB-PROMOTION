@@ -12,14 +12,14 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
   const activeIndexRef = useRef(0);
 
   useEffect(() => {
-    if (!artworks || artworks.length === 0) return;
+    if (!artworks || artworks.length <= 1) return;
 
     const interval = setInterval(() => {
       setTransitioning(true);
 
       activeIndexRef.current = (activeIndexRef.current + 1) % artworks.length;
 
-      // 0.1초 후 activeIndex 교체 -> 바꿀 준비 완
+      // 0.2초 후 activeIndex 교체 -> 바꿀 준비 완
       setTimeout(() => {
         setActiveIndex(activeIndexRef.current);
         setTransitioning(false);
@@ -31,10 +31,32 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
 
   if (!artworks || artworks.length === 0) {
     return <>표시할 아트워크가 없습니다.</>;
+  } // 수정하기
+
+  if (artworks.length === 1) {
+    return (
+      <div data-cy="artworkslider-section" style={{ height: '100vh' }}>
+        <ArtworkList
+          key={0}
+          data={{
+            backgroundImg: artworks[0].mainImg || '',
+            title: artworks[0].name || '',
+            client: artworks[0].client || '',
+            overview: artworks[0].overView,
+            link: artworks[0].link,
+          }}
+          count={1}
+          scrollToSection={() => {}}
+          elementHeight={window.innerHeight}
+          index={0}
+        />
+      </div>
+    );
   }
 
   return (
     <div
+      data-cy="artworkslider-section"
       style={{
         position: 'relative',
         overflow: 'hidden',
@@ -99,3 +121,4 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
 };
 
 export default ArtworkSlider;
+

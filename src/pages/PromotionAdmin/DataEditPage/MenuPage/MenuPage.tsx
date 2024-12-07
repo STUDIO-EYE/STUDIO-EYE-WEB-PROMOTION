@@ -20,11 +20,11 @@ interface IMenuData {
 
 function MenuPage() {
   const [menuList, setMenuList] = useState<IMenuData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 관리
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchMenuData = async () => {
     try {
-      setIsLoading(true); // 데이터를 가져오는 동안 로딩 시작
+      setIsLoading(true);
       const data = await getAllMenuData();
 
       if (data && Array.isArray(data.data) && data.data.length > 0) {

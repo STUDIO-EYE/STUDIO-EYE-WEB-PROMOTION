@@ -9,6 +9,7 @@ import WaitingRequestsList from '@/components/PromotionAdmin/Home/RequestSummary
 import { ContentBox } from '@/components/PromotionAdmin/Request/Components';
 import Pagination from '@/components/Pagination/Pagination';
 import { ReactComponent as DeleteIcon } from '@/assets/images/PA/minusIcon.svg';
+import { MSG } from '@/constants/messages';
 
 function RequestList() {
   const { data, isLoading, refetch } = useQuery<IRequest[]>('requests', getRequestsData, { refetchOnWindowFocus: false });
@@ -47,11 +48,11 @@ function RequestList() {
   const slicedRequests = filteredRequests?.slice(indexOfFirst, indexOfLast) || [];
 
   const handleDeleteRequest = async (id: number) => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
+    if (window.confirm(MSG.CONFIRM_MSG.DELETE)) {
       try {
         await deleteRequest(id);
-        alert('삭제되었습니다.');
-        refetch(); // 삭제 후 데이터 새로 불러오기
+        alert(MSG.ALERT_MSG.DELETE);
+        refetch();
       } catch (error) {
         alert('삭제에 실패했습니다. 다시 시도해주세요.');
       }

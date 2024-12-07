@@ -16,6 +16,7 @@ const BUTTON_MSG = {
 
 const CONFIRM_MSG = {
   SAVE: '저장하시겠습니까?',
+  EDIT: '수정하시겠습니까?',
   DELETE: '삭제하시겠습니까?',
   POST: '등록하시겠습니까?',
   CANCLE: '취소하시겠습니까?',
@@ -31,8 +32,10 @@ const CONFIRM_MSG = {
 
 const ALERT_MSG = {
   SAVE: '저장되었습니다.',
+  EDIT: '수정되었습니다.',
   DELETE: '삭제되었습니다.',
   POST: '등록되었습니다.',
+  COMPLETE: '완료되었습니다.',
 };
 
 const PLACEHOLDER_MSG = {

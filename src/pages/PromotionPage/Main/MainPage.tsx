@@ -116,7 +116,7 @@ const MainPage = () => {
             >
               {isLoading ? (
                 <div>데이터 로딩 중...</div>
-              ) : height <= 780 ? (
+              ) : height <= 915 ? (
                 <ArtworkSlider
                   artworks={filteredMainData.map((item) => ({
                     id: item.id,

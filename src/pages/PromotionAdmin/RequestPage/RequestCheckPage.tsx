@@ -13,11 +13,11 @@ import Pagination from '@/components/Pagination/Pagination';
 import UserInfo from '@/components/PromotionAdmin/Request/UserInfo';
 import EmailListComponent from '@/components/PromotionAdmin/Request/EmailListComponent';
 import Button from '@/components/PromotionAdmin/DataEdit/StyleComponents/Button';
+import { MSG } from '@/constants/messages';
 
 const MAX_TEXT_LENGTH = 255;
 
 const RequestDetailPage = () => {
-  // pagination 구현에 사용되는 변수
   const { data, isLoading } = useQuery<IRequestData>(['request', 'id'], getRequestsData);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -33,17 +33,14 @@ const RequestDetailPage = () => {
   const fetchData = async () => {
     try {
       const newData = await getRequestsData();
-      setData(newData); // 데이터 상태 업데이트
+      setData(newData);
     } catch (error) {
-      console.error('Error fetching data:', error);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [currentPage, postsPerPage]);
-
-  //
 
   const navigator = useNavigate();
   const requestDetailMatch = useMatch(`${PA_ROUTES.REQUEST}/:requestId`);
@@ -152,7 +149,7 @@ const RequestDetailPage = () => {
         },
       ]);
 
-      alert('메일 발송이 완료되었습니다.');
+      alert('메일 발송이 ' + MSG.ALERT_MSG.COMPLETE);
       setReplyState(state);
       setTextValue('');
       setEditorState(EditorState.createEmpty());

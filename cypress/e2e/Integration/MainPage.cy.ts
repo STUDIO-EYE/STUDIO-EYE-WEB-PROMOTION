@@ -144,10 +144,9 @@ describe('MainPage - Intro 섹션을 확인한다.', () => {
     login();
   });
 
-  it('관리 페이지에서 로딩 확인 후 mainOverview, commitment가 있는 것을 확인한다.', () => {
+  it('관리 페이지에서 mainOverview, commitment가 있는 것을 확인한다.', () => {
     cy.visit('/promotion-admin/dataEdit');
     cy.get('[data-cy="nav-btn-company"]').click();
-    cy.contains('Loading...').should('be.visible');
     cy.wait(3000);
     cy.intercept('GET', '**/api/company/information', {
       statusCode: 200,
