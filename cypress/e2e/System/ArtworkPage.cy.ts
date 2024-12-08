@@ -121,8 +121,9 @@ describe('Artwork-아트워크를 만들고, 만든 아트워크를 확인한다
     // data 객체의 모든 키-값 쌍을 순회하며 각 값이 페이지에 존재하는지 확인
     cy.get('[data-cy="PP_artwork_detail"]').within(()=>{
       Object.entries(testData).forEach(([key, value]) => {
-        cy.contains(String(value)).should('exist');
-      });
+        if(value==='Top'||value==='Main'||value==='Others') cy.contains(String(value)==='Top'?'대표':String(value)==='Main'?'메인':'기본').should('exist')
+        else cy.contains(String(value)).should('exist')
+      })
     })
   });
 
@@ -184,13 +185,13 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
         cy.get('[data-cy="create_detail_image"]').selectFile('cypress/fixtures/Artwork/킹더랜드-detail1.png', { force: true })
         cy.get('[data-cy="create_detail_image"]').selectFile('cypress/fixtures/Artwork/킹더랜드-detail2.png', { force: true })
         cy.scrollTo('bottom')
-        cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'disabled')
-        cy.get('[data-cy="modify_artwork_finish"]').invoke('removeAttr', 'disabled').trigger('mouseover')// disable 속성을 일시적으로 제거
-        cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'title').should('equal', '모든 항목을 다 입력해주세요!')// title 메시지 확인
-        cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'disabled', 'disabled') // 테스트 후 disabled 속성 원래 상태로 복구
-        cy.wait(1000)
-        cy.reload()
       })
+      cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'disabled')
+      cy.get('[data-cy="modify_artwork_finish"]').invoke('removeAttr', 'disabled').trigger('mouseover')// disable 속성을 일시적으로 제거
+      cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'title').should('equal', '모든 항목을 다 입력해주세요!')// title 메시지 확인
+      cy.get('[data-cy="modify_artwork_finish"]').invoke('attr', 'disabled', 'disabled') // 테스트 후 disabled 속성 원래 상태로 복구
+      cy.wait(1000)
+      cy.reload()
     })
   });
 
@@ -229,9 +230,9 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
       cy.get('[data-cy="create_main_image"]').selectFile('cypress/fixtures/Artwork/너결싫-main.jpeg', { force: true })
       cy.get('[data-cy="create_responsiveMain_image"]').selectFile('cypress/fixtures/Artwork/너결싫-main.jpeg',{force:true})
       cy.get('[data-cy="create_detail_image"]').selectFile('cypress/fixtures/Artwork/너결싫-detail1.png', { force: true })
-      cy.get('[data-cy="modify_artwork_finish"]').click()
-      cy.wait(1000)
     })
+    cy.get('[data-cy="modify_artwork_finish"]').click()
+    cy.wait(1000);
   });
 
   it('관리 페이지에서 수정한 아트워크가 정상적으로 나타나는지 확인한다.',()=>{
@@ -241,7 +242,8 @@ describe('Artwork-아트워크를 수정하고, 수정한 아트워크가 반영
     // data 객체의 모든 키-값 쌍을 순회하며 각 값이 페이지에 존재하는지 확인
     cy.get('[data-cy="PP_artwork_detail"]').within(()=>{
       Object.entries(testData).forEach(([key, value]) => {
-        cy.contains(String(value)).should('exist')
+        if(value==='Top'||value==='Main'||value==='Others') cy.contains(String(value)==='Top'?'대표':String(value)==='Main'?'메인':'기본').should('exist')
+        else cy.contains(String(value)).should('exist')
       });
     })
   });
