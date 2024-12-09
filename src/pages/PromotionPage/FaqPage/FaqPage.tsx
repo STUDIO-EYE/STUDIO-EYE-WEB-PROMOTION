@@ -124,13 +124,20 @@ const FaqPage = () => {
               onChange={handleTextAreaDataChange}
             />
           </InputWrapper>
-          {errorMessage && (
-            <NoResults data-cy="error-message">{errorMessage}</NoResults> // 에러 메시지가 있을 경우 표시
+                  {errorMessage && (
+            <JobBoxWrapper>
+              <NoResults data-cy="error-message">{errorMessage}</NoResults>
+            </JobBoxWrapper>
           )}
+          
           {searchResult === 'fail' ? (
-            <NoResults data-cy="no-results-message">검색 결과가 없습니다.</NoResults>
+            <JobBoxWrapper>
+              <NoResults data-cy="no-results-message">검색 결과가 없습니다.</NoResults>
+            </JobBoxWrapper>
           ) : searchResult === 'none' ? (
-            <NoResults data-cy="no-results-message">데이터가 없습니다.</NoResults>
+            <JobBoxWrapper>
+              <NoResults data-cy="no-results-message">데이터가 없습니다.</NoResults>
+            </JobBoxWrapper>
           ) : (
             searchData.map((item, i) => (
               <FaqDetailButton
@@ -297,12 +304,26 @@ const Content = styled.div`
     padding-bottom: 3rem; 
   }
 `;
+const JobBoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  padding: 1.8rem 1rem;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  opacity: 0.5;
+`;
+
 
 const NoResults = styled.p`
-  color: gray;
-  font-family: 'pretendard-bold';
-  font-size: 2rem;
-  text-align: center;
+  color: ${theme.color.gray};
+  font-family: 'Pretendard-Bold';
+  font-size: 1.5rem;
+  
 
   @media ${theme.media.large_tablet} {
     font-size: 1.4rem;
@@ -314,7 +335,6 @@ const NoResults = styled.p`
     font-size: 1.1rem;
   }
 `;
-
 
 const InputWrapper = styled.div`
   display: flex;
