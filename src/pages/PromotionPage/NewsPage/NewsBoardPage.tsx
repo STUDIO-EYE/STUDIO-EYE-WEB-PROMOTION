@@ -8,6 +8,8 @@ import { theme } from "@/styles/theme";
 import { AxiosError } from "axios";
 import ErrorComponent from "@/components/Error/ErrorComponent";
 import { useQuery } from "react-query";
+import { useLocation, useNavigate } from "react-router-dom";
+import ScrollToTop from "@/hooks/useScrollToTop";
 
 interface INewsCardProps {
   id: number;
@@ -20,8 +22,21 @@ interface INewsCardProps {
 const NewsBoardPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(6);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page');
 
-  const { data: newsData, isLoading, error } = useQuery<INewsCardProps[], AxiosError>(
+    if (!page) {
+      navigate('?page=1', { replace: true });
+    } else {
+      setCurrentPage(parseInt(page, 10));
+    }
+  }, [location, navigate]);
+
+  const { data: newsData } = useQuery<INewsCardProps[], Error>(
     'newsData',
     async () => {
       const response = await getAllNewsData();
@@ -60,46 +75,21 @@ const NewsBoardPage: React.FC = () => {
   return (
     <Container>
       <IntroSection />
-      {isLoading ? (
-        <><LoadingModal>
-          <LoadingIcon />
-        </LoadingModal><EmptyState>로딩 중...</EmptyState></>
-      ):error ? (
-        isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>
-      ) : !newsData? (
-        <EmptyState>데이터가 없습니다.</EmptyState>
-      ) : (
-        <>
-          <NewsSection
-            currentNewsData={currentNewsData}
-            onNewsClick={(url) => window.open(url)}
-          />
-          <NewsPagination
-            postsPerPage={postsPerPage}
-            totalPosts={newsData?.length || 0}
-            paginate={paginate}
-            data-cy="news-pagination"
-          />
-        </>
-      )}
+      <NewsSection
+        currentNewsData={currentNewsData}
+        onNewsClick={(url) => window.open(url)}
+      />
+      <NewsPagination
+        postsPerPage={postsPerPage}
+        totalPosts={newsData?.length || 0}
+        paginate={paginate}
+        data-cy="news-pagination"
+      />
     </Container>
   );
 };
 
 export default NewsBoardPage;
-
-const EmptyState = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: 'pretendard-bold';
-  font-size: 2rem;
-  color: gray;
-  text-align: center;
-  padding: 0.75rem;
-  word-break: keep-all;
-`;
 
 const Container = styled.div`
   overflow-x: hidden;
@@ -117,37 +107,5 @@ const Container = styled.div`
     width:95%;
     padding: 0;
     margin: auto;
-  }
-`;
-
-const LoadingModal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.036);
-  backdrop-filter: blur(3px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-const LoadingIcon = styled.div`
-  border: 8px solid rgba(255, 255, 255, 0.3);
-  border-top: 8px solid ${theme.color.white.bold};
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 `;

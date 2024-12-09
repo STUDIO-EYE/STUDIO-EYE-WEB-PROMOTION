@@ -16,7 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs/AdapterDayjs';
 const NewsEditPage = () => {
   const { id } = useParams();
   const [errorMessage, setErrorMessage] = useState(''); //데이터 업데이트 할 때
-  const news=useOutletContext<{news:INEWS,setIsEditing:(React.Dispatch<React.SetStateAction<boolean>>)}>();
+  const news = useOutletContext<{ news: INEWS, setIsEditing: (React.Dispatch<React.SetStateAction<boolean>>) }>();
   const setIsEditing = useSetRecoilState(dataUpdateState);
 
   const navigator = useNavigate();
@@ -24,8 +24,8 @@ const NewsEditPage = () => {
   const currentPath = location.pathname;
   const listPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
 
-  const {register,getValues,setValue,watch,
-  }= useForm<INEWS>({
+  const { register, getValues, setValue, watch,
+  } = useForm<INEWS>({
     defaultValues: {
       title: news.news.title,
       source: news.news.source,
@@ -44,8 +44,8 @@ const NewsEditPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     setIsEditing(true);
     const { name, value } = e.target;
-    if (/^\s|[~!@#$%^&*(),.?":{}|<>]/.test(value.charAt(0))) {return;}
-    setPutData((prevData) => ({...prevData,[name]: value,}));
+    if (/^\s|[~!@#$%^&*(),.?":{}|<>]/.test(value.charAt(0))) { return; }
+    setPutData((prevData) => ({ ...prevData, [name]: value, }));
   };
   const visibility = watch('visibility');
   const handleChangeVisibility = (value: boolean) => {
@@ -59,15 +59,15 @@ const NewsEditPage = () => {
   //   return `${year}-${month}-${day}`;
   // };
 
-  const handleCancelWriting=()=>{
-    if(window.confirm(MSG.CONFIRM_MSG.CANCLE)){
+  const handleCancelWriting = () => {
+    if (window.confirm(MSG.CONFIRM_MSG.CANCLE)) {
       news.setIsEditing(false)
       setIsEditing(false)
       navigator(listPath);
     }
   }
 
-  const handlePut=async()=>{
+  const handlePut = async () => {
     // const formData = new FormData();
     const requestData = {
       id: Number(id),
@@ -79,17 +79,17 @@ const NewsEditPage = () => {
     };
     // formData.append('dto', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
 
-    if(window.confirm(MSG.CONFIRM_MSG.SAVE)){
-      try{
-        const response=await putNews(requestData)
+    if (window.confirm(MSG.CONFIRM_MSG.SAVE)) {
+      try {
+        const response = await putNews(requestData)
         // if (response.code === 400 && response.data === null) { //에러메시지 있을 때
-          alert(MSG.ALERT_MSG.SAVE)
-          news.setIsEditing(false)
-          setIsEditing(false)
-          navigator(listPath)
-          return;
+        alert(MSG.ALERT_MSG.SAVE)
+        news.setIsEditing(false)
+        setIsEditing(false)
+        navigator(listPath)
+        return;
         // }
-      }catch (error: any) {
+      } catch (error: any) {
         alert(MSG.CONFIRM_MSG.FAILED)
       }
     }
@@ -98,38 +98,38 @@ const NewsEditPage = () => {
   //----------------------------------------
   return (
     <Container>
-      <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',marginBottom:5}}>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
         <Description>제목</Description>
-        <div style={{display:'flex',flexDirection:'row',marginTop:'auto',marginBottom:'auto'}}>
-            <SendButton onClick={handlePut} data-cy="news-submit-button">완료</SendButton>
-            <SendButton onClick={handleCancelWriting} data-cy="news-cancel-button">취소</SendButton>
+        <div style={{ display: 'flex', flexDirection: 'row', marginTop: 'auto', marginBottom: 'auto' }}>
+          <SendButton onClick={handlePut} data-cy="news-submit-button">완료</SendButton>
+          <SendButton onClick={handleCancelWriting} data-cy="news-cancel-button">취소</SendButton>
         </div>
       </div>
       <InputBlock
-            {...register('title')}
-            name='title'
-            value={putData.title}
-            onChange={handleChange}
-            placeholder='News 제목'
-            data-cy='news-title-input'
-            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold",marginRight:10}}/>
-      
+        {...register('title')}
+        name='title'
+        value={putData.title}
+        onChange={handleChange}
+        placeholder='News 제목'
+        data-cy='news-title-input'
+        style={{ borderRadius: "5px", fontFamily: "pretendard-semiBold", marginRight: 10 }} />
+
       <div>
         <Description>출처/작성자</Description>
         <InputBlock
-            {...register('source')}
-            name='source'
-            value={putData.source}
-            onChange={handleChange}
-            placeholder='출처/작성자'
-            data-cy='news-source-input'
-            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
+          {...register('source')}
+          name='source'
+          value={putData.source}
+          onChange={handleChange}
+          placeholder='출처/작성자'
+          data-cy='news-source-input'
+          style={{ borderRadius: "5px", fontFamily: "pretendard-semiBold" }} />
       </div>
-      <div style={{display:'flex',flexDirection:'row'}}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div>
           <Description>원문 날짜</Description>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
+            <DatePicker
               {...register('pubDate')}
               format='YYYY-MM-DD'
               value={dayjs(putData.pubDate)}
@@ -143,12 +143,12 @@ const NewsEditPage = () => {
                 textField: {
                   sx: {
                     backgroundColor: '#ffffff',
-                    borderRadius:'5px',
-                    fontFamily:'pretendard',
+                    borderRadius: '5px',
+                    fontFamily: 'pretendard',
                     fontSize: '14px',
                     margin: 'auto 0 auto 5px',
                     boxShadow: '1px 1px 4px 0.3px #c6c6c6',
-                    '.MuiInputBase-input':{
+                    '.MuiInputBase-input': {
                       padding: '10px',
                     },
                     '.MuiOutlinedInput-root': {
@@ -169,38 +169,38 @@ const NewsEditPage = () => {
             />
           </LocalizationProvider>
         </div>
-        <div style={{margin:'auto'}}>
+        <div style={{ margin: 'auto' }}>
           <Description>공개 여부</Description>
           <VisibilityWrapper>
-                <CheckBox 
-                  onClick={() => handleChangeVisibility(true)} 
-                  className='public' 
-                  selected={visibility}
-                  data-cy="news-visibility-public"
-                >
-                  공개
-                </CheckBox>
-                <CheckBox 
-                  onClick={() => handleChangeVisibility(false)} 
-                  className='private' 
-                  selected={!visibility}
-                  data-cy="news-visibility-private"
-                >
-                  비공개
-                </CheckBox>
+            <CheckBox
+              onClick={() => handleChangeVisibility(true)}
+              className='public'
+              selected={visibility}
+              data-cy="news-visibility-public"
+            >
+              공개
+            </CheckBox>
+            <CheckBox
+              onClick={() => handleChangeVisibility(false)}
+              className='private'
+              selected={!visibility}
+              data-cy="news-visibility-private"
+            >
+              비공개
+            </CheckBox>
           </VisibilityWrapper>
         </div>
       </div>
       <div>
         <Description>링크</Description>
         <InputBlock
-            {...register('url')}
-            name='url'
-            value={putData.url}
-            onChange={handleChange}
-            placeholder='기사 링크'
-            data-cy='news-link-input'
-            style={{borderRadius:"5px",fontFamily:"pretendard-semiBold"}}/>
+          {...register('url')}
+          name='url'
+          value={putData.url}
+          onChange={handleChange}
+          placeholder='기사 링크'
+          data-cy='news-link-input'
+          style={{ borderRadius: "5px", fontFamily: "pretendard-semiBold" }} />
       </div>
     </Container>
   );
@@ -208,7 +208,7 @@ const NewsEditPage = () => {
 
 export default NewsEditPage;
 
-const Container=styled.div`
+const Container = styled.div`
 min-width: 300px;
 width: 100%;
 
@@ -220,10 +220,9 @@ border-radius: 5px;
 overflow:hidden;
 // white-space:nowrap;
 text-overflow: ellipsis;
-}
-`
+`;
 
-const Title=styled.div`
+const Title = styled.div`
 padding: 5px;
 font-size: 1em;
 white-space: nowrap;
@@ -249,7 +248,7 @@ const SendButton = styled.button`
   }
 `;
 
-const InputBlock=styled.input`
+const InputBlock = styled.input`
 outline: none;
 font-family: pretendard;
 font-size: 14px;

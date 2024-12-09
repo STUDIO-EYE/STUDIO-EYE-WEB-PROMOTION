@@ -4,25 +4,25 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import {ReactComponent as DOTS} from '@/assets/images/PA/3dot_Column.svg';
+import { ReactComponent as DOTS } from '@/assets/images/PA/3dot_Column.svg';
 import { MSG } from '@/constants/messages';
 
 const NewsViewPage = () => {
   const { id } = useParams();
-  const { data, isLoading, error, refetch } = useQuery<INEWS, Error>(['newsDetail',id], ()=>getNewsDetail(Number(id)));
-  const news=data;
+  const { data, isLoading, error, refetch } = useQuery<INEWS, Error>(['newsDetail', id], () => getNewsDetail(Number(id)));
+  const news = data;
 
   const navigator = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
   const listPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
-  const [isEditing,setIsEditing]=useState(false)
-  const handleEditNews=()=>{
+  const [isEditing, setIsEditing] = useState(false)
+  const handleEditNews = () => {
     setIsEditing(true)
     setMore(false)
     navigator(`edit`)
   }
-  const sharedNews={news:news,setIsEditing}
+  const sharedNews = { news: news, setIsEditing }
 
   // const formatDate = (date: Date): string => {
   //   const year = date.getFullYear();
@@ -31,25 +31,25 @@ const NewsViewPage = () => {
   //   return `${year}-${month}-${day}`;
   // };
 
-  const handleDelete=async ()=>{
-    if(window.confirm(MSG.CONFIRM_MSG.DELETE)){
-      try{
-        const response=await deleteNews(Number(id))
+  const handleDelete = async () => {
+    if (window.confirm(MSG.CONFIRM_MSG.DELETE)) {
+      try {
+        const response = await deleteNews(Number(id))
         // if (response.code === 400 && response.data === null) { //에러메시지 있을 때
-          alert(MSG.ALERT_MSG.DELETE)
-          navigator(listPath)
-          return;
+        alert(MSG.ALERT_MSG.DELETE)
+        navigator(listPath)
+        return;
         // }
-      }catch (error: any) {
+      } catch (error: any) {
         alert(MSG.CONFIRM_MSG.FAILED)
       }
-    }else{
+    } else {
       setMore(false)
     }
   }
 
   //more 버튼 관련----------------------------------------
-  const [more,setMore]=useState(false);
+  const [more, setMore] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const buttonRef = useRef<SVGSVGElement>(null); // 버튼의 위치를 가져오기 위한 ref
   const menuRef = useRef<HTMLUListElement>(null); // 메뉴의 ref 타입
@@ -57,8 +57,8 @@ const NewsViewPage = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setMenuPosition({
-        top: rect.bottom + window.scrollY+5, // 버튼의 하단 위치
-        left: rect.right + window.scrollX-90,  // 버튼의 왼쪽 위치
+        top: rect.bottom + window.scrollY + 5, // 버튼의 하단 위치
+        left: rect.right + window.scrollX - 90,  // 버튼의 왼쪽 위치
       });
     }
     setMore((prev) => !prev);
@@ -80,7 +80,7 @@ const NewsViewPage = () => {
     };
   }, []);
 
-//링크 유효성 검사----------------------------------------
+  //링크 유효성 검사----------------------------------------
   function isValidUrl(url: string) {
     try {
       new URL(url);
@@ -142,7 +142,7 @@ const NewsViewPage = () => {
 
 export default NewsViewPage;
 
-const Container=styled.div`
+const Container = styled.div`
 margin-left: 10px;
 width: 500px;
 height: fit-content;
@@ -156,10 +156,9 @@ border-radius: 5px;
 overflow:hidden;
 // white-space:nowrap;
 text-overflow: ellipsis;
-}
-`
+`;
 
-const Title=styled.div`
+const Title = styled.div`
 padding: 0 5px 5px 5px;
 font-size: 1.5em;
 font-family: 'pretendard-bold';
@@ -175,21 +174,21 @@ const Description = styled.div`
   margin-top:10px;
 `;
 
-const Day=styled.div`
+const Day = styled.div`
 padding: 5px;
 font-size: 1.1em;
 font-family: 'pretendard-semibold';
 `
-const Visibility=styled.div<{visibility: boolean|null}>`
+const Visibility = styled.div<{ visibility: boolean | null }>`
 border-radius: 5px;
-background-color: ${({visibility})=>visibility===true?'#ffaa007d':'#33333321'};
+background-color: ${({ visibility }) => visibility === true ? '#ffaa007d' : '#33333321'};
 width: fit-content;
 padding: 4px;
 font-family: pretendard-medium;
 font-size: 1.1em;
 margin: 5px;
 `
-const Content=styled.a`
+const Content = styled.a`
 padding: 5px;
 font-family: 'pretendard';
 color: #2c2ff2;
@@ -198,7 +197,7 @@ text-decoration:underline;
   cursor: pointer;
 }
 `
-const More=styled(DOTS)`
+const More = styled(DOTS)`
 width:18px;
 height:18px;
 margin-top:auto;
@@ -206,7 +205,7 @@ margin-bottom:auto;
 margin-right:10px;
 cursor: pointer;
 `
-const Menu=styled.ul<{ top: number; left: number }>`
+const Menu = styled.ul<{ top: number; left: number }>`
 position: absolute;
 top: ${({ top }) => top}px;
 left: ${({ left }) => left}px;
