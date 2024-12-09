@@ -107,6 +107,7 @@ const Artwork = () => {
                     overView={artwork.overView}
                     projectType={artwork.projectType}
                     projectImages={artwork.projectImages}
+                    responsiveImg={artwork.responsiveImg}
                     sequence={artwork.sequence}
                     mainSequence={artwork.mainSequence}
                   />
