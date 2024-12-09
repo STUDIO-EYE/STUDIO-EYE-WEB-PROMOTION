@@ -6,7 +6,7 @@ import { getNews } from '@/apis/PromotionAdmin/news';
 import Pagination from '@/components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
 
-const NewsList = ({handler}:{handler:(id:number)=>void}) => {
+const NewsList = ({ handler }: { handler: (id: number) => void }) => {
   const { data, isLoading, error, refetch } = useQuery<INEWS[], Error>('newsList', getNews);
   // const newsData: INEWS[]=data?data:[];
 
@@ -19,29 +19,29 @@ const NewsList = ({handler}:{handler:(id:number)=>void}) => {
     setCurrentPage(pageNumber - 1); // 페이지 인덱스를 0부터 시작하게 조정
     navigate(`?page=${pageNumber}`); // URL 쿼리 매개변수 업데이트
   };
-  const currentArtworks = data?data.slice(indexOfFirstPost, indexOfLastPost):[];
+  const currentArtworks = data ? data.slice(indexOfFirstPost, indexOfLastPost) : [];
 
-  const handleClick=(id:number)=>{
+  const handleClick = (id: number) => {
     handler(id)
   };
 
   return (
-    <div style={{flexDirection:'column'}}>
-      {isLoading?<h1>Loading...</h1>:
-        data?
-        <>
-          {currentArtworks.map((i)=>(
-            <div
-            key={i.id}
-            style={{marginBottom:"5px"}}
-            onClick={()=>handleClick(i.id)}
-            data-cy={`news-item-${i.id}`} >
-            <NewsItem data={i}/>
-            </div>
-          ))}
-          <Pagination postsPerPage={postsPerPage} totalPosts={data.length} paginate={paginate} />
-        </>
-        :<>😊 뉴스 데이터가 존재하지 않습니다.</>}
+    <div style={{ flexDirection: 'column' }}>
+      {isLoading ? <h1>Loading...</h1> :
+        data ?
+          <>
+            {currentArtworks.map((i) => (
+              <div
+                key={i.id}
+                style={{ marginBottom: "5px" }}
+                onClick={() => handleClick(i.id)}
+                data-cy={`news-item-${i.id}`} >
+                <NewsItem data={i} />
+              </div>
+            ))}
+            <Pagination postsPerPage={postsPerPage} totalPosts={data.length} paginate={paginate} />
+          </>
+          : <>😊 뉴스 데이터가 존재하지 않습니다.</>}
     </div>
   );
 };

@@ -33,12 +33,11 @@ const WhatWeDoPage = ({ companyDetailData }: WhatWeDoPageProps) => {
         closestSection = index;
       }
     });
-
     setHighlighted(closestSection);
   });
 
-  if (companyDetailData.length === 0) {
-    return null; // 데이터 로딩 중이면 아무것도 렌더링하지 않음
+  if (!Array.isArray(companyDetailData) || companyDetailData.length === 0) {
+    return null;
   }
 
   return (

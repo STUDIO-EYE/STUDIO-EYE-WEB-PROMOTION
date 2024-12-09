@@ -18,16 +18,16 @@ const AboutPage = () => {
   const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData, errors } =
     useLoaderData() as AboutPageLoaderData;
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    useEffect(() => {
-      if (errors.length>0) {
-        setIsModalOpen(true);
-      }
-    }, [errors]);
-    const closeModal = () => {
-      setIsModalOpen(false);
-      window.location.reload();
-    };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (errors.length > 0) {
+      setIsModalOpen(true);
+    }
+  }, [errors]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const mainPartnersData = partnersData.filter((info) => {
     return info.partnerInfo.is_main;
@@ -35,7 +35,7 @@ const AboutPage = () => {
 
   return (
     <ScrollContainer>
-      {isModalOpen &&<ErrorComponent error={errors[0]} onClose={closeModal}/>}
+      {isModalOpen && <ErrorComponent error={errors[0]} onClose={closeModal} />}
       <IntroPage companyIntroData={companyIntroData} sloganImageUrl={sloganImageUrl} />
       <WhatWeDoPage companyDetailData={companyDetailData} />
       <Section data-cy='about-section'>

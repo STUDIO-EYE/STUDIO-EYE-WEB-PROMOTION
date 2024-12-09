@@ -50,7 +50,6 @@ const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
     return cleanedString === '' ? INTRO_DATA.COMPANY_INTRO : cleanedString;
   };
 
-
   return (
     <Container data-cy='intro-container'>
       <InitContainer data-cy='init-container'>
@@ -94,7 +93,7 @@ const IntroPage = ({ companyIntroData, sloganImageUrl }: IntroPageProps) => {
           >
             <BackgroundText data-cy='about-title'>ABOUT</BackgroundText>
             <AboutText
-              data-cy="about-content"
+              data-cy='about-content'
               dangerouslySetInnerHTML={{
                 __html: removeParagraphTags(companyIntroData || INTRO_DATA.COMPANY_INTRO),
               }}
@@ -169,7 +168,7 @@ const InitTitleWrapper = styled.div`
     gap: 0.5rem;
   }
 `;
-const InitTitle = styled(motion.div) <IFontStyleProps>`
+const InitTitle = styled(motion.div)<IFontStyleProps>`
   font-family: ${theme.font.bold};
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: ${(props) => props.color || theme.color.white.light};

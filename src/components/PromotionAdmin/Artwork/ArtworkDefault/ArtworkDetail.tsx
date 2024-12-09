@@ -81,6 +81,25 @@ const ArtworkDetail = () => {
     }
   }, [projectType]);
 
+  const convertURLsToFiles = async (data: ArtworkData) => {
+    try {
+      if (data.mainImg) {
+        const mainImgFile = await urlToFile(data.mainImg);
+        setMainImage(mainImgFile);
+      }
+      if (data.responsiveImg) {
+        const responsiveImgFile = await urlToFile(data.responsiveImg);
+        setResponsiveMainImage(responsiveImgFile);
+      }
+      if (data.projectImages && data.projectImages.length > 0) {
+        const detailImageFiles = await Promise.all(data.projectImages.map((image) => urlToFile(image.imageUrlList)));
+        setDetailImages(detailImageFiles);
+      }
+    } catch (error) {
+      console.error('[Error converting URLs to Files]', error);
+    }
+  };
+
   // fetchArtworkDetails 함수 내에서 ArtworkData를 받아와서 state에 설정하는 부분
   const fetchArtworkDetails = async () => {
     try {
@@ -101,51 +120,41 @@ const ArtworkDetail = () => {
         setIsTopMainArtwork(false);
       }
 
-      if (data.mainImg) {
-        try {
-          const mainImgFile = await urlToFile(data.mainImg);
-          setMainImage(mainImgFile);
-          setGetModeMainImg(data.mainImg);
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load main image]', error);
-          setMainImage(null);
-          setGetModeMainImg('');
-        }
-      }
+      // getMode에서는 URL만 저장
+      setGetModeMainImg(data.mainImg || '');
+      setGetModeResponsiveMainImg(data.responsiveMainImg || '');
+      setGetModeDetailImgs(data.projectImages?.map((image: { imageUrlList: string }) => image.imageUrlList) || []);
 
-      if (data.responsiveMainImg) {
-        try {
-          const responsiveImgFile = await urlToFile(data.responsiveMainImg);
-          setResponsiveMainImage(responsiveImgFile);
-          setGetModeResponsiveMainImg(data.responsiveMainImg);
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load responsive main image]', error);
-          setResponsiveMainImage(null);
-          setGetModeResponsiveMainImg('');
-        }
-      }
-
-      if (data.projectImages && data.projectImages.length > 0) {
-        try {
-          const detailImageFiles = await Promise.all(
-            data.projectImages.map(async (image: { imageUrlList: string }) => urlToFile(image.imageUrlList)),
-          );
-          setDetailImages(detailImageFiles);
-          setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load detail images]', error);
-          setDetailImages([]);
-          setGetModeDetailImgs([]);
-        }
+      if (!isGetMode) {
+        // 수정 모드에서는 바로 파일 변환
+        convertURLsToFiles(data);
       }
     } catch (error) {
       console.error('[Error fetching artwork details]', error);
     }
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
+    setIsGetMode(false); // 수정 모드로 전환
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsGetMode(false);
+
+    try {
+      // URL 데이터를 파일로 변환
+      if (getModeMainImg) {
+        const mainImgFile = await urlToFile(getModeMainImg);
+        setMainImage(mainImgFile);
+      }
+      if (getModeResponsiveMainImg) {
+        const responsiveImgFile = await urlToFile(getModeResponsiveMainImg);
+        setResponsiveMainImage(responsiveImgFile);
+      }
+      if (getModeDetailImgs.length > 0) {
+        const detailImageFiles = await Promise.all(getModeDetailImgs.map((url) => urlToFile(url)));
+        setDetailImages(detailImageFiles);
+      }
+    } catch (error) {
+      console.error('[Error converting URL to File in edit mode]', error);
+    }
   };
 
   const handleOverviewChange = (newOverview: string) => {
@@ -232,6 +241,7 @@ const ArtworkDetail = () => {
     try {
       const response = await putArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
+        alert(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);

@@ -19,7 +19,7 @@ const Artwork = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [producingIsOpend, setProducingIsOpened] = useRecoilState(backdropState);
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 7;
+  const postsPerPage = 6;
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedProjectType, setSelectedProjectType] = useState<projectType | 'all'>('all');
@@ -91,7 +91,7 @@ const Artwork = () => {
           {filteredAndSortedArtworks.length === 0 ? (
             <NoDataWrapper>😊 아트워크 데이터가 존재하지 않습니다.</NoDataWrapper>
           ) : (
-            <div data-cy='PA_artwork_list' style={{ height: '1260px' }}>
+            <div data-cy='PA_artwork_list' style={{ height: '1200px' }}>
               {currentArtworks.map((artwork) => (
                 <LinkStyle to={`${PA_ROUTES.ARTWORK}/${artwork.id}?page=${currentPage + 1}`} key={artwork.id}>
                   <ArtworkBox
@@ -107,6 +107,7 @@ const Artwork = () => {
                     overView={artwork.overView}
                     projectType={artwork.projectType}
                     projectImages={artwork.projectImages}
+                    responsiveImg={artwork.responsiveImg}
                     sequence={artwork.sequence}
                     mainSequence={artwork.mainSequence}
                   />

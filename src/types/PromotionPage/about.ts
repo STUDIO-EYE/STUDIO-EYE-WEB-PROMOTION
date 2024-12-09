@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError } from 'axios';
 
 export interface IPartnerInfo {
   id: number;
@@ -20,7 +20,7 @@ export interface ICEOInfoData {
 }
 
 export interface WhatWeDoPageProps {
-  companyDetailData: { key: string; value: string }[]; // 데이터 타입 정의
+  companyDetailData: { id: number; key: string; value: string }[]; // 데이터 타입 정의
 }
 
 export interface AboutPageLoaderData {
@@ -28,6 +28,6 @@ export interface AboutPageLoaderData {
   partnersData: ICorpInfoData[]; // 파트너 데이터
   companyIntroData: string; // 회사 소개 데이터
   sloganImageUrl: string; // 슬로건 이미지 URL
-  companyDetailData: { key: string; value: string }[]; // 회사 세부 데이터
+  companyDetailData: { id: number; key: string; value: string }[]; // 회사 세부 데이터
   errors: AxiosError[];
 }

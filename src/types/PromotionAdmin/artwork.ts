@@ -17,6 +17,7 @@ export type ArtworkData = {
   projectType: projectType;
   isPosted: boolean;
   mainImg: string;
+  responsiveImg: string;
   projectImages: ArtworkImage[];
   sequence: number;
   mainSequence: number;
