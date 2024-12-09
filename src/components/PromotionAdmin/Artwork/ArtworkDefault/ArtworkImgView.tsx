@@ -21,9 +21,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #0000001a;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
 `;
 const ModalContent = styled.div`
-  max-width: 100%;
+  max-width: 30rem;
   max-height: 100%;
   display: flex;
   justify-content: center;
@@ -32,7 +35,7 @@ const ModalContent = styled.div`
   img {
     object-fit: contain;
     max-width: 100%;
-    max-height: 100%;
+    max-height: 30rem;
     border-radius: 10px;
   }
 `;
