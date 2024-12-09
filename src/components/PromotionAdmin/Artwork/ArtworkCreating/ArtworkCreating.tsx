@@ -149,7 +149,6 @@ const ArtworkCreating = () => {
       }
       alert(MSG.ALERT_MSG.SAVE);
       setProducingIsOpened(false);
-      console.log(response.data.id);
       navigate(`${PA_ROUTES.ARTWORK}/${response.data.id}?page=1`);
     } catch (error: any) {
       alert(MSG.CONFIRM_MSG.FAILED);
