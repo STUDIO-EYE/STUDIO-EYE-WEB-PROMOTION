@@ -73,6 +73,11 @@ const EXCEPTION_MSG = {
   INVALID_LINK: '유효하지 않은 URL입니다.',
 };
 
+const ERROR_MSG = {
+  SERVER_ERROR:
+    '현재 서버 또는 인터넷 연결 문제로 인해 문의 등록이 완료되지 않았습니다. 불편을 드려 죄송합니다. 문제가 지속될 경우, 문의해 주시면 신속히 도와드리겠습니다.',
+};
+
 export const MSG = {
   BUTTON_MSG,
   ALERT_MSG,
@@ -80,4 +85,5 @@ export const MSG = {
   PLACEHOLDER_MSG,
   INVALID_MSG,
   EXCEPTION_MSG,
+  ERROR_MSG,
 };

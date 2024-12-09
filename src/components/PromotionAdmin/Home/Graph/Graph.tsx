@@ -11,8 +11,8 @@ type Props = {
   title: string;
   processedData: { x: string; y: number }[];
   data: ViewData[] | RequestData[];
-  handleCategoryChange: (category:string)=>void;
-  handleStateChange: (state:string)=>void;
+  handleCategoryChange: (category: string) => void;
+  handleStateChange: (state: string) => void;
   handleStartDateChange: (newStartDate: dayjs.Dayjs | null) => void;
   handleEndDateChange: (newEndDate: dayjs.Dayjs | null) => void;
   category: string;
@@ -24,10 +24,10 @@ type Props = {
   filter2: Option[];
 };
 
-type Option={
-  value:string;
-  label:string;
-}
+type Option = {
+  value: string;
+  label: string;
+};
 
 const Graph = ({
   title,
@@ -45,14 +45,14 @@ const Graph = ({
   filter,
   filter2,
 }: Props) => {
-  const [showFilter2, setShowFilter2] = useState(false); 
-  useEffect(()=>{
-    if(division==='request'||category===MenuType.ARTWORK){
+  const [showFilter2, setShowFilter2] = useState(false);
+  useEffect(() => {
+    if (division === 'request' || category === MenuType.ARTWORK) {
       setShowFilter2(true);
-    }else{
+    } else {
       setShowFilter2(false);
     }
-  },[category])
+  }, [category]);
 
   return (
     <Container>
@@ -70,17 +70,40 @@ const Graph = ({
           />
         </DayPickerWrapper>
       </HeaderWrapper>
-      <div style={{
-        display:'flex',justifyContent:'flex-end',marginRight:'15px'}}>
-        <FilterSelect value={category} onChange={(e)=>handleCategoryChange(e.target.value)}>
-          {filter&&filter.map((option)=>{
-            return <FilterOption value={option.value}>{option.label}</FilterOption>
-          })}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginRight: '15px',
+        }}
+      >
+        <FilterSelect
+          value={category}
+          onChange={(e: { target: { value: string } }) => handleCategoryChange(e.target.value)}
+        >
+          {filter &&
+            filter.map((option, index) => {
+              return (
+                <FilterOption key={index} value={option.value}>
+                  {option.label}
+                </FilterOption>
+              );
+            })}
         </FilterSelect>
-        <FilterSelect value={state} style={{marginLeft:'10px'}} onChange={(e)=>handleStateChange(e.target.value)} disabled={showFilter2?false:true}>
-        {filter2&&filter2.map((option,index)=>{
-          return <FilterOption key={index} value={option.value}>{option.label}</FilterOption>
-        })}
+        <FilterSelect
+          value={state}
+          style={{ marginLeft: '10px' }}
+          onChange={(e: { target: { value: string } }) => handleStateChange(e.target.value)}
+          disabled={showFilter2 ? false : true}
+        >
+          {filter2 &&
+            filter2.map((option, index) => {
+              return (
+                <FilterOption key={index} value={option.value}>
+                  {option.label}
+                </FilterOption>
+              );
+            })}
         </FilterSelect>
       </div>
       <BodyWrapper>
@@ -159,7 +182,7 @@ const ErrorWrapper = styled.div`
   }
 `;
 
-const FilterSelect=styled.select`
+const FilterSelect = styled.select`
   min-width: fit-content;
   height: fit-content;
   backdrop-filter: blur(4px);
@@ -168,8 +191,8 @@ const FilterSelect=styled.select`
   padding: 4px;
   font-size: 0.9rem;
   font-family: 'pretendard';
-`
-const FilterOption=styled.option`
-font-size: 0.9rem;
-font-family: pretendard;
-`
+`;
+const FilterOption = styled.option`
+  font-size: 0.9rem;
+  font-family: pretendard;
+`;

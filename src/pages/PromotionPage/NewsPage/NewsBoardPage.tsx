@@ -5,6 +5,8 @@ import IntroSection from "./IntroSection";
 import NewsSection from "./NewsSection";
 import NewsPagination from "@/components/Pagination/NewsPagination";
 import { theme } from "@/styles/theme";
+import { AxiosError } from "axios";
+import ErrorComponent from "@/components/Error/ErrorComponent";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import ScrollToTop from "@/hooks/useScrollToTop";
@@ -18,7 +20,6 @@ interface INewsCardProps {
 }
 
 const NewsBoardPage: React.FC = () => {
-
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(6);
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const NewsBoardPage: React.FC = () => {
     async () => {
       const response = await getAllNewsData();
       if (!response || !response.data) {
-        throw new Error('데이터가 없습니다.');
+        throw error;
       }
       return response.data.map((news: any) => ({
         id: news.id,
@@ -51,6 +52,17 @@ const NewsBoardPage: React.FC = () => {
       }));
     }
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (error!==null) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;

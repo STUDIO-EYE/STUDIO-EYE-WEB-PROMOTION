@@ -60,7 +60,7 @@ export default HeaderDetail;
 const NavWrapper = styled.div`
   span {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   li {
     list-style: none;
@@ -82,6 +82,7 @@ const NavWrapper = styled.div`
 
     &:hover::after {
       width: 100%;
+      z-index:1;
     }
   }
 `;

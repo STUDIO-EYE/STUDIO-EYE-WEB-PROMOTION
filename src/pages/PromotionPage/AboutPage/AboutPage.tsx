@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IntroPage from './IntroPage';
 import WhatWeDoPage from './WhatWeDoPage';
@@ -6,6 +6,7 @@ import { theme } from '@/styles/theme';
 import { useMediaQuery } from 'react-responsive';
 import { useLoaderData } from 'react-router-dom';
 import { AboutPageLoaderData } from '@/types/PromotionPage/about';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 interface IContainerStyleProps {
   backgroundColor?: string;
@@ -14,8 +15,19 @@ interface IContainerStyleProps {
 const AboutPage = () => {
   const isMobile = useMediaQuery({ query: `(max-width: ${theme.mediaSize.mobile}px)` });
 
-  const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData } =
+  const { ceoData, partnersData, companyIntroData, sloganImageUrl, companyDetailData, errors } =
     useLoaderData() as AboutPageLoaderData;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    useEffect(() => {
+      if (errors.length>0) {
+        setIsModalOpen(true);
+      }
+    }, [errors]);
+    const closeModal = () => {
+      setIsModalOpen(false);
+      window.location.reload();
+    };
 
   const mainPartnersData = partnersData.filter((info) => {
     return info.partnerInfo.is_main;
@@ -23,6 +35,7 @@ const AboutPage = () => {
 
   return (
     <ScrollContainer>
+      {isModalOpen &&<ErrorComponent error={errors[0]} onClose={closeModal}/>}
       <IntroPage companyIntroData={companyIntroData} sloganImageUrl={sloganImageUrl} />
       <WhatWeDoPage companyDetailData={companyDetailData} />
       <Section data-cy='about-section'>

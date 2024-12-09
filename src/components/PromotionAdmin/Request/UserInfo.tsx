@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface UserInfoProps {
-    clickedRequest: IRequestData;
-  }
-  
-  const UserInfo: React.FC<UserInfoProps> = ({ clickedRequest }) => {
+  clickedRequest: IRequestData;
+}
+
+const UserInfo: React.FC<UserInfoProps> = ({ clickedRequest }) => {
   const [userInfoExpanded, setUserInfoExpanded] = useState(false);
 
   const toggleUserInfoExpansion = () => {
@@ -44,15 +44,26 @@ interface UserInfoProps {
               <UserInfoData>
                 <ul>
                   {clickedRequest?.fileUrlList.map((url: string, index: number) => {
-                    const fileName = url.split('amazonaws.com/')[1];
-                    return (
-                      <li key={index}>
-                        -{' '}
-                        <Link href={url} target='_blank' rel='noopener noreferrer'>
-                          {fileName}
-                        </Link>
-                      </li>
-                    );
+                    try {
+                      const decodedUrl = decodeURIComponent(url);
+                      const fileName = decodedUrl.split('amazonaws.com/')[1];
+
+                      return (
+                        <li key={index}>
+                          -{' '}
+                          <Link href={decodedUrl} target='_blank' rel='noopener noreferrer'>
+                            {fileName}
+                          </Link>
+                        </li>
+                      );
+                    } catch (error) {
+                      console.error('Invalid URL or decoding error:', url);
+                      return (
+                        <li key={index}>
+                          - <span>파일명 표시 오류</span>
+                        </li>
+                      );
+                    }
                   })}
                 </ul>
               </UserInfoData>
@@ -69,7 +80,7 @@ const UserInfoWrapper = styled.div`
 `;
 
 const UserInfoTitle = styled.div`
-width: fit-content;
+  width: fit-content;
   cursor: pointer;
   color: gray;
   font-weight: bold;

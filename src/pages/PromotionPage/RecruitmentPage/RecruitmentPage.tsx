@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { IRecruitmentList, IBenefit } from '@/types/PromotionAdmin/recruitment';
 import { getAllRecruitmentData, getRecruitmentData, getBenefitData } from '../../../apis/PromotionAdmin/recruitment';
 import groupImage from '@/assets/images/PP/group.png';
 import { theme } from '@/styles/theme';
+import { AxiosError } from 'axios';
+import ErrorComponent from '@/components/Error/ErrorComponent';
 
 const RecruitmentPage = () => {
   const currentPage = 1;
@@ -14,7 +16,7 @@ const RecruitmentPage = () => {
     data: recruitmentData,
     isLoading: isRecruitmentLoading,
     error: recruitmentError,
-  } = useQuery<IRecruitmentList, Error>(
+  } = useQuery<IRecruitmentList, AxiosError>(
     ['recruitmentList'],
     () => getAllRecruitmentData(currentPage, RecruitmentsPerPage),
     { keepPreviousData: true },
@@ -24,7 +26,7 @@ const RecruitmentPage = () => {
     data: benefitData,
     isLoading: isBenefitLoading,
     error: benefitError,
-  } = useQuery<IBenefit[], Error>(['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 });
+  } = useQuery<IBenefit[], AxiosError>(['benefit'], getBenefitData, { keepPreviousData: false, staleTime: 0 });
 
   const handleClickPost = async (id: number, status: string) => {
     if (status === 'OPEN') {
@@ -42,16 +44,27 @@ const RecruitmentPage = () => {
     );
   };
 
-  if (isRecruitmentLoading || isBenefitLoading) {
-    return <div>Loading...</div>;
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (recruitmentError !== null || benefitError !== null) {
+      setIsModalOpen(true);
+    }
+  }, [recruitmentError, benefitError]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.reload();
+  };
 
-  if (recruitmentError || benefitError) {
-    return <div>Error occurred!</div>;
-  }
+  // if (isRecruitmentLoading || isBenefitLoading) {
+  //   return <div style={{height:'100%'}}>Loading...</div>;
+  // }
+  // if (recruitmentError || benefitError) {
+  //   return <div>Error occurred!</div>;
+  // }
 
   return (
     <Container>
+      {isModalOpen && <ErrorComponent error={recruitmentError || benefitError} onClose={closeModal} />}
       {/* 첫 번째 섹션: 채용 페이지 인트로 */}
       <IntroSection data-cy='intro-section'>
         <IntroTitleWrapper>
@@ -79,50 +92,51 @@ const RecruitmentPage = () => {
           </ImageWrapper>
         </IntroTitleWrapper>
       </IntroSection>
- {/* 두 번째 섹션: 채용 게시판 */}
-<JobBoardSection data-cy="recruitment-section">
-  <PostGrid>
-    <Header>진행중인 채용공고</Header>
-    <Content>
-      {recruitmentData && recruitmentData.content.length > 0 ? (
-        recruitmentData.content.map((recruitment) => (
-          <PostItem
-            key={recruitment.id}
-            isOpen={recruitment.status === 'OPEN'}
-            {...(recruitment.status === 'OPEN' ? { 'data-cy': `post-item-${recruitment.id}` } : {})}
-            onClick={() => handleClickPost(recruitment.id, recruitment.status)}
-          >
-            <StatusButtonWrapper>
-              <StatusButton
-                isDeadline={recruitment.status === 'CLOSE'}
-                isPreparing={recruitment.status === 'PREPARING'}
-              >
-                {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
-              </StatusButton>
-            </StatusButtonWrapper>
-            <TextWrapper>
-              <PostTitle>{recruitment.title}</PostTitle>
-            </TextWrapper>
-          </PostItem>
-        ))
-      ) : (
-        <NoRecruitmentMessage>현재 올라온 채용공고가 없습니다.</NoRecruitmentMessage>
-      )}
-    </Content>
-  </PostGrid>
-</JobBoardSection>
+      {/* 두 번째 섹션: 채용 게시판 */}
+      <JobBoardSection data-cy='recruitment-section'>
+        <PostGrid>
+          <Header>진행중인 채용공고</Header>
+          <Content>
+            {recruitmentData && recruitmentData.content.length > 0 ? (
+              recruitmentData.content.map((recruitment) => (
+                <PostItem
+                  key={recruitment.id}
+                  isOpen={recruitment.status === 'OPEN'}
+                  {...(recruitment.status === 'OPEN' ? { 'data-cy': `post-item-${recruitment.id}` } : {})}
+                  onClick={() => handleClickPost(recruitment.id, recruitment.status)}
+                >
+                  <StatusButtonWrapper>
+                    <StatusButton
+                      data-cy='recruitment-status'
+                      isDeadline={recruitment.status === 'CLOSE'}
+                      isPreparing={recruitment.status === 'PREPARING'}
+                    >
+                      {recruitment.status === 'CLOSE' ? '마감' : recruitment.status === 'OPEN' ? '진행' : '예정'}
+                    </StatusButton>
+                  </StatusButtonWrapper>
+                  <TextWrapper>
+                    <PostTitle data-cy='recruitment-title'>{recruitment.title}</PostTitle>
+                  </TextWrapper>
+                </PostItem>
+              ))
+            ) : (
+              <NoRecruitmentMessage>현재 올라온 채용공고가 없습니다.</NoRecruitmentMessage>
+            )}
+          </Content>
+        </PostGrid>
+      </JobBoardSection>
 
       {/* 세 번째 섹션: 회사 복지 정보 */}
       <BenefitsSection data-cy='benefit-section'>
         {benefitData && benefitData.length > 0 && (
           <BenefitsSection data-cy='benefit-section'>
-            <BenefitSectionTitle>STUDIOEYE'S BENEFIT</BenefitSectionTitle>
+            <BenefitSectionTitle>{`STUDIOEYE'S BENEFIT`}</BenefitSectionTitle>
             <ListWrapper>
               {benefitData.map((benefit) => (
                 <BenefitItem key={benefit.id}>
                   <BenefitImage src={benefit.imageUrl} alt={benefit.imageFileName} />
-                  <BenefitTitle>{benefit.title}</BenefitTitle>
-                  <BenefitContent>{benefit.content}</BenefitContent>
+                  <BenefitTitle data-cy='benefit-title'>{benefit.title}</BenefitTitle>
+                  <BenefitContent data-cy='benefit-content'>{benefit.content}</BenefitContent>
                 </BenefitItem>
               ))}
             </ListWrapper>
@@ -331,7 +345,7 @@ const JobBoardSection = styled.div`
 `;
 
 const PostGrid = styled.div`
-   width: 100%;
+  width: 100%;
   max-width: 75rem;
   padding: 1rem;
   box-sizing: border-box; // 패딩 포함 폭 계산
@@ -352,11 +366,10 @@ const Header = styled.h3`
 const Content = styled.div`
   border-top: 1.5px solid black;
   border-bottom: 1.5px solid black;
-  
 `;
 const PostItem = styled.div<{ isOpen: boolean }>`
   width: 100%;
-  padding: 2.5rem 1rem; 
+  padding: 2.5rem 1rem;
   background-color: ${theme.color.white.light};
   border-top: 1.5px solid #ccc;
   display: flex;
@@ -364,7 +377,7 @@ const PostItem = styled.div<{ isOpen: boolean }>`
   align-items: center;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
-  min-height: 4rem; 
+  min-height: 4rem;
   box-sizing: border-box;
   cursor: ${(props) => (props.isOpen ? 'pointer' : 'default')};
 
@@ -433,7 +446,7 @@ const BenefitsSection = styled.div`
   background-color: ${(props) => props.theme.color.white.light};
   width: 100%;
   margin-top: 10rem;
-  margin-bottom: 3rem; 
+  margin-bottom: 3rem;
 `;
 
 const BenefitSectionTitle = styled.h1`
@@ -516,31 +529,29 @@ const BenefitContent = styled.p`
 const NoRecruitmentMessage = styled.div`
   font-family: ${(props) => props.theme.font.medium};
   color: ${(props) => props.theme.color.black.light};
-  font-size: clamp(1.5rem, 3vw, 2.2rem); 
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
   text-align: center;
   margin: 3rem 0;
   line-height: 1.8;
   padding: 1.5rem 2rem;
 
   @media ${(props) => props.theme.media.large_tablet} {
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem); 
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
     margin: 2.5rem 0;
     padding: 1.2rem 1.8rem;
   }
 
   @media ${(props) => props.theme.media.tablet} {
-    font-size: clamp(1rem, 2vw, 1.4rem); 
+    font-size: clamp(1rem, 2vw, 1.4rem);
     margin: 2rem 0;
     padding: 1rem 1.5rem;
   }
 
   @media ${(props) => props.theme.media.mobile} {
-    font-size: clamp(0.9rem, 2vw, 1.3rem); 
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
     margin: 1.5rem 0;
     padding: 0.8rem 1.2rem;
   }
 `;
-
-
 
 export default RecruitmentPage;
