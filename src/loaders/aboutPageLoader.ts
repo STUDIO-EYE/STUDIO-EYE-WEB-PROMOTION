@@ -28,18 +28,30 @@ export const aboutPageLoader = async () => {
   const errors: AxiosError[] = [];
   try {
     const [ceoData, partnersData, companyData, companyDetailData] = await Promise.all([
-      getCEOData().catch((error) => { errors.push(error); return { data: defaultCEOData, error }; }), // CEO 데이터 실패 시 기본값 반환
-      getPartnersData().catch((error) => { errors.push(error); return { data: defaultCorpData, error }; }), // Partners 데이터 실패 시 기본값 반환
-      getCompanyData().catch((error) => { errors.push(error); return { data: { introduction: '', sloganImageUrl: '' }, error };}), // 회사 데이터 실패 시 기본값 반환
-      getCompanyDetailData().catch((error) => { errors.push(error); return { data: [], error }; }), // 회사 세부 데이터 실패 시 빈 배열 반환
+      getCEOData().catch((error) => {
+        errors.push(error);
+        return { data: defaultCEOData, error };
+      }), // CEO 데이터 실패 시 기본값 반환
+      getPartnersData().catch((error) => {
+        errors.push(error);
+        return { data: defaultCorpData, error };
+      }), // Partners 데이터 실패 시 기본값 반환
+      getCompanyData().catch((error) => {
+        errors.push(error);
+        return { data: { introduction: '', sloganImageUrl: '' }, error };
+      }), // 회사 데이터 실패 시 기본값 반환
+      getCompanyDetailData().catch((error) => {
+        errors.push(error);
+        return { data: [], error };
+      }), // 회사 세부 데이터 실패 시 빈 배열 반환
     ]);
 
     // 강제 새로고침 효과를 위해 데이터 복사
     return {
       ceoData: JSON.parse(JSON.stringify(ceoData || defaultCEOData)),
       partnersData: JSON.parse(JSON.stringify(partnersData || defaultCorpData)),
-      companyIntroData: companyData.data.introduction || '',
-      sloganImageUrl: companyData.data.sloganImageUrl || '',
+      companyIntroData: companyData.introduction || '',
+      sloganImageUrl: companyData.sloganImageUrl || '',
       companyDetailData: companyDetailData || [],
       errors: errors,
     };
