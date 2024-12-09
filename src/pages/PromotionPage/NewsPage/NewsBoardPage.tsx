@@ -36,7 +36,7 @@ const NewsBoardPage: React.FC = () => {
     }
   }, [location, navigate]);
 
-  const { data: newsData } = useQuery<INewsCardProps[], Error>(
+  const { data: newsData, isLoading, error } = useQuery<INewsCardProps[], AxiosError>(
     'newsData',
     async () => {
       const response = await getAllNewsData();
