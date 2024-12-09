@@ -58,30 +58,37 @@ const NewsSection: React.FC<NewsSectionProps> = ({ currentNewsData, onNewsClick 
 
   return (
     <Container ref={containerRef}>
-      <NewsSectionIntro>스튜디오아이 관련 뉴스 보기</NewsSectionIntro>
-      {
-        currentNewsData.map((news) => (
-          <NewsCard
-            key={news.id}
-            className={isClicked === news.id ? 'clicked' : ''}
-            onClick={() => handleNewsClick(news.url, news.id)}
-            onMouseEnter={() => !isMobile && setIsClicked(news.id)}
-            data-cy={`news-item-${news.id}`}
-          >
-            <TextWrapper>
-              <Title>{news.title}</Title>
-              <Source>
-                {news.source} | {new Date(news.pubDate).toLocaleDateString()}
-              </Source>
-            </TextWrapper>
-            <ArrowIcon data-cy={`news-delete-button-${news.id}`}>
-              <GoArrowRight />
-            </ArrowIcon>
-          </NewsCard>
-        ))
-      }
+      <Grid>
+        <NewsSectionIntro>스튜디오아이 관련 뉴스 보기</NewsSectionIntro>
+        <BorderLine>
+          {currentNewsData.length === 0 ? (
+            <NoDataMessage>현재 올라온 뉴스가 없습니다.</NoDataMessage>
+          ) : (
+            currentNewsData.map((news) => (
+              <NewsCard
+                key={news.id}
+                className={isClicked === news.id ? 'clicked' : ''}
+                onClick={() => handleNewsClick(news.url, news.id)}
+                onMouseEnter={() => !isMobile && setIsClicked(news.id)}
+                data-cy={`news-item-${news.id}`}
+              >
+                <TextWrapper>
+                  <Title>{news.title}</Title>
+                  <Source>
+                    {news.source} | {new Date(news.pubDate).toLocaleDateString()}
+                  </Source>
+                </TextWrapper>
+                <ArrowIcon data-cy={`news-delete-button-${news.id}`}>
+                  <GoArrowRight />
+                </ArrowIcon>
+              </NewsCard>
+            ))
+          )}
+        </BorderLine>
+      </Grid>
     </Container>
   );
+
 }
 export default NewsSection;
 
@@ -103,16 +110,14 @@ const Container = styled.div`
 `;
 
 const NewsSectionIntro = styled.h3`
-  font-size: 21px;
-  font-weight: 700;
+  font-size: clamp(0.8rem, 3vw, 1.6rem);
   color: white;
-  margin-bottom: 20px;
-  max-width: 1200px;
+  margin-bottom: 1rem;
   width: 100%;
+  font-family: ${theme.font.medium};
 
-  @media ${theme.media.mobile} {
-    font-size: 1rem;
-    margin-left: 1rem;
+  @media ${theme.media.large_tablet} {
+    margin-bottom: 0.5rem;
   }
 `;
 
@@ -161,14 +166,55 @@ const ArrowIcon = styled.div`
   }
 `;
 
+const Grid = styled.div`
+  width: 100%;
+  max-width: 75rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+`;
+
+const BorderLine = styled.div`
+  border-top: 1.5px solid white;
+  border-bottom: 1.5px solid white;
+`;
+
+const NoDataMessage = styled.div`
+  color: ${(props) => props.theme.color.black.light};
+  font-size: clamp(1.5rem, 3vw, 2.2rem); 
+  text-align: center;
+  margin: 3rem 0;
+  line-height: 1.8;
+  padding: 1.5rem 2rem;
+  word-break: keep-all;
+
+  @media ${(props) => props.theme.media.large_tablet} {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem); 
+    margin: 2.5rem 0;
+    padding: 1.2rem 1.8rem;
+  }
+
+  @media ${(props) => props.theme.media.tablet} {
+    font-size: clamp(1rem, 2vw, 1.4rem); 
+    margin: 2rem 0;
+    padding: 1rem 1.5rem;
+  }
+
+  @media ${(props) => props.theme.media.mobile} {
+    font-size: clamp(0.9rem, 2vw, 1.3rem); 
+    margin: 1.5rem 0;
+    padding: 0.8rem 1.2rem;
+  }
+`;
+
 const NewsCard = styled.div`
   width: 100%;
   max-width: 1200px;
   padding: 20px 0;
   margin-bottom: 10px;
   background-color: black;
-  border-top: 1px solid white;
-  border-bottom: 1px solid white;
+  border-top: 1.5px solid #ccc;
+
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -202,3 +248,5 @@ const NewsCard = styled.div`
     }
   }
 `;
+
+

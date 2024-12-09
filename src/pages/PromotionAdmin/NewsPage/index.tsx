@@ -12,28 +12,28 @@ const Index = () => {
   const navigator = useNavigate();
 
   useEffect(() => {
-    
+
   }, [producingIsOpend]);
 
-  const handleWritingNews=()=>{
+  const handleWritingNews = () => {
     setProducingIsOpened(!producingIsOpend);
   }
-  const handleViewNews=(id:number)=>{
+  const handleViewNews = (id: number) => {
     navigator(`${id}`);
   }
 
   return (
     <>
-    {producingIsOpend && <BackDrop children={<NewsWritePage/>} isOpen={producingIsOpend} />}
-    <Container data-cy="news-index-container">
+      {producingIsOpend && <BackDrop children={<NewsWritePage />} isOpen={producingIsOpend} />}
+      <Container data-cy="news-index-container">
         <HeaderWrapper>
-        <span style={{marginTop:"auto",marginBottom:"auto"}} data-cy="news-header-title">News 목록</span>
-        <SendButton onClick={handleWritingNews} data-cy="news-write-button">글쓰기</SendButton>
+          <span style={{ marginTop: "auto", marginBottom: "auto" }} data-cy="news-header-title">News 목록</span>
+          <SendButton onClick={handleWritingNews} data-cy="news-write-button">글쓰기</SendButton>
         </HeaderWrapper>
-        <div style={{display:'flex'}}><NewsList handler={handleViewNews} data-cy="news-list"/>
-        <Outlet data-cy="news-outlet" />
+        <div style={{ display: 'flex' }}><NewsList handler={handleViewNews} data-cy="news-list" />
+          <Outlet data-cy="news-outlet" />
         </div>
-    </Container>
+      </Container>
     </>
   );
 };

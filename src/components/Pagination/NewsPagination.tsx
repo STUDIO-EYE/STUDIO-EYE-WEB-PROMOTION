@@ -14,6 +14,7 @@ const NewsPagination = ({ postsPerPage, totalPosts, paginate }: IPaginationProps
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageRange, setCurrentPageRange] = useState(0);
+  const [shouldScroll, setShouldScroll] = useState(false);
   const location = useLocation();
 
   const pageNumbers = [];
@@ -37,37 +38,41 @@ const NewsPagination = ({ postsPerPage, totalPosts, paginate }: IPaginationProps
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const page = parseInt(queryParams.get('page') || '1', 10);
+    const page = parseInt(queryParams.get("page") || "1", 10);
     setCurrentPage(page);
     setIndex(page - 1);
     const pageRange = Math.ceil(page / 10) - 1;
     setCurrentPageRange(pageRange);
   }, [location]);
 
-  // useEffect(() => {
-  //   window.scrollTo({ top: 900, behavior: 'smooth' });
-  // }, [currentPage, currentPageRange]);
+  useEffect(() => {
+    if (shouldScroll) {
+      window.scrollTo({ top: 900, behavior: "smooth" });
+      setShouldScroll(false);
+    }
+  }, [shouldScroll]);
 
   return (
     <Wrapper>
       {currentPageRange > 0 && (
         <>
           <PageLi onClick={() => setCurrentPageRange(0)} selected={false}>
-            {'<<'}
+            {"<<"}
           </PageLi>
           <PageLi onClick={handlePrevRange} selected={false}>
-            {'<'}
+            {"<"}
           </PageLi>
         </>
       )}
       {displayedPages.map((number) => (
         <PageLi
           key={number}
-          className='page-item'
+          className="page-item"
           onClick={() => {
-            paginate(number + 1); // 페이지 인덱스를 1부터 시작하게 조정
+            paginate(number + 1);
             setIndex(number);
             navigate(`?page=${number + 1}`);
+            setShouldScroll(true);
           }}
           selected={number === index ? true : false}
         >
@@ -77,10 +82,10 @@ const NewsPagination = ({ postsPerPage, totalPosts, paginate }: IPaginationProps
       {currentPageRange < totalPageRanges - 1 && (
         <>
           <PageLi onClick={handleNextRange} selected={false}>
-            {'>'}
+            {">"}
           </PageLi>
           <PageLi onClick={() => setCurrentPageRange(totalPageRanges - 1)} selected={false}>
-            {'>>'}
+            {">>"}
           </PageLi>
         </>
       )}
