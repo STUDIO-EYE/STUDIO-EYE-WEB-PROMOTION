@@ -241,6 +241,7 @@ const ArtworkDetail = () => {
     try {
       const response = await putArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
+        alert(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);

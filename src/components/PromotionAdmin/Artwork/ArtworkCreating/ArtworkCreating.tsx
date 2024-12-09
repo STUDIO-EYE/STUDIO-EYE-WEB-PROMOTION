@@ -10,6 +10,7 @@ import { linkCheck } from '@/components/ValidationRegEx/ValidationRegEx';
 import { useNavigate } from 'react-router-dom';
 import { PA_ROUTES } from '@/constants/routerConstants';
 import { MSG } from '@/constants/messages';
+import ScrollToTop from '@/hooks/useScrollToTop';
 
 const ArtworkCreating = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -62,7 +63,6 @@ const ArtworkCreating = () => {
     } else {
       setIsTopMainArtwork(false);
     }
-    console.log('바뀜', isTopMainArtwork);
   }, [projectType]);
 
   const handleOverviewChange = (newOverview: string) => {
@@ -144,6 +144,7 @@ const ArtworkCreating = () => {
     try {
       const response = await postArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
+        alert(response.message);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
@@ -189,7 +190,6 @@ const ArtworkCreating = () => {
           item.name === 'responsiveMainImage' ? null : item.name === 'mainImage' &&
             defaultValue[index + 1]?.name === 'responsiveMainImage' ? (
             <div key={index}>
-              {/* {errorMessage && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
               <ArtworkValueLayout
                 valueTitle={defaultValue[index + 1].title}
@@ -199,7 +199,6 @@ const ArtworkCreating = () => {
             </div>
           ) : (
             <div key={index}>
-              {/* {errorMessage && item.name === 'artworkType' && <ErrorMessage> ⚠ {errorMessage}</ErrorMessage>} */}
               {linkRegexMessage && item.name === 'link' && <ErrorMessage> ⚠ {linkRegexMessage}</ErrorMessage>}
               <ArtworkValueLayout valueTitle={item.title} description={item.description} content={item.content} />
             </div>
@@ -233,13 +232,13 @@ const ValueWrapper = styled.div`
   backdrop-filter: blur(10px);
   box-sizing: border-box;
   width: fit-content;
-  height: 32rem;
+  height: 38rem;
   overflow-y: scroll;
   width: 100%;
-  padding: 2.3rem;
+  padding: 2.8rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem; /* 박스 간 간격 */
+  gap: 1rem; /* 박스 간 간격 */
 `;
 
 const CloseContainer = styled.div`
