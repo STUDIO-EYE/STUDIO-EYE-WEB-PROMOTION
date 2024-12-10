@@ -29,9 +29,7 @@ const AboutPage = () => {
     window.location.reload();
   };
 
-  const mainPartnersData = partnersData.filter((info) => {
-    return info.partnerInfo.is_main;
-  });
+  const mainPartnersData = partnersData.filter((info) => info.partnerInfo && info.partnerInfo.isMain);
 
   return (
     <ScrollContainer>
