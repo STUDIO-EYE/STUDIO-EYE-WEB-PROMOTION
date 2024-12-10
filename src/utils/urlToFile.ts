@@ -33,13 +33,17 @@ export const isValidUrl = (url: string): boolean => {
   }
 };
 
-export async function urlToFile(url: string | null, fileName?: string): Promise<File> {
+export async function urlToFile(url: string | null, fileName: string): Promise<File> {
   try {
     if (!url || !isValidUrl(url)) {
-      console.error('[Invalid URL detected]', url);
+      console.error('[Invalid URL detected]', { url, fileName });
       const uniqueSuffix = Math.random().toString(36).slice(-6);
-      return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' });
+      return new File([], `default_${uniqueSuffix}.png`, { type: 'image/png' });
     }
+
+    // 파일 이름 길이 제한: 30자 초과 시 잘라내기
+    const maxFileNameLength = 30;
+    const sanitizedFileName = fileName.length > maxFileNameLength ? fileName.slice(0, maxFileNameLength) : fileName;
 
     // 캐시 무효화를 위해 URL에 타임스탬프 추가
     const cacheBusterUrl = `${url}?t=${Date.now()}`;
@@ -58,17 +62,12 @@ export async function urlToFile(url: string | null, fileName?: string): Promise<
     }
 
     const blob = await response.blob();
-    const finalFileName = fileName ? extractFileNameFromUrl(fileName) : extractFileNameFromUrl(url);
 
-    // 확장자 중복 방지
-    const sanitizedFileName = finalFileName.replace(/(\.[a-zA-Z0-9]+)+$/, (match) =>
-      match.split('.').slice(0, 2).join('.'),
-    );
-
+    // 잘린 파일 이름으로 File 객체 생성
     return new File([blob], sanitizedFileName, { type: blob.type });
   } catch (error) {
     console.error('[Error converting URL to file]', { url, fileName, error });
     const uniqueSuffix = Math.random().toString(36).slice(-6);
-    return new File([], fileName || `default_${uniqueSuffix}.png`, { type: 'image/png' });
+    return new File([], `default_${uniqueSuffix}.png`, { type: 'image/png' });
   }
 }
