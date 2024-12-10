@@ -3,7 +3,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { useState } from 'react';
 import styled from 'styled-components';
 import CategoryDropDown from '../CategoryDropDown';
 import ImageUpload from './ImageUpload';
@@ -14,6 +13,11 @@ export type DefaultValueItem = {
   description: string;
   content: React.ReactNode;
   error?: string;
+};
+
+type ImageDataType = {
+  url: string;
+  fileName: string;
 };
 
 export const getArtworkDefaultValue = (
@@ -41,9 +45,9 @@ export const getArtworkDefaultValue = (
   handleOverviewChange: (newOverview: string) => void,
   isTopMainArtwork: boolean,
   handleImageClick?: (src: string) => void,
-  getModeMainImg?: string,
-  getModeResponsiveMainImg?: string,
-  getModeDetailImgs?: string[],
+  getModeMainImg?: ImageDataType | null,
+  getModeResponsiveMainImg?: ImageDataType | null,
+  getModeDetailImgs?: ImageDataType[],
   isGetMode?: boolean,
 ) => {
   const defaultValue: DefaultValueItem[] = [
@@ -239,8 +243,8 @@ export const getArtworkDefaultValue = (
       description: '썸네일 이미지는 최대 한 개만 설정 가능합니다.',
       content:
         isGetMode && getModeMainImg ? (
-          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeMainImg)}>
-            <IsGetModeImg src={getModeMainImg} alt='메인 이미지' />
+          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeMainImg.url)}>
+            <IsGetModeImg src={getModeMainImg.url} alt={getModeMainImg.fileName} />
             <HoverText>클릭하여 상세보기</HoverText>
           </HoverContainer>
         ) : (
@@ -260,8 +264,8 @@ export const getArtworkDefaultValue = (
       description: '반응형 썸네일 이미지는 최대 한 개만 설정 가능합니다.\n권장픽셀: 400px*900px',
       content:
         isGetMode && getModeResponsiveMainImg ? (
-          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeResponsiveMainImg)}>
-            <IsGetModeImg src={getModeResponsiveMainImg} alt='메인 반응형 이미지' />
+          <HoverContainer onClick={() => handleImageClick && handleImageClick(getModeResponsiveMainImg.url)}>
+            <IsGetModeImg src={getModeResponsiveMainImg.url} alt={getModeResponsiveMainImg.fileName} />
             <HoverText>클릭하여 상세보기</HoverText>
           </HoverContainer>
         ) : (
@@ -282,8 +286,8 @@ export const getArtworkDefaultValue = (
       content:
         isGetMode && getModeDetailImgs ? (
           getModeDetailImgs.map((i, index) => (
-            <HoverContainer key={`detail-image-${index}`} onClick={() => handleImageClick && handleImageClick(i)}>
-              <IsGetModeImg src={i} alt={`서브 이미지 ${index + 1}`} />
+            <HoverContainer key={`detail-image-${index}`} onClick={() => handleImageClick && handleImageClick(i.url)}>
+              <IsGetModeImg src={i.url} alt={i.fileName} />
               <HoverText>클릭하여 상세보기</HoverText>
             </HoverContainer>
           ))

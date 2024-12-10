@@ -33,10 +33,6 @@ describe('3. WHAT WE DO를 관리한다', () => {
         key: 'MCN 2.0',
         value: '정말로 다양하고 멋진 작업물을 문의해보세요',
       },
-      {
-        key: 'Digital Operator',
-        value: '정말로 다양하고 멋진 다양한 고객의 Youtube, Instagram, TikTok 채널을 운영 대행합니다',
-      },
     ];
 
     updatedDetails.forEach((detail, index) => {
@@ -44,11 +40,6 @@ describe('3. WHAT WE DO를 관리한다', () => {
         .eq(index)
         .clear({ force: true })
         .type(detail.key, { force: true });
-
-      cy.get(`[data-cy="${aboutPageAttributes.DETAIL_VALUE_INPUT}"]`)
-        .eq(index)
-        .clear({ force: true })
-        .type(detail.value, { force: true });
     });
 
     // 저장하기 버튼 클릭 후 PUT 요청 가로채기

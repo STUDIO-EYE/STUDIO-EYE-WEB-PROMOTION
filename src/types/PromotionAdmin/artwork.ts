@@ -17,11 +17,13 @@ export type ArtworkData = {
   projectType: projectType;
   isPosted: boolean;
   mainImg: string;
+  mainImgFileName: string;
+  responsiveMainImg: string;
+  responsiveMainImgFileName: string;
   projectImages: ArtworkImage[];
   sequence: number;
   mainSequence: number;
 };
-
 export type PostArtworkData = {
   request: PostArtworkDataRequestType;
   file: string | File;

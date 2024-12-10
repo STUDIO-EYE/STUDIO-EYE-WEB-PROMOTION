@@ -14,12 +14,17 @@ import BackDrop from '@/components/Backdrop/Backdrop';
 import ArtworkImgView from './ArtworkImgView';
 import { urlToFile } from '@/utils/urlToFile';
 
+type ImageDataType = {
+  url: string;
+  fileName: string;
+};
+
 const ArtworkDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImgSrc, setModalImgSrc] = useState<string>('');
-  const [getModeMainImg, setGetModeMainImg] = useState('');
-  const [getModeResponsiveMainImg, setGetModeResponsiveMainImg] = useState('');
-  const [getModeDetailImgs, setGetModeDetailImgs] = useState<string[]>([]);
+  const [getModeMainImg, setGetModeMainImg] = useState<ImageDataType | null>(null);
+  const [getModeResponsiveMainImg, setGetModeResponsiveMainImg] = useState<ImageDataType | null>(null);
+  const [getModeDetailImgs, setGetModeDetailImgs] = useState<ImageDataType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isProjectOpened, setIsProjectOpened] = useState<boolean>(false);
@@ -69,6 +74,14 @@ const ArtworkDetail = () => {
   ]);
 
   useEffect(() => {
+    console.log('[ArtworkDetail] getMode Images:', {
+      getModeMainImg,
+      getModeResponsiveMainImg,
+      getModeDetailImgs,
+    });
+  }, [getModeMainImg, getModeResponsiveMainImg, getModeDetailImgs]);
+
+  useEffect(() => {
     fetchArtworkDetails();
     setIsGetMode(true);
   }, [artworkId]);
@@ -80,6 +93,35 @@ const ArtworkDetail = () => {
       setIsTopMainArtwork(false);
     }
   }, [projectType]);
+
+  const convertURLsToFiles = async (data: ArtworkData) => {
+    try {
+      if (data.mainImg) {
+        console.log('[Converting main image]', { url: data.mainImg, fileName: data.mainImgFileName });
+        const mainImgFile = await urlToFile(data.mainImg, data.mainImgFileName);
+        setMainImage(mainImgFile);
+      }
+
+      if (data.responsiveMainImg) {
+        console.log('[Converting responsive image]', {
+          url: data.responsiveMainImg,
+          fileName: data.responsiveMainImgFileName,
+        });
+        const responsiveImgFile = await urlToFile(data.responsiveMainImg, data.responsiveMainImgFileName);
+        setResponsiveMainImage(responsiveImgFile);
+      }
+
+      if (data.projectImages && data.projectImages.length > 0) {
+        console.log('[Converting detail images]', data.projectImages);
+        const detailImageFiles = await Promise.all(
+          data.projectImages.map((image) => urlToFile(image.imageUrlList, image.fileName)),
+        );
+        setDetailImages(detailImageFiles);
+      }
+    } catch (error) {
+      console.error('[Error in convertURLsToFiles]', { data, error });
+    }
+  };
 
   // fetchArtworkDetails 함수 내에서 ArtworkData를 받아와서 state에 설정하는 부분
   const fetchArtworkDetails = async () => {
@@ -101,51 +143,56 @@ const ArtworkDetail = () => {
         setIsTopMainArtwork(false);
       }
 
-      if (data.mainImg) {
-        try {
-          const mainImgFile = await urlToFile(data.mainImg);
-          setMainImage(mainImgFile);
-          setGetModeMainImg(data.mainImg);
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load main image]', error);
-          setMainImage(null);
-          setGetModeMainImg('');
-        }
-      }
+      // getMode에서는 URL만 저장
+      setGetModeMainImg(data.mainImg ? { url: data.mainImg, fileName: data.mainImgFileName } : null);
 
-      if (data.responsiveMainImg) {
-        try {
-          const responsiveImgFile = await urlToFile(data.responsiveMainImg);
-          setResponsiveMainImage(responsiveImgFile);
-          setGetModeResponsiveMainImg(data.responsiveMainImg);
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load responsive main image]', error);
-          setResponsiveMainImage(null);
-          setGetModeResponsiveMainImg('');
-        }
-      }
+      setGetModeResponsiveMainImg(
+        data.responsiveMainImg ? { url: data.responsiveMainImg, fileName: data.responsiveMainImgFileName } : null,
+      );
 
-      if (data.projectImages && data.projectImages.length > 0) {
-        try {
-          const detailImageFiles = await Promise.all(
-            data.projectImages.map(async (image: { imageUrlList: string }) => urlToFile(image.imageUrlList)),
-          );
-          setDetailImages(detailImageFiles);
-          setGetModeDetailImgs(data.projectImages.map((image: { imageUrlList: string }) => image.imageUrlList));
-        } catch (error) {
-          console.error('[ArtworkDetail Failed to load detail images]', error);
-          setDetailImages([]);
-          setGetModeDetailImgs([]);
-        }
+      setGetModeDetailImgs(
+        data.projectImages?.map((image: { imageUrlList: any; fileName: any }) => ({
+          url: image.imageUrlList,
+          fileName: image.fileName,
+        })) || [],
+      );
+
+      if (!isGetMode) {
+        // 수정 모드에서는 바로 파일 변환
+        convertURLsToFiles(data);
       }
     } catch (error) {
       console.error('[Error fetching artwork details]', error);
     }
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
+    setIsGetMode(false); // 수정 모드로 전환
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsGetMode(false);
+
+    try {
+      // 메인 이미지 변환
+      if (getModeMainImg) {
+        const mainImgFile = await urlToFile(getModeMainImg.url, getModeMainImg.fileName);
+        setMainImage(mainImgFile);
+      }
+
+      // 반응형 메인 이미지 변환
+      if (getModeResponsiveMainImg) {
+        const responsiveImgFile = await urlToFile(getModeResponsiveMainImg.url, getModeResponsiveMainImg.fileName);
+        setResponsiveMainImage(responsiveImgFile);
+      }
+
+      // 상세 이미지 변환
+      if (getModeDetailImgs.length > 0) {
+        const detailImageFiles = await Promise.all(
+          getModeDetailImgs.map((image) => urlToFile(image.url, image.fileName)),
+        );
+        setDetailImages(detailImageFiles);
+      }
+    } catch (error) {
+      console.error('[Error fetching artwork details]', error);
+    }
   };
 
   const handleOverviewChange = (newOverview: string) => {

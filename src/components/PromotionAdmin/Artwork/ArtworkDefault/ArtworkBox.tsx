@@ -17,6 +17,9 @@ const ArtworkBox = ({
   isPosted,
   mainImg,
   projectImages,
+  responsiveMainImg,
+  responsiveMainImgFileName,
+  mainImgFileName,
   sequence,
 }: ArtworkData) => {
   const slicedName = name.length > 15 ? `${name.slice(0, 15)}...` : name;
@@ -24,7 +27,7 @@ const ArtworkBox = ({
   const slicedClient = client.length > 20 ? `${client.slice(0, 20)}...` : client;
   return (
     <Container>
-      <img src={mainImg} alt='mainImg' />
+      <img src={mainImg} alt={mainImg} />
       <DescriptionWrapper data-cy='PA_artwork'>
         <Wrapper>
           <div>
