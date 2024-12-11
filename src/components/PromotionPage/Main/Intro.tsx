@@ -26,15 +26,15 @@ const Intro = () => {
       div.innerHTML = htmlString;
       return div.textContent?.trim() === '';
     };
-  
+
     const fetchData = async () => {
       try {
         const data = await getCompanyData();
-  
+
         if (
-          !data || 
-          Object.keys(data).length === 0 || 
-          isContentEmpty(data.mainOverview) || 
+          !data ||
+          Object.keys(data).length === 0 ||
+          isContentEmpty(data.mainOverview) ||
           isContentEmpty(data.commitment)
         ) {
           setCompanyMainOverview(INTRO_DATA.MAIN_OVERVIEW);
@@ -45,14 +45,14 @@ const Intro = () => {
         }
       } catch (error) {
         setErrorMessage(
-          'Intro Error: ' + 
+          'Intro Error: ' +
           (error instanceof Error ? error.message : '에러가 발생했습니다. 관리자에게 문의하세요.')
         );
       }
     };
-  
+
     fetchData();
-  }, []);  
+  }, []);
 
   if (errorMessage) {
     return <div>{errorMessage}</div>;

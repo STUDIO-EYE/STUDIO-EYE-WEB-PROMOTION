@@ -70,10 +70,10 @@ const MainPage = () => {
     setIsModalOpen(false);
     window.location.reload();
   };
-  
+
   return (
     <>
-      {isModalOpen &&<ErrorComponent error={error} onClose={closeModal}/>}
+      {isModalOpen && <ErrorComponent error={error} onClose={closeModal} />}
       <style>{`
         body, html {
           overflow: hidden;
@@ -135,13 +135,13 @@ const MainPage = () => {
                     id: item.id,
                     department: item.department || '',
                     category: item.category || '',
-                    name: item.name || ARTWORKLIST_DATA.TITLE,
+                    name: item.name ? item.name : ARTWORKLIST_DATA.TITLE,
                     link: item.link || '',
-                    client: item.client || ARTWORKLIST_DATA.CLIENT,
+                    client: item.client ? item.client : ARTWORKLIST_DATA.CLIENT,
                     date: item.date || '',
-                    mainImg: item.mainImg || defaultMainImg,
-                    responsiveMainImg: item.responsiveMainImg || defaultMainImg,
-                    overView: item.overView || ARTWORKLIST_DATA.OVERVIEW,
+                    mainImg: item.mainImg ? item.mainImg : defaultMainImg,
+                    responsiveMainImg: item.responsiveMainImg ? item.responsiveMainImg : defaultMainImg,
+                    overView: item.overView ? item.overView : ARTWORKLIST_DATA.OVERVIEW,
                     isPosted: item.isPosted ?? true,
                     projectImages: item.projectImages || [],
                   }))}

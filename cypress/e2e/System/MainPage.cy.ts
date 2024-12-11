@@ -36,7 +36,7 @@ describe('Artwork 데이터 생성, 수정, 삭제 및 확인한다.', () => {
           name: '타입',
           selector: '[data-cy="create_artwork_artworkType"]',
           value: data[3].artworkType,
-          type: 'select',
+          type: 'select-type',
         },
       ];
     });
@@ -52,7 +52,7 @@ describe('Artwork 데이터 생성, 수정, 삭제 및 확인한다.', () => {
         if (field.type === 'dropdown') {
           cy.get(field.selector).click({ force: true });
           cy.get('[data-cy="create_artwork_category_dropdown"]').contains(field.value).click({ force: true });
-        } else if (field.type === 'select') {
+        } else if (field.type === 'select-type') {
           cy.get(field.selector).contains(field.value).click({ force: true });
         } else {
           cy.get(field.selector).type(field.value);
@@ -91,7 +91,7 @@ describe('Artwork 데이터 생성, 수정, 삭제 및 확인한다.', () => {
         if (field.type === 'dropdown') {
           cy.get(field.selector).click({ force: true });
           cy.get('[data-cy="create_artwork_category_dropdown"]').contains(field.value).click({ force: true });
-        } else if (field.type === 'select') {
+        } else if (field.type === 'select-type') {
           cy.get(field.selector).contains(field.value).click({ force: true });
         } else {
           if (field.name === '제목') {

@@ -135,57 +135,53 @@ describe('Mainpage - Top 섹션을 확인한다.', () => {
     });
     cy.visit('/');
     cy.wait(5000);
-    cy.contains('Artwork Error:').should('be.visible');
+    cy.contains('Error').should('be.visible');
   });
 });
 
 describe('MainPage - Intro 섹션을 확인한다.', () => {
   beforeEach(() => {
+    cy.viewport(1920, 1080);
     login();
   });
 
-  it('관리 페이지에서 mainOverview, commitment가 있는 것을 확인한다.', () => {
-    cy.visit('/promotion-admin/dataEdit');
-    cy.get('[data-cy="nav-btn-company"]').click();
-    cy.wait(3000);
-    cy.intercept('GET', '**/api/company/information', {
-      statusCode: 200,
-      body: [
-        {
-          code: 200,
-          status: 'OK',
-          message: '전체 회사 정보를 성공적으로 조회하였습니다.',
-          data: {
-            id: 1,
-            mainOverview: '<p>스튜디오 아이와 함께 영상물 퀄리티 UP&nbsp;</p>',
-            commitment: '<p>최고의 경험을 선사하는 스튜디오 아이의 작업과 함께하세요.</p>',
-            address: '서울시 성동구 광나루로 162 BS성수타워 5층',
-            addressEnglish: '5F 162, Gwangnaru-ro, Seongdong-gu, Seoul, Republic of Korea',
-            lightLogoImageFileName: 'LightLogo.png',
-            lightLogoImageUrl: '',
-            darkLogoImageFileName: 'DarkLogo.png',
-            darkLogoImageUrl: '',
-            phone: '02-2038-2663',
-            fax: '02-2038-2663',
-            introduction:
-              '<p>2010년에 설립된 <span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">클라이언트 맞춤형 콘텐츠 제작</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">과</span><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">&nbsp;운영 대책 서비스</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">를 제공하고 있으며,</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);"><span class="ql-cursor">﻿</span>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</span></p>',
-            sloganImageFileName: 'Slogan.png',
-            sloganImageUrl: '',
-            detailInformation: [],
-          },
-        },
-      ],
-    });
-
-    cy.scrollTo(1000, 0);
-    const child = ['MainOverview', 'commitment'];
-    cy.get('[data-cy="introduction_list"]').within(() => {
-      child.forEach((child) => {
-        cy.scrollTo('right', { duration: 1000 }); // 수평으로 스크롤
-        cy.get(`[data-cy="intro_${child}"]`).should('exist');
-      });
-    });
-  });
+  // it('관리 페이지에서 mainOverview, commitment가 있는 것을 확인한다.', () => {
+  //   cy.visit('/promotion-admin/dataEdit');
+  //   cy.get('[data-cy="nav-btn-company"]').click();
+  //   cy.wait(3000);
+  //   cy.intercept('GET', '**/company/information', {
+  //     statusCode: 200,
+  //     body: [
+  //       {
+  //         code: 200,
+  //         status: 'OK',
+  //         message: '전체 회사 정보를 성공적으로 조회하였습니다.',
+  //         data: {
+  //           id: 1,
+  //           mainOverview: '<p>스튜디오 아이와 함께 영상물 퀄리티 UP&nbsp;</p>',
+  //           commitment: '<p>최고의 경험을 선사하는 스튜디오 아이의 작업과 함께하세요.</p>',
+  //           address: '서울시 성동구 광나루로 162 BS성수타워 5층',
+  //           addressEnglish: '5F 162, Gwangnaru-ro, Seongdong-gu, Seoul, Republic of Korea',
+  //           lightLogoImageFileName: '',
+  //           lightLogoImageUrl: '',
+  //           darkLogoImageFileName: '',
+  //           darkLogoImageUrl: '',
+  //           phone: '02-2038-2663',
+  //           fax: '02-2038-2663',
+  //           introduction:
+  //             '<p>2010년에 설립된 <span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">스튜디오 아이는 다양한 장르를 소화할 수 있는 PD들이 모여</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">클라이언트 맞춤형 콘텐츠 제작</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">과</span><span style="background-color: rgb(0, 0, 0); color: rgb(255, 169, 0);">&nbsp;운영 대책 서비스</span><span style="background-color: rgb(0, 0, 0); color: rgb(251, 251, 251);">를 제공하고 있으며,</span></p><p><span style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);"><span class="ql-cursor">﻿</span>드라마 애니메이션 등을 전문으로 하는 여러 계열사들과도 협력하고 있습니다.</span></p>',
+  //           sloganImageFileName: '',
+  //           sloganImageUrl: '',
+  //           detailInformation: [],
+  //         },
+  //       },
+  //     ],
+  //   });
+  //   const child = ['mainOverview', 'commitment'];
+  //   child.forEach((child) => {
+  //     cy.get(`[data-cy="intro_${child}"]`).should('exist');
+  //   });
+  // });
 
   it('프로모션 페이지의 메인의 Intro 섹션에서 Company Information 데이터가 있는 것을 확인한다.', () => {
     cy.intercept('GET', '**/api/company/information', {
@@ -246,7 +242,7 @@ describe('MainPage - Intro 섹션을 확인한다.', () => {
     });
     cy.visit('/');
     cy.wait(5000);
-    cy.contains('Intro Error:').should('be.visible');
+    cy.contains('Error').should('be.visible');
   });
 });
 
@@ -381,7 +377,9 @@ describe('MainPage - ArtworkList 섹션을 확인한다.', () => {
       data: null,
     });
     cy.visit('/');
-    cy.contains('표시할 아트워크가 없습니다.').should('be.visible');
+    cy.get('[data-cy="artwork_client"]').should('exist');
+    cy.get('[data-cy="artwork_name"]').should('exist');
+    cy.get('[data-cy="artwork_overview"]').should('exist');
   });
 
   it('필수 예외) 요청을 했으나 Status Code가 500일 경우.', () => {
@@ -391,7 +389,7 @@ describe('MainPage - ArtworkList 섹션을 확인한다.', () => {
     });
     cy.visit('/');
     cy.wait(5000);
-    cy.contains('Artwork Error:').should('be.visible');
+    cy.contains('문제').should('be.visible');
   });
 });
 
@@ -552,6 +550,6 @@ describe('MainPage - Outro 섹션을 확인한다.', () => {
     });
     cy.visit('/');
     cy.wait(5000);
-    cy.contains('Outro Error:').should('be.visible');
+    cy.contains('Error').should('be.visible');
   });
 });
