@@ -17,7 +17,7 @@ const defaultCorpData: ICorpInfoData[] = [
   {
     partnerInfo: {
       id: 1,
-      is_main: true,
+      isMain: true,
       link: 'https://www.netflix.com/browse',
     },
     logoImg: LocomoLogo,
