@@ -23,9 +23,8 @@ function ArtworkDetailPage() {
   const { data, isLoading } = useQuery<IArtworksData>(['artwork', 'id'], getArtworkData);
   const [filteredData,setFilteredData]=useState<IArtwork[]>([])
 
-  const clickedArtwork =
-    artworkDetailMatch?.params.id && data?.data.find((artwork) => String(artwork.id) === artworkDetailMatch.params.id);
-    useEffect(()=>{
+  const clickedArtwork = artworkDetailMatch?.params.id && data?.data.find((artwork) => String(artwork.id) === artworkDetailMatch.params.id);
+  useEffect(()=>{
     if(data){
       if(artworkDetailMatch?.params.category!=="all"){
         setFilteredData(data.data.filter((d)=>{return d.category===artworkDetailMatch?.params.category! && d.isPosted===true}))
@@ -34,7 +33,7 @@ function ArtworkDetailPage() {
         setFilteredData(data.data.filter((d)=>{return d.isPosted===true}))
       }
     }
-  },[])
+  },[data, artworkDetailMatch?.params.category])
 
   // animation
   const { scrollYProgress } = useScroll();
