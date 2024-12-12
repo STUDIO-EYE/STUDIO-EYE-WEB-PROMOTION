@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getClientLogoImgList = async () => {
   try {
-    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/client/logoImgList`);
+    const response = await axios.get(`${PROMOTION_BASIC_PATH}/api/client`);
     return response.data.data;
   } catch (error) {
     console.log('[❌ Error getClientLogoImgList]', error);
