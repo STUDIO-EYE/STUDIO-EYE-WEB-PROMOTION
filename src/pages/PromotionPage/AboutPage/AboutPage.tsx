@@ -29,9 +29,7 @@ const AboutPage = () => {
     window.location.reload();
   };
 
-  const mainPartnersData = partnersData.filter((info) => {
-    return info.partnerInfo.is_main;
-  });
+  const mainPartnersData = partnersData.filter((info) => info.partnerInfo && info.partnerInfo.isMain);
 
   return (
     <ScrollContainer>
@@ -78,7 +76,7 @@ const AboutPage = () => {
             </CorpLogoRowContainer>
           </CorpLogoContainer>
         ) : (
-          <div data-cy='company-no-data'>기업 정보가 없습니다.</div>
+          <div data-cy='company-no-data'></div>
         )}
       </Section>
     </ScrollContainer>

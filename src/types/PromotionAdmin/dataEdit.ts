@@ -36,7 +36,7 @@ export interface IPartnersData {
   logoImg: string;
   partnerInfo: {
     id: number;
-    is_main: boolean;
+    isMain: boolean;
     link: string;
     name: string;
   };
@@ -53,7 +53,7 @@ interface IPartnerContentItem {
   id: number;
   name: string;
   logoImageUrl: string;
-  is_main: boolean;
+  isMain: boolean;
   link: string;
 }
 

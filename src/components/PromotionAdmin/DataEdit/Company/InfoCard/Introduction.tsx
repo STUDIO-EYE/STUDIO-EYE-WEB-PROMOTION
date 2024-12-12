@@ -30,7 +30,7 @@ const Introduction = ({ setEditIntroduction }: IIntrodutionProps) => {
           </TitleWrapper>
           <InputWrapper>
             <InputTitle>Main Overview</InputTitle>
-            <Content data-cy='intro_MainOverview'>
+            <Content data-cy='intro_mainOverview'>
               <InnerHTML description={data.mainOverview} />
             </Content>
             <InputTitle>Commitment</InputTitle>

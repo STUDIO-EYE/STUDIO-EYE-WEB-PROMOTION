@@ -27,7 +27,7 @@ import { useSetRecoilState } from 'recoil';
 import { dataUpdateState } from '@/recoil/atoms';
 
 interface IFormData {
-  is_main: boolean;
+  isMain: boolean;
   link: string;
   name: string;
 }
@@ -51,7 +51,7 @@ function PartnerEditPage() {
     formState: { errors },
   } = useForm<IFormData>({
     defaultValues: {
-      is_main: clickedPartner ? clickedPartner.partnerInfo.is_main : true,
+      isMain: clickedPartner ? clickedPartner.partnerInfo.isMain : true,
       link: clickedPartner ? clickedPartner.partnerInfo.link : '',
       name: clickedPartner ? clickedPartner.partnerInfo.name : '',
     },
@@ -87,32 +87,32 @@ function PartnerEditPage() {
   const [putData, setPutData] = useState({
     partnerInfo: {
       id: clickedPartner && clickedPartner.partnerInfo.id,
-      is_main: clickedPartner && clickedPartner.partnerInfo.is_main,
+      isMain: clickedPartner && clickedPartner.partnerInfo.isMain,
       link: clickedPartner && clickedPartner.partnerInfo.link,
       name: clickedPartner && clickedPartner.partnerInfo.name,
     },
     logoImg: clickedPartner ? clickedPartner.logoImg : '',
   });
 
-  const [isVisibility, setIsVisibility] = useState(putData.partnerInfo.is_main);
+  const [isVisibility, setIsVisibility] = useState(putData.partnerInfo.isMain);
 
   useEffect(() => {
     if (clickedPartner) {
       reset({
         link: clickedPartner.partnerInfo.link,
         name: clickedPartner.partnerInfo.name,
-        is_main: clickedPartner.partnerInfo.is_main,
+        isMain: clickedPartner.partnerInfo.isMain,
       });
       setPutData({
         partnerInfo: {
           id: clickedPartner.partnerInfo.id,
-          is_main: clickedPartner.partnerInfo.is_main,
+          isMain: clickedPartner.partnerInfo.isMain,
           link: clickedPartner.partnerInfo.link,
           name: clickedPartner.partnerInfo.name,
         },
         logoImg: clickedPartner.logoImg,
       });
-      setIsVisibility(clickedPartner.partnerInfo.is_main);
+      setIsVisibility(clickedPartner.partnerInfo.isMain);
     }
   }, [clickedPartner, reset]);
 
@@ -129,7 +129,7 @@ function PartnerEditPage() {
         [
           JSON.stringify({
             id: putData.partnerInfo.id,
-            is_main: isVisibility,
+            isMain: isVisibility,
             link: data.link,
             name: data.name,
           }),
@@ -266,9 +266,9 @@ function PartnerEditPage() {
                     setIsVisibility(visibility); // 로컬 상태 업데이트
                     setPutData((prevData) => ({
                       ...prevData,
-                      partnerInfo: { ...prevData.partnerInfo, is_main: visibility }, // 데이터 업데이트
+                      partnerInfo: { ...prevData.partnerInfo, isMain: visibility }, // 데이터 업데이트
                     }));
-                    setValue('is_main', visibility, { shouldValidate: true }); // useForm과 동기화
+                    setValue('isMain', visibility, { shouldValidate: true }); // useForm과 동기화
                     setIsEditing(true); // 변경 상태 활성화
                   }}
                 />

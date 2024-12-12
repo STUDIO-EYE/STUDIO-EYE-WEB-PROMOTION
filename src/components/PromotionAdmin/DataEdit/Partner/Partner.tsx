@@ -79,7 +79,7 @@ const Partner = () => {
                     logo={partner.logoImageUrl}
                     name={partner.name}
                     link={partner.link}
-                    is_posted={partner.is_main}
+                    is_posted={partner.isMain}
                     onClick={() => {
                       if (isEditing && !window.confirm(MSG.CONFIRM_MSG.DATA_EDIT.EXIT)) {
                         return;
@@ -90,7 +90,7 @@ const Partner = () => {
                         `${PA_ROUTES.DATA_EDIT}/${PA_ROUTES_CHILD.DATA_EDIT_PARTNER}/${partner.id}?page=${currentPage}`,
                       );
                     }}
-                    svgComponent={partner.is_main ? <PublicIcon /> : <PrivateIcon />}
+                    svgComponent={partner.isMain ? <PublicIcon /> : <PrivateIcon />}
                   />
                 </React.Fragment>
               ))}

@@ -21,13 +21,33 @@ const Intro = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    const isContentEmpty = (htmlString: string) => {
+      const div = document.createElement('div');
+      div.innerHTML = htmlString;
+      return div.textContent?.trim() === '';
+    };
+
     const fetchData = async () => {
       try {
         const data = await getCompanyData();
-        setCompanyMainOverview(data.mainOverview);
-        setCompanyCommitment(data.commitment);
+
+        if (
+          !data ||
+          Object.keys(data).length === 0 ||
+          isContentEmpty(data.mainOverview) ||
+          isContentEmpty(data.commitment)
+        ) {
+          setCompanyMainOverview(INTRO_DATA.MAIN_OVERVIEW);
+          setCompanyCommitment(INTRO_DATA.COMMITMENT);
+        } else {
+          setCompanyMainOverview(data.mainOverview);
+          setCompanyCommitment(data.commitment);
+        }
       } catch (error) {
-        setErrorMessage('Intro Error: ' + (error instanceof Error ? error.message : '에러가 발생했습니다. 관리자에게 문의하세요.'));
+        setErrorMessage(
+          'Intro Error: ' +
+          (error instanceof Error ? error.message : '에러가 발생했습니다. 관리자에게 문의하세요.')
+        );
       }
     };
 

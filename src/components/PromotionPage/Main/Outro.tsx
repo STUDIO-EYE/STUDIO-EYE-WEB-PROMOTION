@@ -5,15 +5,19 @@ import { getClientLogoImgList } from '@/apis/PromotionPage/client';
 import ClientRowAnimation from '../Client/ClientRowAnimation';
 import WorkWithUs from '../WorkWithUs/WorkWithUs';
 import { theme } from '@/styles/theme';
+import { getClientType } from '@/types/PromotionPage/client';
 
 const Outro = () => {
-  const { data, isLoading, error } = useQuery<string[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
+  const { data, isLoading, error } = useQuery<getClientType[], Error>(['clientLogoImgList'], getClientLogoImgList, {});
+
+  // visibility가 true인 데이터만 필터링 후 logoImg만 추출
+  const filteredLogoImgs = data ? data.filter((item) => item.clientInfo.visibility).map((item) => item.logoImg) : [];
 
   if (isLoading) return <>is Loading...</>;
   if (error) return <>Outro Error: {error.message}</>;
   return (
     <Container data-cy='outro-section'>
-      <ClientRowAnimation data={data} isLoading={isLoading} error={error} />
+      <ClientRowAnimation data={filteredLogoImgs} isLoading={isLoading} error={error} />
       <WorkWithUs />
     </Container>
   );

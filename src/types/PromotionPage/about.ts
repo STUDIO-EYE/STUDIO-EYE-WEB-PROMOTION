@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 export interface IPartnerInfo {
   id: number;
-  is_main: boolean;
+  isMain: boolean;
   link: string;
 }
 

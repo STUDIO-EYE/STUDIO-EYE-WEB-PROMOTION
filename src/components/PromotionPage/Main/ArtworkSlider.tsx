@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy } from 'react';
 import ArtworkList from './ArtworkList';
 import { IArtwork } from '@/types/PromotionPage/artwork';
+import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants';
+import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg'; // 디폴트 이미지 임포트
+
 
 interface IArtworkSliderProps {
   artworks: IArtwork[];
@@ -30,8 +33,25 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
   }, [artworks]);
 
   if (!artworks || artworks.length === 0) {
-    return <>표시할 아트워크가 없습니다.</>;
-  } // 수정하기
+    return (
+      <div data-cy="artworkslider-section" style={{ height: '100vh' }}>
+        <ArtworkList
+          key={0}
+          data={{
+            backgroundImg: defaultMainImg,
+            title: ARTWORKLIST_DATA.TITLE,
+            client: ARTWORKLIST_DATA.CLIENT,
+            overview: ARTWORKLIST_DATA.OVERVIEW,
+            link: '',
+          }}
+          count={1}
+          scrollToSection={() => { }}
+          elementHeight={window.innerHeight}
+          index={0}
+        />
+      </div>
+    );
+  }
 
   if (artworks.length === 1) {
     return (
@@ -46,7 +66,7 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
             link: artworks[0].link,
           }}
           count={1}
-          scrollToSection={() => {}}
+          scrollToSection={() => { }}
           elementHeight={window.innerHeight}
           index={0}
         />
@@ -78,13 +98,13 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
           key={activeIndex}
           data={{
             backgroundImg: artworks[activeIndex].mainImg || '',
-            title: artworks[activeIndex].name || '',
+            title: artworks[activeIndex].name || ARTWORKLIST_DATA.TITLE,
             client: artworks[activeIndex].client || '',
             overview: artworks[activeIndex].overView,
             link: artworks[activeIndex].link,
           }}
           count={artworks.length}
-          scrollToSection={() => {}}
+          scrollToSection={() => { }}
           elementHeight={window.innerHeight}
           index={activeIndex}
         />
@@ -111,7 +131,7 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
             link: artworks[(activeIndex + 1) % artworks.length].link,
           }}
           count={artworks.length}
-          scrollToSection={() => {}}
+          scrollToSection={() => { }}
           elementHeight={window.innerHeight}
           index={(activeIndex + 1) % artworks.length}
         />
