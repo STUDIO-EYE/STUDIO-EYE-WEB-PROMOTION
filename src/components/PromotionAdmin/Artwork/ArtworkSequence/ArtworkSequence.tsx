@@ -151,8 +151,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
       ) : onEdit ? (
         <DragDropContext onDragEnd={onDragEnd}>
           {type === 'main' //main sequence면 top 고정
-            ? realData
-                ?.filter((i) => i.projectType === 'top')
+            ? data?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>
                     <ArtworkSequenceBox type={'top'} artworkData={i} />
@@ -183,8 +182,7 @@ const ArtworkSequence = ({ type, data, isLoading, error, refetch }: ArtworkSeque
         <div>
           {/*edit 모드 아니면 일반 리스트*/}
           {type === 'main' //main sequence면 top 고정
-            ? realData
-                ?.filter((i) => i.projectType === 'top')
+            ? data?.filter((i) => i.projectType === 'top')
                 .map((i) => (
                   <div style={{ marginBottom: '3px' }}>
                     <ArtworkSequenceBox type={'top'} artworkData={i} />
