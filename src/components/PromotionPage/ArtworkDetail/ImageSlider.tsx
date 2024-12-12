@@ -27,6 +27,7 @@ function ImageSlider({ projectImages }: IImageSliderProps) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       <AnimatePresence>
+      {projectImages[index] && projectImages[index].imageUrlList && (
         <motion.img
           key={projectImages[index].id}
           src={projectImages[index].imageUrlList}
@@ -36,7 +37,7 @@ function ImageSlider({ projectImages }: IImageSliderProps) {
           transition={{ duration: 1 }}
           style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' }}
           alt=''
-        />
+        />)}
       </AnimatePresence>
       <div style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center' }}>
         {projectImages.map((_, pageIndex) => (
