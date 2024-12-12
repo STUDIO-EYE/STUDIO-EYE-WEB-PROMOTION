@@ -21,7 +21,7 @@ import { PA_ROUTES, PA_ROUTES_CHILD } from '@/constants/routerConstants';
 import { useNavigate } from 'react-router-dom';
 
 interface IFormData {
-  is_main: boolean;
+  isMain: boolean;
   link: string;
   name: string;
 }
@@ -50,7 +50,7 @@ function PartnerWritePage() {
   const navigate = useNavigate();
   const [postData, setPostData] = useState({
     partnerInfo: {
-      is_main: true,
+      isMain: true,
       name: '',
       link: '',
     },
@@ -65,7 +65,7 @@ function PartnerWritePage() {
     formState: { errors },
   } = useForm<IFormData>({
     defaultValues: {
-      is_main: true,
+      isMain: true,
       name: '',
     },
   });
@@ -113,7 +113,7 @@ function PartnerWritePage() {
       new Blob(
         [
           JSON.stringify({
-            is_main: data.is_main,
+            isMain: data.isMain,
             link: data.link,
             name: data.name,
           }),
@@ -226,13 +226,13 @@ function PartnerWritePage() {
             <ToggleSwitch
               option1='공개'
               option2='비공개'
-              selected={postData.partnerInfo.is_main}
+              selected={postData.partnerInfo.isMain}
               onToggle={(visibility) => {
                 setPostData((prevData) => ({
                   ...prevData,
-                  partnerInfo: { ...prevData.partnerInfo, is_main: visibility },
+                  partnerInfo: { ...prevData.partnerInfo, isMain: visibility },
                 }));
-                setValue('is_main', visibility, { shouldValidate: true }); // useForm과 동기화
+                setValue('isMain', visibility, { shouldValidate: true }); // useForm과 동기화
               }}
             />
           </VisibilityWrapper>
