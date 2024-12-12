@@ -29,9 +29,9 @@ const WatingRequests = () => {
         <TitleWrapper>
           <div>
             <Icon width={20} height={20} stroke='#595959' />
-            <h1>의뢰 통계 요약</h1>
+            <h1>문의 통계 요약</h1>
           </div>
-          <span>승인 대기 의뢰 총 {data && data.length > 0 ? data.length : 0}건</span>
+          <span>승인 대기 문의 총 {data && data.length > 0 ? data.length : 0}건</span>
         </TitleWrapper>
         <BtnWrapper>
           <SortWrapper onClick={handleSort} rotate={sortByRecent ? false : true}>
@@ -58,7 +58,7 @@ const WatingRequests = () => {
             />
           ))
         ) : (
-          <NoDataWrapper>😊 대기 중인 의뢰가 없습니다.</NoDataWrapper>
+          <NoDataWrapper>😊 대기 중인 문의가 없습니다.</NoDataWrapper>
         )}
       </BodyWrapper>
     </Container>
