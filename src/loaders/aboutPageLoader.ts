@@ -13,16 +13,7 @@ const defaultCEOData: ICEOInfoData = {
   imageUrl: defaultCEOLogo,
 };
 
-const defaultCorpData: ICorpInfoData[] = [
-  {
-    partnerInfo: {
-      id: 1,
-      isMain: true,
-      link: 'https://www.netflix.com/browse',
-    },
-    logoImg: LocomoLogo,
-  },
-];
+
 
 export const aboutPageLoader = async () => {
   const errors: AxiosError[] = [];
@@ -34,7 +25,7 @@ export const aboutPageLoader = async () => {
       }), // CEO 데이터 실패 시 기본값 반환
       getPartnersData().catch((error) => {
         errors.push(error);
-        return { data: defaultCorpData, error };
+        return { data: [], error };
       }), // Partners 데이터 실패 시 기본값 반환
       getCompanyData().catch((error) => {
         errors.push(error);
@@ -46,10 +37,12 @@ export const aboutPageLoader = async () => {
       }), // 회사 세부 데이터 실패 시 빈 배열 반환
     ]);
 
+
+
     // 강제 새로고침 효과를 위해 데이터 복사
     return {
       ceoData: JSON.parse(JSON.stringify(ceoData || defaultCEOData)),
-      partnersData: JSON.parse(JSON.stringify(partnersData || defaultCorpData)),
+      partnersData: JSON.parse(JSON.stringify(partnersData || [])),
       companyIntroData: companyData.introduction || '',
       sloganImageUrl: companyData.sloganImageUrl || '',
       companyDetailData: companyDetailData || [],
@@ -61,7 +54,7 @@ export const aboutPageLoader = async () => {
     // 모든 데이터 로드 실패 시 기본값 반환
     return {
       ceoData: defaultCEOData,
-      partnersData: defaultCorpData,
+      partnersData: [],
       companyIntroData: '',
       sloganImageUrl: '',
       companyDetailData: [],

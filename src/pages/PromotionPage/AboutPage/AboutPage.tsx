@@ -76,7 +76,7 @@ const AboutPage = () => {
             </CorpLogoRowContainer>
           </CorpLogoContainer>
         ) : (
-          <div data-cy='company-no-data'>기업 정보가 없습니다.</div>
+          <div data-cy='company-no-data'></div>
         )}
       </Section>
     </ScrollContainer>
