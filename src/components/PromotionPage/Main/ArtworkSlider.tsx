@@ -1,36 +1,71 @@
-import React, { useState, useEffect, useRef, lazy } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ArtworkList from './ArtworkList';
 import { IArtwork } from '@/types/PromotionPage/artwork';
 import { ARTWORKLIST_DATA } from '@/constants/introdutionConstants';
-import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg'; // 디폴트 이미지 임포트
-
+import defaultMainImg from '@/assets/images/PP/defaultMainImg.jpg';
 
 interface IArtworkSliderProps {
   artworks: IArtwork[];
 }
 
 const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [transitioning, setTransitioning] = useState(false);
-  const activeIndexRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(1); // 중간에서 시작
+  const [isAnimating, setIsAnimating] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  // 앞뒤로 복사된 배열 생성
+  const extendedArtworks = [
+    artworks[artworks.length - 1], // 마지막 이미지 복사
+    ...artworks,
+    artworks[0], // 첫 번째 이미지 복사
+  ];
 
   useEffect(() => {
     if (!artworks || artworks.length <= 1) return;
 
     const interval = setInterval(() => {
-      setTransitioning(true);
-
-      activeIndexRef.current = (activeIndexRef.current + 1) % artworks.length;
-
-      // 0.2초 후 activeIndex 교체 -> 바꿀 준비 완
-      setTimeout(() => {
-        setActiveIndex(activeIndexRef.current);
-        setTransitioning(false);
-      }, 200);
-    }, 3000);
+      handleSlide(1); // 다음 슬라이드로 이동
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [artworks]);
+
+  const handleSlide = (direction: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setActiveIndex((prevIndex) => prevIndex + direction);
+    }, 1000); // 애니메이션 시간과 동기화
+  };
+
+useEffect(() => {
+  const totalArtworks = artworks.length;
+
+  if (activeIndex === 0) {
+    // 첫 번째 복사본에서 실제 마지막 이미지로 이동
+    setTimeout(() => {
+      if (sliderRef.current) {
+        sliderRef.current.style.transition = 'none'; // 애니메이션 없이 이동
+      }
+      setActiveIndex(totalArtworks); // 마지막으로 이동
+    }, 1000); // 애니메이션 끝날 때까지 대기
+  } else if (activeIndex === totalArtworks + 1) {
+    // 마지막 복사본에서 실제 첫 번째 이미지로 이동
+    setActiveIndex(1); // 첫 번째 인덱스로 이동
+
+    // 애니메이션을 다시 활성화
+    setTimeout(() => {
+      if (sliderRef.current) {
+        sliderRef.current.style.transition = 'transform 1s ease'; // 애니메이션 다시 활성화
+      }
+    }, 50); // 아주 짧은 시간 후 애니메이션을 활성화
+  } else {
+    if (sliderRef.current) {
+      sliderRef.current.style.transition = 'transform 1s ease'; // 일반 애니메이션
+    }
+  }
+}, [activeIndex, artworks.length]);
 
   if (!artworks || artworks.length === 0) {
     return (
@@ -45,7 +80,7 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
             link: '',
           }}
           count={1}
-          scrollToSection={() => { }}
+          scrollToSection={() => {}}
           elementHeight={window.innerHeight}
           index={0}
         />
@@ -84,61 +119,41 @@ const ArtworkSlider: React.FC<IArtworkSliderProps> = ({ artworks }) => {
       }}
     >
       <div
+        ref={sliderRef}
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          transition: 'transform 2s ease',
-          transform: transitioning ? 'translateX(-100%)' : 'translateX(0)', // 현재 아트워크 왼쪽으로 나감
+          display: 'flex',
+          flexDirection: 'column',
+          transform: `translateY(${-activeIndex * 100}vh)`,
+          transition: 'transform 1s ease',
         }}
       >
-        <ArtworkList
-          key={activeIndex}
-          data={{
-            backgroundImg: artworks[activeIndex].mainImg || '',
-            title: artworks[activeIndex].name || ARTWORKLIST_DATA.TITLE,
-            client: artworks[activeIndex].client || '',
-            overview: artworks[activeIndex].overView,
-            link: artworks[activeIndex].link,
-          }}
-          count={artworks.length}
-          scrollToSection={() => { }}
-          elementHeight={window.innerHeight}
-          index={activeIndex}
-        />
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          transition: 'transform 2s ease',
-          transform: transitioning ? 'translateX(0)' : 'translateX(100%)', // 새 아트워크가 오른쪽에서 왼쪽으로 들어옴
-        }}
-      >
-        <ArtworkList
-          key={(activeIndex + 1) % artworks.length}
-          data={{
-            backgroundImg: artworks[(activeIndex + 1) % artworks.length].mainImg || '',
-            title: artworks[(activeIndex + 1) % artworks.length].name || '',
-            client: artworks[(activeIndex + 1) % artworks.length].client || '',
-            overview: artworks[(activeIndex + 1) % artworks.length].overView,
-            link: artworks[(activeIndex + 1) % artworks.length].link,
-          }}
-          count={artworks.length}
-          scrollToSection={() => { }}
-          elementHeight={window.innerHeight}
-          index={(activeIndex + 1) % artworks.length}
-        />
+        {extendedArtworks.map((artwork, index) => (
+          <div
+            key={index}
+            style={{
+              minHeight: '100vh',
+              width: '100%',
+            }}
+          >
+            <ArtworkList
+              key={index}
+              data={{
+                backgroundImg: artwork.mainImg || defaultMainImg,
+                title: artwork.name || ARTWORKLIST_DATA.TITLE,
+                client: artwork.client || '',
+                overview: artwork.overView,
+                link: artwork.link,
+              }}
+              count={artworks.length}
+              scrollToSection={() => {}}
+              elementHeight={window.innerHeight}
+              index={index}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 export default ArtworkSlider;
-

@@ -29,7 +29,7 @@ const MainPage = () => {
   const sectionsRef = useRef<HTMLElement[]>([]);
   const filteredMainData = data?.data ? data.data.filter((i) => i.projectType === 'main') : [];
   const filteredTopData = data?.data ? data.data.filter((i) => i.projectType === 'top') : [];
-  const { height } = useWindowSize();
+  const { width, height } = useWindowSize();
 
   const scrollToSection = useCallback((index: number) => {
     if (sectionsRef.current[index]) {
@@ -129,7 +129,7 @@ const MainPage = () => {
             >
               {isLoading ? (
                 <div>데이터 로딩 중...</div>
-              ) : height <= 915 ? (
+              ) : width<=767 ? (
                 <ArtworkSlider
                   artworks={filteredMainData.map((item) => ({
                     id: item.id,

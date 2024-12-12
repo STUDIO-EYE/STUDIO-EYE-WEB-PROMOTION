@@ -4,6 +4,7 @@ import { motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
 import ArtworkNav from './ArtworkNav';
 import { theme } from '@/styles/theme';
+import useWindowSize from '@/hooks/useWindowSize';
 
 const defaultMainImg = lazy(() => import('@/assets/images/PP/defaultMainImg.jpg'));
 const SkeletonComponent = lazy(() => import('../SkeletonComponent/SkeletonComponent'));
@@ -23,6 +24,7 @@ interface SectionProps {
 }
 
 const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection }, ref) => {
+  const { width } = useWindowSize();
   const MotionBox = motion<BoxProps>(Box);
   const cardInView: Variants = {
     offscreen: {
@@ -72,7 +74,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
             <TitleWrapper data-cy="artwork_name">{data.title.length > 20 ? `${data.title.slice(0, 20)}...` : data.title}</TitleWrapper>
             <OverviewWrapper data-cy="artwork_overview">{data.overview}</OverviewWrapper>
           </TextWrapper>
-          <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />
+          {width > 767 && <ArtworkNav count={count} scrollToSection={scrollToSection} activeIndex={index} />}
         </motion.div>
       </Suspense>
 
