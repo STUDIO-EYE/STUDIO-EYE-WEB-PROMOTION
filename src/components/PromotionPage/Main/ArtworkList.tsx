@@ -47,7 +47,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       position="relative"
       viewport={{ once: false, amount: 0.7 }}
       ref={ref}
-      backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${data.backgroundImg || defaultMainImg})`}
+      backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)), url(${data.backgroundImg || defaultMainImg})`}
       backgroundSize="cover"
       backgroundPosition="center"
       css={`
@@ -59,6 +59,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
           scroll-snap-type: none;
           overflow-y: auto;
         }
+        image-rendering: crisp-edges; /* 선명도 향상 */
       `}
     >
       <Suspense fallback={
@@ -78,7 +79,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
         </motion.div>
       </Suspense>
 
-      {data.link && (
+      {/* {data.link && (
         <a data-cy='artwork_link'
           href={data.link}
           target="_blank"
@@ -94,7 +95,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
             zIndex: '1'
           }}
         />
-      )}
+      )} */}
     </MotionBox>
   );
 });
