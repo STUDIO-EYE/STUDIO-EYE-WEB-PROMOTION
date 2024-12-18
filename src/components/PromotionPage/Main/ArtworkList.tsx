@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ArtworkNav from './ArtworkNav';
 import { theme } from '@/styles/theme';
 import useWindowSize from '@/hooks/useWindowSize';
+import { useNavigate } from 'react-router-dom';
 
 const defaultMainImg = lazy(() => import('@/assets/images/PP/defaultMainImg.jpg'));
 const SkeletonComponent = lazy(() => import('../SkeletonComponent/SkeletonComponent'));
@@ -13,6 +14,7 @@ interface SectionProps {
   elementHeight: number;
   index: number;
   data: {
+    id:number;
     backgroundImg: string;
     title: string;
     client: string;
@@ -24,6 +26,7 @@ interface SectionProps {
 }
 
 const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, count, scrollToSection }, ref) => {
+  const navigate = useNavigate();
   const { width } = useWindowSize();
   const MotionBox = motion<BoxProps>(Box);
   const cardInView: Variants = {
@@ -34,11 +37,17 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       opacity: 1,
     },
   };
+  const handleClick = () => {
+    if (data.id && data.id !== 0) { // id가 유효하고 0이 아닌 경우에만 이동
+      navigate(`/artwork/all/${data.id}`);
+    }
+  };
 
   return (
     <MotionBox data-cy="artworklist-section"
       w="100%"
       h="100vh"
+      onClick={handleClick} 
       scrollSnapType='y mandatory'
       overflowY='hidden'
       scrollSnapAlign="center"
@@ -47,7 +56,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
       position="relative"
       viewport={{ once: false, amount: 0.7 }}
       ref={ref}
-      backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)), url(${data.backgroundImg || defaultMainImg})`}
+      backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${data.backgroundImg || defaultMainImg})`}
       backgroundSize="cover"
       backgroundPosition="center"
       css={`
@@ -60,6 +69,7 @@ const ArtworkList = React.forwardRef<HTMLElement, SectionProps>(({ index, data, 
           overflow-y: auto;
         }
         image-rendering: crisp-edges; /* 선명도 향상 */
+        cursor:pointer;
       `}
     >
       <Suspense fallback={

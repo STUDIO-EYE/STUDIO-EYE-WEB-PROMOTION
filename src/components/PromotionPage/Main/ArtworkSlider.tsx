@@ -73,6 +73,7 @@ useEffect(() => {
         <ArtworkList
           key={0}
           data={{
+            id: ARTWORKLIST_DATA.ID,
             backgroundImg: defaultMainImg,
             title: ARTWORKLIST_DATA.TITLE,
             client: ARTWORKLIST_DATA.CLIENT,
@@ -94,6 +95,7 @@ useEffect(() => {
         <ArtworkList
           key={0}
           data={{
+            id: artworks[0].id || 0,
             backgroundImg: artworks[0].mainImg || '',
             title: artworks[0].name || '',
             client: artworks[0].client || '',
@@ -138,6 +140,7 @@ useEffect(() => {
             <ArtworkList
               key={index}
               data={{
+                id: artwork.id || ARTWORKLIST_DATA.ID,
                 backgroundImg: artwork.mainImg || defaultMainImg,
                 title: artwork.name || ARTWORKLIST_DATA.TITLE,
                 client: artwork.client || '',

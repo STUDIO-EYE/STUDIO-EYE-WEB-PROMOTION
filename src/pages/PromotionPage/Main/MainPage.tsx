@@ -151,6 +151,7 @@ const MainPage = () => {
                   <ArtworkList
                     key={item.id}
                     data={{
+                      id:item.id ? item.id  : ARTWORKLIST_DATA.ID,
                       backgroundImg: item.mainImg ? item.mainImg : defaultMainImg,
                       title: item.name ? item.name : ARTWORKLIST_DATA.TITLE,
                       client: item.client ? item.client : ARTWORKLIST_DATA.CLIENT,
@@ -168,6 +169,7 @@ const MainPage = () => {
                 <ArtworkList
                   key={'default'}
                   data={{
+                    id: ARTWORKLIST_DATA.ID,
                     backgroundImg: defaultMainImg,
                     title: ARTWORKLIST_DATA.TITLE,
                     client: ARTWORKLIST_DATA.CLIENT,

@@ -21,6 +21,7 @@ export const PARTER_DATA = {
 };
 
 export const ARTWORKLIST_DATA = {
+  ID: 0,
   TITLE: '이준호와 임윤아의 킹더랜드 인터뷰',
   CLIENT: 'NETFLIX Korea Youtube',
   OVERVIEW: '쉿!!🤫 소음을 내면 호텔의 별점이 내려가요! 배우 이준호와 임윤아의 조용조용 ASMR 인터뷰가 시작됩니다.',
