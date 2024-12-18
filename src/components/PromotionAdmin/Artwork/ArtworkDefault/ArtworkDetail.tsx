@@ -13,8 +13,10 @@ import { MSG } from '@/constants/messages';
 import BackDrop from '@/components/Backdrop/Backdrop';
 import ArtworkImgView from './ArtworkImgView';
 import { urlToFile } from '@/utils/urlToFile';
+import FixedLoading from '@/components/Loading/FixedLoading';
 
 const ArtworkDetail = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImgSrc, setModalImgSrc] = useState<string>('');
   const [getModeMainImg, setGetModeMainImg] = useState('');
@@ -207,6 +209,7 @@ const ArtworkDetail = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     const requestData = {
       projectId: artworkData?.id,
@@ -242,6 +245,7 @@ const ArtworkDetail = () => {
       const response = await putArtwork(formData);
       if (response.code === 400 && response.data === null && response.message) {
         alert(response.message);
+        setIsLoading(false);
         return;
       }
       alert(MSG.ALERT_MSG.SAVE);
@@ -251,6 +255,8 @@ const ArtworkDetail = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.log('[artwork updating error]', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -312,6 +318,7 @@ const ArtworkDetail = () => {
 
   return (
     <>
+      {isLoading && <FixedLoading />}
       {isModalOpen && (
         <BackDrop children={<ArtworkImgView src={modalImgSrc} closeModal={closeModal} />} isOpen={isModalOpen} />
       )}
